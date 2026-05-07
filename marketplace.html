@@ -1,0 +1,1452 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Marketplace — AI AGENTS CC</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/base.css">
+  <link rel="stylesheet" href="assets/css/components.css">
+  <link rel="stylesheet" href="assets/css/layout.css">
+  <style>
+    /* ── Hero ─────────────────────────────────────────────── */
+    .mp-hero {
+      background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 50%, #a855f7 100%);
+      border-radius: var(--radius-lg);
+      padding: 28px 28px 24px;
+      margin-bottom: 20px;
+      position: relative;
+      overflow: hidden;
+      color: #fff;
+    }
+
+    .mp-hero::before {
+      content: '';
+      position: absolute;
+      top: -60px;
+      right: -60px;
+      width: 220px;
+      height: 220px;
+      background: radial-gradient(circle, rgba(255, 255, 255, .12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .mp-hero-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, .18);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      margin-bottom: 12px;
+    }
+
+    .mp-hero h1 {
+      font-family: var(--font-heading);
+      font-size: 22px;
+      font-weight: 800;
+      margin-bottom: 4px;
+      line-height: 1.2;
+    }
+
+    .mp-hero p {
+      font-size: var(--fs-sm);
+      opacity: .85;
+      margin-bottom: 16px;
+      line-height: 1.5;
+    }
+
+    .mp-hero-stats {
+      display: flex;
+      gap: 20px;
+    }
+
+    .mp-hero-stat {
+      text-align: center;
+    }
+
+    .mp-hero-stat-val {
+      font-family: var(--font-heading);
+      font-size: 20px;
+      font-weight: 800;
+      line-height: 1;
+    }
+
+    .mp-hero-stat-lbl {
+      font-size: 11px;
+      opacity: .75;
+      margin-top: 2px;
+    }
+
+    /* ── Filters ──────────────────────────────────────────── */
+    .mp-filters {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+
+    .mp-search-wrap {
+      position: relative;
+      flex: 1;
+      min-width: 180px;
+    }
+
+    .mp-search-wrap svg {
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 15px;
+      height: 15px;
+      color: var(--text-muted);
+      pointer-events: none;
+    }
+
+    .mp-search {
+      width: 100%;
+      padding: 8px 10px 8px 32px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      font-size: var(--fs-sm);
+      font-family: var(--font-body);
+      color: var(--text);
+      background: #fff;
+      outline: none;
+      transition: border-color .15s;
+    }
+
+    .mp-search:focus {
+      border-color: #7c3aed;
+    }
+
+    .cat-pills {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .cat-pill {
+      padding: 5px 12px;
+      border-radius: 99px;
+      font-size: 12px;
+      font-weight: 600;
+      border: 1.5px solid var(--border);
+      background: #fff;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all .15s;
+      white-space: nowrap;
+      font-family: var(--font-body);
+    }
+
+    .cat-pill:hover {
+      border-color: #7c3aed;
+      color: #7c3aed;
+    }
+
+    .cat-pill.active {
+      background: #7c3aed;
+      border-color: #7c3aed;
+      color: #fff;
+    }
+
+    .mp-sort {
+      padding: 7px 10px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-md);
+      font-size: var(--fs-sm);
+      font-family: var(--font-body);
+      color: var(--text);
+      background: #fff;
+      cursor: pointer;
+      outline: none;
+      transition: border-color .15s;
+    }
+
+    .mp-sort:focus {
+      border-color: #7c3aed;
+    }
+
+    /* ── Product grid ─────────────────────────────────────── */
+    .mp-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+
+    .mp-card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      cursor: pointer;
+      transition: box-shadow .2s, transform .2s;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .mp-card:hover {
+      box-shadow: 0 8px 24px rgba(0, 0, 0, .10);
+      transform: translateY(-2px);
+    }
+
+    .mp-cover {
+      height: 110px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 36px;
+      position: relative;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .mp-cover::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, transparent 60%, rgba(0, 0, 0, .18));
+    }
+
+    .mp-body {
+      padding: 14px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .mp-cat-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 2px 8px;
+      border-radius: 99px;
+      font-size: 10px;
+      font-weight: 700;
+      margin-bottom: 7px;
+      width: fit-content;
+    }
+
+    .mp-title {
+      font-family: var(--font-heading);
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.35;
+      margin-bottom: 5px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .mp-desc {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.55;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      margin-bottom: 10px;
+      flex: 1;
+    }
+
+    .mp-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: auto;
+      padding-top: 10px;
+      border-top: 1px solid var(--border);
+    }
+
+    .mp-price {
+      font-family: var(--font-heading);
+      font-size: 16px;
+      font-weight: 800;
+      color: #7c3aed;
+    }
+
+    .mp-seller {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .mp-seller-av {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 9px;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .mp-buy-btn {
+      width: 100%;
+      margin-top: 10px;
+      padding: 8px;
+      background: #7c3aed;
+      color: #fff;
+      border: none;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      font-size: var(--fs-sm);
+      font-weight: 600;
+      font-family: var(--font-body);
+      transition: background .15s;
+    }
+
+    .mp-buy-btn:hover {
+      background: #6d28d9;
+    }
+
+    .mp-empty {
+      grid-column: 1/-1;
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--text-muted);
+      font-size: var(--fs-sm);
+    }
+
+    .mp-empty-icon {
+      font-size: 40px;
+      margin-bottom: 10px;
+    }
+
+    /* ── Product detail modal ─────────────────────────────── */
+    .mp-modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, .55);
+      z-index: 300;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .2s;
+    }
+
+    .mp-modal-overlay.open {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .mp-modal {
+      background: #fff;
+      border-radius: var(--radius-lg);
+      width: 100%;
+      max-width: 600px;
+      max-height: 90vh;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      transform: translateY(12px);
+      transition: transform .2s;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, .2);
+    }
+
+    .mp-modal-overlay.open .mp-modal {
+      transform: translateY(0);
+    }
+
+    .mp-modal-cover {
+      height: 160px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 56px;
+      flex-shrink: 0;
+      position: relative;
+    }
+
+    .mp-modal-close {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, .85);
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: #374151;
+    }
+
+    .mp-modal-close:hover {
+      background: #fff;
+    }
+
+    .mp-modal-body {
+      padding: 20px 24px 24px;
+    }
+
+    .mp-modal-cat {
+      margin-bottom: 6px;
+    }
+
+    .mp-modal-title {
+      font-family: var(--font-heading);
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--text);
+      line-height: 1.25;
+      margin-bottom: 6px;
+    }
+
+    .mp-modal-seller-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 14px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .mp-modal-seller-av {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .mp-modal-seller-name {
+      font-size: var(--fs-sm);
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .mp-modal-seller-xp {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .mp-modal-desc {
+      font-size: var(--fs-sm);
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin-bottom: 16px;
+    }
+
+    .mp-modal-long {
+      font-size: var(--fs-sm);
+      color: var(--text);
+      line-height: 1.75;
+      margin-bottom: 20px;
+      white-space: pre-wrap;
+    }
+
+    .mp-modal-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+    }
+
+    .mp-modal-price {
+      font-family: var(--font-heading);
+      font-size: 24px;
+      font-weight: 800;
+      color: #7c3aed;
+    }
+
+    .mp-modal-sales {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .mp-modal-buy {
+      padding: 10px 24px;
+      background: #7c3aed;
+      color: #fff;
+      border: none;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      font-size: var(--fs-base);
+      font-weight: 700;
+      font-family: var(--font-body);
+      transition: background .15s;
+    }
+
+    .mp-modal-buy:hover {
+      background: #6d28d9;
+    }
+
+    /* ── Post product modal ───────────────────────────────── */
+    .post-modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, .55);
+      z-index: 400;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .2s;
+    }
+
+    .post-modal-overlay.open {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .post-modal {
+      background: #fff;
+      border-radius: var(--radius-lg);
+      width: 100%;
+      max-width: 520px;
+      max-height: 90vh;
+      overflow-y: auto;
+      transform: translateY(12px);
+      transition: transform .2s;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, .2);
+    }
+
+    .post-modal-overlay.open .post-modal {
+      transform: translateY(0);
+    }
+
+    .post-modal-header {
+      padding: 16px 20px 14px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .post-modal-title {
+      font-family: var(--font-heading);
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .post-modal-close {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--bg-hover);
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-muted);
+    }
+
+    .post-modal-body {
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .form-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .form-input,
+    .form-select,
+    .form-textarea {
+      padding: 9px 12px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-md);
+      font-size: var(--fs-sm);
+      font-family: var(--font-body);
+      color: var(--text);
+      background: #fff;
+      outline: none;
+      transition: border-color .15s;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .form-input:focus,
+    .form-select:focus,
+    .form-textarea:focus {
+      border-color: #7c3aed;
+    }
+
+    .form-textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .color-picker-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .color-swatch {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: transform .15s, border-color .15s;
+    }
+
+    .color-swatch:hover {
+      transform: scale(1.15);
+    }
+
+    .color-swatch.selected {
+      border-color: #1e293b;
+      transform: scale(1.1);
+    }
+
+    .post-modal-footer {
+      padding: 14px 20px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+
+    .btn-cancel {
+      padding: 8px 16px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-md);
+      font-size: var(--fs-sm);
+      font-weight: 600;
+      background: #fff;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-family: var(--font-body);
+    }
+
+    .btn-cancel:hover {
+      background: var(--bg-hover);
+    }
+
+    .btn-submit-purple {
+      padding: 8px 20px;
+      background: #7c3aed;
+      color: #fff;
+      border: none;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      font-size: var(--fs-sm);
+      font-weight: 700;
+      font-family: var(--font-body);
+      transition: background .15s;
+    }
+
+    .btn-submit-purple:hover {
+      background: #6d28d9;
+    }
+
+    .btn-submit-purple:disabled {
+      opacity: .6;
+      cursor: not-allowed;
+    }
+
+    /* ── Right panel extras ───────────────────────────────── */
+    .rp-section-title {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .06em;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .rp-cat-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 7px 0;
+      border-bottom: 1px solid var(--border);
+      cursor: pointer;
+    }
+
+    .rp-cat-item:last-child {
+      border-bottom: none;
+    }
+
+    .rp-cat-name {
+      font-size: var(--fs-sm);
+      color: var(--text);
+      font-weight: 500;
+    }
+
+    .rp-cat-count {
+      font-size: 11px;
+      color: var(--text-muted);
+      background: var(--bg-hover);
+      padding: 1px 7px;
+      border-radius: 99px;
+    }
+
+    .rp-feat-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .rp-feat-item:last-child {
+      border-bottom: none;
+    }
+
+    .rp-feat-cover {
+      width: 42px;
+      height: 42px;
+      border-radius: 8px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+    }
+
+    .rp-feat-title {
+      font-size: var(--fs-xs);
+      font-weight: 600;
+      color: var(--text);
+      line-height: 1.35;
+      margin-bottom: 3px;
+    }
+
+    .rp-feat-price {
+      font-size: 12px;
+      font-weight: 700;
+      color: #7c3aed;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="app">
+    <!-- Sidebar -->
+    <aside id="sidebar">
+      <div id="sidebar-logo">
+        <div class="sidebar-logo-mark">
+          <svg viewBox="0 0 20 20" fill="none">
+            <circle cx="10" cy="10" r="3" fill="currentColor" />
+            <path d="M10 3v2M10 15v2M3 10h2M15 10h2" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+            <path d="M5.5 5.5l1.5 1.5M13 13l1.5 1.5M14.5 5.5L13 7M7 13l-1.5 1.5" stroke="currentColor"
+              stroke-width="1.5" stroke-linecap="round" />
+          </svg>
+        </div>
+        <div class="sidebar-logo-text">AI AGENTS <span>CC</span></div>
+      </div>
+      <nav id="sidebar-nav">
+        <div class="nav-section-label">Cộng đồng</div>
+        <a href="feed.html" class="nav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
+          </svg>
+          Bảng tin
+        </a>
+        <a href="cot.html" class="nav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path
+              d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+          </svg>
+          CÔT
+        </a>
+        <a href="signal.html" class="nav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path d="M13 10V3L4 14h7v7l9-11h-7z" />
+          </svg>
+          Tín hiệu
+        </a>
+        <a href="qa.html" class="nav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path
+              d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          Hỏi đáp
+        </a>
+        <div class="nav-section-label" style="margin-top:8px;">Học tập</div>
+        <a href="courses.html" class="nav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path
+              d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+          </svg>
+          Khóa học
+        </a>
+        <a href="challenge.html" class="nav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path
+              d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z" />
+          </svg>
+          Challenge
+        </a>
+        <a href="leaderboard.html" class="nav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path
+              d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+          </svg>
+          Leaderboard
+        </a>
+        <div class="nav-section-label" style="margin-top:8px;">Khác</div>
+        <a href="marketplace.html" class="nav-item active">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path
+              d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+          </svg>
+          Marketplace
+        </a>
+        <a href="members.html" class="nav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path
+              d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
+          </svg>
+          Thành viên
+        </a>
+      </nav>
+      <div id="sidebar-user">
+        <div class="user-avatar-wrap">
+          <div id="sbAvatar"
+            style="width:32px;height:32px;font-size:12px;font-weight:700;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#7c3aed;">
+          </div>
+          <div class="user-status-dot"></div>
+        </div>
+        <div class="user-info">
+          <div class="user-name" id="sbName">—</div>
+          <div class="user-level" id="sbLevel">—</div>
+        </div>
+        <a href="index.html" class="icon-btn" title="Đăng xuất" style="margin-left:auto;"
+          onclick="sessionStorage.clear()">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4" />
+            <polyline points="16 17 21 12 16 7" />
+            <line x1="21" y1="12" x2="9" y2="12" />
+          </svg>
+        </a>
+      </div>
+    </aside>
+
+    <div id="main">
+      <!-- Topbar -->
+      <div id="topbar">
+        <button class="icon-btn" id="sidebarToggle" aria-label="Menu" style="display:none">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path d="M4 6h16M4 12h16M4 18h16" stroke-linecap="round" />
+          </svg>
+        </button>
+        <div class="topbar-title">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            style="width:17px;height:17px">
+            <path
+              d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+          </svg>
+          Marketplace
+        </div>
+        <div class="topbar-right">
+          <button class="btn btn-primary btn-sm" onclick="openPostModal()"
+            style="background:#7c3aed;border-color:#7c3aed">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"
+              style="width:13px;height:13px">
+              <path d="M12 4v16m8-8H4" stroke-linecap="round" />
+            </svg>
+            Đăng bán
+          </button>
+          <button class="topbar-btn" aria-label="Thông báo">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <path
+                d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+            </svg>
+          </button>
+          <div id="topbarAvatar"
+            style="width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;background:#7c3aed;cursor:pointer;">
+          </div>
+        </div>
+      </div>
+
+      <div id="content-row">
+        <!-- Main feed -->
+        <main id="feed" style="padding:20px 24px;">
+
+          <!-- Hero -->
+          <div class="mp-hero">
+            <div class="mp-hero-icon">🛒</div>
+            <h1>Chợ Sản Phẩm Số</h1>
+            <p>Mua bán prompt, template, ebook, AI agent và công cụ số từ cộng đồng</p>
+            <div class="mp-hero-stats">
+              <div class="mp-hero-stat">
+                <div class="mp-hero-stat-val" id="heroTotal">—</div>
+                <div class="mp-hero-stat-lbl">Sản phẩm</div>
+              </div>
+              <div class="mp-hero-stat">
+                <div class="mp-hero-stat-val" id="heroSellers">—</div>
+                <div class="mp-hero-stat-lbl">Người bán</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Filters -->
+          <div class="mp-filters">
+            <div class="mp-search-wrap">
+              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8" />
+                <path d="M21 21l-4.35-4.35" stroke-linecap="round" />
+              </svg>
+              <input class="mp-search" id="mpSearch" type="text" placeholder="Tìm sản phẩm...">
+            </div>
+            <div class="cat-pills" id="catPills">
+              <button class="cat-pill active" data-cat="all">Tất cả</button>
+              <button class="cat-pill" data-cat="prompt">Prompt</button>
+              <button class="cat-pill" data-cat="agent">AI Agent</button>
+              <button class="cat-pill" data-cat="ebook">Ebook</button>
+              <button class="cat-pill" data-cat="tool">Công cụ</button>
+              <button class="cat-pill" data-cat="course">Mini Course</button>
+            </div>
+            <select class="mp-sort" id="mpSort">
+              <option value="newest">Mới nhất</option>
+              <option value="popular">Bán chạy</option>
+              <option value="price_asc">Giá tăng dần</option>
+              <option value="price_desc">Giá giảm dần</option>
+            </select>
+          </div>
+
+          <!-- Grid -->
+          <div class="mp-grid" id="mpGrid">
+            <div class="mp-empty">
+              <div class="mp-empty-icon">⏳</div>Đang tải...
+            </div>
+          </div>
+
+        </main>
+
+        <!-- Right panel -->
+        <aside id="right-panel">
+
+          <!-- Profile card -->
+          <div class="rp-card" id="rpProfile">
+            <div style="font-size:var(--fs-sm);color:var(--text-muted);text-align:center;padding:8px 0">Đang tải...
+            </div>
+          </div>
+
+          <!-- Categories -->
+          <div class="rp-card">
+            <div class="rp-section-title">Danh mục</div>
+            <div id="rpCats"></div>
+          </div>
+
+          <!-- Featured products -->
+          <div class="rp-card">
+            <div class="rp-section-title">Bán chạy nhất</div>
+            <div id="rpFeatured"></div>
+          </div>
+
+        </aside>
+      </div><!-- /content-row -->
+
+      <!-- Mobile nav -->
+      <nav id="mobile-nav">
+        <a href="feed.html" class="mob-nav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
+          </svg>
+          <span>Bảng tin</span>
+        </a>
+        <a href="challenge.html" class="mob-nav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path
+              d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z" />
+          </svg>
+          <span>Challenge</span>
+        </a>
+        <a href="marketplace.html" class="mob-nav-item active">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path
+              d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+          </svg>
+          <span>Market</span>
+        </a>
+        <a href="members.html" class="mob-nav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path
+              d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
+          </svg>
+          <span>Thành viên</span>
+        </a>
+      </nav>
+    </div><!-- /main -->
+  </div><!-- /app -->
+
+  <!-- Mobile sidebar -->
+  <div id="mob-overlay" onclick="closeSidebar()"></div>
+  <div id="mob-sidebar">
+    <div
+      style="padding:14px 16px;border-bottom:1px solid var(--border);font-size:var(--fs-md);font-weight:700;color:var(--text);">
+      Menu</div>
+    <nav style="flex:1;overflow-y:auto;padding:8px;">
+      <a href="feed.html" class="nav-item">Bảng tin</a>
+      <a href="cot.html" class="nav-item">CÔT</a>
+      <a href="signal.html" class="nav-item">Tín hiệu</a>
+      <a href="qa.html" class="nav-item">Hỏi đáp</a>
+      <a href="courses.html" class="nav-item">Khóa học</a>
+      <a href="challenge.html" class="nav-item">Challenge</a>
+      <a href="leaderboard.html" class="nav-item">Leaderboard</a>
+      <a href="marketplace.html" class="nav-item active">Marketplace</a>
+      <a href="members.html" class="nav-item">Thành viên</a>
+    </nav>
+  </div>
+
+  <!-- Product detail modal -->
+  <div class="mp-modal-overlay" id="detailOverlay" onclick="handleDetailOverlayClick(event)">
+    <div class="mp-modal" id="detailModal">
+      <div class="mp-modal-cover" id="detailCover">
+        <button class="mp-modal-close" onclick="closeDetailModal()">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" style="width:14px;height:14px">
+            <path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" />
+          </svg>
+        </button>
+      </div>
+      <div class="mp-modal-body">
+        <div class="mp-modal-cat" id="detailCat"></div>
+        <div class="mp-modal-title" id="detailTitle"></div>
+        <div class="mp-modal-seller-row">
+          <div class="mp-modal-seller-av" id="detailSellerAv"></div>
+          <div>
+            <div class="mp-modal-seller-name" id="detailSellerName"></div>
+            <div class="mp-modal-seller-xp" id="detailSellerXp"></div>
+          </div>
+        </div>
+        <div class="mp-modal-desc" id="detailDesc"></div>
+        <div class="mp-modal-long" id="detailLong"></div>
+        <div class="mp-modal-footer">
+          <div>
+            <div class="mp-modal-price" id="detailPrice"></div>
+            <div class="mp-modal-sales" id="detailSales"></div>
+          </div>
+          <button class="mp-modal-buy" id="detailBuyBtn" onclick="goCheckout()">🛒 Mua ngay</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Post product modal -->
+  <div class="post-modal-overlay" id="postOverlay" onclick="handlePostOverlayClick(event)">
+    <div class="post-modal">
+      <div class="post-modal-header">
+        <div class="post-modal-title">Đăng sản phẩm mới</div>
+        <button class="post-modal-close" onclick="closePostModal()">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" style="width:14px;height:14px">
+            <path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" />
+          </svg>
+        </button>
+      </div>
+      <div class="post-modal-body">
+        <div class="form-group">
+          <label class="form-label">Tên sản phẩm *</label>
+          <input class="form-input" id="pmTitle" type="text" placeholder="VD: Bộ 50 Prompt ChatGPT Bán Hàng"
+            maxlength="120">
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Danh mục *</label>
+            <select class="form-select" id="pmCat">
+              <option value="prompt">📝 Prompt & Template</option>
+              <option value="agent">🤖 AI Agent & Workflow</option>
+              <option value="ebook">📚 Ebook & Tài liệu</option>
+              <option value="tool">🔧 Công cụ & Script</option>
+              <option value="course">🎓 Mini Course</option>
+              <option value="other">📦 Khác</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Giá (VNĐ) *</label>
+            <input class="form-input" id="pmPrice" type="number" min="0" placeholder="VD: 199000">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Mô tả ngắn *</label>
+          <textarea class="form-textarea" id="pmDesc" placeholder="Tóm tắt sản phẩm của bạn trong 1-2 câu..."
+            style="min-height:64px;"></textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Nội dung chi tiết</label>
+          <textarea class="form-textarea" id="pmLong"
+            placeholder="Mô tả đầy đủ: bao gồm gì, dùng như thế nào, ai phù hợp..."
+            style="min-height:120px;"></textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Màu bìa</label>
+          <div class="color-picker-row" id="pmColorPicker"></div>
+        </div>
+      </div>
+      <div class="post-modal-footer">
+        <button class="btn-cancel" onclick="closePostModal()">Hủy</button>
+        <button class="btn-submit-purple" id="pmSubmitBtn" onclick="submitProduct()">Đăng sản phẩm</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="assets/js/app.js"></script>
+  <script>
+    const API = 'http://localhost:3000/api';
+    const AV_COLORS = ['#0ea5e9', '#8b5cf6', '#10b981', '#f59e0b', '#ec4899', '#3b82f6'];
+    const COVER_COLORS = ['#7c3aed', '#0ea5e9', '#10b981', '#f59e0b', '#ec4899', '#3b82f6', '#ef4444', '#0f172a'];
+
+    const CAT_META = {
+      prompt: { label: 'Prompt & Template', icon: '📝', bg: '#fef3c7', color: '#92400e' },
+      agent: { label: 'AI Agent', icon: '🤖', bg: '#ede9fe', color: '#5b21b6' },
+      ebook: { label: 'Ebook & Tài liệu', icon: '📚', bg: '#d1fae5', color: '#065f46' },
+      tool: { label: 'Công cụ & Script', icon: '🔧', bg: '#dbeafe', color: '#1e40af' },
+      course: { label: 'Mini Course', icon: '🎓', bg: '#fce7f3', color: '#9d174d' },
+      other: { label: 'Khác', icon: '📦', bg: '#f1f5f9', color: '#475569' },
+    };
+
+    const LEVELS = [
+      { level: 1, name: 'Khởi động', xpMin: 0, xpMax: 45 }, { level: 2, name: 'Học viên', xpMin: 45, xpMax: 120 },
+      { level: 3, name: 'Thực hành', xpMin: 120, xpMax: 250 }, { level: 4, name: 'Nâng cao', xpMin: 250, xpMax: 450 },
+      { level: 5, name: 'Chuyên gia', xpMin: 450, xpMax: 700 }, { level: 6, name: 'Bậc thầy', xpMin: 700, xpMax: 1000 },
+      { level: 7, name: 'Huyền thoại', xpMin: 1000, xpMax: 1500 }, { level: 8, name: 'Tiên tri', xpMin: 1500, xpMax: 2200 },
+      { level: 9, name: 'Thần thánh', xpMin: 2200, xpMax: 9999 },
+    ];
+    function getLevel(xp) { return [...LEVELS].reverse().find(l => xp >= l.xpMin) || LEVELS[0]; }
+    function escHtml(s) { const d = document.createElement('div'); d.textContent = s || ''; return d.innerHTML; }
+    function fmtPrice(p) { return p === 0 ? 'Miễn phí' : p.toLocaleString('vi-VN') + '₫'; }
+    function avLetter(u) { return (u.first_name || u.first_name || '?')[0].toUpperCase(); }
+    function avColor(id) { return AV_COLORS[(id || 0) % AV_COLORS.length]; }
+
+    // State
+    let allProducts = [];
+    let currentCat = 'all';
+    let currentSort = 'newest';
+    let searchQuery = '';
+    let currentProductId = null;
+
+    // Init
+    function init() {
+      const raw = sessionStorage.getItem('currentUser');
+      if (!raw) return (location.href = 'index.html');
+      const user = JSON.parse(raw);
+
+      // Sidebar user
+      document.getElementById('sbAvatar').textContent = avLetter(user);
+      document.getElementById('sbAvatar').style.background = avColor(user.id);
+      document.getElementById('sbName').textContent = `${user.first_name} ${user.last_name}`;
+      const lv = getLevel(user.xp || 0);
+      document.getElementById('sbLevel').textContent = `Lv.${lv.level} · ${lv.name}`;
+      document.getElementById('topbarAvatar').textContent = avLetter(user);
+      document.getElementById('topbarAvatar').style.background = avColor(user.id);
+
+      buildColorPicker();
+      setupFilters();
+      loadProducts();
+      loadRpProfile(user);
+    }
+
+    function buildColorPicker() {
+      const wrap = document.getElementById('pmColorPicker');
+      COVER_COLORS.forEach((c, i) => {
+        const sw = document.createElement('div');
+        sw.className = 'color-swatch' + (i === 0 ? ' selected' : '');
+        sw.style.background = c;
+        sw.dataset.color = c;
+        sw.onclick = () => {
+          wrap.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('selected'));
+          sw.classList.add('selected');
+        };
+        wrap.appendChild(sw);
+      });
+    }
+
+    function setupFilters() {
+      document.getElementById('catPills').addEventListener('click', e => {
+        const pill = e.target.closest('.cat-pill');
+        if (!pill) return;
+        document.querySelectorAll('.cat-pill').forEach(p => p.classList.remove('active'));
+        pill.classList.add('active');
+        currentCat = pill.dataset.cat;
+        renderGrid();
+        renderRpCats();
+      });
+
+      document.getElementById('mpSort').addEventListener('change', e => {
+        currentSort = e.target.value;
+        renderGrid();
+      });
+
+      let searchTimer;
+      document.getElementById('mpSearch').addEventListener('input', e => {
+        clearTimeout(searchTimer);
+        searchTimer = setTimeout(() => {
+          searchQuery = e.target.value.trim().toLowerCase();
+          renderGrid();
+        }, 250);
+      });
+    }
+
+    async function loadProducts() {
+      try {
+        const data = await fetch(`${API}/products`).then(r => r.json());
+        allProducts = data.products || [];
+        document.getElementById('heroTotal').textContent = data.total || allProducts.length;
+        const sellers = new Set(allProducts.map(p => p.first_name + p.last_name));
+        document.getElementById('heroSellers').textContent = sellers.size;
+        renderGrid();
+        renderRpCats();
+        renderRpFeatured();
+      } catch {
+        document.getElementById('mpGrid').innerHTML = '<div class="mp-empty"><div class="mp-empty-icon">⚠️</div>Không thể tải sản phẩm. Đảm bảo server đang chạy.</div>';
+      }
+    }
+
+    function getFiltered() {
+      let list = [...allProducts];
+      if (currentCat !== 'all') list = list.filter(p => p.category === currentCat);
+      if (searchQuery) list = list.filter(p =>
+        p.title.toLowerCase().includes(searchQuery) ||
+        (p.description || '').toLowerCase().includes(searchQuery)
+      );
+      if (currentSort === 'popular') list.sort((a, b) => b.sales_count - a.sales_count);
+      else if (currentSort === 'price_asc') list.sort((a, b) => a.price - b.price);
+      else if (currentSort === 'price_desc') list.sort((a, b) => b.price - a.price);
+      return list;
+    }
+
+    function renderGrid() {
+      const grid = document.getElementById('mpGrid');
+      const list = getFiltered();
+      if (!list.length) {
+        grid.innerHTML = '<div class="mp-empty"><div class="mp-empty-icon">🔍</div>Không tìm thấy sản phẩm phù hợp.</div>';
+        return;
+      }
+      grid.innerHTML = list.map(p => {
+        const cat = CAT_META[p.category] || CAT_META.other;
+        const sellerName = `${p.first_name} ${p.last_name}`;
+        return `
+    <div class="mp-card" onclick="openDetailModal(${p.id})">
+      <div class="mp-cover" style="background:${escHtml(p.cover_color)}">${cat.icon}</div>
+      <div class="mp-body">
+        <span class="mp-cat-badge" style="background:${cat.bg};color:${cat.color}">${cat.icon} ${escHtml(cat.label)}</span>
+        <div class="mp-title">${escHtml(p.title)}</div>
+        <div class="mp-desc">${escHtml(p.description || '')}</div>
+        <div class="mp-footer">
+          <div class="mp-price">${fmtPrice(p.price)}</div>
+          <div class="mp-seller">
+            <div class="mp-seller-av" style="background:${avColor(p.id)}">${sellerName[0]}</div>
+            <span>${escHtml(sellerName)}</span>
+          </div>
+        </div>
+        <button class="mp-buy-btn" onclick="event.stopPropagation();buyNow(${p.id})">🛒 Mua ngay</button>
+      </div>
+    </div>`;
+      }).join('');
+    }
+
+    function renderRpCats() {
+      const counts = {};
+      allProducts.forEach(p => { counts[p.category] = (counts[p.category] || 0) + 1; });
+      const el = document.getElementById('rpCats');
+      el.innerHTML = Object.entries(CAT_META).map(([key, m]) => {
+        const count = counts[key] || 0;
+        return `<div class="rp-cat-item" onclick="filterCat('${key}')">
+      <span class="rp-cat-name">${m.icon} ${m.label}</span>
+      <span class="rp-cat-count">${count}</span>
+    </div>`;
+      }).join('');
+    }
+
+    function renderRpFeatured() {
+      const top = [...allProducts].sort((a, b) => b.sales_count - a.sales_count).slice(0, 4);
+      document.getElementById('rpFeatured').innerHTML = top.map(p => {
+        const cat = CAT_META[p.category] || CAT_META.other;
+        return `<div class="rp-feat-item" onclick="openDetailModal(${p.id})" style="cursor:pointer">
+      <div class="rp-feat-cover" style="background:${escHtml(p.cover_color)}">${cat.icon}</div>
+      <div>
+        <div class="rp-feat-title">${escHtml(p.title)}</div>
+        <div class="rp-feat-price">${fmtPrice(p.price)}</div>
+      </div>
+    </div>`;
+      }).join('') || '<div style="font-size:var(--fs-xs);color:var(--text-muted)">Chưa có sản phẩm.</div>';
+    }
+
+    function filterCat(cat) {
+      currentCat = cat;
+      document.querySelectorAll('.cat-pill').forEach(p => {
+        p.classList.toggle('active', p.dataset.cat === cat);
+      });
+      renderGrid();
+    }
+
+    // ── Detail modal ─────────────────────────────────────────
+    async function openDetailModal(id) {
+      currentProductId = id;
+      document.getElementById('detailOverlay').classList.add('open');
+      try {
+        const p = await fetch(`${API}/products/${id}`).then(r => r.json());
+        const cat = CAT_META[p.category] || CAT_META.other;
+        const sellerName = `${p.first_name} ${p.last_name}`;
+
+        document.getElementById('detailCover').style.background = p.cover_color;
+        document.getElementById('detailCover').querySelector('button').style.cssText = '';
+        const iconSpan = document.getElementById('detailCover').querySelector('.cover-emoji');
+        if (!document.getElementById('detailCoverEmoji')) {
+          const span = document.createElement('span');
+          span.id = 'detailCoverEmoji';
+          span.style.fontSize = '56px';
+          document.getElementById('detailCover').insertBefore(span, document.getElementById('detailCover').querySelector('button'));
+        }
+        document.getElementById('detailCoverEmoji').textContent = cat.icon;
+
+        document.getElementById('detailCat').innerHTML = `<span class="mp-cat-badge" style="background:${cat.bg};color:${cat.color}">${cat.icon} ${escHtml(cat.label)}</span>`;
+        document.getElementById('detailTitle').textContent = p.title;
+        document.getElementById('detailSellerAv').textContent = sellerName[0];
+        document.getElementById('detailSellerAv').style.background = avColor(p.seller_id || p.id);
+        document.getElementById('detailSellerName').textContent = sellerName;
+        document.getElementById('detailSellerXp').textContent = `${p.xp || 0} XP · Level ${p.level || 1}`;
+        document.getElementById('detailDesc').textContent = p.description || '';
+        document.getElementById('detailLong').textContent = p.long_description || '';
+        document.getElementById('detailPrice').textContent = fmtPrice(p.price);
+        document.getElementById('detailSales').textContent = `${p.sales_count || 0} lượt mua`;
+        document.getElementById('detailBuyBtn').textContent = p.price === 0 ? '⬇️ Tải miễn phí' : '🛒 Mua ngay';
+      } catch {
+        document.getElementById('detailTitle').textContent = 'Không thể tải sản phẩm.';
+      }
+    }
+
+    function closeDetailModal() {
+      document.getElementById('detailOverlay').classList.remove('open');
+      currentProductId = null;
+    }
+    function handleDetailOverlayClick(e) { if (e.target === document.getElementById('detailOverlay')) closeDetailModal(); }
+
+    function goCheckout() {
+      const id = currentProductId;
+      if (!id) return;
+      closeDetailModal();
+      location.href = `checkout.html?id=${id}`;
+    }
+    function buyNow(id) { location.href = `checkout.html?id=${id}`; }
+
+    // ── Post modal ────────────────────────────────────────────
+    function openPostModal() {
+      const raw = sessionStorage.getItem('currentUser');
+      if (!raw) return (location.href = 'index.html');
+      document.getElementById('postOverlay').classList.add('open');
+    }
+    function closePostModal() { document.getElementById('postOverlay').classList.remove('open'); }
+    function handlePostOverlayClick(e) { if (e.target === document.getElementById('postOverlay')) closePostModal(); }
+
+    async function submitProduct() {
+      const raw = sessionStorage.getItem('currentUser');
+      if (!raw) return;
+      const user = JSON.parse(raw);
+
+      const title = document.getElementById('pmTitle').value.trim();
+      const category = document.getElementById('pmCat').value;
+      const price = parseInt(document.getElementById('pmPrice').value || '0');
+      const description = document.getElementById('pmDesc').value.trim();
+      const long_description = document.getElementById('pmLong').value.trim();
+      const cover_color = document.querySelector('.color-swatch.selected')?.dataset.color || '#7c3aed';
+
+      if (!title) return alert('Vui lòng nhập tên sản phẩm.');
+      if (!description) return alert('Vui lòng nhập mô tả ngắn.');
+      if (isNaN(price) || price < 0) return alert('Giá không hợp lệ.');
+
+      const btn = document.getElementById('pmSubmitBtn');
+      btn.disabled = true; btn.textContent = 'Đang đăng...';
+
+      try {
+        const res = await fetch(`${API}/products`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ user_id: user.id, title, description, long_description, price, category, cover_color }),
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Lỗi đăng sản phẩm.');
+        closePostModal();
+        document.getElementById('pmTitle').value = '';
+        document.getElementById('pmPrice').value = '';
+        document.getElementById('pmDesc').value = '';
+        document.getElementById('pmLong').value = '';
+        await loadProducts();
+        alert('⏳ Sản phẩm đã được gửi thành công!\n\nAdmin sẽ xem xét và duyệt trong vòng 24 giờ. Bạn sẽ nhận email thông báo kết quả.');
+      } catch (err) {
+        alert(err.message);
+      } finally {
+        btn.disabled = false; btn.textContent = 'Đăng sản phẩm';
+      }
+    }
+
+    // ── Right panel profile ───────────────────────────────────
+    async function loadRpProfile(user) {
+      const card = document.getElementById('rpProfile');
+      try {
+        const u = await fetch(`${API}/users/${user.id}`).then(r => r.json()).catch(() => user);
+        const lv = getLevel(u.xp || 0);
+        const xpInLevel = (u.xp || 0) - lv.xpMin;
+        const xpNeeded = lv.xpMax - lv.xpMin;
+        const pct = Math.min(100, Math.round(xpInLevel / xpNeeded * 100));
+        const name = `${u.first_name} ${u.last_name}`;
+        card.innerHTML = `
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+        <div style="width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;color:#fff;background:${avColor(u.id)};flex-shrink:0">${name[0]}</div>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:var(--fs-sm);font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${escHtml(name)}</div>
+          <div style="font-size:11px;color:var(--text-muted)">Lv.${lv.level} ${escHtml(lv.name)}</div>
+        </div>
+      </div>
+      <div style="font-size:11px;color:var(--text-muted);display:flex;justify-content:space-between;margin-bottom:4px">
+        <span>${u.xp || 0} XP</span><span style="color:var(--accent-green);font-weight:600">${lv.xpMax - (u.xp || 0)} XP đến Lv.${lv.level + 1}</span>
+      </div>
+      <div class="xp-bar"><div class="xp-bar-fill" style="width:${pct}%"></div></div>
+      <a href="profile.html?id=${u.id}" style="display:block;margin-top:10px;text-align:center;font-size:12px;font-weight:600;color:#7c3aed;text-decoration:none">Xem hồ sơ →</a>`;
+      } catch {
+        card.innerHTML = `<div style="font-size:var(--fs-xs);color:var(--text-muted);padding:4px 0">Không thể tải profile.</div>`;
+      }
+    }
+
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeDetailModal(); closePostModal(); } });
+
+    init();
+  </script>
+</body>
+
+</html>

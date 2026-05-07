@@ -1,0 +1,1246 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Thành viên — AI AGENTS CC</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/base.css">
+  <link rel="stylesheet" href="assets/css/components.css">
+  <link rel="stylesheet" href="assets/css/layout.css">
+  <style>
+    /* ── Hero ──────────────────────────────────────────── */
+    .mem-hero {
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 60%, #0c2040 100%);
+      border-radius: var(--radius-lg);
+      padding: 22px 28px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .mem-hero::before {
+      content: '';
+      position: absolute;
+      top: -30px;
+      right: -30px;
+      width: 160px;
+      height: 160px;
+      background: radial-gradient(circle, rgba(14, 165, 233, .15) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .mem-hero-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #0ea5e9, #8b5cf6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .mem-hero-icon svg {
+      width: 24px;
+      height: 24px;
+      color: #fff;
+    }
+
+    .mem-hero-info {
+      flex: 1;
+    }
+
+    .mem-hero-title {
+      font-family: var(--font-heading);
+      font-size: 20px;
+      font-weight: 800;
+      color: #f0f6ff;
+      margin-bottom: 4px;
+    }
+
+    .mem-hero-sub {
+      font-size: var(--fs-xs);
+      color: #64748b;
+    }
+
+    .mem-hero-stats {
+      display: flex;
+      gap: 24px;
+      flex-shrink: 0;
+    }
+
+    .mem-hero-stat {
+      text-align: center;
+    }
+
+    .mem-hero-stat-val {
+      font-family: var(--font-heading);
+      font-size: 22px;
+      font-weight: 800;
+      color: #f0f6ff;
+      line-height: 1;
+    }
+
+    .mem-hero-stat-label {
+      font-size: 11px;
+      color: #64748b;
+      margin-top: 2px;
+    }
+
+    /* ── Search & Filter Bar ───────────────────────────── */
+    .mem-controls {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 18px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .mem-search {
+      flex: 1;
+      min-width: 200px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 8px 12px;
+    }
+
+    .mem-search svg {
+      width: 15px;
+      height: 15px;
+      color: var(--text-muted);
+      flex-shrink: 0;
+    }
+
+    .mem-search input {
+      flex: 1;
+      border: none;
+      outline: none;
+      font-family: var(--font-body);
+      font-size: var(--fs-sm);
+      color: var(--text);
+      background: transparent;
+    }
+
+    .mem-search input::placeholder {
+      color: var(--text-muted);
+    }
+
+    .mem-sort {
+      font-size: var(--fs-xs);
+      font-weight: 600;
+      padding: 8px 12px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      background: var(--bg-card);
+      color: var(--text-muted);
+      cursor: pointer;
+      font-family: var(--font-body);
+      outline: none;
+      transition: border-color .15s;
+    }
+
+    .mem-sort:focus {
+      border-color: var(--color-primary);
+    }
+
+    .mem-count {
+      font-size: var(--fs-xs);
+      color: var(--text-muted);
+      white-space: nowrap;
+      padding: 8px 0;
+    }
+
+    /* ── Member Grid ───────────────────────────────────── */
+    .member-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .member-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 18px 16px;
+      cursor: pointer;
+      transition: box-shadow .15s, transform .15s, border-color .15s;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .member-card:hover {
+      box-shadow: var(--shadow-md);
+      transform: translateY(-2px);
+      border-color: var(--color-primary);
+    }
+
+    .member-card-avatar {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-heading);
+      font-size: 18px;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 10px;
+      flex-shrink: 0;
+    }
+
+    .member-card-name {
+      font-size: var(--fs-sm);
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 3px;
+      line-height: 1.3;
+    }
+
+    .member-card-level {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 99px;
+      margin-bottom: 10px;
+    }
+
+    .member-card-stats {
+      display: flex;
+      gap: 0;
+      width: 100%;
+      border-top: 1px solid var(--border);
+      padding-top: 10px;
+      margin-top: auto;
+    }
+
+    .member-stat {
+      flex: 1;
+      text-align: center;
+      padding: 0 4px;
+    }
+
+    .member-stat:not(:last-child) {
+      border-right: 1px solid var(--border);
+    }
+
+    .member-stat-val {
+      font-size: var(--fs-sm);
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1;
+      margin-bottom: 2px;
+    }
+
+    .member-stat-label {
+      font-size: 10px;
+      color: var(--text-muted);
+    }
+
+    .member-card-join {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+    }
+
+    /* ── Pagination ────────────────────────────────────── */
+    .mem-pager {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 8px 0 24px;
+    }
+
+    .mem-pager-btn {
+      padding: 6px 14px;
+      font-size: var(--fs-xs);
+      font-weight: 600;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      background: var(--bg-card);
+      color: var(--text-muted);
+      cursor: pointer;
+      font-family: var(--font-body);
+      transition: all .15s;
+    }
+
+    .mem-pager-btn:hover:not(:disabled) {
+      border-color: var(--color-primary);
+      color: var(--color-primary);
+    }
+
+    .mem-pager-btn:disabled {
+      opacity: .4;
+      cursor: not-allowed;
+    }
+
+    .mem-pager-info {
+      font-size: var(--fs-xs);
+      color: var(--text-muted);
+    }
+
+    /* ── Profile Modal ─────────────────────────────────── */
+    .profile-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, .55);
+      z-index: 200;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 20px 16px;
+      backdrop-filter: blur(3px);
+      overflow-y: auto;
+    }
+
+    .profile-overlay.open {
+      display: flex;
+    }
+
+    .profile-card {
+      background: #fff;
+      border-radius: 16px;
+      width: 100%;
+      max-width: 620px;
+      box-shadow: 0 24px 48px rgba(0, 0, 0, .2);
+      animation: profileIn .2s ease;
+      display: flex;
+      flex-direction: column;
+      margin: auto;
+    }
+
+    @keyframes profileIn {
+      from {
+        transform: translateY(12px);
+        opacity: 0;
+      }
+
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    /* Header */
+    .profile-pheader {
+      padding: 22px 24px 18px;
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+
+    .profile-ph-top {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+
+    .profile-ph-avatar {
+      width: 68px;
+      height: 68px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-heading);
+      font-size: 24px;
+      font-weight: 800;
+      color: #fff;
+      flex-shrink: 0;
+    }
+
+    .profile-ph-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .profile-ph-name {
+      font-family: var(--font-heading);
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--text);
+      margin-bottom: 6px;
+      line-height: 1.2;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .profile-ph-badges {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+      margin-bottom: 5px;
+    }
+
+    .badge-role {
+      padding: 3px 10px;
+      border-radius: 99px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .badge-lv {
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      border: 1.5px solid;
+    }
+
+    .badge-me {
+      font-size: 10px;
+      font-weight: 700;
+      background: #e0f2fe;
+      color: #0369a1;
+      padding: 2px 7px;
+      border-radius: 99px;
+    }
+
+    .profile-ph-subtitle {
+      font-size: var(--fs-xs);
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+
+    .profile-msg-btn {
+      padding: 5px 12px;
+      font-size: var(--fs-xs);
+      font-weight: 600;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      background: #fff;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-family: var(--font-body);
+      transition: border-color .15s, color .15s;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .profile-msg-btn:hover {
+      border-color: var(--color-primary);
+      color: var(--color-primary);
+    }
+
+    .profile-close-btn {
+      width: 30px;
+      height: 30px;
+      border: none;
+      border-radius: 50%;
+      background: var(--bg-hover);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-muted);
+      font-size: 18px;
+      flex-shrink: 0;
+      transition: background .15s;
+    }
+
+    .profile-close-btn:hover {
+      background: #fee2e2;
+      color: #ef4444;
+    }
+
+    /* XP section */
+    .profile-xp-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      margin-bottom: 5px;
+    }
+
+    .profile-xp-cur {
+      color: #22c55e;
+      font-weight: 700;
+    }
+
+    .profile-xp-next {
+      color: var(--text-muted);
+    }
+
+    .profile-xp-track {
+      height: 8px;
+      background: #e2e8f0;
+      border-radius: 99px;
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+
+    .profile-xp-track-fill {
+      height: 100%;
+      background: #22c55e;
+      border-radius: 99px;
+      transition: width .6s ease;
+    }
+
+    /* Stats row */
+    .profile-stat-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+    }
+
+    .profile-stat-item {
+      text-align: center;
+      flex: 1;
+      padding: 4px 0;
+    }
+
+    .profile-stat-val {
+      font-family: var(--font-heading);
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--text);
+      line-height: 1;
+      margin-bottom: 3px;
+    }
+
+    .profile-stat-lbl {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .profile-stat-sep {
+      width: 1px;
+      height: 32px;
+      background: var(--border);
+      flex-shrink: 0;
+    }
+
+    /* Body */
+    .profile-pbody {
+      flex: 1;
+      overflow-y: auto;
+      max-height: 58vh;
+    }
+
+    .profile-section {
+      padding: 14px 24px;
+    }
+
+    .profile-section-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .07em;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+      text-transform: uppercase;
+    }
+
+    .profile-divider {
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* Power Symbols */
+    .power-symbols-row {
+      display: flex;
+      gap: 4px;
+      justify-content: space-around;
+    }
+
+    .power-sym {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .power-sym-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      border: 2px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      background: #f8fafc;
+      transition: border-color .2s, background .2s;
+    }
+
+    .power-sym.active .power-sym-icon {
+      border-color: var(--sym-color, var(--color-primary));
+      background: var(--sym-bg, #e0f2fe);
+    }
+
+    .power-sym-label {
+      font-size: 10px;
+      color: var(--text-muted);
+      font-weight: 600;
+      text-align: center;
+    }
+
+    .power-sym.active .power-sym-label {
+      color: var(--text);
+    }
+
+    /* Tabs */
+    .profile-tabs-bar {
+      display: flex;
+      border-bottom: 2px solid var(--border);
+      padding: 0 24px;
+      flex-shrink: 0;
+    }
+
+    .profile-tab {
+      padding: 10px 14px;
+      font-size: var(--fs-sm);
+      font-weight: 600;
+      color: var(--text-muted);
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-family: var(--font-body);
+      border-bottom: 2px solid transparent;
+      margin-bottom: -2px;
+      transition: color .15s;
+    }
+
+    .profile-tab.active {
+      color: var(--color-primary);
+      border-bottom-color: var(--color-primary);
+    }
+
+    .profile-tab:hover:not(.active) {
+      color: var(--text);
+    }
+
+    /* Posts */
+    .profile-posts-list {
+      padding: 4px 24px 16px;
+    }
+
+    .profile-post-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .profile-post-item:last-child {
+      border-bottom: none;
+    }
+
+    .profile-post-pillar {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      margin-top: 7px;
+    }
+
+    .profile-post-body {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .profile-post-title {
+      font-size: var(--fs-sm);
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 3px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .profile-post-meta {
+      font-size: 11px;
+      color: var(--text-muted);
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .profile-post-tag {
+      font-size: 10px;
+      font-weight: 600;
+      padding: 1px 6px;
+      border-radius: 99px;
+      white-space: nowrap;
+    }
+
+    .profile-empty {
+      padding: 28px;
+      text-align: center;
+      font-size: var(--fs-sm);
+      color: var(--text-muted);
+    }
+
+    /* ── Right panel extra ─────────────────────────────── */
+    .rp-comm-stat {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .rp-comm-stat:last-child {
+      border-bottom: none;
+    }
+
+    .rp-comm-stat-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-size: 15px;
+    }
+
+    .rp-comm-stat-val {
+      font-family: var(--font-heading);
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--text);
+      line-height: 1;
+    }
+
+    .rp-comm-stat-label {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    /* ── Responsive ────────────────────────────────────── */
+    @media (max-width: 480px) {
+      .member-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .mem-hero-stats {
+        display: none;
+      }
+
+      .profile-pheader {
+        padding: 16px 16px 14px;
+      }
+
+      .profile-section {
+        padding: 12px 16px;
+      }
+
+      .profile-tabs-bar {
+        padding: 0 16px;
+      }
+
+      .profile-posts-list {
+        padding: 4px 16px 12px;
+      }
+
+      .profile-ph-avatar {
+        width: 54px;
+        height: 54px;
+        font-size: 18px;
+      }
+
+      .profile-pbody {
+        max-height: 65vh;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="app">
+    <aside id="sidebar">
+      <div id="sidebar-logo">
+        <div class="sidebar-logo-mark">
+          <svg viewBox="0 0 20 20" fill="none">
+            <circle cx="10" cy="10" r="3" fill="currentColor" />
+            <path d="M10 3v2M10 15v2M3 10h2M15 10h2" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+            <path d="M5.5 5.5l1.5 1.5M13 13l1.5 1.5M14.5 5.5L13 7M7 13l-1.5 1.5" stroke="currentColor"
+              stroke-width="1.5" stroke-linecap="round" />
+          </svg>
+        </div>
+        <div class="sidebar-logo-text">AI AGENTS <span>CC</span></div>
+      </div>
+      <nav id="sidebar-nav">
+        <div class="nav-section-label">Cộng đồng</div>
+        <a href="feed.html" class="nav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
+          </svg>
+          Bảng tin
+        </a>
+        <a href="cot.html" class="nav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <polygon
+              points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+          </svg>
+          CÔT
+        </a>
+        <a href="signal.html" class="nav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+          </svg>
+          Tín hiệu
+        </a>
+        <a href="qa.html" class="nav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path
+              d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          Hỏi đáp
+        </a>
+        <div class="nav-section-label" style="margin-top:8px;">Học tập</div>
+        <a href="courses.html" class="nav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
+          </svg>
+          Khóa học
+        </a>
+        <a href="challenge.html" class="nav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path
+              d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z" />
+          </svg>
+          Challenge
+        </a>
+        <a href="leaderboard.html" class="nav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path
+              d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"
+              stroke-linecap="round" />
+          </svg>
+          Leaderboard
+        </a>
+        <div class="nav-section-label" style="margin-top:8px;">Khác</div>
+        <a href="marketplace.html" class="nav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path
+              d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z" />
+          </svg>
+          Marketplace
+        </a>
+        <a href="members.html" class="nav-item active">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path
+              d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
+          </svg>
+          Thành viên
+        </a>
+      </nav>
+      <div id="sidebar-user">
+        <div class="user-avatar-wrap">
+          <div class="avatar-placeholder avatar-md" id="sbAvatar"
+            style="width:32px;height:32px;font-size:12px;font-weight:700;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#7c3aed;">
+          </div>
+          <div class="user-status-dot"></div>
+        </div>
+        <div class="user-info">
+          <div class="user-name" id="sbName">—</div>
+          <div class="user-level" id="sbLevel">—</div>
+        </div>
+        <a href="index.html" class="icon-btn" title="Đăng xuất" style="margin-left:auto;"
+          onclick="sessionStorage.clear()">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4" />
+            <polyline points="16 17 21 12 16 7" />
+            <line x1="21" y1="12" x2="9" y2="12" />
+          </svg>
+        </a>
+      </div>
+    </aside>
+
+    <div id="main">
+      <div id="mobile-topbar">
+        <button class="mob-menu-btn" onclick="openSidebar()" aria-label="Menu">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <line x1="3" y1="6" x2="21" y2="6" />
+            <line x1="3" y1="12" x2="21" y2="12" />
+            <line x1="3" y1="18" x2="21" y2="18" />
+          </svg>
+        </button>
+        <span style="flex:1;font-size:var(--fs-md);font-weight:600;color:var(--text)">Thành viên</span>
+      </div>
+      <div id="topbar">
+        <div class="topbar-title">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            style="width:17px;height:17px">
+            <path
+              d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
+          </svg>
+          Thành viên
+        </div>
+        <div class="topbar-right">
+          <a href="#" class="icon-btn" aria-label="Thông báo">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <path
+                d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+            </svg>
+          </a>
+        </div>
+      </div>
+
+      <div id="content-row">
+        <main id="feed">
+          <!-- Hero -->
+          <div class="mem-hero">
+            <div class="mem-hero-icon">
+              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <path
+                  d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+            </div>
+            <div class="mem-hero-info">
+              <div class="mem-hero-title">Cộng đồng AI Agent</div>
+              <div class="mem-hero-sub">Những người học & builder AI Agent tại Việt Nam</div>
+            </div>
+            <div class="mem-hero-stats">
+              <div class="mem-hero-stat">
+                <div class="mem-hero-stat-val" id="heroTotal">—</div>
+                <div class="mem-hero-stat-label">Thành viên</div>
+              </div>
+              <div class="mem-hero-stat">
+                <div class="mem-hero-stat-val" id="heroActive" style="color:#34d399">—</div>
+                <div class="mem-hero-stat-label">Tuần này</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Controls -->
+          <div class="mem-controls">
+            <div class="mem-search">
+              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <circle cx="11" cy="11" r="8" />
+                <path d="M21 21l-4.35-4.35" />
+              </svg>
+              <input type="text" id="searchInput" placeholder="Tìm theo tên..." oninput="onSearch()">
+            </div>
+            <select class="mem-sort" id="sortSelect" onchange="loadMembers(true)">
+              <option value="xp">Xếp theo XP</option>
+              <option value="new">Mới nhất</option>
+              <option value="posts">Nhiều bài nhất</option>
+            </select>
+            <div class="mem-count" id="memCount"></div>
+          </div>
+
+          <!-- Grid -->
+          <div class="member-grid" id="memberGrid">
+            <div style="grid-column:1/-1;padding:48px;text-align:center;color:var(--text-muted)">Đang tải...</div>
+          </div>
+
+          <!-- Pager -->
+          <div class="mem-pager" id="memPager"></div>
+        </main>
+
+        <aside id="right-panel">
+          <div class="rp-card">
+            <p class="widget-title">👤 HỒ SƠ CỦA TÔI</p>
+            <div id="rpMyProfile">
+              <div style="text-align:center;padding:12px 0;color:var(--text-muted);font-size:var(--fs-sm)">Đang tải...
+              </div>
+            </div>
+          </div>
+          <div class="rp-card">
+            <p class="widget-title">📊 THỐNG KÊ CỘNG ĐỒNG</p>
+            <div id="rpCommStats">
+              <div style="text-align:center;padding:12px 0;color:var(--text-muted);font-size:var(--fs-sm)">Đang tải...
+              </div>
+            </div>
+          </div>
+          <div class="rp-card" style="background:linear-gradient(135deg,#fffbeb,#fef3c7);border-color:#fde68a;">
+            <p class="widget-title" style="color:#92400e;">💡 MẸO CỘNG ĐỒNG</p>
+            <p style="font-size:var(--fs-xs);color:#78716c;line-height:1.6;">
+              Kết nối với thành viên cùng level để học hỏi lẫn nhau. Bấm vào bất kỳ thành viên nào để xem bài đăng của
+              họ.
+            </p>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </div>
+
+  <div id="mob-overlay"></div>
+  <div id="mob-sidebar">
+    <div
+      style="padding:14px 16px;border-bottom:1px solid var(--border);font-size:var(--fs-md);font-weight:700;color:var(--text);">
+      Menu</div>
+    <nav style="flex:1;overflow-y:auto;padding:8px;">
+      <a href="feed.html" class="nav-item">Bảng tin</a>
+      <a href="cot.html" class="nav-item">⭐ CÔT</a>
+      <a href="challenge.html" class="nav-item">Challenge</a>
+      <a href="leaderboard.html" class="nav-item">Leaderboard</a>
+      <a href="members.html" class="nav-item active">Thành viên</a>
+    </nav>
+  </div>
+
+  <nav id="mobile-nav">
+    <a href="feed.html" class="mob-nav-btn">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
+      </svg>
+      Home
+    </a>
+    <a href="members.html" class="mob-nav-btn active">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <path
+          d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
+      </svg>
+      TV
+    </a>
+    <a href="leaderboard.html" class="mob-nav-btn">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <path d="M9 12l2 2 4-4" />
+      </svg>
+      BXH
+    </a>
+  </nav>
+
+  <!-- ── Profile Modal ──────────────────────────────────── -->
+  <div class="profile-overlay" id="profileOverlay" onclick="handleOverlayClick(event)">
+    <div class="profile-card" id="profileCard">
+      <div style="text-align:center;padding:40px;color:var(--text-muted)">Đang tải...</div>
+    </div>
+  </div>
+
+  <script src="assets/js/app.js"></script>
+  <script>
+    const API = 'http://localhost:3000/api';
+    const AV_COLORS = ['#0ea5e9', '#8b5cf6', '#10b981', '#f59e0b', '#ec4899', '#3b82f6', '#ef4444', '#14b8a6'];
+
+    const LEVELS = [
+      { level: 1, name: 'Khởi động', xpMin: 0, xpMax: 45 }, { level: 2, name: 'Học viên', xpMin: 45, xpMax: 120 },
+      { level: 3, name: 'Thực hành', xpMin: 120, xpMax: 250 }, { level: 4, name: 'Nâng cao', xpMin: 250, xpMax: 450 },
+      { level: 5, name: 'Chuyên gia', xpMin: 450, xpMax: 700 }, { level: 6, name: 'Bậc thầy', xpMin: 700, xpMax: 1000 },
+      { level: 7, name: 'Huyền thoại', xpMin: 1000, xpMax: 1500 }, { level: 8, name: 'Tiên tri', xpMin: 1500, xpMax: 2200 },
+      { level: 9, name: 'Thần thánh', xpMin: 2200, xpMax: 9999 },
+    ];
+    const LEVEL_COLORS = [
+      '#64748b', '#3b82f6', '#10b981', '#8b5cf6', '#f59e0b', '#ef4444', '#ec4899', '#0ea5e9', '#f97316'
+    ];
+    const PILLAR_MAP = {
+      offer: { label: 'Offer', color: '#f59e0b' },
+      traffic: { label: 'Thu hút', color: '#3b82f6' },
+      conversion: { label: 'Chuyển đổi', color: '#8b5cf6' },
+      delivery: { label: 'Cung ứng', color: '#10b981' },
+      continuity: { label: 'Continuity', color: '#ec4899' },
+    };
+
+    function getLevel(xp) {
+      for (let i = LEVELS.length - 1; i >= 0; i--) if (xp >= LEVELS[i].xpMin) return LEVELS[i];
+      return LEVELS[0];
+    }
+    function avColor(id) { return AV_COLORS[id % AV_COLORS.length]; }
+    function initials(u) { return ((u.first_name || '?')[0] + ((u.last_name || '')[0] || '')).toUpperCase(); }
+    function fmtDate(s) {
+      if (!s) return '—';
+      const d = new Date(s);
+      return `${d.getDate()}/${d.getMonth() + 1}/${d.getFullYear()}`;
+    }
+    function fmtRelative(s) {
+      if (!s) return '—';
+      const diff = (Date.now() - new Date(s)) / 1000;
+      if (diff < 60) return 'vừa xong';
+      if (diff < 3600) return Math.floor(diff / 60) + ' phút trước';
+      if (diff < 86400) return Math.floor(diff / 3600) + ' giờ trước';
+      if (diff < 86400 * 30) return Math.floor(diff / 86400) + ' ngày trước';
+      return fmtDate(s);
+    }
+    function escHtml(s) {
+      return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+
+    let currentUser = null;
+    (function () {
+      const raw = sessionStorage.getItem('currentUser');
+      if (!raw) { window.location.href = 'index.html'; return; }
+      currentUser = JSON.parse(raw);
+      const ini = initials(currentUser);
+      const col = avColor(currentUser.id);
+      document.getElementById('sbAvatar').textContent = ini;
+      document.getElementById('sbAvatar').style.background = col;
+      document.getElementById('sbName').textContent = currentUser.first_name + ' ' + currentUser.last_name;
+      const lv = getLevel(currentUser.xp || 0);
+      document.getElementById('sbLevel').textContent = lv.name + ' · Lv.' + lv.level;
+    })();
+
+    // ── Pagination state ──────────────────────────────────
+    const LIMIT = 24;
+    let offset = 0;
+    let totalMembers = 0;
+    let searchTimer = null;
+
+    function onSearch() {
+      clearTimeout(searchTimer);
+      searchTimer = setTimeout(() => loadMembers(true), 350);
+    }
+
+    // ── Load members ──────────────────────────────────────
+    async function loadMembers(reset = false) {
+      if (reset) offset = 0;
+      const search = document.getElementById('searchInput').value.trim();
+      const sort = document.getElementById('sortSelect').value;
+
+      // Map sort to API order
+      const sortParam = sort === 'new' ? 'new' : sort === 'posts' ? 'posts' : 'xp';
+
+      const grid = document.getElementById('memberGrid');
+      if (reset) grid.innerHTML = '<div style="grid-column:1/-1;padding:32px;text-align:center;color:var(--text-muted)">Đang tải...</div>';
+
+      try {
+        const params = new URLSearchParams({ limit: LIMIT, offset, search });
+        const { users, total } = await fetch(`${API}/members?${params}`).then(r => r.json());
+        totalMembers = total;
+
+        document.getElementById('heroTotal').textContent = total;
+        document.getElementById('memCount').textContent = `${total} thành viên`;
+
+        if (!users.length) {
+          grid.innerHTML = '<div style="grid-column:1/-1;padding:48px;text-align:center;color:var(--text-muted)">Không tìm thấy thành viên nào.</div>';
+          document.getElementById('memPager').innerHTML = '';
+          return;
+        }
+
+        // Sort client-side for posts (API returns by XP)
+        let sorted = [...users];
+        if (sort === 'posts') sorted.sort((a, b) => b.post_count - a.post_count);
+        else if (sort === 'new') sorted.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+
+        grid.innerHTML = sorted.map(u => renderMemberCard(u)).join('');
+        renderPager(total);
+      } catch (e) {
+        grid.innerHTML = '<div style="grid-column:1/-1;padding:24px;color:#ef4444">⚠️ Không kết nối được server. Chạy: node server.js</div>';
+      }
+    }
+
+    function renderMemberCard(u) {
+      const lv = getLevel(u.xp || 0);
+      const col = avColor(u.id);
+      const lvColor = LEVEL_COLORS[(lv.level - 1) % LEVEL_COLORS.length];
+      const ini = initials(u);
+      return `<div class="member-card" onclick="openProfile(${u.id})">
+    <div class="member-card-avatar" style="background:${col}">${ini}</div>
+    <div class="member-card-name">${escHtml(u.first_name)} ${escHtml(u.last_name || '')}</div>
+    <span class="member-card-level" style="background:${lvColor}22;color:${lvColor}">
+      Lv.${lv.level} ${lv.name}
+    </span>
+    <div class="member-card-join">Tham gia ${fmtDate(u.created_at)}</div>
+    <div class="member-card-stats">
+      <div class="member-stat">
+        <div class="member-stat-val" style="color:var(--accent-green)">${u.xp || 0}</div>
+        <div class="member-stat-label">XP</div>
+      </div>
+      <div class="member-stat">
+        <div class="member-stat-val" style="color:#f59e0b">${u.streak || 0}🔥</div>
+        <div class="member-stat-label">Streak</div>
+      </div>
+      <div class="member-stat">
+        <div class="member-stat-val">${u.post_count || 0}</div>
+        <div class="member-stat-label">Bài</div>
+      </div>
+    </div>
+  </div>`;
+    }
+
+    function renderPager(total) {
+      const totalPages = Math.ceil(total / LIMIT);
+      const cur = Math.floor(offset / LIMIT) + 1;
+      const pager = document.getElementById('memPager');
+      if (totalPages <= 1) { pager.innerHTML = ''; return; }
+      pager.innerHTML = `
+    <button class="mem-pager-btn" ${cur === 1 ? 'disabled' : ''} onclick="changePage(-1)">‹ Trước</button>
+    <span class="mem-pager-info">Trang ${cur} / ${totalPages}</span>
+    <button class="mem-pager-btn" ${cur === totalPages ? 'disabled' : ''} onclick="changePage(1)">Sau ›</button>`;
+    }
+
+    function changePage(dir) {
+      offset = Math.max(0, offset + dir * LIMIT);
+      loadMembers(false);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // ── Right panel ───────────────────────────────────────
+    async function loadRpProfile() {
+      try {
+        const u = await fetch(`${API}/users/${currentUser.id}`).then(r => r.json());
+        const lv = getLevel(u.xp || 0);
+        const pct = Math.min(100, Math.round(((u.xp || 0) - lv.xpMin) / (lv.xpMax - lv.xpMin) * 100));
+        const col = avColor(u.id);
+        document.getElementById('rpMyProfile').innerHTML = `
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+        <div style="width:38px;height:38px;background:${col};border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff;flex-shrink:0;">${initials(u)}</div>
+        <div>
+          <div style="font-size:var(--fs-sm);font-weight:700;color:var(--text)">${escHtml(u.first_name)} ${escHtml(u.last_name || '')}</div>
+          <div style="font-size:var(--fs-xs);color:var(--color-primary);font-weight:600">Lv.${lv.level} ${lv.name}</div>
+        </div>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-size:var(--fs-xs);color:var(--text-muted);margin-bottom:4px">
+        <span>XP</span><span style="font-weight:600;color:var(--text)">${u.xp || 0} / ${lv.xpMax}</span>
+      </div>
+      <div class="xp-bar" style="margin-bottom:10px;"><div class="xp-bar-fill" style="width:${pct}%"></div></div>
+      <div class="stat-row">
+        <div class="stat-item"><div class="stat-value" style="color:var(--accent-green)">${u.xp || 0}</div><div class="stat-label">XP</div></div>
+        <div class="stat-item"><div class="stat-value" style="color:#f59e0b">${u.streak || 0}🔥</div><div class="stat-label">Streak</div></div>
+        <div class="stat-item"><div class="stat-value">${u.post_count || 0}</div><div class="stat-label">Bài</div></div>
+        <div class="stat-item"><div class="stat-value">${u.completed_days || 0}</div><div class="stat-label">Ngày</div></div>
+      </div>`;
+      } catch (e) { }
+    }
+
+    async function loadRpCommStats() {
+      try {
+        const { total } = await fetch(`${API}/members?limit=1`).then(r => r.json());
+        document.getElementById('heroActive').textContent = '—';
+        document.getElementById('rpCommStats').innerHTML = `
+      <div class="rp-comm-stat">
+        <div class="rp-comm-stat-icon" style="background:#e0f2fe">👥</div>
+        <div><div class="rp-comm-stat-val">${total}</div><div class="rp-comm-stat-label">Tổng thành viên</div></div>
+      </div>
+      <div class="rp-comm-stat">
+        <div class="rp-comm-stat-icon" style="background:#d1fae5">📝</div>
+        <div><div class="rp-comm-stat-val" id="commPostCount">—</div><div class="rp-comm-stat-label">Bài đăng</div></div>
+      </div>
+      <div class="rp-comm-stat">
+        <div class="rp-comm-stat-icon" style="background:#ede9fe">⚡</div>
+        <div><div class="rp-comm-stat-val" id="commChallengeDays">—</div><div class="rp-comm-stat-label">Ngày challenge xong</div></div>
+      </div>`;
+      } catch (e) { }
+    }
+
+    function openProfile(userId) {
+      location.href = 'profile.html?id=' + userId;
+    }
+
+    // ── Init ──────────────────────────────────────────────
+    loadMembers(true);
+    loadRpProfile();
+    loadRpCommStats();
+  </script>
+</body>
+
+</html>

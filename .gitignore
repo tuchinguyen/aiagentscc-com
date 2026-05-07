@@ -1,0 +1,5 @@
+.env
+brain.db
+node_modules/
+*.log
+*.err

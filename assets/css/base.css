@@ -1,0 +1,95 @@
+/* ============================================================
+   BASE — CSS variables, reset, typography
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap');
+
+:root {
+  /* Primary */
+  --color-primary:       #0ea5e9;
+  --color-primary-dark:  #0284c7;
+  --color-primary-light: #bae6fd;
+
+  /* Backgrounds */
+  --bg-app:     #f8fafc;
+  --bg-card:    #ffffff;
+  --bg-hover:   #f1f5f9;
+  --bg-active:  #e0f2fe;
+  --bg-input:   #f8fafc;
+
+  /* Text */
+  --text:       #0f172a;
+  --text-muted: #64748b;
+  --text-light: #94a3b8;
+
+  /* Borders */
+  --border:       #e2e8f0;
+  --border-focus: #0ea5e9;
+
+  /* Accents */
+  --accent-green:  #10b981;
+  --accent-purple: #8b5cf6;
+  --accent-amber:  #f59e0b;
+  --accent-red:    #ef4444;
+
+  /* Pillar colors */
+  --pillar-offer:       #f59e0b;
+  --pillar-traffic:     #3b82f6;
+  --pillar-conversion:  #8b5cf6;
+  --pillar-delivery:    #10b981;
+  --pillar-continuity:  #ec4899;
+
+  /* Typography */
+  --font-body:    'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-heading: 'Plus Jakarta Sans', 'Inter', sans-serif;
+
+  --fs-xs:   11px;
+  --fs-sm:   13px;
+  --fs-base: 15px;
+  --fs-md:   16px;
+  --fs-lg:   18px;
+  --fs-xl:   22px;
+  --fs-2xl:  28px;
+
+  /* Layout */
+  --sidebar-w:  240px;
+  --rp-w:       260px;
+  --topbar-h:   56px;
+  --mob-nav-h:  60px;
+
+  /* Effects */
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.08), 0 2px 4px rgba(0,0,0,0.04);
+  --shadow-lg: 0 10px 30px rgba(0,0,0,0.10), 0 4px 8px rgba(0,0,0,0.04);
+
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
+}
+
+/* Reset */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { height: 100%; }
+
+body {
+  font-family: var(--font-body);
+  font-size: var(--fs-base);
+  color: var(--text);
+  background: var(--bg-app);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a { color: var(--color-primary); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+img { max-width: 100%; display: block; }
+
+button { font-family: var(--font-body); cursor: pointer; }
+
+h1, h2, h3, h4 { font-family: var(--font-heading); line-height: 1.25; }
+
+[x-cloak] { display: none !important; }

@@ -1,0 +1,700 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Đăng nhập — AI AGENTS CC</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0c10;
+    --surface: #111318;
+    --surface-2: #181c23;
+    --border: rgba(255,255,255,0.07);
+    --border-hover: rgba(255,255,255,0.15);
+    --accent: #00e5a0;
+    --accent-dim: rgba(0,229,160,0.12);
+    --accent-glow: rgba(0,229,160,0.25);
+    --text: #f0f2f5;
+    --text-muted: #6b7585;
+    --text-sub: #9aa3b2;
+    --red: #ff4d6d;
+    --font: 'Space Grotesk', sans-serif;
+    --mono: 'Space Mono', monospace;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: var(--font);
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Grid background pattern */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,229,160,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,229,160,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Glowing orb */
+  body::after {
+    content: '';
+    position: fixed;
+    top: -200px;
+    right: -150px;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(0,229,160,0.08) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Left panel — branding */
+  .left-panel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 60px 80px;
+    position: relative;
+    z-index: 1;
+    display: none;
+  }
+
+  .tag-line {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 32px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .tag-line::before {
+    content: '';
+    width: 24px;
+    height: 1px;
+    background: var(--accent);
+    display: inline-block;
+  }
+
+  .left-panel h1 {
+    font-size: clamp(36px, 4vw, 56px);
+    font-weight: 700;
+    line-height: 1.1;
+    color: var(--text);
+    margin-bottom: 20px;
+  }
+
+  .left-panel h1 .highlight {
+    color: var(--accent);
+  }
+
+  .left-panel p {
+    font-size: 16px;
+    color: var(--text-sub);
+    line-height: 1.7;
+    max-width: 400px;
+    margin-bottom: 48px;
+  }
+
+  .stats-row {
+    display: flex;
+    gap: 40px;
+  }
+
+  .stat-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .stat-number {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--text);
+    font-family: var(--mono);
+  }
+
+  .stat-number span {
+    color: var(--accent);
+  }
+
+  .stat-label {
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+
+  /* Divider */
+  .divider {
+    width: 1px;
+    background: var(--border);
+    margin: 40px 0;
+  }
+
+  /* Right panel — login form */
+  .right-panel {
+    width: 100%;
+    max-width: 480px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 40px;
+    position: relative;
+    z-index: 1;
+    margin: 0 auto;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 48px;
+  }
+
+  .logo-mark {
+    width: 36px;
+    height: 36px;
+    background: var(--accent);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .logo-mark svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .logo-text {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: 0.02em;
+  }
+
+  .logo-text span {
+    color: var(--accent);
+  }
+
+  .form-header {
+    margin-bottom: 36px;
+  }
+
+  .form-header h2 {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 6px;
+    letter-spacing: -0.02em;
+  }
+
+  .form-header p {
+    font-size: 14px;
+    color: var(--text-muted);
+  }
+
+  .field {
+    margin-bottom: 20px;
+  }
+
+  .field label {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-sub);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 8px;
+    font-family: var(--mono);
+  }
+
+  .input-wrap {
+    position: relative;
+  }
+
+  .input-icon {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 16px;
+    height: 16px;
+    color: var(--text-muted);
+    pointer-events: none;
+  }
+
+  input[type="email"],
+  input[type="password"],
+  input[type="text"] {
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 13px 44px 13px 42px;
+    font-size: 15px;
+    font-family: var(--font);
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+  }
+
+  input::placeholder {
+    color: var(--text-muted);
+  }
+
+  input:focus {
+    border-color: var(--accent);
+    background: var(--surface-2);
+    box-shadow: 0 0 0 3px var(--accent-dim);
+  }
+
+  .toggle-pw {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--text-muted);
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    transition: color 0.15s;
+  }
+
+  .toggle-pw:hover { color: var(--text); }
+
+  .field-error {
+    font-size: 12px;
+    color: var(--red);
+    margin-top: 6px;
+    display: none;
+  }
+
+  .options-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 28px;
+  }
+
+  .remember-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--text-muted);
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .remember-label input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    accent-color: var(--accent);
+    cursor: pointer;
+    padding: 0;
+    border-radius: 4px;
+  }
+
+  .forgot-link {
+    font-size: 13px;
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: color 0.15s;
+  }
+
+  .forgot-link:hover { color: var(--accent); }
+
+  .btn-login {
+    width: 100%;
+    background: var(--accent);
+    color: #000;
+    border: none;
+    border-radius: 10px;
+    padding: 14px;
+    font-size: 15px;
+    font-weight: 700;
+    font-family: var(--font);
+    cursor: pointer;
+    letter-spacing: 0.01em;
+    transition: opacity 0.15s, transform 0.1s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .btn-login:hover { opacity: 0.88; }
+  .btn-login:active { transform: scale(0.99); }
+  .btn-login:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  .spinner {
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(0,0,0,0.3);
+    border-top-color: #000;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    display: none;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .register-row {
+    text-align: center;
+    margin-top: 28px;
+    font-size: 14px;
+    color: var(--text-muted);
+  }
+
+  .register-row a {
+    color: var(--accent);
+    font-weight: 600;
+    text-decoration: none;
+    transition: opacity 0.15s;
+  }
+
+  .register-row a:hover { opacity: 0.75; }
+
+  /* Google button */
+  .btn-google {
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 13px 16px;
+    font-size: 15px;
+    font-weight: 600;
+    font-family: var(--font);
+    color: var(--text);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: border-color 0.2s, background 0.2s;
+    text-decoration: none;
+    margin-bottom: 24px;
+  }
+
+  .btn-google:hover {
+    border-color: var(--border-hover);
+    background: var(--surface-2);
+  }
+
+  .btn-google:active { transform: scale(0.99); }
+
+  .btn-google .g-spinner {
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255,255,255,0.2);
+    border-top-color: var(--text);
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    display: none;
+  }
+
+  /* OR divider */
+  .or-divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+
+  .or-divider::before,
+  .or-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .or-divider span {
+    font-size: 12px;
+    color: var(--text-muted);
+    font-family: var(--mono);
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+  }
+
+  .error-banner {
+    background: rgba(255,77,109,0.1);
+    border: 1px solid rgba(255,77,109,0.3);
+    border-radius: 10px;
+    padding: 12px 16px;
+    font-size: 13px;
+    color: #ff8099;
+    margin-bottom: 20px;
+    display: none;
+    align-items: center;
+    gap: 10px;
+  }
+
+  /* Features list */
+  .feature-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 16px;
+  }
+
+  .feature-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 5px 12px;
+    font-size: 12px;
+    color: var(--text-sub);
+    font-family: var(--mono);
+  }
+
+  .feature-tag::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    flex-shrink: 0;
+  }
+
+  /* Responsive */
+  @media (min-width: 900px) {
+    body {
+      flex-direction: row;
+    }
+
+    .left-panel {
+      display: flex;
+    }
+
+    .divider {
+      display: block;
+    }
+
+    .right-panel {
+      width: 440px;
+      max-width: 440px;
+      flex-shrink: 0;
+      padding: 60px 56px;
+    }
+  }
+</style>
+</head>
+<body>
+
+<!-- Left panel -->
+<div class="left-panel">
+  <div class="tag-line">Cộng đồng AI Agent</div>
+
+  <h1>Làm chủ<br><span class="highlight">AI Agent</span><br>từ hôm nay.</h1>
+
+  <p>Nơi học viên thực chiến cùng nhau — từ prompt engineering đến deploy agent thực tế.</p>
+
+  <div class="stats-row">
+    <div class="stat-item">
+      <div class="stat-number">2<span>K+</span></div>
+      <div class="stat-label">Học viên</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-number">120<span>+</span></div>
+      <div class="stat-label">Bài học</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-number">21</div>
+      <div class="stat-label">Day Challenge</div>
+    </div>
+  </div>
+
+  <div class="feature-tags" style="margin-top:40px;">
+    <span class="feature-tag">AI Agent</span>
+    <span class="feature-tag">Prompt Engineering</span>
+    <span class="feature-tag">n8n / Make</span>
+    <span class="feature-tag">Automation</span>
+  </div>
+</div>
+
+<!-- Right panel -->
+<div class="right-panel">
+
+  <div class="logo">
+    <div class="logo-mark">
+      <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="10" cy="10" r="3" fill="#000"/>
+        <path d="M10 3 L10 5M10 15 L10 17M3 10 L5 10M15 10 L17 10" stroke="#000" stroke-width="2" stroke-linecap="round"/>
+        <path d="M5.5 5.5 L7 7M13 13 L14.5 14.5M14.5 5.5 L13 7M7 13 L5.5 14.5" stroke="#000" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div class="logo-text">AI AGENT <span>CC</span></div>
+  </div>
+
+  <div class="form-header">
+    <h2>Chào mừng trở lại</h2>
+    <p>Đăng nhập để tiếp tục hành trình của bạn</p>
+  </div>
+
+  <!-- Google Sign-In -->
+  <button class="btn-google" id="googleBtn" type="button" onclick="handleGoogleLogin()">
+    <div class="g-spinner" id="gSpinner"></div>
+    <svg width="18" height="18" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M43.611 20.083H42V20H24v8h11.303c-1.649 4.657-6.08 8-11.303 8-6.627 0-12-5.373-12-12s5.373-12 12-12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 12.955 4 4 12.955 4 24s8.955 20 20 20 20-8.955 20-20c0-1.341-.138-2.65-.389-3.917z" fill="#FFC107"/>
+      <path d="M6.306 14.691l6.571 4.819C14.655 15.108 19.000 12 24 12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 16.318 4 9.656 8.337 6.306 14.691z" fill="#FF3D00"/>
+      <path d="M24 44c5.166 0 9.86-1.977 13.409-5.192l-6.19-5.238A11.91 11.91 0 0124 36c-5.202 0-9.619-3.317-11.283-7.946l-6.522 5.025C9.505 39.556 16.227 44 24 44z" fill="#4CAF50"/>
+      <path d="M43.611 20.083H42V20H24v8h11.303a12.04 12.04 0 01-4.087 5.571l.003-.002 6.19 5.238C36.971 39.205 44 34 44 24c0-1.341-.138-2.65-.389-3.917z" fill="#1976D2"/>
+    </svg>
+    <span id="googleBtnText">Tiếp tục với Google</span>
+  </button>
+
+  <div class="or-divider"><span>hoặc đăng nhập bằng email</span></div>
+
+  <div class="error-banner" id="errorBanner">
+    <svg width="16" height="16" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/><path d="M12 8v4M12 16h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    <span id="errorMsg">Email hoặc mật khẩu không đúng.</span>
+  </div>
+
+  <form id="loginForm" autocomplete="on">
+
+    <div class="field">
+      <label>Email</label>
+      <div class="input-wrap">
+        <svg class="input-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+          <rect x="2" y="4" width="20" height="16" rx="2" stroke="currentColor"/>
+          <path d="M2 8l10 6 10-6" stroke="currentColor" stroke-linecap="round"/>
+        </svg>
+        <input type="email" id="email" name="email" placeholder="ban@email.com" autocomplete="email" required>
+      </div>
+      <div class="field-error" id="emailError">Vui lòng nhập email hợp lệ.</div>
+    </div>
+
+    <div class="field">
+      <label>Mật khẩu</label>
+      <div class="input-wrap">
+        <svg class="input-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+          <rect x="3" y="11" width="18" height="11" rx="2" stroke="currentColor"/>
+          <path d="M7 11V7a5 5 0 0110 0v4" stroke="currentColor" stroke-linecap="round"/>
+        </svg>
+        <input type="password" id="password" name="password" placeholder="••••••••" autocomplete="current-password" required>
+        <button type="button" class="toggle-pw" id="togglePw" aria-label="Hiện/ẩn mật khẩu">
+          <svg id="eyeIcon" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+            <circle cx="12" cy="12" r="3"/>
+          </svg>
+        </button>
+      </div>
+      <div class="field-error" id="pwError">Vui lòng nhập mật khẩu.</div>
+    </div>
+
+    <div class="options-row">
+      <label class="remember-label">
+        <input type="checkbox" id="remember" name="remember">
+        Nhớ đăng nhập
+      </label>
+      <a href="#" class="forgot-link">Quên mật khẩu?</a>
+    </div>
+
+    <button type="submit" class="btn-login" id="submitBtn">
+      <div class="spinner" id="spinner"></div>
+      <span id="btnText">Đăng nhập</span>
+      <svg id="btnArrow" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+        <path d="M5 12h14M12 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+  </form>
+
+  <div class="register-row">
+    Chưa có tài khoản? <a href="/register">Tham gia miễn phí</a>
+  </div>
+</div>
+
+<script>
+  function handleGoogleLogin() {
+    const btn = document.getElementById('googleBtn');
+    const gSpinner = document.getElementById('gSpinner');
+    const gText = document.getElementById('googleBtnText');
+    btn.disabled = true;
+    gSpinner.style.display = 'block';
+    gText.textContent = 'Đang chuyển hướng...';
+    // Replace this URL with your real Google OAuth endpoint
+    // e.g. window.location.href = '/auth/google/redirect';
+    setTimeout(() => {
+      // Demo only — remove this block in production
+      btn.disabled = false;
+      gSpinner.style.display = 'none';
+      gText.textContent = 'Tiếp tục với Google';
+    }, 2000);
+  }
+
+  const form = document.getElementById('loginForm');
+  const emailEl = document.getElementById('email');
+  const pwEl = document.getElementById('password');
+  const toggleBtn = document.getElementById('togglePw');
+  const eyeIcon = document.getElementById('eyeIcon');
+  const submitBtn = document.getElementById('submitBtn');
+  const spinner = document.getElementById('spinner');
+  const btnText = document.getElementById('btnText');
+  const btnArrow = document.getElementById('btnArrow');
+  const errorBanner = document.getElementById('errorBanner');
+
+  const eyeOpen = `<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>`;
+  const eyeClosed = `<path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19M1 1l22 22" stroke-linecap="round"/>`;
+
+  let showPw = false;
+  toggleBtn.addEventListener('click', () => {
+    showPw = !showPw;
+    pwEl.type = showPw ? 'text' : 'password';
+    eyeIcon.innerHTML = showPw ? eyeClosed : eyeOpen;
+  });
+
+  function setLoading(on) {
+    submitBtn.disabled = on;
+    spinner.style.display = on ? 'block' : 'none';
+    btnText.textContent = on ? 'Đang xử lý...' : 'Đăng nhập';
+    btnArrow.style.display = on ? 'none' : 'block';
+  }
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    errorBanner.style.display = 'none';
+
+    const email = emailEl.value.trim();
+    const pw = pwEl.value;
+
+    if (!email || !pw) return;
+
+    setLoading(true);
+
+    // Simulate auth request — replace with real fetch
+    await new Promise(r => setTimeout(r, 1400));
+
+    setLoading(false);
+
+    // Demo: show error
+    errorBanner.style.display = 'flex';
+  });
+</script>
+</body>
+</html>

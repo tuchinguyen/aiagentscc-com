@@ -1,0 +1,1776 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hỏi đáp — AI AGENTS CC</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/base.css">
+  <link rel="stylesheet" href="assets/css/components.css">
+  <link rel="stylesheet" href="assets/css/layout.css">
+  <style>
+    /* ── QA hero banner ─────────────────────────────── */
+    .qa-hero {
+      background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 60%, #a7f3d0 100%);
+      border: 1px solid #6ee7b7;
+      border-radius: var(--radius-lg);
+      padding: 20px 24px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .qa-hero-icon {
+      width: 52px;
+      height: 52px;
+      background: linear-gradient(135deg, #10b981, #059669);
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 26px;
+      flex-shrink: 0;
+      box-shadow: 0 4px 12px rgba(16, 185, 129, .28);
+    }
+
+    .qa-hero-body {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .qa-hero-title {
+      font-family: var(--font-heading);
+      font-size: var(--fs-lg);
+      font-weight: 800;
+      color: #065f46;
+      margin-bottom: 2px;
+    }
+
+    .qa-hero-sub {
+      font-size: var(--fs-sm);
+      color: #047857;
+      line-height: 1.5;
+    }
+
+    .qa-hero-stats {
+      display: flex;
+      gap: 20px;
+      flex-shrink: 0;
+    }
+
+    .qa-stat {
+      text-align: center;
+    }
+
+    .qa-stat-num {
+      font-size: var(--fs-xl);
+      font-weight: 800;
+      color: #065f46;
+    }
+
+    .qa-stat-lbl {
+      font-size: var(--fs-xs);
+      color: #047857;
+      margin-top: 1px;
+    }
+
+    /* ── Action bar ─────────────────────────────────── */
+    .qa-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+
+    .qa-ask-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      border-radius: var(--radius-md);
+      background: #10b981;
+      color: #fff;
+      border: none;
+      font-size: var(--fs-sm);
+      font-weight: 700;
+      cursor: pointer;
+      font-family: var(--font-body);
+      transition: background .15s;
+      flex-shrink: 0;
+    }
+
+    .qa-ask-btn:hover {
+      background: #059669;
+    }
+
+    .sort-btn {
+      padding: 7px 12px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      font-size: var(--fs-sm);
+      font-weight: 500;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-family: var(--font-body);
+      transition: all .15s;
+    }
+
+    .sort-btn.active {
+      background: #d1fae5;
+      border-color: #6ee7b7;
+      color: #065f46;
+      font-weight: 600;
+    }
+
+    .sort-btn:hover:not(.active) {
+      border-color: #6ee7b7;
+      color: #065f46;
+    }
+
+    .filter-btn {
+      padding: 7px 12px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      font-size: var(--fs-sm);
+      font-weight: 500;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-family: var(--font-body);
+      transition: all .15s;
+    }
+
+    .filter-btn.active {
+      background: #d1fae5;
+      border-color: #6ee7b7;
+      color: #065f46;
+      font-weight: 600;
+    }
+
+    .filter-btn:hover:not(.active) {
+      border-color: #6ee7b7;
+      color: #065f46;
+    }
+
+    /* ── Post list ──────────────────────────────────── */
+    .post-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .post-card {
+      cursor: pointer;
+    }
+
+    .post-card:hover {
+      box-shadow: 0 4px 16px rgba(16, 185, 129, .15);
+      transform: translateY(-1px);
+      transition: box-shadow .15s, transform .15s;
+    }
+
+    /* ── Answer badge ───────────────────────────────── */
+    .badge-answered {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 99px;
+      background: #d1fae5;
+      color: #065f46;
+    }
+
+    .badge-question {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 99px;
+      background: #ecfdf5;
+      color: #10b981;
+      border: 1px solid #a7f3d0;
+    }
+
+    /* ── Right panel ────────────────────────────────── */
+    .profile-user-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .profile-name {
+      font-size: var(--fs-base);
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .profile-title {
+      font-size: var(--fs-xs);
+      color: var(--text-muted);
+      margin-top: 1px;
+    }
+
+    .profile-level-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 5px;
+    }
+
+    .profile-level {
+      font-size: var(--fs-xs);
+      color: var(--text-muted);
+    }
+
+    .profile-xp {
+      font-size: var(--fs-xs);
+      font-weight: 700;
+      color: var(--accent-green);
+    }
+
+    .xp-next {
+      font-size: 10px;
+      color: var(--text-light);
+      text-align: right;
+      margin-top: 3px;
+    }
+
+    /* ── Top answerers widget ───────────────────────── */
+    .qa-contrib-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .qa-contrib-item:last-child {
+      border-bottom: none;
+    }
+
+    .qa-contrib-rank {
+      width: 20px;
+      font-size: var(--fs-xs);
+      font-weight: 700;
+      color: var(--text-light);
+      text-align: center;
+      flex-shrink: 0;
+    }
+
+    .qa-contrib-name {
+      font-size: var(--fs-sm);
+      font-weight: 600;
+      color: var(--text);
+      flex: 1;
+      min-width: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .qa-contrib-count {
+      font-size: 11px;
+      font-weight: 700;
+      background: #d1fae5;
+      color: #065f46;
+      padding: 2px 7px;
+      border-radius: 99px;
+    }
+
+    /* ── Post modal ─────────────────────────────────── */
+    .post-modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, .5);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .2s;
+    }
+
+    .post-modal-overlay.open {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .post-modal {
+      background: #fff;
+      border-radius: 16px;
+      width: 100%;
+      max-width: 680px;
+      max-height: 90vh;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, .18);
+      transform: translateY(16px);
+      transition: transform .2s;
+      overflow: hidden;
+    }
+
+    .post-modal-overlay.open .post-modal {
+      transform: translateY(0);
+    }
+
+    .pm-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 20px;
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+
+    .pm-header-badges {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .pm-close {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: none;
+      background: var(--bg-hover);
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 20px;
+      line-height: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .pm-close:hover {
+      background: #e2e8f0;
+    }
+
+    .pm-body {
+      overflow-y: auto;
+      flex: 1;
+      padding: 20px;
+    }
+
+    .pm-author-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .pm-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 700;
+      color: #fff;
+      flex-shrink: 0;
+    }
+
+    .pm-author-name {
+      font-size: var(--fs-sm);
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .pm-author-meta {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .pm-title {
+      font-family: var(--font-heading);
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--text);
+      margin-bottom: 12px;
+      line-height: 1.35;
+    }
+
+    .pm-content {
+      font-size: var(--fs-base);
+      color: var(--text);
+      line-height: 1.75;
+      white-space: pre-wrap;
+    }
+
+    .pm-actions {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 12px 20px;
+      border-top: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+
+    .pm-like-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 16px;
+      border-radius: var(--radius-md);
+      border: 1.5px solid var(--border);
+      background: #fff;
+      cursor: pointer;
+      font-size: var(--fs-sm);
+      font-weight: 600;
+      color: var(--text-muted);
+      transition: all .15s;
+      font-family: var(--font-body);
+    }
+
+    .pm-like-btn:hover,
+    .pm-like-btn.liked {
+      border-color: #f43f5e;
+      color: #f43f5e;
+      background: #fff1f2;
+    }
+
+    .pm-cmt-count-lbl {
+      font-size: var(--fs-sm);
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .pm-comments {
+      flex-shrink: 0;
+      max-height: 320px;
+      overflow-y: auto;
+      border-top: 1px solid var(--border);
+    }
+
+    .pm-cmt-item {
+      display: flex;
+      gap: 10px;
+      padding: 12px 20px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .pm-cmt-item:last-child {
+      border-bottom: none;
+    }
+
+    .pm-cmt-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 700;
+      color: #fff;
+      flex-shrink: 0;
+    }
+
+    .pm-cmt-body {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .pm-cmt-header {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      margin-bottom: 3px;
+      flex-wrap: wrap;
+    }
+
+    .pm-cmt-name {
+      font-size: var(--fs-xs);
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .pm-cmt-time {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .pm-cmt-text {
+      font-size: var(--fs-sm);
+      color: var(--text);
+      line-height: 1.55;
+    }
+
+    .pm-empty-cmt {
+      text-align: center;
+      padding: 20px;
+      color: var(--text-muted);
+      font-size: var(--fs-sm);
+    }
+
+    .pm-reply-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      margin-top: 5px;
+      padding: 2px 0;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-family: var(--font-body);
+      transition: color .15s;
+    }
+
+    .pm-reply-btn:hover {
+      color: #10b981;
+    }
+
+    .pm-reply-form {
+      display: none;
+      margin-top: 8px;
+      align-items: flex-end;
+      gap: 6px;
+    }
+
+    .pm-reply-form.open {
+      display: flex;
+    }
+
+    .pm-reply-input {
+      flex: 1;
+      padding: 7px 10px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      font-size: 12px;
+      font-family: var(--font-body);
+      color: var(--text);
+      resize: none;
+      min-height: 32px;
+      max-height: 72px;
+      background: var(--bg-hover);
+      outline: none;
+      transition: border-color .15s, background .15s;
+    }
+
+    .pm-reply-input:focus {
+      border-color: #10b981;
+      background: #fff;
+    }
+
+    .pm-reply-submit {
+      padding: 6px 12px;
+      height: 32px;
+      background: #10b981;
+      color: #fff;
+      border: none;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 600;
+      font-family: var(--font-body);
+      white-space: nowrap;
+      transition: background .15s;
+    }
+
+    .pm-reply-submit:hover {
+      background: #059669;
+    }
+
+    .pm-reply-cancel {
+      padding: 6px 10px;
+      height: 32px;
+      background: none;
+      color: var(--text-muted);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 600;
+      font-family: var(--font-body);
+      white-space: nowrap;
+    }
+
+    .pm-reply-cancel:hover {
+      background: var(--bg-hover);
+    }
+
+    .pm-replies {
+      padding-left: 42px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .pm-replies .pm-cmt-item {
+      border-bottom: none;
+      padding: 8px 20px 8px 0;
+    }
+
+    .pm-replies .pm-cmt-avatar {
+      width: 26px;
+      height: 26px;
+      font-size: 10px;
+    }
+
+    .pm-comment-form {
+      display: flex;
+      gap: 10px;
+      align-items: flex-end;
+      padding: 12px 20px;
+      border-top: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+
+    .pm-comment-input {
+      flex: 1;
+      padding: 9px 13px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      font-size: var(--fs-sm);
+      font-family: var(--font-body);
+      color: var(--text);
+      resize: none;
+      min-height: 38px;
+      max-height: 100px;
+      background: var(--bg-hover);
+      outline: none;
+      transition: border-color .15s, background .15s;
+    }
+
+    .pm-comment-input:focus {
+      border-color: #10b981;
+      background: #fff;
+    }
+
+    .pm-comment-submit {
+      padding: 9px 16px;
+      background: #10b981;
+      color: #fff;
+      border: none;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      font-size: var(--fs-sm);
+      font-weight: 600;
+      font-family: var(--font-body);
+      transition: background .15s;
+      white-space: nowrap;
+      height: 38px;
+    }
+
+    .pm-comment-submit:hover {
+      background: #059669;
+    }
+
+    .pm-comment-submit:disabled {
+      opacity: .6;
+      cursor: not-allowed;
+    }
+
+    /* ── Ask modal ──────────────────────────────────── */
+    .ask-modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, .5);
+      z-index: 1100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .2s;
+    }
+
+    .ask-modal-overlay.open {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .ask-modal {
+      background: #fff;
+      border-radius: 16px;
+      width: 100%;
+      max-width: 540px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, .18);
+      transform: translateY(16px);
+      transition: transform .2s;
+      overflow: hidden;
+    }
+
+    .ask-modal-overlay.open .ask-modal {
+      transform: translateY(0);
+    }
+
+    .ask-modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .ask-modal-title {
+      font-family: var(--font-heading);
+      font-size: var(--fs-md);
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    .ask-modal-body {
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .ask-field label {
+      display: block;
+      font-size: var(--fs-sm);
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+
+    .ask-field label span {
+      color: #ef4444;
+    }
+
+    .ask-input {
+      width: 100%;
+      padding: 9px 13px;
+      box-sizing: border-box;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      font-size: var(--fs-sm);
+      font-family: var(--font-body);
+      color: var(--text);
+      background: var(--bg-hover);
+      outline: none;
+      transition: border-color .15s, background .15s;
+    }
+
+    .ask-input:focus {
+      border-color: #10b981;
+      background: #fff;
+    }
+
+    .ask-textarea {
+      width: 100%;
+      padding: 9px 13px;
+      box-sizing: border-box;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      font-size: var(--fs-sm);
+      font-family: var(--font-body);
+      color: var(--text);
+      background: var(--bg-hover);
+      outline: none;
+      resize: vertical;
+      min-height: 100px;
+      transition: border-color .15s, background .15s;
+    }
+
+    .ask-textarea:focus {
+      border-color: #10b981;
+      background: #fff;
+    }
+
+    .ask-modal-footer {
+      padding: 14px 20px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+
+    .ask-cancel-btn {
+      padding: 8px 16px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      font-size: var(--fs-sm);
+      font-weight: 600;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-family: var(--font-body);
+    }
+
+    .ask-cancel-btn:hover {
+      background: var(--bg-hover);
+    }
+
+    .ask-submit-btn {
+      padding: 8px 20px;
+      border-radius: var(--radius-md);
+      background: #10b981;
+      color: #fff;
+      border: none;
+      font-size: var(--fs-sm);
+      font-weight: 700;
+      cursor: pointer;
+      font-family: var(--font-body);
+      transition: background .15s;
+    }
+
+    .ask-submit-btn:hover {
+      background: #059669;
+    }
+
+    .ask-submit-btn:disabled {
+      opacity: .6;
+      cursor: not-allowed;
+    }
+
+    @media (max-width: 768px) {
+      .qa-hero {
+        flex-wrap: wrap;
+        gap: 12px;
+        padding: 14px 16px;
+      }
+
+      .qa-hero-stats {
+        gap: 14px;
+      }
+
+      .qa-actions {
+        gap: 5px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="app">
+
+    <!-- Sidebar -->
+    <aside id="sidebar">
+      <div id="sidebar-logo">
+        <div class="sidebar-logo-mark">
+          <svg viewBox="0 0 20 20" fill="none">
+            <circle cx="10" cy="10" r="3" fill="currentColor" />
+            <path d="M10 3v2M10 15v2M3 10h2M15 10h2" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+            <path d="M5.5 5.5l1.5 1.5M13 13l1.5 1.5M14.5 5.5L13 7M7 13l-1.5 1.5" stroke="currentColor"
+              stroke-width="1.5" stroke-linecap="round" />
+          </svg>
+        </div>
+        <div class="sidebar-logo-text">AI AGENTS <span>CC</span></div>
+      </div>
+
+      <nav id="sidebar-nav">
+        <div class="nav-section-label">Cộng đồng</div>
+
+        <a href="feed.html" class="nav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
+          </svg>
+          Bảng tin
+        </a>
+
+        <a href="cot.html" class="nav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <polygon
+              points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+          </svg>
+          CÔT
+        </a>
+
+        <a href="signal.html" class="nav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+          </svg>
+          Tín hiệu
+        </a>
+
+        <a href="qa.html" class="nav-item active">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path
+              d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          Hỏi đáp
+        </a>
+
+        <div class="nav-section-label" style="margin-top:8px;">Học tập</div>
+
+        <a href="courses.html" class="nav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
+          </svg>
+          Khóa học
+        </a>
+
+        <a href="challenge.html" class="nav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path
+              d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z" />
+          </svg>
+          Challenge
+        </a>
+
+        <a href="leaderboard.html" class="nav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path
+              d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+          </svg>
+          Leaderboard
+        </a>
+
+        <div class="nav-section-label" style="margin-top:8px;">Khác</div>
+
+        <a href="marketplace.html" class="nav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path
+              d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z" />
+          </svg>
+          Marketplace
+        </a>
+
+        <a href="members.html" class="nav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path
+              d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
+          </svg>
+          Thành viên
+        </a>
+      </nav>
+
+      <div id="sidebar-user">
+        <div class="user-avatar-wrap">
+          <div class="avatar-placeholder avatar-md" id="sbAvatar" style="background:#7c3aed;">?</div>
+          <div class="user-status-dot"></div>
+        </div>
+        <div class="user-info">
+          <div class="user-name" id="sbName">—</div>
+          <div class="user-level" id="sbLevel">—</div>
+        </div>
+        <a href="index.html" class="icon-btn" title="Đăng xuất" style="margin-left:auto;" onclick="doLogout()">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4" />
+            <polyline points="16 17 21 12 16 7" />
+            <line x1="21" y1="12" x2="9" y2="12" />
+          </svg>
+        </a>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <div id="main">
+
+      <!-- Mobile topbar -->
+      <div id="mobile-topbar">
+        <button class="mob-menu-btn" onclick="openSidebar()" aria-label="Menu">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <line x1="3" y1="6" x2="21" y2="6" />
+            <line x1="3" y1="12" x2="21" y2="12" />
+            <line x1="3" y1="18" x2="21" y2="18" />
+          </svg>
+        </button>
+        <span style="flex:1;font-size:var(--fs-md);font-weight:700;color:#065f46;">❓ Hỏi đáp</span>
+        <a href="#" class="icon-btn" aria-label="Thông báo" style="position:relative;">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path
+              d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+          </svg>
+          <span class="notif-dot"></span>
+        </a>
+      </div>
+
+      <!-- Desktop topbar -->
+      <div id="topbar">
+        <div class="topbar-title" style="color:#065f46;">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            style="color:#10b981;">
+            <path
+              d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          Hỏi đáp cộng đồng
+        </div>
+        <div class="topbar-right">
+          <a href="#" class="icon-btn" aria-label="Thông báo" style="position:relative;">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <path
+                d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+            </svg>
+            <span class="notif-dot"></span>
+          </a>
+          <a href="#" class="icon-btn" aria-label="Tin nhắn">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <path
+                d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+            </svg>
+          </a>
+          <div class="topbar-search" role="button" tabindex="0">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <circle cx="11" cy="11" r="8" />
+              <line x1="21" y1="21" x2="16.65" y2="16.65" />
+            </svg>
+            Tìm kiếm...
+          </div>
+        </div>
+      </div>
+
+      <div id="content-row">
+
+        <!-- Main feed -->
+        <main id="feed">
+
+          <!-- Hero -->
+          <div class="qa-hero">
+            <div class="qa-hero-icon">❓</div>
+            <div class="qa-hero-body">
+              <div class="qa-hero-title">Hỏi đáp cộng đồng</div>
+              <div class="qa-hero-sub">Đặt câu hỏi, nhận câu trả lời từ cộng đồng AI Agent. Cùng nhau học hỏi và phát
+                triển.</div>
+            </div>
+            <div class="qa-hero-stats">
+              <div class="qa-stat">
+                <div class="qa-stat-num" id="qaCount">—</div>
+                <div class="qa-stat-lbl">Câu hỏi</div>
+              </div>
+              <div class="qa-stat">
+                <div class="qa-stat-num" id="qaAnswered">—</div>
+                <div class="qa-stat-lbl">Đã trả lời</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Action bar -->
+          <div class="qa-actions">
+            <button class="qa-ask-btn" onclick="openAskModal()">
+              <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"
+                stroke-linecap="round">
+                <circle cx="12" cy="12" r="10" />
+                <path d="M12 8v4m0 4h.01" />
+              </svg>
+              Đặt câu hỏi
+            </button>
+
+            <div style="width:1px;height:24px;background:var(--border);margin:0 2px;"></div>
+
+            <button class="sort-btn active" data-sort="latest" onclick="setSort('latest', this)">Mới nhất</button>
+            <button class="sort-btn" data-sort="popular" onclick="setSort('popular', this)">Phổ biến</button>
+
+            <div style="flex:1;"></div>
+
+            <button class="filter-btn" id="unansweredBtn" onclick="toggleUnanswered()">Chưa trả lời</button>
+          </div>
+
+          <!-- Post list -->
+          <div class="post-list" id="postList">
+            <div style="text-align:center;padding:48px 0;color:var(--text-muted)">
+              <div class="spinner" style="display:inline-block;margin-bottom:8px"></div>
+              <div style="font-size:var(--fs-sm)">Đang tải câu hỏi...</div>
+            </div>
+          </div>
+
+          <!-- Load more -->
+          <div id="loadMoreWrap" style="display:none;text-align:center;padding:16px 0;">
+            <button class="btn btn-secondary" onclick="loadMore()">Xem thêm</button>
+          </div>
+
+        </main>
+
+        <!-- Right panel -->
+        <aside id="right-panel">
+
+          <!-- Profile card -->
+          <div class="rp-card" id="profileCard">
+            <div style="text-align:center;padding:16px 0;color:var(--text-muted);font-size:var(--fs-sm)">Đang tải...
+            </div>
+          </div>
+
+          <!-- Top answerers widget -->
+          <div class="rp-card" id="topAnswerersWidget">
+            <div style="text-align:center;padding:12px 0;color:var(--text-muted);font-size:var(--fs-sm)">Đang tải...
+            </div>
+          </div>
+
+          <!-- Leaderboard widget -->
+          <div class="rp-card" id="lbWidget">
+            <div style="text-align:center;padding:12px 0;color:var(--text-muted);font-size:var(--fs-sm)">Đang tải...
+            </div>
+          </div>
+
+        </aside>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile overlay + sidebar -->
+  <div id="mob-overlay"></div>
+  <div id="mob-sidebar">
+    <div
+      style="padding:14px 16px;border-bottom:1px solid var(--border);font-size:var(--fs-md);font-weight:700;color:var(--text);display:flex;align-items:center;gap:8px;">
+      <div
+        style="width:28px;height:28px;background:var(--color-primary);border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+        <svg width="16" height="16" fill="none" viewBox="0 0 20 20">
+          <circle cx="10" cy="10" r="3" fill="#fff" />
+          <path d="M10 3v2M10 15v2M3 10h2M15 10h2" stroke="#fff" stroke-width="2" stroke-linecap="round" />
+        </svg>
+      </div>
+      AI AGENTS CC
+    </div>
+    <nav style="flex:1;overflow-y:auto;padding:8px;">
+      <div class="nav-section-label">Cộng đồng</div>
+      <a href="feed.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
+        </svg>
+        Bảng tin
+      </a>
+      <a href="cot.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <polygon
+            points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+        </svg>
+        CÔT
+      </a>
+      <a href="signal.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+        </svg>
+        Tín hiệu
+      </a>
+      <a href="qa.html" class="nav-item active">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <path
+            d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        Hỏi đáp
+      </a>
+      <div class="nav-section-label">Học tập</div>
+      <a href="courses.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
+        </svg>
+        Khóa học
+      </a>
+      <a href="challenge.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <path
+            d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z" />
+        </svg>
+        Challenge
+      </a>
+      <a href="leaderboard.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <path
+            d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+        </svg>
+        Leaderboard
+      </a>
+      <div class="nav-section-label">Khác</div>
+      <a href="marketplace.html" class="nav-item">Marketplace</a>
+      <a href="members.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <path
+            d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
+        </svg>
+        Thành viên
+      </a>
+    </nav>
+  </div>
+
+  <!-- Mobile bottom nav -->
+  <nav id="mobile-nav">
+    <a href="feed.html" class="mob-nav-btn">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
+      </svg>
+      Home
+    </a>
+    <a href="qa.html" class="mob-nav-btn active">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <path
+          d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+      Hỏi đáp
+    </a>
+    <a href="challenge.html" class="mob-nav-btn">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <path
+          d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z" />
+      </svg>
+      Challenge
+    </a>
+    <a href="#" class="mob-nav-btn">
+      <div
+        style="width:22px;height:22px;border-radius:50%;background:#7c3aed;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#fff;"
+        id="mobAvatar">?</div>
+      Tôi
+    </a>
+  </nav>
+
+  <!-- Post detail modal -->
+  <div class="post-modal-overlay" id="postModalOverlay" onclick="handlePostModalBgClick(event)">
+    <div class="post-modal">
+      <div class="pm-header">
+        <div class="pm-header-badges" id="pmHeaderBadges"></div>
+        <button class="pm-close" onclick="closePost()">&#215;</button>
+      </div>
+      <div class="pm-body" id="pmBody"></div>
+      <div class="pm-actions">
+        <button class="pm-like-btn" id="pmLikeBtn" onclick="pmToggleLike()">
+          <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round"
+              d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+          </svg>
+          <span id="pmLikeCount">0</span> Thích
+        </button>
+        <span class="pm-cmt-count-lbl">
+          <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round"
+              d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+          </svg>
+          <span id="pmCmtCount">0</span> câu trả lời
+        </span>
+      </div>
+      <div class="pm-comments" id="pmComments"></div>
+      <div class="pm-comment-form">
+        <textarea class="pm-comment-input" id="pmCommentInput" placeholder="Viết câu trả lời của bạn..." rows="1"
+          onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();pmSubmitComment();}"></textarea>
+        <button class="pm-comment-submit" id="pmCommentSubmit" onclick="pmSubmitComment()">Gửi</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Ask question modal -->
+  <div class="ask-modal-overlay" id="askModalOverlay" onclick="handleAskModalBgClick(event)">
+    <div class="ask-modal">
+      <div class="ask-modal-header">
+        <div class="ask-modal-title">❓ Đặt câu hỏi mới</div>
+        <button class="pm-close" onclick="closeAskModal()">&#215;</button>
+      </div>
+      <div class="ask-modal-body">
+        <div class="ask-field">
+          <label>Tiêu đề câu hỏi <span>*</span></label>
+          <input type="text" class="ask-input" id="askTitle"
+            placeholder="Ví dụ: Làm thế nào để deploy agent lên production?" maxlength="200">
+        </div>
+        <div class="ask-field">
+          <label>Mô tả chi tiết</label>
+          <textarea class="ask-textarea" id="askContent"
+            placeholder="Mô tả chi tiết câu hỏi của bạn, bối cảnh, những gì bạn đã thử..."></textarea>
+        </div>
+      </div>
+      <div class="ask-modal-footer">
+        <button class="ask-cancel-btn" onclick="closeAskModal()">Hủy</button>
+        <button class="ask-submit-btn" id="askSubmitBtn" onclick="submitQuestion()">Đăng câu hỏi</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="assets/js/app.js"></script>
+  <script>
+    const API = 'http://localhost:3000/api';
+    const AV_COLORS = ['#0ea5e9', '#8b5cf6', '#10b981', '#f59e0b', '#ec4899', '#3b82f6', '#ef4444', '#14b8a6'];
+    const LEVELS = [
+      { level: 1, xpMin: 0, xpMax: 45 }, { level: 2, xpMin: 45, xpMax: 120 }, { level: 3, xpMin: 120, xpMax: 250 },
+      { level: 4, xpMin: 250, xpMax: 450 }, { level: 5, xpMin: 450, xpMax: 700 }, { level: 6, xpMin: 700, xpMax: 1000 },
+      { level: 7, xpMin: 1000, xpMax: 1500 }, { level: 8, xpMin: 1500, xpMax: 2200 }, { level: 9, xpMin: 2200, xpMax: 9999 },
+    ];
+    function getLevelDef(xp) { for (let i = LEVELS.length - 1; i >= 0; i--) if (xp >= LEVELS[i].xpMin) return LEVELS[i]; return LEVELS[0]; }
+
+    let currentUser = null;
+    let activeSort = 'latest';
+    let showUnanswered = false;
+    let offset = 0;
+    const LIMIT = 20;
+    let allLoaded = false;
+    let _allPosts = [];
+
+    // ── Helpers ───────────────────────────────────────────────────
+    function escHtml(s) {
+      return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+
+    function fmtRelative(dateStr) {
+      const diff = Date.now() - new Date(dateStr).getTime();
+      const m = Math.floor(diff / 60000), h = Math.floor(m / 60), d = Math.floor(h / 24);
+      if (d > 30) return Math.floor(d / 30) + ' tháng trước';
+      if (d > 0) return d + ' ngày trước';
+      if (h > 0) return h + ' giờ trước';
+      if (m > 0) return m + ' phút trước';
+      return 'vừa xong';
+    }
+
+    // ── Auth ──────────────────────────────────────────────────────
+    function doLogout() {
+      sessionStorage.removeItem('currentUser');
+      window.location.href = 'index.html';
+    }
+
+    function initUser() {
+      const raw = sessionStorage.getItem('currentUser');
+      if (!raw) { window.location.href = 'index.html'; return; }
+      currentUser = JSON.parse(raw);
+      const initials = (currentUser.first_name[0] + (currentUser.last_name?.[0] || '')).toUpperCase();
+      const color = AV_COLORS[currentUser.id % AV_COLORS.length];
+      document.getElementById('sbAvatar').textContent = initials;
+      document.getElementById('sbAvatar').style.background = color;
+      document.getElementById('sbName').textContent = currentUser.first_name + ' ' + currentUser.last_name;
+      document.getElementById('sbLevel').textContent = `Level ${currentUser.level} · ${currentUser.xp} XP`;
+      const mob = document.getElementById('mobAvatar');
+      if (mob) { mob.textContent = initials; mob.style.background = color; }
+    }
+
+    // ── Load Q&A posts ────────────────────────────────────────────
+    async function loadQA(reset = true) {
+      if (reset) { offset = 0; allLoaded = false; }
+      const el = document.getElementById('postList');
+      if (reset) {
+        el.innerHTML = '<div style="text-align:center;padding:48px 0;color:var(--text-muted)"><div class="spinner" style="display:inline-block;margin-bottom:8px"></div><div style="font-size:var(--fs-sm)">Đang tải câu hỏi...</div></div>';
+      }
+
+      try {
+        let url = `${API}/feed?type=question&limit=${LIMIT}&offset=${offset}&sort=${activeSort}`;
+        const data = await fetch(url).then(r => r.json());
+        let posts = data.posts || [];
+
+        // Client-side unanswered filter
+        if (showUnanswered) {
+          posts = posts.filter(p => (p.comments_count || 0) === 0);
+        }
+
+        // Store for hero stats
+        if (reset) _allPosts = posts;
+        else _allPosts = _allPosts.concat(posts);
+
+        if (reset && !posts.length) {
+          el.innerHTML = '<div style="text-align:center;padding:64px 0;color:var(--text-muted)"><div style="font-size:40px;margin-bottom:10px">❓</div><div style="font-size:var(--fs-base);font-weight:600;color:var(--text);margin-bottom:4px">Chưa có câu hỏi nào</div><div style="font-size:var(--fs-sm)">Hãy là người đầu tiên đặt câu hỏi cho cộng đồng!</div></div>';
+          document.getElementById('loadMoreWrap').style.display = 'none';
+          updateHeroStats([]);
+          return;
+        }
+
+        const html = posts.map(p => renderQACard(p)).join('');
+        if (reset) el.innerHTML = html;
+        else el.insertAdjacentHTML('beforeend', html);
+
+        offset += (data.posts || []).length;
+        allLoaded = (data.posts || []).length < LIMIT;
+        document.getElementById('loadMoreWrap').style.display = allLoaded ? 'none' : 'block';
+
+        if (reset) updateHeroStats(_allPosts);
+      } catch (e) {
+        if (reset) el.innerHTML = '<div style="text-align:center;padding:40px 0;color:#ef4444;font-size:var(--fs-sm)">⚠️ Không kết nối được server.<br>Chạy: <code>node server.js</code></div>';
+      }
+    }
+
+    function updateHeroStats(posts) {
+      const total = posts.length;
+      const answered = posts.filter(p => (p.comments_count || 0) > 0).length;
+      document.getElementById('qaCount').textContent = total < LIMIT ? total : total + '+';
+      document.getElementById('qaAnswered').textContent = answered;
+    }
+
+    function loadMore() { loadQA(false); }
+
+    function renderQACard(p) {
+      const initials = (p.first_name[0] + (p.last_name?.[0] || '')).toUpperCase();
+      const color = AV_COLORS[p.author_id % AV_COLORS.length];
+      const name = p.first_name + ' ' + p.last_name;
+      const time = fmtRelative(p.created_at);
+      const hasAnswer = (p.comments_count || 0) > 0;
+
+      const answeredBadge = hasAnswer
+        ? `<span class="badge-answered">✓ Đã có trả lời</span>` : '';
+
+      return `
+  <article class="post-card" onclick="openPost(${p.id})" tabindex="0" role="button" aria-label="Mở câu hỏi">
+    <div class="post-avatar" style="width:40px;height:40px;border-radius:50%;background:${color};display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:#fff;flex-shrink:0;">${initials}</div>
+    <div class="post-body">
+      <div class="post-meta">
+        <span class="badge-question">❓ Câu hỏi</span>
+        ${answeredBadge}
+        <span class="post-author">${escHtml(name)}</span>
+        <span class="badge badge-level">Lv.${p.level}</span>
+        <span class="post-time">${time}</span>
+      </div>
+      ${p.title ? `<h3 class="post-title">${escHtml(p.title)}</h3>` : ''}
+      <p class="post-excerpt">${escHtml(p.content || '')}</p>
+      <div class="post-footer">
+        <span class="post-stat" onclick="event.stopPropagation();likePost(${p.id},this)" style="cursor:pointer">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
+          <span class="like-count">${p.likes_count || 0}</span>
+        </span>
+        <span class="post-stat">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+          ${p.comments_count || 0}
+        </span>
+      </div>
+    </div>
+  </article>`;
+    }
+
+    async function likePost(id, el) {
+      await fetch(`${API}/posts/${id}/like`, { method: 'POST' });
+      const cnt = el.querySelector('.like-count');
+      cnt.textContent = Number(cnt.textContent) + 1;
+    }
+
+    // ── Sort & Filter ─────────────────────────────────────────────
+    function setSort(sort, btn) {
+      activeSort = sort;
+      document.querySelectorAll('.sort-btn[data-sort]').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      loadQA();
+    }
+
+    function toggleUnanswered() {
+      showUnanswered = !showUnanswered;
+      document.getElementById('unansweredBtn').classList.toggle('active', showUnanswered);
+      loadQA();
+    }
+
+    // ── Ask modal ─────────────────────────────────────────────────
+    function openAskModal() {
+      document.getElementById('askTitle').value = '';
+      document.getElementById('askContent').value = '';
+      document.getElementById('askModalOverlay').classList.add('open');
+      document.body.style.overflow = 'hidden';
+      setTimeout(() => document.getElementById('askTitle').focus(), 200);
+    }
+
+    function closeAskModal() {
+      document.getElementById('askModalOverlay').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    function handleAskModalBgClick(e) {
+      if (e.target === document.getElementById('askModalOverlay')) closeAskModal();
+    }
+
+    async function submitQuestion() {
+      const title = document.getElementById('askTitle').value.trim();
+      const content = document.getElementById('askContent').value.trim();
+      if (!title) { document.getElementById('askTitle').focus(); return; }
+      if (!currentUser) return;
+
+      const btn = document.getElementById('askSubmitBtn');
+      btn.disabled = true;
+      btn.textContent = 'Đang đăng...';
+
+      try {
+        const res = await fetch(`${API}/posts`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            user_id: currentUser.id,
+            title: title,
+            content: content,
+            post_type: 'question',
+          }),
+        });
+        if (res.ok) {
+          closeAskModal();
+          loadQA();
+        }
+      } catch (e) { }
+
+      btn.disabled = false;
+      btn.textContent = 'Đăng câu hỏi';
+    }
+
+    // ── Post modal ────────────────────────────────────────────────
+    let _pmPostId = null;
+    let _pmLiked = false;
+
+    async function openPost(postId) {
+      _pmPostId = postId; _pmLiked = false;
+      const overlay = document.getElementById('postModalOverlay');
+      overlay.classList.add('open');
+      document.body.style.overflow = 'hidden';
+      document.getElementById('pmBody').innerHTML = '<div style="text-align:center;padding:48px;color:var(--text-muted)">Đang tải...</div>';
+      document.getElementById('pmComments').innerHTML = '';
+      document.getElementById('pmCommentInput').value = '';
+      document.getElementById('pmLikeBtn').classList.remove('liked');
+
+      try {
+        const [post, cmts] = await Promise.all([
+          fetch(`${API}/posts/${postId}`).then(r => r.json()),
+          fetch(`${API}/posts/${postId}/comments`).then(r => r.json()),
+        ]);
+        renderPmPost(post);
+        renderPmComments(cmts.comments || []);
+      } catch (e) {
+        document.getElementById('pmBody').innerHTML = '<div style="padding:40px;text-align:center;color:#ef4444">Không thể tải câu hỏi.</div>';
+      }
+    }
+
+    function renderPmPost(p) {
+      const ini = ((p.first_name || '?')[0] + ((p.last_name || '')[0] || '')).toUpperCase();
+      const col = AV_COLORS[p.author_id % AV_COLORS.length];
+      const hasAns = (p.comments_count || 0) > 0;
+
+      document.getElementById('pmHeaderBadges').innerHTML =
+        '<span class="badge-question" style="font-size:11px;font-weight:700;padding:3px 10px;border-radius:99px;background:#ecfdf5;color:#10b981;border:1px solid #a7f3d0;">❓ Câu hỏi</span>' +
+        (hasAns ? '<span class="badge-answered" style="font-size:11px;font-weight:700;padding:3px 10px;border-radius:99px;background:#d1fae5;color:#065f46;">✓ Đã có trả lời</span>' : '');
+
+      document.getElementById('pmLikeCount').textContent = p.likes_count || 0;
+      document.getElementById('pmCmtCount').textContent = p.comments_count || 0;
+
+      document.getElementById('pmBody').innerHTML = `
+    <div class="pm-author-row">
+      <div class="pm-avatar" style="background:${col}">${ini}</div>
+      <div>
+        <div class="pm-author-name">${escHtml(p.first_name)} ${escHtml(p.last_name || '')}</div>
+        <div class="pm-author-meta">Lv.${p.level} · ${fmtRelative(p.created_at)}</div>
+      </div>
+    </div>
+    ${p.title ? `<div class="pm-title">${escHtml(p.title)}</div>` : ''}
+    <div class="pm-content">${escHtml(p.content || '')}</div>`;
+    }
+
+    function renderPmComments(comments) {
+      const el = document.getElementById('pmComments');
+      if (!comments.length) {
+        el.innerHTML = '<div class="pm-empty-cmt">Chưa có câu trả lời nào. Hãy là người đầu tiên! 💬</div>';
+        return;
+      }
+      const roots = comments.filter(c => !c.parent_id);
+      const replyMap = {};
+      comments.filter(c => c.parent_id).forEach(c => {
+        (replyMap[c.parent_id] = replyMap[c.parent_id] || []).push(c);
+      });
+      el.innerHTML = roots.map(c => renderCmt(c, replyMap[c.id] || [])).join('');
+    }
+
+    function renderCmt(c, replies) {
+      const ini = ((c.first_name || '?')[0] + ((c.last_name || '')[0] || '')).toUpperCase();
+      const col = AV_COLORS[(c.author_id || c.user_id || 0) % AV_COLORS.length];
+      const repliesHtml = replies.length
+        ? `<div class="pm-replies">${replies.map(r => renderCmt(r, [])).join('')}</div>` : '';
+
+      return `<div class="pm-cmt-item" id="cmt-${c.id}">
+    <div class="pm-cmt-avatar" style="background:${col}">${ini}</div>
+    <div class="pm-cmt-body">
+      <div class="pm-cmt-header">
+        <span class="pm-cmt-name">${escHtml(c.first_name)} ${escHtml(c.last_name || '')}</span>
+        <span class="pm-cmt-time">${fmtRelative(c.created_at)}</span>
+      </div>
+      <div class="pm-cmt-text">${escHtml(c.content)}</div>
+      <button class="pm-reply-btn" onclick="toggleReply(${c.id})">
+        <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"/></svg>
+        Trả lời
+      </button>
+      <div class="pm-reply-form" id="rf-${c.id}">
+        <textarea class="pm-reply-input" id="ri-${c.id}" placeholder="Trả lời ${escHtml(c.first_name)}..." rows="1"
+          onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();submitReply(${c.id});}"></textarea>
+        <button class="pm-reply-submit" onclick="submitReply(${c.id})">Gửi</button>
+        <button class="pm-reply-cancel" onclick="toggleReply(${c.id})">Hủy</button>
+      </div>
+    </div>
+  </div>${repliesHtml}`;
+    }
+
+    function toggleReply(cmtId) {
+      document.querySelectorAll('.pm-reply-form.open').forEach(f => {
+        if (f.id !== `rf-${cmtId}`) f.classList.remove('open');
+      });
+      const form = document.getElementById(`rf-${cmtId}`);
+      if (!form) return;
+      form.classList.toggle('open');
+      if (form.classList.contains('open')) document.getElementById(`ri-${cmtId}`)?.focus();
+    }
+
+    async function submitReply(parentId) {
+      const input = document.getElementById(`ri-${parentId}`);
+      const content = input?.value.trim();
+      if (!content || !currentUser) return;
+      try {
+        await fetch(`${API}/posts/${_pmPostId}/comments`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ user_id: currentUser.id, content, parent_id: parentId }),
+        });
+        input.value = '';
+        document.getElementById(`rf-${parentId}`)?.classList.remove('open');
+        const cmts = await fetch(`${API}/posts/${_pmPostId}/comments`).then(r => r.json());
+        renderPmComments(cmts.comments || []);
+        document.getElementById('pmCmtCount').textContent =
+          Number(document.getElementById('pmCmtCount').textContent) + 1;
+      } catch (e) { }
+    }
+
+    async function pmToggleLike() {
+      if (!currentUser || !_pmPostId) return;
+      _pmLiked = !_pmLiked;
+      document.getElementById('pmLikeBtn').classList.toggle('liked', _pmLiked);
+      const cnt = document.getElementById('pmLikeCount');
+      cnt.textContent = Number(cnt.textContent) + (_pmLiked ? 1 : -1);
+      await fetch(`${API}/posts/${_pmPostId}/like`, { method: 'POST' });
+    }
+
+    async function pmSubmitComment() {
+      const input = document.getElementById('pmCommentInput');
+      const content = input.value.trim();
+      if (!content || !currentUser) return;
+      const btn = document.getElementById('pmCommentSubmit');
+      btn.disabled = true;
+      try {
+        await fetch(`${API}/posts/${_pmPostId}/comments`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ user_id: currentUser.id, content }),
+        });
+        input.value = '';
+        const cmts = await fetch(`${API}/posts/${_pmPostId}/comments`).then(r => r.json());
+        renderPmComments(cmts.comments || []);
+        const el = document.getElementById('pmCmtCount');
+        el.textContent = Number(el.textContent) + 1;
+      } catch (e) { }
+      btn.disabled = false;
+    }
+
+    function closePost() {
+      document.getElementById('postModalOverlay').classList.remove('open');
+      document.body.style.overflow = '';
+      _pmPostId = null;
+    }
+
+    function handlePostModalBgClick(e) {
+      if (e.target === document.getElementById('postModalOverlay')) closePost();
+    }
+
+    // ── Profile card ──────────────────────────────────────────────
+    async function loadProfileCard() {
+      if (!currentUser) return;
+      try {
+        const u = await fetch(`${API}/users/${currentUser.id}`).then(r => r.json());
+        const initials = (u.first_name[0] + (u.last_name?.[0] || '')).toUpperCase();
+        const color = AV_COLORS[u.id % AV_COLORS.length];
+        const lv = getLevelDef(u.xp || 0);
+        const xpToNext = lv.xpMax - (u.xp || 0);
+        const xpPct = Math.min(Math.round(((u.xp || 0) - lv.xpMin) / (lv.xpMax - lv.xpMin) * 100), 100);
+        document.getElementById('profileCard').innerHTML = `
+      <div class="profile-user-row">
+        <div style="width:42px;height:42px;background:${color};border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:#fff;">${initials}</div>
+        <div>
+          <div class="profile-name">${escHtml(u.first_name)} ${escHtml(u.last_name || '')}</div>
+          <div class="profile-title">🏁 Level ${lv.level}</div>
+        </div>
+      </div>
+      <div class="profile-level-row">
+        <span class="profile-level">Lv.${lv.level}</span>
+        <span class="profile-xp">${u.xp} XP</span>
+      </div>
+      <div class="xp-bar" style="margin-bottom:4px;">
+        <div class="xp-bar-fill" style="width:${xpPct}%"></div>
+      </div>
+      <div class="xp-next">Còn ${Math.max(0, xpToNext)} XP để lên Lv.${lv.level + 1}</div>
+      <div class="stat-row">
+        <div class="stat-item">
+          <div class="stat-value" style="color:var(--color-primary)">${u.post_count || 0}</div>
+          <div class="stat-label">Bài đăng</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value" style="color:var(--accent-purple)">${u.completed_days || 0}</div>
+          <div class="stat-label">🏆 Challenge</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value" style="color:#f59e0b">${u.streak || 0}</div>
+          <div class="stat-label">🔥 Streak</div>
+        </div>
+      </div>`;
+      } catch (e) { }
+    }
+
+    // ── Top answerers widget ──────────────────────────────────────
+    async function loadTopAnswerersWidget() {
+      try {
+        const { posts } = await fetch(`${API}/feed?type=question&limit=100`).then(r => r.json());
+        // Aggregate by author from posts that have comments (answered ones)
+        // We use all posts' author data to show who asked the most active questions
+        // For "top answerers" we'd need comments endpoint; instead show top questioners who got answered
+        const counts = {};
+        const meta = {};
+        posts.forEach(p => {
+          if ((p.comments_count || 0) > 0) {
+            counts[p.author_id] = (counts[p.author_id] || 0) + (p.comments_count || 0);
+            meta[p.author_id] = { name: p.first_name + ' ' + (p.last_name || ''), id: p.author_id };
+          }
+        });
+        const sorted = Object.entries(counts).sort((a, b) => b[1] - a[1]).slice(0, 7);
+        const rankIcon = ['🥇', '🥈', '🥉'];
+        const rows = sorted.map(([uid, count], i) => {
+          const u = meta[uid];
+          const color = AV_COLORS[Number(uid) % AV_COLORS.length];
+          const ini = u.name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
+          return `<div class="qa-contrib-item">
+        <div class="qa-contrib-rank">${rankIcon[i] || i + 1}</div>
+        <div style="width:26px;height:26px;border-radius:50%;background:${color};display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;flex-shrink:0;">${ini}</div>
+        <div class="qa-contrib-name">${escHtml(u.name)}</div>
+        <div class="qa-contrib-count">${count} trả lời</div>
+      </div>`;
+        }).join('');
+        document.getElementById('topAnswerersWidget').innerHTML = `
+      <p class="widget-title">💬 TOP TRẢ LỜI</p>
+      ${rows || '<div style="font-size:var(--fs-sm);color:var(--text-muted);text-align:center;padding:8px 0;">Chưa có dữ liệu.</div>'}`;
+      } catch (e) { }
+    }
+
+    // ── Leaderboard widget ────────────────────────────────────────
+    async function loadLBWidget() {
+      try {
+        const uid = currentUser ? currentUser.id : '';
+        const { ranked } = await fetch(`${API}/leaderboard?period=alltime&limit=5&user_id=${uid}`).then(r => r.json());
+        const rankIcon = ['🥇', '🥈', '🥉'];
+        const rows = ranked.map((u, i) => {
+          const initials = (u.first_name[0] + (u.last_name?.[0] || '')).toUpperCase();
+          const color = AV_COLORS[u.id % AV_COLORS.length];
+          const isMe = currentUser && u.id === currentUser.id;
+          return `<div class="lb-item" style="${isMe ? 'background:#ecfdf5;border-radius:8px;' : ''}">
+        <div class="lb-rank ${i === 0 ? 'gold' : i === 1 ? 'silver' : i === 2 ? 'bronze' : ''}">${rankIcon[i] || i + 1}</div>
+        <div style="width:28px;height:28px;border-radius:50%;background:${color};display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;flex-shrink:0">${initials}</div>
+        <div style="flex:1;min-width:0;">
+          <div class="lb-name">${escHtml(u.first_name)} ${escHtml(u.last_name || '')}${isMe ? '<span style="font-size:10px;background:#d1fae5;color:#065f46;padding:1px 5px;border-radius:99px;font-weight:700;margin-left:4px;">Bạn</span>' : ''}</div>
+          <div class="lb-exp">${u.period_xp} XP</div>
+        </div>
+      </div>`;
+        }).join('');
+        document.getElementById('lbWidget').innerHTML = `
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+        <p class="widget-title" style="margin-bottom:0;">🏆 TOP XP</p>
+        <a href="leaderboard.html" style="font-size:var(--fs-xs);font-weight:600;color:var(--color-primary);">Xem tất cả →</a>
+      </div>${rows}`;
+      } catch (e) { }
+    }
+
+    // ── Keyboard shortcuts ────────────────────────────────────────
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') {
+        closePost();
+        closeAskModal();
+      }
+    });
+
+    // ── Init ──────────────────────────────────────────────────────
+    initUser();
+    loadQA();
+    loadProfileCard();
+    loadTopAnswerersWidget();
+    loadLBWidget();
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,1817 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hồ sơ thành viên — AI AGENTS CC</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/base.css">
+  <link rel="stylesheet" href="assets/css/components.css">
+  <link rel="stylesheet" href="assets/css/layout.css">
+  <style>
+    /* ── Profile Hero ──────────────────────────────────── */
+    .profile-hero {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 28px;
+      margin-bottom: 16px;
+    }
+
+    .profile-hero-top {
+      display: flex;
+      align-items: flex-start;
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+
+    .profile-avatar {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-heading);
+      font-size: 28px;
+      font-weight: 800;
+      color: #fff;
+      flex-shrink: 0;
+    }
+
+    .profile-hero-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .profile-hero-name {
+      font-family: var(--font-heading);
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--text);
+      margin-bottom: 6px;
+      line-height: 1.2;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .badge-role {
+      padding: 3px 10px;
+      border-radius: 99px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .badge-lv {
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      border: 1.5px solid;
+    }
+
+    .badge-me {
+      font-size: 10px;
+      font-weight: 700;
+      background: #e0f2fe;
+      color: #0369a1;
+      padding: 2px 7px;
+      border-radius: 99px;
+    }
+
+    .profile-hero-subtitle {
+      font-size: var(--fs-sm);
+      color: var(--text-muted);
+      margin-bottom: 10px;
+    }
+
+    .profile-hero-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .btn-msg {
+      padding: 7px 14px;
+      font-size: var(--fs-xs);
+      font-weight: 600;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      background: #fff;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-family: var(--font-body);
+      transition: border-color .15s, color .15s;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .btn-msg:hover {
+      border-color: var(--color-primary);
+      color: var(--color-primary);
+    }
+
+    .profile-join {
+      font-size: var(--fs-xs);
+      color: var(--text-muted);
+    }
+
+    /* XP section */
+    .profile-xp-section {
+      margin-bottom: 20px;
+    }
+
+    .profile-xp-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      margin-bottom: 5px;
+    }
+
+    .profile-xp-cur {
+      color: #22c55e;
+      font-weight: 700;
+    }
+
+    .profile-xp-next {
+      color: var(--text-muted);
+    }
+
+    .profile-xp-track {
+      height: 8px;
+      background: #e2e8f0;
+      border-radius: 99px;
+      overflow: hidden;
+    }
+
+    .profile-xp-fill {
+      height: 100%;
+      background: #22c55e;
+      border-radius: 99px;
+      transition: width .6s ease;
+    }
+
+    /* Stats */
+    .profile-stat-row {
+      display: flex;
+      align-items: stretch;
+    }
+
+    .profile-stat-item {
+      flex: 1;
+      text-align: center;
+      padding: 12px 8px;
+    }
+
+    .profile-stat-item:not(:last-child) {
+      border-right: 1px solid var(--border);
+    }
+
+    .profile-stat-val {
+      font-family: var(--font-heading);
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--text);
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+
+    .profile-stat-lbl {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    /* ── Section Cards ─────────────────────────────────── */
+    .profile-section-card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      margin-bottom: 16px;
+      overflow: hidden;
+    }
+
+    .psc-header {
+      padding: 14px 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .psc-title {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .07em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .psc-body {
+      padding: 16px 20px;
+    }
+
+    /* ── Power Symbols ─────────────────────────────────── */
+    .power-symbols-row {
+      display: flex;
+      gap: 8px;
+      justify-content: space-around;
+    }
+
+    .power-sym {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 7px;
+      flex: 1;
+    }
+
+    .power-sym-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      border: 2px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      background: #f8fafc;
+      transition: border-color .2s, background .2s;
+    }
+
+    .power-sym.active .power-sym-icon {
+      border-color: var(--sym-color, var(--color-primary));
+      background: var(--sym-bg, #e0f2fe);
+    }
+
+    .power-sym-name {
+      font-size: 10px;
+      color: var(--text-muted);
+      font-weight: 600;
+      text-align: center;
+      line-height: 1.3;
+    }
+
+    .power-sym-count {
+      font-size: 10px;
+      color: var(--text-muted);
+    }
+
+    .power-sym.active .power-sym-name {
+      color: var(--text);
+    }
+
+    .power-sym.active .power-sym-count {
+      color: var(--text-muted);
+    }
+
+    /* ── Activity Heatmap ──────────────────────────────── */
+    .heatmap-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .heatmap-stat {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .heatmap-wrap {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    /* ── Tabs ──────────────────────────────────────────── */
+    .profile-tabs-bar {
+      display: flex;
+      border-bottom: 2px solid var(--border);
+      padding: 0 20px;
+    }
+
+    .profile-tab {
+      padding: 12px 16px;
+      font-size: var(--fs-sm);
+      font-weight: 600;
+      color: var(--text-muted);
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-family: var(--font-body);
+      border-bottom: 2px solid transparent;
+      margin-bottom: -2px;
+      transition: color .15s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .profile-tab .tab-count {
+      font-size: 10px;
+      font-weight: 700;
+      padding: 1px 6px;
+      border-radius: 99px;
+      background: var(--bg-hover);
+      color: var(--text-muted);
+    }
+
+    .profile-tab.active {
+      color: var(--color-primary);
+      border-bottom-color: var(--color-primary);
+    }
+
+    .profile-tab.active .tab-count {
+      background: #e0f2fe;
+      color: var(--color-primary);
+    }
+
+    .profile-tab:hover:not(.active) {
+      color: var(--text);
+    }
+
+    .tab-content {
+      padding: 8px 20px 20px;
+      min-height: 180px;
+    }
+
+    /* ── Post / Comment Items ──────────────────────────── */
+    .post-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .post-item:last-child {
+      border-bottom: none;
+    }
+
+    .post-item-pillar {
+      width: 4px;
+      border-radius: 2px;
+      flex-shrink: 0;
+      align-self: stretch;
+      min-height: 40px;
+    }
+
+    .post-item-body {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .post-item-title {
+      font-size: var(--fs-sm);
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 4px;
+      line-height: 1.4;
+    }
+
+    .post-item-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .post-item-tag {
+      font-size: 10px;
+      font-weight: 600;
+      padding: 2px 7px;
+      border-radius: 99px;
+      white-space: nowrap;
+    }
+
+    .post-item-stats {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .comment-preview {
+      margin-top: 8px;
+      padding: 8px 10px;
+      background: var(--bg-hover);
+      border-radius: var(--radius-sm);
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.5;
+      border-left: 3px solid var(--border);
+    }
+
+    .comment-author {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-bottom: 2px;
+    }
+
+    .comment-author strong {
+      color: var(--text);
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--text-muted);
+      font-size: var(--fs-sm);
+    }
+
+    .empty-icon {
+      font-size: 32px;
+      margin-bottom: 10px;
+      opacity: .5;
+    }
+
+    /* ── Right Panel ───────────────────────────────────── */
+    .profile-rp-card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 16px;
+      margin-bottom: 12px;
+    }
+
+    .rp-card-title {
+      font-size: var(--fs-xs);
+      font-weight: 700;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+    }
+
+    .rp-link {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: var(--fs-sm);
+      color: var(--text);
+      text-decoration: none;
+      transition: color .15s;
+    }
+
+    .rp-link:last-child {
+      border-bottom: none;
+    }
+
+    .rp-link:hover {
+      color: var(--color-primary);
+    }
+
+    .rp-link svg {
+      width: 15px;
+      height: 15px;
+      flex-shrink: 0;
+      color: var(--text-muted);
+    }
+
+    /* ── Breadcrumb ────────────────────────────────────── */
+    .page-breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: var(--fs-xs);
+      color: var(--text-muted);
+      margin-bottom: 16px;
+    }
+
+    .page-breadcrumb a {
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color .15s;
+    }
+
+    .page-breadcrumb a:hover {
+      color: var(--color-primary);
+    }
+
+    .breadcrumb-sep {
+      color: var(--border);
+    }
+
+    .breadcrumb-cur {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    /* ── Responsive ────────────────────────────────────── */
+    @media (max-width: 768px) {
+      .profile-hero {
+        padding: 18px;
+      }
+
+      .profile-avatar {
+        width: 60px;
+        height: 60px;
+        font-size: 20px;
+      }
+
+      .profile-hero-name {
+        font-size: 18px;
+      }
+
+      .profile-stat-val {
+        font-size: 18px;
+      }
+
+      .power-sym-icon {
+        width: 44px;
+        height: 44px;
+        font-size: 18px;
+      }
+    }
+
+    /* ── Post Detail Modal ──────────────────────────────── */
+    .post-modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, .5);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .2s;
+    }
+
+    .post-modal-overlay.open {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .post-modal {
+      background: #fff;
+      border-radius: 16px;
+      width: 100%;
+      max-width: 680px;
+      max-height: 90vh;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, .18);
+      transform: translateY(16px);
+      transition: transform .2s;
+      overflow: hidden;
+    }
+
+    .post-modal-overlay.open .post-modal {
+      transform: translateY(0);
+    }
+
+    .pm-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 20px;
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+
+    .pm-header-badges {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .pm-close {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: none;
+      background: var(--bg-hover);
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 20px;
+      line-height: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background .15s;
+      flex-shrink: 0;
+    }
+
+    .pm-close:hover {
+      background: #e2e8f0;
+    }
+
+    .pm-body {
+      overflow-y: auto;
+      flex: 1;
+      padding: 20px;
+    }
+
+    .pm-author-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .pm-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 700;
+      color: #fff;
+      flex-shrink: 0;
+    }
+
+    .pm-author-name {
+      font-size: var(--fs-sm);
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .pm-author-meta {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .pm-title {
+      font-family: var(--font-heading);
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--text);
+      margin-bottom: 12px;
+      line-height: 1.35;
+    }
+
+    .pm-content {
+      font-size: var(--fs-base);
+      color: var(--text);
+      line-height: 1.75;
+      white-space: pre-wrap;
+    }
+
+    .pm-actions {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 12px 20px;
+      border-top: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+
+    .pm-like-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 16px;
+      border-radius: var(--radius-md);
+      border: 1.5px solid var(--border);
+      background: #fff;
+      cursor: pointer;
+      font-size: var(--fs-sm);
+      font-weight: 600;
+      color: var(--text-muted);
+      transition: all .15s;
+      font-family: var(--font-body);
+    }
+
+    .pm-like-btn:hover,
+    .pm-like-btn.liked {
+      border-color: #f43f5e;
+      color: #f43f5e;
+      background: #fff1f2;
+    }
+
+    .pm-cmt-count-lbl {
+      font-size: var(--fs-sm);
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .pm-comments {
+      flex-shrink: 0;
+      max-height: 320px;
+      overflow-y: auto;
+      border-top: 1px solid var(--border);
+    }
+
+    .pm-cmt-item {
+      display: flex;
+      gap: 10px;
+      padding: 12px 20px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .pm-cmt-item:last-child {
+      border-bottom: none;
+    }
+
+    .pm-cmt-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 700;
+      color: #fff;
+      flex-shrink: 0;
+    }
+
+    .pm-cmt-body {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .pm-cmt-header {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      margin-bottom: 3px;
+      flex-wrap: wrap;
+    }
+
+    .pm-cmt-name {
+      font-size: var(--fs-xs);
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .pm-cmt-time {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .pm-cmt-text {
+      font-size: var(--fs-sm);
+      color: var(--text);
+      line-height: 1.55;
+    }
+
+    .pm-empty-cmt {
+      text-align: center;
+      padding: 20px;
+      color: var(--text-muted);
+      font-size: var(--fs-sm);
+    }
+
+    .pm-reply-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      margin-top: 5px;
+      padding: 2px 0;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-family: var(--font-body);
+      transition: color .15s;
+    }
+
+    .pm-reply-btn:hover {
+      color: var(--color-primary);
+    }
+
+    .pm-reply-form {
+      display: none;
+      margin-top: 8px;
+      align-items: flex-end;
+      gap: 6px;
+    }
+
+    .pm-reply-form.open {
+      display: flex;
+    }
+
+    .pm-reply-input {
+      flex: 1;
+      padding: 7px 10px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      font-size: 12px;
+      font-family: var(--font-body);
+      color: var(--text);
+      resize: none;
+      min-height: 32px;
+      max-height: 72px;
+      background: var(--bg-hover);
+      outline: none;
+      transition: border-color .15s, background .15s;
+    }
+
+    .pm-reply-input:focus {
+      border-color: var(--color-primary);
+      background: #fff;
+    }
+
+    .pm-reply-submit {
+      padding: 6px 12px;
+      height: 32px;
+      background: var(--color-primary);
+      color: #fff;
+      border: none;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 600;
+      font-family: var(--font-body);
+      white-space: nowrap;
+      transition: background .15s;
+    }
+
+    .pm-reply-submit:hover {
+      background: #0284c7;
+    }
+
+    .pm-reply-cancel {
+      padding: 6px 10px;
+      height: 32px;
+      background: none;
+      color: var(--text-muted);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 600;
+      font-family: var(--font-body);
+      white-space: nowrap;
+    }
+
+    .pm-reply-cancel:hover {
+      background: var(--bg-hover);
+    }
+
+    .pm-replies {
+      padding-left: 42px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .pm-replies .pm-cmt-item {
+      border-bottom: none;
+      padding: 8px 20px 8px 0;
+    }
+
+    .pm-comment-form {
+      display: flex;
+      gap: 10px;
+      align-items: flex-end;
+      padding: 12px 20px;
+      border-top: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+
+    .pm-comment-input {
+      flex: 1;
+      padding: 9px 13px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      font-size: var(--fs-sm);
+      font-family: var(--font-body);
+      color: var(--text);
+      resize: none;
+      min-height: 38px;
+      max-height: 100px;
+      background: var(--bg-hover);
+      outline: none;
+      transition: border-color .15s, background .15s;
+    }
+
+    .pm-comment-input:focus {
+      border-color: var(--color-primary);
+      background: #fff;
+    }
+
+    .pm-comment-submit {
+      padding: 9px 16px;
+      background: var(--color-primary);
+      color: #fff;
+      border: none;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      font-size: var(--fs-sm);
+      font-weight: 600;
+      font-family: var(--font-body);
+      transition: background .15s;
+      white-space: nowrap;
+      height: 38px;
+    }
+
+    .pm-comment-submit:hover {
+      background: #0284c7;
+    }
+
+    .pm-comment-submit:disabled {
+      opacity: .6;
+      cursor: not-allowed;
+    }
+
+    .post-item {
+      cursor: pointer;
+    }
+
+    .post-item:hover .post-item-title {
+      color: var(--color-primary);
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="app">
+    <!-- Sidebar -->
+    <aside id="sidebar">
+      <div id="sidebar-logo">
+        <div class="sidebar-logo-mark">
+          <svg viewBox="0 0 20 20" fill="none">
+            <circle cx="10" cy="10" r="3" fill="currentColor" />
+            <path d="M10 3v2M10 15v2M3 10h2M15 10h2" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+            <path d="M5.5 5.5l1.5 1.5M13 13l1.5 1.5M14.5 5.5L13 7M7 13l-1.5 1.5" stroke="currentColor"
+              stroke-width="1.5" stroke-linecap="round" />
+          </svg>
+        </div>
+        <div class="sidebar-logo-text">AI AGENTS <span>CC</span></div>
+      </div>
+      <nav id="sidebar-nav">
+        <div class="nav-section-label">Cộng đồng</div>
+        <a href="feed.html" class="nav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
+          </svg>
+          Bảng tin
+        </a>
+        <a href="cot.html" class="nav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path
+              d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+          </svg>
+          CÔT
+        </a>
+        <a href="signal.html" class="nav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path d="M13 10V3L4 14h7v7l9-11h-7z" />
+          </svg>
+          Tín hiệu
+        </a>
+        <a href="qa.html" class="nav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path
+              d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          Hỏi đáp
+        </a>
+        <div class="nav-section-label" style="margin-top:8px;">Học tập</div>
+        <a href="courses.html" class="nav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path
+              d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+          </svg>
+          Khóa học
+        </a>
+        <a href="challenge.html" class="nav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path
+              d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z" />
+          </svg>
+          Challenge
+        </a>
+        <a href="leaderboard.html" class="nav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path
+              d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+          </svg>
+          Leaderboard
+        </a>
+        <div class="nav-section-label" style="margin-top:8px;">Khác</div>
+        <a href="marketplace.html" class="nav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path
+              d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+          </svg>
+          Marketplace
+        </a>
+        <a href="members.html" class="nav-item active">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path
+              d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
+          </svg>
+          Thành viên
+        </a>
+      </nav>
+      <div id="sidebar-user">
+        <div class="user-avatar-wrap">
+          <div class="avatar-placeholder avatar-md" id="sbAvatar"
+            style="width:32px;height:32px;font-size:12px;font-weight:700;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#7c3aed;">
+          </div>
+          <div class="user-status-dot"></div>
+        </div>
+        <div class="user-info">
+          <div class="user-name" id="sbName">—</div>
+          <div class="user-level" id="sbLevel">—</div>
+        </div>
+        <a href="index.html" class="icon-btn" title="Đăng xuất" style="margin-left:auto;"
+          onclick="sessionStorage.clear()">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4" />
+            <polyline points="16 17 21 12 16 7" />
+            <line x1="21" y1="12" x2="9" y2="12" />
+          </svg>
+        </a>
+      </div>
+    </aside>
+
+    <div id="main">
+      <!-- Topbar -->
+      <div id="topbar">
+        <div class="topbar-title" id="topbarTitle">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            style="width:17px;height:17px">
+            <path
+              d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
+          </svg>
+          Hồ sơ thành viên
+        </div>
+        <div class="topbar-right">
+          <button class="topbar-btn" id="topbarNotif" aria-label="Thông báo">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <path
+                d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+            </svg>
+          </button>
+          <div class="topbar-avatar-placeholder" id="topbarAvatar"
+            style="width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;background:#7c3aed;cursor:pointer;">
+          </div>
+        </div>
+      </div>
+
+      <div id="content-row">
+        <!-- Main feed -->
+        <div id="feed" style="padding:20px 24px;">
+
+          <!-- Breadcrumb -->
+          <div class="page-breadcrumb">
+            <a href="members.html">Thành viên</a>
+            <span class="breadcrumb-sep">›</span>
+            <span class="breadcrumb-cur" id="bcName">Hồ sơ</span>
+          </div>
+
+          <!-- Loading state -->
+          <div id="profileLoading" style="text-align:center;padding:60px 20px;color:var(--text-muted)">
+            <div style="font-size:32px;margin-bottom:12px;opacity:.4">👤</div>
+            <div>Đang tải hồ sơ...</div>
+          </div>
+
+          <!-- Profile content (hidden until loaded) -->
+          <div id="profileContent" style="display:none">
+
+            <!-- Hero -->
+            <div class="profile-hero">
+              <div class="profile-hero-top">
+                <div class="profile-avatar" id="profileAvatarEl"></div>
+                <div class="profile-hero-info">
+                  <div class="profile-hero-name" id="profileNameEl"></div>
+                  <div style="display:flex;gap:6px;align-items:center;margin-bottom:5px;" id="profileBadgesEl"></div>
+                  <div class="profile-hero-subtitle" id="profileSubtitleEl"></div>
+                  <div class="profile-hero-actions">
+                    <button class="btn-msg">💬 Nhắn tin</button>
+                    <span class="profile-join" id="profileJoinEl"></span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="profile-xp-section">
+                <div class="profile-xp-labels">
+                  <span class="profile-xp-cur" id="profileXpCur"></span>
+                  <span class="profile-xp-next" id="profileXpNext"></span>
+                </div>
+                <div class="profile-xp-track">
+                  <div class="profile-xp-fill" id="profileXpFill"></div>
+                </div>
+              </div>
+
+              <div class="profile-stat-row" id="profileStatsEl"></div>
+            </div>
+
+            <!-- Power Symbols -->
+            <div class="profile-section-card">
+              <div class="psc-header">
+                <div class="psc-title">Power Symbols</div>
+                <div style="font-size:11px;color:var(--text-muted)">Hoạt động theo trụ cột</div>
+              </div>
+              <div class="psc-body">
+                <div class="power-symbols-row" id="powerSymbolsEl"></div>
+              </div>
+            </div>
+
+            <!-- Activity heatmap -->
+            <div class="profile-section-card">
+              <div class="psc-header">
+                <div class="psc-title">Hoạt động</div>
+                <div class="heatmap-stat" id="heatmapStat"></div>
+              </div>
+              <div class="psc-body">
+                <div class="heatmap-wrap" id="heatmapEl"></div>
+                <div style="display:flex;align-items:center;gap:3px;justify-content:flex-end;margin-top:10px;">
+                  <span style="font-size:10px;color:#94a3b8;">Ít</span>
+                  <div style="width:11px;height:11px;border-radius:2px;background:#e2e8f0;"></div>
+                  <div style="width:11px;height:11px;border-radius:2px;background:#bbf7d0;"></div>
+                  <div style="width:11px;height:11px;border-radius:2px;background:#4ade80;"></div>
+                  <div style="width:11px;height:11px;border-radius:2px;background:#22c55e;"></div>
+                  <div style="width:11px;height:11px;border-radius:2px;background:#15803d;"></div>
+                  <span style="font-size:10px;color:#94a3b8;">Nhiều</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Tabs + content -->
+            <div class="profile-section-card">
+              <div class="profile-tabs-bar">
+                <button class="profile-tab active" onclick="switchTab(this,'posts')" id="tabPosts">
+                  📝 Bài viết <span class="tab-count" id="tcPosts">0</span>
+                </button>
+                <button class="profile-tab" onclick="switchTab(this,'comments')" id="tabComments">
+                  💬 Bình luận <span class="tab-count" id="tcComments">0</span>
+                </button>
+                <button class="profile-tab" onclick="switchTab(this,'cot')" id="tabCot">
+                  ★ CÔT <span class="tab-count" id="tcCot">0</span>
+                </button>
+              </div>
+              <div class="tab-content" id="tabContent"></div>
+            </div>
+
+          </div><!-- /profileContent -->
+
+          <div id="profileError" style="display:none;text-align:center;padding:60px;color:#ef4444">
+            Không tìm thấy thành viên này.
+          </div>
+
+        </div><!-- /feed -->
+
+        <!-- Right panel -->
+        <aside id="right-panel">
+
+          <div class="profile-rp-card">
+            <div class="rp-card-title">Điều hướng</div>
+            <a href="members.html" class="rp-link">
+              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <path
+                  d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+              Danh sách thành viên
+            </a>
+            <a href="leaderboard.html" class="rp-link">
+              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <path
+                  d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+              </svg>
+              Leaderboard
+            </a>
+            <a href="feed.html" class="rp-link">
+              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
+              </svg>
+              Bảng tin
+            </a>
+          </div>
+
+          <div class="profile-rp-card" id="rpLevelCard" style="display:none">
+            <div class="rp-card-title">Tiến trình level</div>
+            <div id="rpLevelContent"></div>
+          </div>
+
+          <div class="profile-rp-card" style="background:linear-gradient(135deg,#f0f9ff,#e0f2fe);border-color:#bae6fd;">
+            <div class="rp-card-title" style="color:#0369a1;">💡 Ghi chú</div>
+            <p style="font-size:var(--fs-xs);color:#0369a1;line-height:1.6;">
+              Bấm vào bất kỳ bài viết nào để xem chi tiết và tham gia thảo luận cùng cộng đồng.
+            </p>
+          </div>
+
+        </aside>
+      </div><!-- /content-row -->
+
+      <!-- Mobile nav -->
+      <nav id="mobile-nav">
+        <a href="feed.html" class="mob-nav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
+          </svg>
+          <span>Bảng tin</span>
+        </a>
+        <a href="challenge.html" class="mob-nav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path
+              d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z" />
+          </svg>
+          <span>Challenge</span>
+        </a>
+        <a href="members.html" class="mob-nav-item active">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path
+              d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
+          </svg>
+          <span>TV</span>
+        </a>
+        <a href="leaderboard.html" class="mob-nav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path d="M9 12l2 2 4-4" />
+          </svg>
+          <span>BXH</span>
+        </a>
+      </nav>
+    </div><!-- /main -->
+  </div><!-- /app -->
+
+  <div id="mob-overlay" onclick="closeSidebar()"></div>
+  <div id="mob-sidebar">
+    <div
+      style="padding:14px 16px;border-bottom:1px solid var(--border);font-size:var(--fs-md);font-weight:700;color:var(--text);">
+      Menu</div>
+    <nav style="flex:1;overflow-y:auto;padding:8px;">
+      <a href="feed.html" class="nav-item">Bảng tin</a>
+      <a href="cot.html" class="nav-item">CÔT</a>
+      <a href="signal.html" class="nav-item">Tín hiệu</a>
+      <a href="qa.html" class="nav-item">Hỏi đáp</a>
+      <a href="courses.html" class="nav-item">Khóa học</a>
+      <a href="challenge.html" class="nav-item">Challenge</a>
+      <a href="leaderboard.html" class="nav-item">Leaderboard</a>
+      <a href="members.html" class="nav-item active">Thành viên</a>
+    </nav>
+  </div>
+
+  <script src="assets/js/app.js"></script>
+  <script>
+    const API = 'http://localhost:3000/api';
+
+    const LEVELS = [
+      { level: 1, name: 'Khởi động', xpMin: 0, xpMax: 45 }, { level: 2, name: 'Học viên', xpMin: 45, xpMax: 120 },
+      { level: 3, name: 'Thực hành', xpMin: 120, xpMax: 250 }, { level: 4, name: 'Nâng cao', xpMin: 250, xpMax: 450 },
+      { level: 5, name: 'Chuyên gia', xpMin: 450, xpMax: 700 }, { level: 6, name: 'Bậc thầy', xpMin: 700, xpMax: 1000 },
+      { level: 7, name: 'Huyền thoại', xpMin: 1000, xpMax: 1500 }, { level: 8, name: 'Tiên tri', xpMin: 1500, xpMax: 2200 },
+      { level: 9, name: 'Thần thánh', xpMin: 2200, xpMax: 9999 },
+    ];
+    const LEVEL_COLORS = ['#64748b', '#3b82f6', '#10b981', '#8b5cf6', '#f59e0b', '#ef4444', '#ec4899', '#0ea5e9', '#f97316'];
+    const PILLAR_MAP = {
+      offer: { label: 'Offer', color: '#f59e0b' },
+      traffic: { label: 'Thu hút', color: '#3b82f6' },
+      conversion: { label: 'Chuyển đổi', color: '#8b5cf6' },
+      delivery: { label: 'Cung ứng', color: '#10b981' },
+      continuity: { label: 'Continuity', color: '#ec4899' },
+    };
+    const AV_COLORS = ['#0ea5e9', '#8b5cf6', '#10b981', '#f59e0b', '#ec4899', '#3b82f6', '#ef4444', '#14b8a6'];
+
+    function getLevel(xp) {
+      for (let i = LEVELS.length - 1; i >= 0; i--) if (xp >= LEVELS[i].xpMin) return LEVELS[i];
+      return LEVELS[0];
+    }
+    function avColor(id) { return AV_COLORS[(id || 0) % AV_COLORS.length]; }
+    function initials(u) { return ((u.first_name || '?')[0] + ((u.last_name || '')[0] || '')).toUpperCase(); }
+    function fmtDate(s) {
+      if (!s) return '—';
+      const d = new Date(s);
+      return `${d.getDate()}/${d.getMonth() + 1}/${d.getFullYear()}`;
+    }
+    function fmtRelative(s) {
+      if (!s) return '—';
+      const diff = (Date.now() - new Date(s)) / 1000;
+      if (diff < 60) return 'vừa xong';
+      if (diff < 3600) return Math.floor(diff / 60) + ' phút trước';
+      if (diff < 86400) return Math.floor(diff / 3600) + ' giờ trước';
+      if (diff < 86400 * 30) return Math.floor(diff / 86400) + ' ngày trước';
+      return fmtDate(s);
+    }
+    function escHtml(s) {
+      return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+    function getTitleByLevel(level) {
+      const t = ['', 'Tân binh', 'Người học', 'Người thực hành', 'Người nâng cao', 'Chuyên gia', 'Bậc thầy', 'Huyền thoại', 'Tiên tri', 'Thần thánh'];
+      return t[level] || 'Thành viên';
+    }
+
+    // ── Auth check ────────────────────────────────────────
+    let currentUser = null;
+    (function () {
+      const raw = sessionStorage.getItem('currentUser');
+      if (!raw) { location.href = 'index.html'; return; }
+      currentUser = JSON.parse(raw);
+      const ini = initials(currentUser);
+      const col = avColor(currentUser.id);
+      const lv = getLevel(currentUser.xp || 0);
+      const el = document.getElementById('sbAvatar');
+      if (el) { el.textContent = ini; el.style.background = col; }
+      document.getElementById('sbName').textContent = currentUser.first_name + ' ' + (currentUser.last_name || '');
+      document.getElementById('sbLevel').textContent = lv.name + ' · Lv.' + lv.level;
+      const ta = document.getElementById('topbarAvatar');
+      if (ta) { ta.textContent = ini; ta.style.background = col; }
+    })();
+
+    // ── Load profile data ─────────────────────────────────
+    let _posts = [], _comments = [], _profileUser = null;
+
+    async function loadProfile() {
+      const params = new URLSearchParams(location.search);
+      const userId = params.get('id');
+      if (!userId) { location.href = 'members.html'; return; }
+
+      try {
+        const [uData, pData, aData, cData] = await Promise.all([
+          fetch(`${API}/users/${userId}`).then(r => r.json()),
+          fetch(`${API}/users/${userId}/posts`).then(r => r.json()),
+          fetch(`${API}/users/${userId}/activity`).then(r => r.json()),
+          fetch(`${API}/users/${userId}/comments`).then(r => r.json()),
+        ]);
+
+        if (uData.error) { showError(); return; }
+
+        _profileUser = uData;
+        _posts = pData.posts || [];
+        _comments = cData.posts || [];
+        const activityMap = aData.activity || {};
+
+        renderProfile(_profileUser, activityMap);
+      } catch (e) {
+        showError();
+      }
+    }
+
+    function showError() {
+      document.getElementById('profileLoading').style.display = 'none';
+      document.getElementById('profileError').style.display = 'block';
+    }
+
+    function renderProfile(u, activityMap) {
+      const lv = getLevel(u.xp || 0);
+      const pct = Math.min(100, Math.round(((u.xp || 0) - lv.xpMin) / (lv.xpMax - lv.xpMin) * 100));
+      const col = avColor(u.id);
+      const lvColor = LEVEL_COLORS[(lv.level - 1) % LEVEL_COLORS.length];
+      const ini = initials(u);
+      const isMe = currentUser && u.id === currentUser.id;
+      const xpToNext = lv.xpMax - (u.xp || 0);
+      const nextLv = lv.level < 9 ? lv.level + 1 : lv.level;
+
+      // Avatar
+      const avEl = document.getElementById('profileAvatarEl');
+      avEl.textContent = ini; avEl.style.background = col;
+
+      // Name + badges
+      document.getElementById('bcName').textContent = u.first_name + ' ' + (u.last_name || '');
+      document.getElementById('profileNameEl').innerHTML =
+        escHtml(u.first_name) + ' ' + escHtml(u.last_name || '') +
+        (isMe ? ' <span class="badge-me">Bạn</span>' : '');
+      document.getElementById('profileBadgesEl').innerHTML =
+        `<span class="badge-role" style="background:${lvColor}22;color:${lvColor}">${lv.name}</span>` +
+        `<span class="badge-lv" style="border-color:var(--accent-green);color:var(--accent-green)">Lv.${lv.level}</span>`;
+      document.getElementById('profileSubtitleEl').textContent = getTitleByLevel(lv.level);
+      document.getElementById('profileJoinEl').textContent = 'Tham gia ' + fmtDate(u.created_at);
+      document.title = u.first_name + ' ' + (u.last_name || '') + ' — AI AGENTS CC';
+
+      // XP bar
+      document.getElementById('profileXpCur').textContent = (u.xp || 0) + ' EXP';
+      document.getElementById('profileXpNext').textContent = `Lv.${nextLv} → còn ${xpToNext} EXP`;
+      document.getElementById('profileXpFill').style.width = pct + '%';
+
+      // Stats
+      const cotCount = u.cot_count || 0;
+      document.getElementById('profileStatsEl').innerHTML = `
+    <div class="profile-stat-item">
+      <div class="profile-stat-val" style="color:var(--accent-green)">${u.xp || 0}</div>
+      <div class="profile-stat-lbl">EXP</div>
+    </div>
+    <div class="profile-stat-item">
+      <div class="profile-stat-val" style="color:#f97316">${u.streak || 0}</div>
+      <div class="profile-stat-lbl">Streak</div>
+    </div>
+    <div class="profile-stat-item">
+      <div class="profile-stat-val">${u.post_count || 0}</div>
+      <div class="profile-stat-lbl">Bài viết</div>
+    </div>
+    <div class="profile-stat-item">
+      <div class="profile-stat-val" style="color:var(--accent-purple)">${cotCount}</div>
+      <div class="profile-stat-lbl">★ CÔT</div>
+    </div>
+    <div class="profile-stat-item">
+      <div class="profile-stat-val" style="color:var(--color-primary)">${u.completed_days || 0}</div>
+      <div class="profile-stat-lbl">Ngày xong</div>
+    </div>`;
+
+      // Power symbols
+      renderPowerSymbols(u.pillar_counts || {});
+
+      // Heatmap
+      renderHeatmap(activityMap);
+
+      // Tabs count
+      const cotPosts = _posts.filter(p => p.post_type === 'cot');
+      document.getElementById('tcPosts').textContent = _posts.length;
+      document.getElementById('tcComments').textContent = _comments.length;
+      document.getElementById('tcCot').textContent = cotPosts.length;
+
+      // Default tab
+      switchTab(document.getElementById('tabPosts'), 'posts');
+
+      // Right panel level info
+      renderRpLevel(u, lv, pct);
+
+      // Show content
+      document.getElementById('profileLoading').style.display = 'none';
+      document.getElementById('profileContent').style.display = 'block';
+    }
+
+    // ── Power Symbols ─────────────────────────────────────
+    function renderPowerSymbols(pillarCounts) {
+      const SYMS = [
+        { key: 'offer', icon: '🔥', label: 'Offer', color: '#f59e0b', bg: '#fef3c7' },
+        { key: 'traffic', icon: '⚡', label: 'Thu hút', color: '#3b82f6', bg: '#dbeafe' },
+        { key: 'conversion', icon: '🎯', label: 'Chuyển đổi', color: '#8b5cf6', bg: '#ede9fe' },
+        { key: 'delivery', icon: '⚙️', label: 'Cung ứng', color: '#10b981', bg: '#d1fae5' },
+        { key: 'continuity', icon: '🔗', label: 'Continuity', color: '#ec4899', bg: '#fce7f3' },
+      ];
+      document.getElementById('powerSymbolsEl').innerHTML = SYMS.map(s => {
+        const n = pillarCounts[s.key] || 0;
+        const active = n > 0;
+        const styleAttr = active ? `style="--sym-color:${s.color};--sym-bg:${s.bg}"` : '';
+        return `<div class="power-sym ${active ? 'active' : 'locked'}" ${styleAttr}>
+      <div class="power-sym-icon">${s.icon}</div>
+      <div class="power-sym-name">${s.label}</div>
+      <div class="power-sym-count">${active ? n + ' bài' : '—'}</div>
+    </div>`;
+      }).join('');
+    }
+
+    // ── Heatmap ───────────────────────────────────────────
+    function renderHeatmap(activityMap) {
+      const today = new Date();
+      const yearAgo = new Date(today);
+      yearAgo.setFullYear(yearAgo.getFullYear() - 1);
+      const dow = (yearAgo.getDay() + 6) % 7;
+      yearAgo.setDate(yearAgo.getDate() - dow);
+
+      const MONTHS = ['Th01', 'Th02', 'Th03', 'Th04', 'Th05', 'Th06', 'Th07', 'Th08', 'Th09', 'Th10', 'Th11', 'Th12'];
+      const DAY_LABELS = ['T2', '', 'T4', '', 'T6', '', ''];
+
+      const weeks = [], monthMap = {};
+      let cur = new Date(yearAgo), lastMonth = -1;
+
+      while (cur <= today) {
+        const week = [];
+        for (let d = 0; d < 7; d++) {
+          if (cur > today) { week.push(null); }
+          else {
+            const y = cur.getFullYear(), mo = cur.getMonth(), dd = cur.getDate();
+            const ds = `${y}-${String(mo + 1).padStart(2, '0')}-${String(dd).padStart(2, '0')}`;
+            if (d === 0 && mo !== lastMonth) { monthMap[weeks.length] = MONTHS[mo]; lastMonth = mo; }
+            week.push({ date: ds, xp: activityMap[ds] || 0 });
+          }
+          cur.setDate(cur.getDate() + 1);
+        }
+        weeks.push(week);
+      }
+
+      let totalDays = 0, totalXp = 0;
+      Object.values(activityMap).forEach(x => { totalDays++; totalXp += x; });
+      document.getElementById('heatmapStat').textContent = `${totalDays} ngày · ${totalXp} EXP năm qua`;
+
+      function cc(xp) {
+        if (!xp) return '#e2e8f0';
+        if (xp < 3) return '#bbf7d0';
+        if (xp < 6) return '#4ade80';
+        if (xp < 10) return '#22c55e';
+        return '#15803d';
+      }
+
+      const monthRow = weeks.map((_, i) =>
+        `<div style="width:12px;font-size:9px;color:#94a3b8;overflow:visible;white-space:nowrap;">${monthMap[i] || ''}</div>`
+      ).join('');
+      const dayCol = DAY_LABELS.map(l =>
+        `<div style="height:12px;line-height:12px;font-size:9px;color:#94a3b8;width:20px;text-align:right;padding-right:4px;">${l}</div>`
+      ).join('');
+      const weekCols = weeks.map(w =>
+        `<div style="display:flex;flex-direction:column;gap:2px;">` +
+        w.map(c => c
+          ? `<div style="width:11px;height:11px;border-radius:2px;background:${cc(c.xp)};" title="${c.date}${c.xp ? ' · ' + c.xp + ' EXP' : ''}"></div>`
+          : `<div style="width:11px;height:11px;"></div>`
+        ).join('') + `</div>`
+      ).join('');
+
+      document.getElementById('heatmapEl').innerHTML =
+        `<div style="display:flex;min-width:max-content;">
+      <div><div style="height:16px;"></div><div style="display:flex;flex-direction:column;gap:2px;">${dayCol}</div></div>
+      <div>
+        <div style="display:flex;gap:2px;height:16px;overflow:visible;">${monthRow}</div>
+        <div style="display:flex;gap:2px;">${weekCols}</div>
+      </div>
+    </div>`;
+    }
+
+    // ── Tabs ──────────────────────────────────────────────
+    function switchTab(btn, type) {
+      document.querySelectorAll('.profile-tab').forEach(t => t.classList.remove('active'));
+      btn.classList.add('active');
+
+      const content = document.getElementById('tabContent');
+      if (type === 'posts') {
+        content.innerHTML = renderPostList(_posts);
+      } else if (type === 'cot') {
+        content.innerHTML = renderPostList(_posts.filter(p => p.post_type === 'cot'));
+      } else {
+        content.innerHTML = renderCommentList(_comments);
+      }
+    }
+
+    function renderPostList(posts) {
+      if (!posts.length) return `<div class="empty-state"><div class="empty-icon">📝</div>Chưa có bài đăng nào.</div>`;
+      return posts.map(p => {
+        const pl = PILLAR_MAP[p.pillar] || { label: p.pillar || '', color: '#64748b' };
+        return `<div class="post-item" onclick="openPost(${p.id})">
+      <div class="post-item-pillar" style="background:${pl.color}"></div>
+      <div class="post-item-body">
+        <div class="post-item-title">${escHtml(p.title || (p.content || '').slice(0, 80))}</div>
+        <div class="post-item-meta">
+          <span class="post-item-tag" style="background:${pl.color}20;color:${pl.color}">${pl.label}</span>
+          ${p.post_type === 'cot' ? '<span class="post-item-tag" style="background:#fef3c7;color:#b45309">★ CÔT</span>' : ''}
+          <span>${fmtRelative(p.created_at)}</span>
+          <span class="post-item-stats">
+            <span>❤️ ${p.likes_count || 0}</span>
+            <span>💬 ${p.comments_count || 0}</span>
+          </span>
+        </div>
+      </div>
+    </div>`;
+      }).join('');
+    }
+
+    function renderCommentList(posts) {
+      if (!posts.length) return `<div class="empty-state"><div class="empty-icon">💬</div>Chưa bình luận bài viết nào.</div>`;
+      return posts.map(p => {
+        const pl = PILLAR_MAP[p.pillar] || { label: p.pillar || '', color: '#64748b' };
+        const authorName = escHtml((p.author_first || '') + ' ' + (p.author_last || '')).trim();
+        return `<div class="post-item" onclick="openPost(${p.id})">
+      <div class="post-item-pillar" style="background:${pl.color}"></div>
+      <div class="post-item-body">
+        <div class="comment-author">Bài của <strong>${authorName}</strong></div>
+        <div class="post-item-title">${escHtml(p.title || (p.content || '').slice(0, 80))}</div>
+        <div class="post-item-meta">
+          <span class="post-item-tag" style="background:${pl.color}20;color:${pl.color}">${pl.label}</span>
+          <span>${fmtRelative(p.commented_at || p.created_at)}</span>
+          <span class="post-item-stats">
+            <span>❤️ ${p.likes_count || 0}</span>
+            <span>💬 ${p.comments_count || 0}</span>
+          </span>
+        </div>
+        ${p.my_comment ? `<div class="comment-preview">💬 ${escHtml(p.my_comment)}</div>` : ''}
+      </div>
+    </div>`;
+      }).join('');
+    }
+
+    // ── Right panel level ─────────────────────────────────
+    function renderRpLevel(u, lv, pct) {
+      const lvColor = LEVEL_COLORS[(lv.level - 1) % LEVEL_COLORS.length];
+      document.getElementById('rpLevelContent').innerHTML = `
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+      <div style="width:40px;height:40px;border-radius:50%;background:${lvColor}22;border:2px solid ${lvColor};
+        display:flex;align-items:center;justify-content:center;font-family:var(--font-heading);font-size:16px;font-weight:800;color:${lvColor};">
+        ${lv.level}
+      </div>
+      <div>
+        <div style="font-size:var(--fs-sm);font-weight:700;color:var(--text);">${lv.name}</div>
+        <div style="font-size:11px;color:var(--text-muted);">Level ${lv.level}</div>
+      </div>
+    </div>
+    <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text-muted);margin-bottom:4px;">
+      <span>${u.xp || 0} EXP</span><span>${lv.xpMax} EXP</span>
+    </div>
+    <div style="height:6px;background:#e2e8f0;border-radius:99px;overflow:hidden;margin-bottom:6px;">
+      <div style="height:100%;width:${pct}%;background:${lvColor};border-radius:99px;"></div>
+    </div>
+    <div style="font-size:11px;color:var(--text-muted);text-align:right;">
+      Còn ${lv.xpMax - (u.xp || 0)} EXP → Lv.${Math.min(9, lv.level + 1)}
+    </div>`;
+      document.getElementById('rpLevelCard').style.display = 'block';
+    }
+
+    // ── Post Modal ────────────────────────────────────────
+    let _pmPostId = null;
+    let _pmLiked = false;
+
+    async function openPost(postId) {
+      _pmPostId = postId;
+      _pmLiked = false;
+      const overlay = document.getElementById('postModalOverlay');
+      overlay.classList.add('open');
+      document.body.style.overflow = 'hidden';
+      document.getElementById('pmBody').innerHTML = '<div style="text-align:center;padding:48px;color:var(--text-muted)">Đang tải...</div>';
+      document.getElementById('pmComments').innerHTML = '';
+      document.getElementById('pmCommentInput').value = '';
+      document.getElementById('pmLikeBtn').classList.remove('liked');
+      try {
+        const [post, cmts] = await Promise.all([
+          fetch(`${API}/posts/${postId}`).then(r => r.json()),
+          fetch(`${API}/posts/${postId}/comments`).then(r => r.json()),
+        ]);
+        renderPmPost(post);
+        renderPmComments(cmts.comments || []);
+      } catch (e) {
+        document.getElementById('pmBody').innerHTML = '<div style="padding:40px;text-align:center;color:#ef4444">Không thể tải bài đăng.</div>';
+      }
+    }
+
+    function renderPmPost(p) {
+      const pl = PILLAR_MAP[p.pillar] || null;
+      const ini = ((p.first_name || '?')[0] + ((p.last_name || '')[0] || '')).toUpperCase();
+      const col = AV_COLORS[p.author_id % AV_COLORS.length];
+      document.getElementById('pmHeaderBadges').innerHTML =
+        (pl ? `<span style="font-size:11px;font-weight:700;padding:3px 10px;border-radius:99px;background:${pl.color}20;color:${pl.color}">${pl.label}</span>` : '') +
+        (p.post_type === 'cot' ? '<span style="font-size:11px;font-weight:700;padding:3px 10px;border-radius:99px;background:#fef3c7;color:#b45309">★ CÔT</span>' : '');
+      document.getElementById('pmLikeCount').textContent = p.likes_count || 0;
+      document.getElementById('pmCmtCount').textContent = p.comments_count || 0;
+      document.getElementById('pmBody').innerHTML = `
+    <div class="pm-author-row">
+      <div class="pm-avatar" style="background:${col}">${ini}</div>
+      <div>
+        <div class="pm-author-name">${escHtml(p.first_name)} ${escHtml(p.last_name || '')}</div>
+        <div class="pm-author-meta">Lv.${p.level} · ${fmtRelative(p.created_at)}</div>
+      </div>
+    </div>
+    ${p.title ? `<div class="pm-title">${escHtml(p.title)}</div>` : ''}
+    <div class="pm-content">${escHtml(p.content || '')}</div>`;
+    }
+
+    function renderPmComments(comments) {
+      const el = document.getElementById('pmComments');
+      if (!comments.length) {
+        el.innerHTML = '<div class="pm-empty-cmt">Chưa có bình luận nào. Hãy là người đầu tiên! 💬</div>';
+        return;
+      }
+      const roots = comments.filter(c => !c.parent_id);
+      const replyMap = {};
+      comments.filter(c => c.parent_id).forEach(c => {
+        (replyMap[c.parent_id] = replyMap[c.parent_id] || []).push(c);
+      });
+      el.innerHTML = roots.map(c => renderPmComment(c, replyMap[c.id] || [])).join('');
+    }
+
+    function renderPmComment(c, replies) {
+      const ini = ((c.first_name || '?')[0] + ((c.last_name || '')[0] || '')).toUpperCase();
+      const col = AV_COLORS[c.author_id % AV_COLORS.length];
+      const repliesHtml = replies.length ? `<div class="pm-replies">${replies.map(r => {
+        const rIni = ((r.first_name || '?')[0] + ((r.last_name || '')[0] || '')).toUpperCase();
+        const rCol = AV_COLORS[r.author_id % AV_COLORS.length];
+        return `<div class="pm-cmt-item">
+        <div class="pm-cmt-avatar" style="background:${rCol};width:26px;height:26px;font-size:10px;">${rIni}</div>
+        <div class="pm-cmt-body">
+          <div class="pm-cmt-header">
+            <span class="pm-cmt-name">${escHtml(r.first_name)} ${escHtml(r.last_name || '')}</span>
+            <span class="pm-cmt-time">${fmtRelative(r.created_at)}</span>
+          </div>
+          <div class="pm-cmt-text">${escHtml(r.content)}</div>
+        </div>
+      </div>`;
+      }).join('')
+        }</div>` : '';
+      return `<div class="pm-cmt-item" style="${repliesHtml ? 'border-bottom:none' : ''}">
+    <div class="pm-cmt-avatar" style="background:${col}">${ini}</div>
+    <div class="pm-cmt-body">
+      <div class="pm-cmt-header">
+        <span class="pm-cmt-name">${escHtml(c.first_name)} ${escHtml(c.last_name || '')}</span>
+        <span class="pm-cmt-time">${fmtRelative(c.created_at)}</span>
+      </div>
+      <div class="pm-cmt-text">${escHtml(c.content)}</div>
+      <button class="pm-reply-btn" onclick="pmToggleReply(${c.id})">
+        <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"/></svg>
+        Trả lời
+      </button>
+      <div class="pm-reply-form" id="pm-rf-${c.id}">
+        <textarea class="pm-reply-input" id="pm-ri-${c.id}"
+          placeholder="Trả lời ${escHtml(c.first_name)}..." rows="1"
+          onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();pmSubmitReply(${c.id});}"></textarea>
+        <button class="pm-reply-submit" onclick="pmSubmitReply(${c.id})">Gửi</button>
+        <button class="pm-reply-cancel" onclick="pmToggleReply(${c.id})">Hủy</button>
+      </div>
+    </div>
+  </div>${repliesHtml}`;
+    }
+
+    function pmToggleReply(commentId) {
+      document.querySelectorAll('.pm-reply-form.open').forEach(f => {
+        if (f.id !== `pm-rf-${commentId}`) f.classList.remove('open');
+      });
+      const form = document.getElementById(`pm-rf-${commentId}`);
+      if (!form) return;
+      form.classList.toggle('open');
+      if (form.classList.contains('open')) document.getElementById(`pm-ri-${commentId}`)?.focus();
+    }
+
+    async function pmSubmitReply(parentId) {
+      const input = document.getElementById(`pm-ri-${parentId}`);
+      const text = input?.value.trim();
+      if (!text || !currentUser) return;
+      try {
+        await fetch(`${API}/posts/${_pmPostId}/comments`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ user_id: currentUser.id, content: text, parent_id: parentId }),
+        });
+        input.value = '';
+        document.getElementById(`pm-rf-${parentId}`).classList.remove('open');
+        const { comments } = await fetch(`${API}/posts/${_pmPostId}/comments`).then(r => r.json());
+        renderPmComments(comments);
+        const el = document.getElementById('pmCmtCount');
+        el.textContent = Number(el.textContent) + 1;
+      } catch (e) { }
+    }
+
+    async function pmLike() {
+      if (_pmLiked) return;
+      _pmLiked = true;
+      document.getElementById('pmLikeBtn').classList.add('liked');
+      await fetch(`${API}/posts/${_pmPostId}/like`, { method: 'POST' });
+      const el = document.getElementById('pmLikeCount');
+      el.textContent = Number(el.textContent) + 1;
+    }
+
+    async function pmSubmitComment() {
+      const input = document.getElementById('pmCommentInput');
+      const text = input.value.trim();
+      if (!text || !currentUser) return;
+      const btn = document.getElementById('pmCommentSubmit');
+      btn.disabled = true;
+      try {
+        await fetch(`${API}/posts/${_pmPostId}/comments`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ user_id: currentUser.id, content: text }),
+        });
+        input.value = '';
+        const { comments } = await fetch(`${API}/posts/${_pmPostId}/comments`).then(r => r.json());
+        renderPmComments(comments);
+        const el = document.getElementById('pmCmtCount');
+        el.textContent = Number(el.textContent) + 1;
+      } catch (e) { }
+      btn.disabled = false;
+    }
+
+    function closePostModal() {
+      document.getElementById('postModalOverlay').classList.remove('open');
+      document.body.style.overflow = '';
+      _pmPostId = null;
+    }
+
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closePostModal(); });
+
+    loadProfile();
+  </script>
+
+  <!-- Post Detail Modal -->
+  <div id="postModalOverlay" class="post-modal-overlay" onclick="if(event.target===this)closePostModal()">
+    <div class="post-modal">
+      <div class="pm-header">
+        <div class="pm-header-badges" id="pmHeaderBadges"></div>
+        <button class="pm-close" onclick="closePostModal()">×</button>
+      </div>
+      <div class="pm-body" id="pmBody"></div>
+      <div class="pm-actions">
+        <button class="pm-like-btn" id="pmLikeBtn" onclick="pmLike()">
+          <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round"
+              d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+          </svg>
+          <span id="pmLikeCount">0</span> Thích
+        </button>
+        <span class="pm-cmt-count-lbl">
+          <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round"
+              d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+          </svg>
+          <span id="pmCmtCount">0</span> bình luận
+        </span>
+      </div>
+      <div class="pm-comments" id="pmComments"></div>
+      <div class="pm-comment-form">
+        <textarea id="pmCommentInput" class="pm-comment-input" placeholder="Viết bình luận..." rows="1"
+          onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();pmSubmitComment();}"></textarea>
+        <button class="pm-comment-submit" id="pmCommentSubmit" onclick="pmSubmitComment()">Gửi</button>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>

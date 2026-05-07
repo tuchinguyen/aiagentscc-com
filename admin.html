@@ -1,0 +1,3213 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin — AI AGENTS CC</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap"
+    rel="stylesheet">
+  <style>
+    /* ── Reset & base ──────────────────────────────── */
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --primary: #0ea5e9;
+      --primary-d: #0284c7;
+      --bg: #f1f5f9;
+      --card: #ffffff;
+      --sidebar: #0f172a;
+      --border: #e2e8f0;
+      --text: #0f172a;
+      --muted: #64748b;
+      --light: #94a3b8;
+      --green: #10b981;
+      --red: #ef4444;
+      --amber: #f59e0b;
+      --purple: #8b5cf6;
+      --font: 'Inter', sans-serif;
+      --head: 'Plus Jakarta Sans', sans-serif;
+      --r-sm: 6px;
+      --r-md: 10px;
+      --r-lg: 14px;
+      --shadow: 0 1px 3px rgba(0, 0, 0, .08), 0 1px 2px rgba(0, 0, 0, .05);
+      --shadow-md: 0 4px 12px rgba(0, 0, 0, .1);
+    }
+
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    button {
+      font-family: var(--font);
+      cursor: pointer;
+    }
+
+    /* ── Login overlay ─────────────────────────────── */
+    #loginOverlay {
+      position: fixed;
+      inset: 0;
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 60%, #0c2040 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    .login-box {
+      background: #1e293b;
+      border: 1px solid rgba(255, 255, 255, .08);
+      border-radius: var(--r-lg);
+      padding: 40px 36px;
+      width: 360px;
+      box-shadow: 0 25px 50px rgba(0, 0, 0, .5);
+    }
+
+    .login-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 32px;
+    }
+
+    .login-logo-mark {
+      width: 36px;
+      height: 36px;
+      background: var(--primary);
+      border-radius: var(--r-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .login-logo-mark svg {
+      width: 20px;
+      height: 20px;
+      color: #fff;
+    }
+
+    .login-logo-name {
+      font-family: var(--head);
+      font-size: 13px;
+      font-weight: 700;
+      color: #f0f6ff;
+    }
+
+    .login-logo-name span {
+      color: var(--primary);
+    }
+
+    .login-box h2 {
+      font-size: 22px;
+      font-weight: 800;
+      color: #f0f6ff;
+      margin-bottom: 4px;
+      font-family: var(--head);
+    }
+
+    .login-box p {
+      font-size: 13px;
+      color: #94a3b8;
+      margin-bottom: 28px;
+    }
+
+    .login-field {
+      margin-bottom: 16px;
+    }
+
+    .login-field label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      color: #94a3b8;
+      margin-bottom: 6px;
+      letter-spacing: .03em;
+      text-transform: uppercase;
+    }
+
+    .login-field input {
+      width: 100%;
+      padding: 10px 14px;
+      background: rgba(255, 255, 255, .06);
+      border: 1px solid rgba(255, 255, 255, .1);
+      border-radius: var(--r-sm);
+      color: #f0f6ff;
+      font-size: 14px;
+      font-family: var(--font);
+      outline: none;
+      transition: border-color .15s;
+    }
+
+    .login-field input:focus {
+      border-color: var(--primary);
+    }
+
+    .login-error {
+      background: rgba(239, 68, 68, .15);
+      border: 1px solid rgba(239, 68, 68, .3);
+      color: #fca5a5;
+      border-radius: var(--r-sm);
+      padding: 8px 12px;
+      font-size: 13px;
+      margin-bottom: 14px;
+      display: none;
+    }
+
+    .login-btn {
+      width: 100%;
+      padding: 11px;
+      background: var(--primary);
+      border: none;
+      border-radius: var(--r-sm);
+      color: #fff;
+      font-size: 14px;
+      font-weight: 600;
+      font-family: var(--head);
+      transition: background .15s;
+    }
+
+    .login-btn:hover {
+      background: var(--primary-d);
+    }
+
+    /* ── App shell ─────────────────────────────────── */
+    #shell {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* Sidebar */
+    #sbar {
+      width: 220px;
+      flex-shrink: 0;
+      background: var(--sidebar);
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      z-index: 10;
+    }
+
+    .sbar-logo {
+      padding: 20px 20px 16px;
+      border-bottom: 1px solid rgba(255, 255, 255, .06);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .sbar-logo-mark {
+      width: 30px;
+      height: 30px;
+      background: var(--primary);
+      border-radius: var(--r-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .sbar-logo-mark svg {
+      width: 16px;
+      height: 16px;
+      color: #fff;
+    }
+
+    .sbar-logo-name {
+      font-family: var(--head);
+      font-size: 12px;
+      font-weight: 700;
+      color: #f0f6ff;
+    }
+
+    .sbar-logo-name span {
+      color: var(--primary);
+    }
+
+    .sbar-badge {
+      font-size: 9px;
+      font-weight: 700;
+      padding: 1px 5px;
+      background: var(--red);
+      color: #fff;
+      border-radius: 99px;
+      margin-left: 4px;
+    }
+
+    #sbar nav {
+      padding: 12px 10px;
+      flex: 1;
+      overflow-y: auto;
+    }
+
+    .sbar-section {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: #475569;
+      padding: 10px 10px 6px;
+    }
+
+    .sbar-item {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      padding: 9px 10px;
+      border-radius: var(--r-sm);
+      font-size: 13px;
+      font-weight: 500;
+      color: #94a3b8;
+      transition: background .12s, color .12s;
+      cursor: pointer;
+      border: none;
+      background: none;
+      width: 100%;
+      text-align: left;
+    }
+
+    .sbar-item:hover {
+      background: rgba(255, 255, 255, .06);
+      color: #e2e8f0;
+    }
+
+    .sbar-item.active {
+      background: rgba(14, 165, 233, .15);
+      color: var(--primary);
+    }
+
+    .sbar-item svg {
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+    }
+
+    .sbar-count {
+      margin-left: auto;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 1px 6px;
+      background: rgba(255, 255, 255, .08);
+      border-radius: 99px;
+      color: #94a3b8;
+    }
+
+    .sbar-footer {
+      padding: 12px 16px;
+      border-top: 1px solid rgba(255, 255, 255, .06);
+      font-size: 12px;
+      color: #475569;
+    }
+
+    /* Main content */
+    #main {
+      margin-left: 220px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    /* Topbar */
+    #topbar {
+      background: var(--card);
+      border-bottom: 1px solid var(--border);
+      padding: 0 28px;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 5;
+    }
+
+    #topbar h1 {
+      font-family: var(--head);
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .topbar-sub {
+      font-size: 12px;
+      color: var(--muted);
+      margin-left: 8px;
+    }
+
+    .topbar-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn-sm {
+      padding: 6px 14px;
+      border-radius: var(--r-sm);
+      font-size: 12px;
+      font-weight: 600;
+      border: 1px solid var(--border);
+      background: var(--card);
+      color: var(--muted);
+      transition: all .15s;
+    }
+
+    .btn-sm:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    .btn-sm.primary {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+    }
+
+    .btn-sm.primary:hover {
+      background: var(--primary-d);
+    }
+
+    /* Page sections */
+    .page {
+      display: none;
+      padding: 28px;
+    }
+
+    .page.active {
+      display: block;
+    }
+
+    /* ── Stat cards ────────────────────────────────── */
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    @media (max-width: 1100px) {
+      .stat-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    .stat-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--r-md);
+      padding: 18px 20px;
+      box-shadow: var(--shadow);
+    }
+
+    .stat-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .04em;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .stat-label svg {
+      width: 14px;
+      height: 14px;
+    }
+
+    .stat-val {
+      font-family: var(--head);
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--text);
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+
+    .stat-sub {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .stat-sub em {
+      font-style: normal;
+      font-weight: 600;
+    }
+
+    .stat-sub .up {
+      color: var(--green);
+    }
+
+    .stat-sub .down {
+      color: var(--red);
+    }
+
+    /* ── Table card ────────────────────────────────── */
+    .table-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--r-md);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      margin-bottom: 24px;
+    }
+
+    .table-card-header {
+      padding: 14px 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .table-card-header h2 {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text);
+      flex: 1;
+    }
+
+    .search-input {
+      padding: 7px 12px;
+      border: 1px solid var(--border);
+      border-radius: var(--r-sm);
+      font-size: 13px;
+      font-family: var(--font);
+      color: var(--text);
+      background: var(--bg);
+      outline: none;
+      transition: border-color .15s;
+      width: 220px;
+    }
+
+    .search-input:focus {
+      border-color: var(--primary);
+    }
+
+    .filter-select {
+      padding: 7px 10px;
+      border: 1px solid var(--border);
+      border-radius: var(--r-sm);
+      font-size: 13px;
+      font-family: var(--font);
+      color: var(--text);
+      background: var(--bg);
+      outline: none;
+      cursor: pointer;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      color: var(--muted);
+      padding: 10px 16px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+      background: #f8fafc;
+      white-space: nowrap;
+    }
+
+    td {
+      padding: 11px 16px;
+      border-bottom: 1px solid #f1f5f9;
+      font-size: 13px;
+      color: var(--text);
+      vertical-align: middle;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    tr:hover td {
+      background: #f8fafc;
+    }
+
+    /* Badges */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 99px;
+    }
+
+    .badge-active {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .badge-banned {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .badge-suspended {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    .badge-level {
+      background: #ede9fe;
+      color: #6d28d9;
+    }
+
+    .badge-pillar {
+      font-size: 10px;
+    }
+
+    .pillar-offer {
+      background: #fef3c7;
+      color: #b45309;
+    }
+
+    .pillar-traffic {
+      background: #dbeafe;
+      color: #1d4ed8;
+    }
+
+    .pillar-conversion {
+      background: #ede9fe;
+      color: #7c3aed;
+    }
+
+    .pillar-delivery {
+      background: #d1fae5;
+      color: #065f46;
+    }
+
+    .pillar-continuity {
+      background: #fce7f3;
+      color: #9d174d;
+    }
+
+    /* Action buttons */
+    .act-btn {
+      padding: 4px 10px;
+      border-radius: var(--r-sm);
+      font-size: 11px;
+      font-weight: 600;
+      border: 1px solid var(--border);
+      background: none;
+      color: var(--muted);
+      transition: all .15s;
+      margin-right: 4px;
+    }
+
+    .act-btn:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    .act-btn.danger:hover {
+      border-color: var(--red);
+      color: var(--red);
+    }
+
+    .act-btn.warn:hover {
+      border-color: var(--amber);
+      color: var(--amber);
+    }
+
+    .act-btn.success:hover {
+      border-color: var(--green);
+      color: var(--green);
+    }
+
+    /* Avatar placeholder */
+    .av {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 700;
+      color: #fff;
+      vertical-align: middle;
+      margin-right: 8px;
+      flex-shrink: 0;
+    }
+
+    .xp-bar-sm {
+      height: 4px;
+      background: #e2e8f0;
+      border-radius: 99px;
+      overflow: hidden;
+      width: 80px;
+      display: inline-block;
+      vertical-align: middle;
+      margin-left: 6px;
+    }
+
+    .xp-bar-sm-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #10b981, #0ea5e9);
+      border-radius: 99px;
+    }
+
+    /* ── Level chart ───────────────────────────────── */
+    .level-bars {
+      display: flex;
+      gap: 8px;
+      align-items: flex-end;
+      height: 80px;
+    }
+
+    .level-bar-wrap {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .level-bar-fill {
+      width: 100%;
+      border-radius: 4px 4px 0 0;
+      background: linear-gradient(180deg, var(--primary), #38bdf8);
+      min-height: 4px;
+      transition: height .3s;
+    }
+
+    .level-bar-label {
+      font-size: 10px;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .level-bar-count {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    /* ── Toast ─────────────────────────────────────── */
+    #toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #1e293b;
+      color: #f0f6ff;
+      padding: 10px 18px;
+      border-radius: var(--r-md);
+      font-size: 13px;
+      box-shadow: var(--shadow-md);
+      transform: translateY(10px);
+      opacity: 0;
+      transition: all .2s;
+      pointer-events: none;
+      z-index: 999;
+    }
+
+    #toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    #toast.green {
+      background: #065f46;
+    }
+
+    #toast.red {
+      background: #991b1b;
+    }
+
+    /* ── Pagination ────────────────────────────────── */
+    .pager {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 16px;
+      border-top: 1px solid var(--border);
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .pager button {
+      padding: 5px 10px;
+      border-radius: var(--r-sm);
+      border: 1px solid var(--border);
+      background: var(--card);
+      font-size: 12px;
+      color: var(--muted);
+      transition: all .12s;
+    }
+
+    .pager button:hover:not(:disabled) {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    .pager button:disabled {
+      opacity: .4;
+      cursor: default;
+    }
+
+    /* ── Empty state ───────────────────────────────── */
+    .empty-state {
+      padding: 48px 24px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .empty-state svg {
+      width: 36px;
+      height: 36px;
+      color: #cbd5e1;
+      margin: 0 auto 12px;
+      display: block;
+    }
+
+    /* ── XP log ────────────────────────────────────── */
+    .xp-pos {
+      color: var(--green);
+      font-weight: 700;
+    }
+
+    .xp-neg {
+      color: var(--red);
+      font-weight: 700;
+    }
+
+    /* ── Recent list (dashboard) ───────────────────── */
+    .recent-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--r-md);
+      box-shadow: var(--shadow);
+    }
+
+    .recent-card-header {
+      padding: 14px 20px 12px;
+      border-bottom: 1px solid var(--border);
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .recent-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 20px;
+      border-bottom: 1px solid #f1f5f9;
+    }
+
+    .recent-item:last-child {
+      border-bottom: none;
+    }
+
+    .recent-item-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .recent-item-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .recent-item-meta {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    @media (max-width: 900px) {
+      .two-col {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ── Login overlay ─────────────────────────── -->
+  <div id="loginOverlay">
+    <div class="login-box">
+      <div class="login-logo">
+        <div class="login-logo-mark">
+          <svg viewBox="0 0 20 20" fill="none">
+            <circle cx="10" cy="10" r="3" fill="currentColor" />
+            <path d="M10 3v2M10 15v2M3 10h2M15 10h2" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+          </svg>
+        </div>
+        <div class="login-logo-name">AI AGENT <span>CC</span></div>
+      </div>
+      <h2>Admin Panel</h2>
+      <p>Đăng nhập để quản lý hệ thống</p>
+      <div class="login-error" id="loginErr"></div>
+      <div class="login-field">
+        <label>Admin Key</label>
+        <input type="password" id="adminKeyInput" placeholder="Nhập admin key..."
+          onkeydown="if(event.key==='Enter') doLogin()">
+      </div>
+      <button class="login-btn" onclick="doLogin()">Đăng nhập</button>
+    </div>
+  </div>
+
+  <!-- ── App shell ─────────────────────────────── -->
+  <div id="shell" style="display:none">
+
+    <!-- Sidebar -->
+    <aside id="sbar">
+      <div class="sbar-logo">
+        <div class="sbar-logo-mark">
+          <svg viewBox="0 0 20 20" fill="none">
+            <circle cx="10" cy="10" r="3" fill="currentColor" />
+            <path d="M10 3v2M10 15v2M3 10h2M15 10h2" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+          </svg>
+        </div>
+        <div class="sbar-logo-name">AI AGENTS <span>CC</span></div>
+      </div>
+
+      <nav>
+        <div class="sbar-section">Tổng quan</div>
+        <button class="sbar-item active" onclick="showPage('dashboard')">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <rect x="3" y="3" width="7" height="7" rx="1" />
+            <rect x="14" y="3" width="7" height="7" rx="1" />
+            <rect x="3" y="14" width="7" height="7" rx="1" />
+            <rect x="14" y="14" width="7" height="7" rx="1" />
+          </svg>
+          Dashboard
+        </button>
+
+        <div class="sbar-section">Quản lý</div>
+        <button class="sbar-item" onclick="showPage('users')">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
+            <circle cx="9" cy="7" r="4" />
+            <path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" />
+          </svg>
+          Thành viên
+          <span class="sbar-count" id="sbUserCount">—</span>
+        </button>
+        <button class="sbar-item" onclick="showPage('posts')">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
+          </svg>
+          Bài đăng
+          <span class="sbar-count" id="sbPostCount">—</span>
+        </button>
+        <button class="sbar-item" onclick="showPage('xplog')">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
+          </svg>
+          XP Log
+        </button>
+
+        <div class="sbar-section">Challenge</div>
+        <button class="sbar-item" onclick="showPage('challenges')">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path
+              d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z" />
+          </svg>
+          Thử thách
+        </button>
+        <button class="sbar-item" onclick="showPage('enrollments')">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+          </svg>
+          Đăng ký tham gia
+          <span class="sbar-count" id="sbEnrollPending" style="background:#f59e0b;color:#fff;display:none">0</span>
+        </button>
+        <button class="sbar-item" onclick="showPage('submissions')">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path
+              d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+          </svg>
+          Bài nộp
+          <span class="sbar-count" id="sbPendingCount" style="background:#ef4444;color:#fff;display:none">0</span>
+        </button>
+      </nav>
+
+      <button class="sbar-item" onclick="showPage('marketplace')">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <path
+            d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z" />
+        </svg>
+        Marketplace
+        <span class="sbar-count" id="sbProductCount">—</span>
+        <span id="sbProductPending" style="display:none;background:#f59e0b;color:#fff;font-size:10px;font-weight:700;padding:1px 6px;border-radius:99px;margin-left:2px"></span>
+      </button>
+      <button class="sbar-item" onclick="showPage('courses')">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
+        </svg>
+        Khóa học
+      </button>
+
+      <div class="sbar-section">Hệ thống</div>
+      <button class="sbar-item" onclick="showPage('settings')">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <path
+            d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+          <circle cx="12" cy="12" r="3" />
+        </svg>
+        Cài đặt
+      </button>
+      </nav>
+
+      <div class="sbar-footer">
+        <div style="margin-bottom:4px;font-size:11px;color:#475569">Đã đăng nhập</div>
+        <button onclick="doLogout()"
+          style="font-size:12px;color:#94a3b8;background:none;border:none;cursor:pointer;padding:0;font-family:var(--font)">
+          Đăng xuất
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <div id="main">
+      <header id="topbar">
+        <div style="display:flex;align-items:center">
+          <h1 id="pageTitle">Dashboard</h1>
+          <span class="topbar-sub" id="pageSubtitle"></span>
+        </div>
+        <div class="topbar-actions">
+          <button class="btn-sm" onclick="refreshCurrent()">↺ Làm mới</button>
+          <a href="index.html" target="_blank"><button class="btn-sm">Xem trang web</button></a>
+        </div>
+      </header>
+
+      <!-- ── Dashboard ──────────────────────────── -->
+      <section class="page active" id="page-dashboard">
+        <div class="stat-grid" id="statGrid">
+          <div class="stat-card">
+            <div class="stat-label">
+              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                style="color:var(--primary)">
+                <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
+                <circle cx="9" cy="7" r="4" />
+              </svg>
+              Tổng thành viên
+            </div>
+            <div class="stat-val" id="sTotal">—</div>
+            <div class="stat-sub">Hôm nay <em class="up" id="sNew">+0</em> đăng ký mới</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">
+              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                style="color:var(--amber)">
+                <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
+              </svg>
+              Bài đăng
+            </div>
+            <div class="stat-val" id="sPosts">—</div>
+            <div class="stat-sub">Hôm nay <em class="up" id="sPostsToday">+0</em> bài mới</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">
+              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                style="color:var(--green)">
+                <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
+              </svg>
+              Tổng XP
+            </div>
+            <div class="stat-val" id="sTotalXP">—</div>
+            <div class="stat-sub">Hôm nay <em class="up" id="sXPToday">+0</em> XP</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">
+              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                style="color:var(--purple)">
+                <path
+                  d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z" />
+              </svg>
+              Hoàn thành Challenge
+            </div>
+            <div class="stat-val" id="sCompletions">—</div>
+            <div class="stat-sub">Active 7 ngày: <em id="sActive">—</em> user</div>
+          </div>
+        </div>
+
+        <div class="two-col">
+          <!-- Level distribution -->
+          <div class="recent-card">
+            <div class="recent-card-header">Phân bố Level</div>
+            <div style="padding:20px 24px 16px">
+              <div class="level-bars" id="levelBars"></div>
+              <div style="display:flex;gap:8px;margin-top:8px" id="levelLabels"></div>
+            </div>
+          </div>
+
+          <!-- Recent registrations -->
+          <div class="recent-card">
+            <div class="recent-card-header">Đăng ký gần đây</div>
+            <div id="recentUsers"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── Users ───────────────────────────────── -->
+      <section class="page" id="page-users">
+        <div class="table-card">
+          <div class="table-card-header">
+            <h2>Danh sách thành viên</h2>
+            <input class="search-input" type="text" placeholder="Tìm tên, email..." id="userSearch"
+              oninput="debounceUsers()">
+            <select class="filter-select" id="userStatusFilter" onchange="loadUsers()">
+              <option value="">Tất cả trạng thái</option>
+              <option value="active">Active</option>
+              <option value="banned">Banned</option>
+              <option value="suspended">Suspended</option>
+            </select>
+          </div>
+          <div style="overflow-x:auto">
+            <table id="usersTable">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Thành viên</th>
+                  <th>Email</th>
+                  <th>Level / XP</th>
+                  <th>Streak</th>
+                  <th>Trạng thái</th>
+                  <th>Tham gia</th>
+                  <th>Hành động</th>
+                </tr>
+              </thead>
+              <tbody id="usersTbody">
+                <tr>
+                  <td colspan="8">
+                    <div class="empty-state">Đang tải...</div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="pager" id="userPager"></div>
+        </div>
+      </section>
+
+      <!-- ── Posts ───────────────────────────────── -->
+      <section class="page" id="page-posts">
+        <div class="table-card">
+          <div class="table-card-header">
+            <h2>Quản lý bài đăng</h2>
+            <input class="search-input" type="text" placeholder="Tìm tiêu đề, tác giả..." id="postSearch"
+              oninput="debouncePosts()">
+            <select class="filter-select" id="postPillarFilter" onchange="loadPosts()">
+              <option value="">Tất cả Pillar</option>
+              <option value="offer">Offer</option>
+              <option value="traffic">Thu hút</option>
+              <option value="conversion">Chuyển đổi</option>
+              <option value="delivery">Cung ứng</option>
+              <option value="continuity">Continuity</option>
+            </select>
+            <button class="btn-sm primary" onclick="openNewPostModal()">✏️ Viết bài mới</button>
+          </div>
+          <div style="overflow-x:auto">
+            <table>
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Tiêu đề</th>
+                  <th>Tác giả</th>
+                  <th>Pillar</th>
+                  <th>Loại</th>
+                  <th>Likes</th>
+                  <th>Comments</th>
+                  <th>Đăng lúc</th>
+                  <th>Hành động</th>
+                </tr>
+              </thead>
+              <tbody id="postsTbody">
+                <tr>
+                  <td colspan="9">
+                    <div class="empty-state">Đang tải...</div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── XP Log ──────────────────────────────── -->
+      <section class="page" id="page-xplog">
+        <div class="table-card">
+          <div class="table-card-header">
+            <h2>Lịch sử XP (100 gần nhất)</h2>
+          </div>
+          <div style="overflow-x:auto">
+            <table>
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Thành viên</th>
+                  <th>XP</th>
+                  <th>Nguồn</th>
+                  <th>Ghi chú</th>
+                  <th>Thời gian</th>
+                </tr>
+              </thead>
+              <tbody id="xpTbody">
+                <tr>
+                  <td colspan="6">
+                    <div class="empty-state">Đang tải...</div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── Challenges ─────────────────────────────── -->
+      <section class="page" id="page-challenges">
+        <div class="table-card" style="margin-bottom:16px;">
+          <div class="table-card-header">
+            <h2>Danh sách thử thách</h2>
+            <button class="btn-sm primary" onclick="openCreateChallenge()">+ Tạo thử thách</button>
+          </div>
+          <div style="overflow-x:auto">
+            <table>
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Tên thử thách</th>
+                  <th>Trạng thái</th>
+                  <th>Số ngày</th>
+                  <th>Chờ duyệt</th>
+                  <th>Tạo lúc</th>
+                  <th>Hành động</th>
+                </tr>
+              </thead>
+              <tbody id="challengesTbody">
+                <tr>
+                  <td colspan="7">
+                    <div class="empty-state">Đang tải...</div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── Enrollments ───────────────────────────── -->
+      <section class="page" id="page-enrollments">
+        <div class="table-card">
+          <div class="table-card-header">
+            <h2>Đăng ký tham gia</h2>
+            <select class="filter-select" id="enrollChallengeFilter" onchange="loadEnrollments()">
+              <option value="">Tất cả thử thách</option>
+            </select>
+            <select class="filter-select" id="enrollStatusFilter" onchange="loadEnrollments()">
+              <option value="">Tất cả trạng thái</option>
+              <option value="pending">Chờ duyệt</option>
+              <option value="approved">Đã duyệt</option>
+              <option value="rejected">Từ chối</option>
+            </select>
+          </div>
+          <div style="overflow-x:auto">
+            <table>
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Học viên</th>
+                  <th>Thử thách</th>
+                  <th>Trạng thái</th>
+                  <th>Đăng ký lúc</th>
+                  <th>Bắt đầu lúc</th>
+                  <th>Hành động</th>
+                </tr>
+              </thead>
+              <tbody id="enrollTbody">
+                <tr>
+                  <td colspan="7">
+                    <div class="empty-state">Đang tải...</div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="pager" id="enrollPager"></div>
+        </div>
+      </section>
+
+      <!-- ── Submissions ────────────────────────────── -->
+      <section class="page" id="page-submissions">
+        <div class="table-card">
+          <div class="table-card-header">
+            <h2>Bài nộp</h2>
+            <select class="filter-select" id="subChallengeFilter" onchange="loadSubmissions()">
+              <option value="">Tất cả thử thách</option>
+            </select>
+            <select class="filter-select" id="subStatusFilter" onchange="loadSubmissions()">
+              <option value="">Tất cả trạng thái</option>
+              <option value="pending">Chờ duyệt</option>
+              <option value="approved">Đã duyệt</option>
+              <option value="needs_revision">Cần chỉnh sửa</option>
+            </select>
+          </div>
+          <div style="overflow-x:auto">
+            <table>
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Học viên</th>
+                  <th>Thử thách · Ngày</th>
+                  <th>Trạng thái</th>
+                  <th>Nộp lúc</th>
+                  <th>Hành động</th>
+                </tr>
+              </thead>
+              <tbody id="subsTbody">
+                <tr>
+                  <td colspan="6">
+                    <div class="empty-state">Đang tải...</div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="pager" id="subPager"></div>
+        </div>
+      </section>
+
+      <!-- ── Courses ────────────────────────────────── -->
+      <section class="page" id="page-courses">
+        <div class="table-card">
+          <div class="table-card-header">
+            <h2>Danh sách khóa học</h2>
+            <button class="btn-sm primary" onclick="openCourseModal()">+ Tạo khóa học</button>
+          </div>
+          <div style="overflow-x:auto">
+            <table>
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Tên khóa học</th>
+                  <th>Giảng viên</th>
+                  <th>Bài học</th>
+                  <th>Trạng thái</th>
+                  <th>Thứ tự</th>
+                  <th>Hành động</th>
+                </tr>
+              </thead>
+              <tbody id="coursesTbody">
+                <tr>
+                  <td colspan="7">
+                    <div class="empty-state">Đang tải...</div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── Marketplace ─────────────────────────────── -->
+      <section class="page" id="page-marketplace">
+        <!-- Products table -->
+        <div class="table-card" style="margin-bottom:20px;">
+          <div class="table-card-header">
+            <span>Sản phẩm (<span id="mpProductTotal">0</span>)</span>
+            <button class="btn-sm primary" onclick="openMpProductModal()">+ Thêm sản phẩm</button>
+          </div>
+          <div style="overflow-x:auto;">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Sản phẩm</th>
+                  <th>Người bán</th>
+                  <th>Giá</th>
+                  <th>Danh mục</th>
+                  <th>Đã bán</th>
+                  <th>Trạng thái</th>
+                  <th>Ngày tạo</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="mpProductTbody"></tbody>
+            </table>
+          </div>
+        </div>
+        <!-- Add/Edit Product Modal -->
+        <div id="mpProductModal"
+          style="display:none;position:fixed;inset:0;background:rgba(15,23,42,.5);z-index:500;align-items:center;justify-content:center;padding:20px;">
+          <div
+            style="background:#fff;border-radius:12px;width:100%;max-width:520px;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.2);">
+            <div
+              style="padding:16px 20px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;">
+              <div style="font-size:15px;font-weight:700;color:var(--text);" id="mpProductModalTitle">Thêm sản phẩm
+              </div>
+              <button onclick="closeMpProductModal()"
+                style="width:28px;height:28px;border-radius:50%;background:var(--surface);border:none;cursor:pointer;font-size:16px;color:var(--muted);">×</button>
+            </div>
+            <div style="padding:20px;display:flex;flex-direction:column;gap:14px;">
+              <div>
+                <label style="display:block;font-size:12px;font-weight:600;color:var(--text);margin-bottom:4px;">Tên sản
+                  phẩm *</label>
+                <input class="search-input" style="width:100%" id="mpProdTitle"
+                  placeholder="VD: Bộ 50 Prompt ChatGPT Bán Hàng" maxlength="120">
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+                <div>
+                  <label style="display:block;font-size:12px;font-weight:600;color:var(--text);margin-bottom:4px;">Danh
+                    mục *</label>
+                  <select class="search-input" style="width:100%" id="mpProdCat">
+                    <option value="prompt">📝 Prompt & Template</option>
+                    <option value="agent">🤖 AI Agent & Workflow</option>
+                    <option value="ebook">📚 Ebook & Tài liệu</option>
+                    <option value="tool">🔧 Công cụ & Script</option>
+                    <option value="course">🎓 Mini Course</option>
+                    <option value="other">📦 Khác</option>
+                  </select>
+                </div>
+                <div>
+                  <label style="display:block;font-size:12px;font-weight:600;color:var(--text);margin-bottom:4px;">Giá
+                    (VNĐ) *</label>
+                  <input class="search-input" style="width:100%" id="mpProdPrice" type="number" min="0"
+                    placeholder="VD: 199000 (0 = miễn phí)">
+                </div>
+              </div>
+              <div>
+                <label style="display:block;font-size:12px;font-weight:600;color:var(--text);margin-bottom:4px;">Mô tả
+                  ngắn *</label>
+                <textarea id="mpProdDesc" rows="2"
+                  style="width:100%;padding:8px 10px;border:1.5px solid var(--border);border-radius:6px;font-family:var(--font);font-size:13px;resize:vertical;outline:none;box-sizing:border-box;"
+                  placeholder="Tóm tắt sản phẩm trong 1–2 câu..."></textarea>
+              </div>
+              <div>
+                <label style="display:block;font-size:12px;font-weight:600;color:var(--text);margin-bottom:4px;">Nội
+                  dung chi tiết</label>
+                <textarea id="mpProdLong" rows="5"
+                  style="width:100%;padding:8px 10px;border:1.5px solid var(--border);border-radius:6px;font-family:var(--font);font-size:13px;resize:vertical;outline:none;box-sizing:border-box;"
+                  placeholder="Mô tả đầy đủ: bao gồm gì, dùng như thế nào, ai phù hợp..."></textarea>
+              </div>
+              <div>
+                <label style="display:block;font-size:12px;font-weight:600;color:var(--text);margin-bottom:6px;">Màu
+                  bìa</label>
+                <div style="display:flex;gap:8px;flex-wrap:wrap;" id="mpProdColorPicker"></div>
+              </div>
+              <div>
+                <label style="display:block;font-size:12px;font-weight:600;color:var(--text);margin-bottom:4px;">Trạng
+                  thái</label>
+                <select class="search-input" style="width:100%" id="mpProdStatus">
+                  <option value="published">Đang bán</option>
+                  <option value="draft">Bản nháp (ẩn)</option>
+                </select>
+              </div>
+            </div>
+            <div
+              style="padding:14px 20px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:8px;">
+              <button onclick="closeMpProductModal()"
+                style="padding:8px 16px;border:1.5px solid var(--border);border-radius:6px;font-size:13px;font-weight:600;background:#fff;color:var(--muted);cursor:pointer;font-family:var(--font);">Hủy</button>
+              <button id="mpProdSaveBtn" onclick="saveMpProduct()"
+                style="padding:8px 20px;background:#7c3aed;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:13px;font-weight:700;font-family:var(--font);">Lưu
+                sản phẩm</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Orders table -->
+        <div class="table-card">
+          <div class="table-card-header">
+            <span>Đơn hàng (<span id="mpOrderTotal">0</span>)</span>
+          </div>
+          <div style="overflow-x:auto;">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Sản phẩm</th>
+                  <th>Người mua</th>
+                  <th>Số tiền</th>
+                  <th>Phương thức</th>
+                  <th>Trạng thái</th>
+                  <th>Ngày đặt</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="mpOrderTbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── Settings ───────────────────────────────── -->
+      <section class="page" id="page-settings">
+        <div class="table-card" style="max-width:600px;">
+          <div class="table-card-header">
+            <h2>Thông báo toàn trang (Banner)</h2>
+          </div>
+          <div style="padding:20px 24px;display:flex;flex-direction:column;gap:16px;">
+            <div style="display:flex;align-items:center;gap:12px;">
+              <label style="font-size:13px;font-weight:600;color:var(--text);min-width:80px;">Trạng thái</label>
+              <label style="display:flex;align-items:center;gap:8px;cursor:pointer;">
+                <input type="checkbox" id="settingAnnoEnabled" style="width:16px;height:16px;accent-color:#0ea5e9;">
+                <span style="font-size:13px;color:var(--text)">Hiển thị banner thông báo trên trang Bảng tin</span>
+              </label>
+            </div>
+            <div style="display:flex;align-items:center;gap:12px;">
+              <label style="font-size:13px;font-weight:600;color:var(--text);min-width:80px;">Icon</label>
+              <input id="settingAnnoIcon" type="text" class="search-input"
+                style="width:80px;text-align:center;font-size:18px;" placeholder="📢" maxlength="4">
+              <span style="font-size:12px;color:var(--muted)">Emoji hiển thị đầu banner</span>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:6px;">
+              <label style="font-size:13px;font-weight:600;color:var(--text);">Nội dung thông báo</label>
+              <textarea id="settingAnnoText" rows="3"
+                style="width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:8px;font-family:var(--font);font-size:13px;resize:vertical;outline:none;line-height:1.5;"
+                placeholder="Nhập nội dung thông báo hiển thị cho thành viên..."></textarea>
+            </div>
+            <!-- Preview -->
+            <div>
+              <div
+                style="font-size:12px;font-weight:600;color:var(--muted);margin-bottom:6px;text-transform:uppercase;">
+                Xem trước</div>
+              <div id="settingAnnoPreview"
+                style="background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:10px 16px;font-size:13px;color:#78716c;display:flex;gap:8px;align-items:flex-start;">
+                <strong id="settingPreviewIcon" style="color:#92400e;flex-shrink:0;">📢</strong>
+                <span id="settingPreviewText" style="color:#78716c;">Nội dung thông báo sẽ hiển thị ở đây...</span>
+              </div>
+            </div>
+            <div style="display:flex;gap:10px;">
+              <button class="btn-sm primary" onclick="saveSettings()">💾 Lưu cài đặt</button>
+              <button class="btn-sm" onclick="loadSettings()">↺ Đặt lại</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div><!-- /main -->
+  </div><!-- /shell -->
+
+  <!-- ── Create challenge modal ────────────────────── -->
+  <div id="createChallengeModal"
+    style="display:none;position:fixed;inset:0;background:rgba(15,23,42,.6);z-index:300;align-items:center;justify-content:center;padding:16px;">
+    <div style="background:#fff;border-radius:12px;width:100%;max-width:480px;box-shadow:0 24px 48px rgba(0,0,0,.2);">
+      <div
+        style="padding:20px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;">
+        <h3 style="font-size:16px;font-weight:700;" id="challengeModalTitle">Tạo thử thách mới</h3>
+        <button onclick="closeChallengeModal()"
+          style="border:none;background:none;cursor:pointer;font-size:20px;color:var(--muted);">×</button>
+      </div>
+      <div style="padding:20px 24px;">
+        <input type="hidden" id="editChallengeId">
+        <div style="margin-bottom:14px;">
+          <label
+            style="display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:5px;text-transform:uppercase;">Tên
+            thử thách *</label>
+          <input class="search-input" style="width:100%" id="cTitle" placeholder="VD: 21 Ngày Làm Chủ AI Agent">
+        </div>
+        <div style="margin-bottom:14px;">
+          <label
+            style="display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:5px;text-transform:uppercase;">Mô
+            tả</label>
+          <textarea id="cDesc" rows="3"
+            style="width:100%;padding:8px 12px;border:1px solid var(--border);border-radius:6px;font-family:var(--font);font-size:13px;resize:vertical;outline:none;"
+            placeholder="Mô tả ngắn về thử thách..."></textarea>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;">
+          <div>
+            <label
+              style="display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:5px;text-transform:uppercase;">Số
+              ngày</label>
+            <input class="search-input" style="width:100%" type="number" id="cDuration" value="21" min="1" max="365">
+          </div>
+          <div>
+            <label
+              style="display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:5px;text-transform:uppercase;">Màu
+              chủ đạo</label>
+            <input type="color" id="cColor" value="#0ea5e9"
+              style="width:100%;height:36px;border:1px solid var(--border);border-radius:6px;cursor:pointer;padding:2px;">
+          </div>
+        </div>
+        <div>
+          <label
+            style="display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:5px;text-transform:uppercase;">Trạng
+            thái</label>
+          <select id="cStatus" class="filter-select" style="width:100%">
+            <option value="draft">Bản nháp (ẩn khỏi frontend)</option>
+            <option value="active">Đang mở (hiển thị)</option>
+            <option value="archived">Đã kết thúc</option>
+          </select>
+        </div>
+      </div>
+      <div style="padding:14px 24px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:10px;">
+        <button class="btn-sm" onclick="closeChallengeModal()">Hủy</button>
+        <button class="btn-sm primary" onclick="saveChallengeModal()">Lưu</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Add/Edit day modal ─────────────────────────── -->
+  <div id="dayModal"
+    style="display:none;position:fixed;inset:0;background:rgba(15,23,42,.6);z-index:400;align-items:center;justify-content:center;padding:16px;">
+    <div
+      style="background:#fff;border-radius:12px;width:100%;max-width:520px;max-height:90vh;overflow-y:auto;box-shadow:0 24px 48px rgba(0,0,0,.2);">
+      <div
+        style="padding:20px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:#fff;z-index:1;">
+        <h3 style="font-size:16px;font-weight:700;" id="dayModalTitle">Thêm ngày mới</h3>
+        <button onclick="closeDayModal()"
+          style="border:none;background:none;cursor:pointer;font-size:20px;color:var(--muted);">×</button>
+      </div>
+      <div style="padding:20px 24px;">
+        <input type="hidden" id="editDayId">
+        <input type="hidden" id="editDayChallengeId">
+        <div style="margin-bottom:14px;">
+          <label
+            style="display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:5px;text-transform:uppercase;">Tiêu
+            đề ngày *</label>
+          <input class="search-input" style="width:100%" id="dTitle" placeholder="VD: Giới thiệu bản thân">
+        </div>
+        <div style="margin-bottom:14px;">
+          <label
+            style="display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:5px;text-transform:uppercase;">Mô
+            tả ngắn</label>
+          <input class="search-input" style="width:100%" id="dDesc" placeholder="Mô tả tóm tắt task...">
+        </div>
+        <div style="margin-bottom:14px;">
+          <label
+            style="display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:5px;text-transform:uppercase;">Hướng
+            dẫn chi tiết</label>
+          <textarea id="dInstructions" rows="5"
+            style="width:100%;padding:8px 12px;border:1px solid var(--border);border-radius:6px;font-family:var(--font);font-size:13px;resize:vertical;outline:none;"
+            placeholder="Hướng dẫn chi tiết cho học viên..."></textarea>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;">
+          <div>
+            <label
+              style="display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:5px;text-transform:uppercase;">XP
+              thưởng</label>
+            <input class="search-input" style="width:100%" type="number" id="dXp" value="5" min="1" max="100">
+          </div>
+          <div>
+            <label
+              style="display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:5px;text-transform:uppercase;">Thời
+              gian chờ (giờ)</label>
+            <input class="search-input" style="width:100%" type="number" id="dDuration" value="24" min="0" max="720"
+              title="Số giờ tối thiểu trước khi mở ngày tiếp theo sau khi bài được duyệt">
+          </div>
+        </div>
+        <div style="margin-bottom:4px;">
+          <label
+            style="display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:5px;text-transform:uppercase;">Hạn
+            nộp bài (tuỳ chọn)</label>
+          <input class="search-input" style="width:100%" type="datetime-local" id="dDeadline"
+            title="Sau thời điểm này, form nộp bài sẽ tự đóng">
+          <div style="font-size:11px;color:var(--muted);margin-top:4px;">Để trống = không giới hạn thời gian.</div>
+        </div>
+      </div>
+      <div style="padding:14px 24px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:10px;">
+        <button class="btn-sm" onclick="closeDayModal()">Hủy</button>
+        <button class="btn-sm primary" onclick="saveDayModal()">Lưu</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Review submission modal ───────────────────── -->
+  <div id="reviewModal"
+    style="display:none;position:fixed;inset:0;background:rgba(15,23,42,.6);z-index:300;align-items:center;justify-content:center;padding:16px;">
+    <div
+      style="background:#fff;border-radius:12px;width:100%;max-width:560px;max-height:90vh;overflow-y:auto;box-shadow:0 24px 48px rgba(0,0,0,.2);">
+      <div
+        style="padding:20px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:#fff;z-index:1;">
+        <h3 style="font-size:16px;font-weight:700;">Duyệt bài nộp</h3>
+        <button onclick="closeReviewModal()"
+          style="border:none;background:none;cursor:pointer;font-size:20px;color:var(--muted);">×</button>
+      </div>
+      <div style="padding:20px 24px;">
+        <div id="reviewInfo"
+          style="margin-bottom:16px;padding:12px 14px;background:#f8fafc;border-radius:8px;font-size:13px;"></div>
+        <div style="margin-bottom:6px;font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;">Nội
+          dung bài nộp</div>
+        <div id="reviewContent"
+          style="background:#f1f5f9;border-radius:8px;padding:14px;font-size:13px;line-height:1.7;white-space:pre-wrap;max-height:200px;overflow-y:auto;color:#1e293b;">
+        </div>
+        <div style="margin-top:16px;" id="revisionNoteWrap">
+          <div style="margin-bottom:6px;font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;">Ghi
+            chú khi yêu cầu sửa</div>
+          <textarea id="reviewNote" rows="3"
+            style="width:100%;padding:8px 12px;border:1px solid var(--border);border-radius:6px;font-family:var(--font);font-size:13px;resize:vertical;outline:none;"
+            placeholder="Hướng dẫn học viên chỉnh sửa..."></textarea>
+        </div>
+      </div>
+      <div style="padding:14px 24px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:10px;">
+        <button class="btn-sm" onclick="closeReviewModal()">Hủy</button>
+        <button class="btn-sm warn" onclick="reviewAction('revision')">⚠️ Yêu cầu sửa</button>
+        <button class="btn-sm primary" onclick="reviewAction('approve')">✅ Duyệt bài</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Course create/edit modal ───────────────────── -->
+  <div id="courseModal"
+    style="display:none;position:fixed;inset:0;background:rgba(15,23,42,.6);z-index:400;align-items:center;justify-content:center;padding:16px;">
+    <div style="background:#fff;border-radius:12px;width:100%;max-width:500px;box-shadow:0 24px 48px rgba(0,0,0,.2);">
+      <div
+        style="padding:18px 22px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;">
+        <h3 style="font-size:16px;font-weight:700;" id="courseModalTitle">Tạo khóa học mới</h3>
+        <button onclick="closeCourseModal()"
+          style="border:none;background:none;cursor:pointer;font-size:20px;color:var(--muted);">×</button>
+      </div>
+      <div style="padding:20px 22px;display:flex;flex-direction:column;gap:14px;">
+        <div>
+          <label
+            style="display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:5px;text-transform:uppercase;">Tên
+            khóa học *</label>
+          <input class="search-input" style="width:100%" id="crsTitle" placeholder="VD: Prompt Engineering từ A-Z">
+        </div>
+        <div>
+          <label
+            style="display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:5px;text-transform:uppercase;">Mô
+            tả</label>
+          <textarea id="crsDesc" rows="2"
+            style="width:100%;padding:8px 12px;border:1px solid var(--border);border-radius:6px;font-family:var(--font);font-size:13px;resize:vertical;outline:none;"
+            placeholder="Mô tả ngắn về khóa học..."></textarea>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+          <div>
+            <label
+              style="display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:5px;text-transform:uppercase;">Giảng
+              viên</label>
+            <input class="search-input" style="width:100%" id="crsInstructor" placeholder="Tên giảng viên">
+          </div>
+          <div>
+            <label
+              style="display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:5px;text-transform:uppercase;">Thứ
+              tự hiển thị</label>
+            <input class="search-input" style="width:100%" type="number" id="crsOrder" value="0" min="0">
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+          <div>
+            <label
+              style="display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:5px;text-transform:uppercase;">Màu
+              cover</label>
+            <input type="color" id="crsCover" value="#6366f1"
+              style="width:100%;height:38px;padding:2px 4px;border:1px solid var(--border);border-radius:6px;cursor:pointer;">
+          </div>
+          <div>
+            <label
+              style="display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:5px;text-transform:uppercase;">Trạng
+              thái</label>
+            <select id="crsStatus" class="search-input" style="width:100%">
+              <option value="draft">Bản nháp</option>
+              <option value="published">Xuất bản</option>
+            </select>
+          </div>
+        </div>
+        <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:4px;">
+          <button class="btn-sm" onclick="closeCourseModal()">Hủy</button>
+          <button class="btn-sm primary" onclick="saveCourse()">💾 Lưu</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Lessons manage modal ───────────────────────── -->
+  <div id="lessonsModal"
+    style="display:none;position:fixed;inset:0;background:rgba(15,23,42,.6);z-index:400;align-items:center;justify-content:center;padding:16px;">
+    <div
+      style="background:#fff;border-radius:12px;width:100%;max-width:680px;max-height:92vh;display:flex;flex-direction:column;box-shadow:0 24px 48px rgba(0,0,0,.2);">
+      <div
+        style="padding:18px 22px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;">
+        <h3 style="font-size:16px;font-weight:700;" id="lessonsModalTitle">Bài học</h3>
+        <button onclick="closeLessonsModal()"
+          style="border:none;background:none;cursor:pointer;font-size:20px;color:var(--muted);">×</button>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;flex:1;min-height:0;overflow:hidden;">
+        <!-- Danh sách bài học -->
+        <div style="border-right:1px solid var(--border);overflow-y:auto;padding:16px;">
+          <div style="font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;margin-bottom:12px;">
+            Danh sách bài học</div>
+          <div id="lessonsList">
+            <div style="text-align:center;padding:20px;color:#94a3b8;font-size:13px;">Đang tải...</div>
+          </div>
+        </div>
+        <!-- Form thêm/sửa bài học -->
+        <div style="overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;">
+          <div style="font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;" id="lsnFormTitle">
+            Thêm bài học mới</div>
+          <div>
+            <label style="display:block;font-size:11px;font-weight:600;color:var(--muted);margin-bottom:4px;">Tên bài
+              học *</label>
+            <input class="search-input" style="width:100%" id="lsnTitle" placeholder="VD: Bài 1 — Giới thiệu">
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+            <div>
+              <label style="display:block;font-size:11px;font-weight:600;color:var(--muted);margin-bottom:4px;">Thứ
+                tự</label>
+              <input class="search-input" style="width:100%" type="number" id="lsnOrder" placeholder="1" min="0">
+            </div>
+            <div>
+              <label style="display:block;font-size:11px;font-weight:600;color:var(--muted);margin-bottom:4px;">Thời
+                lượng (phút)</label>
+              <input class="search-input" style="width:100%" type="number" id="lsnDuration" placeholder="15" min="0">
+            </div>
+          </div>
+          <div>
+            <label style="display:block;font-size:11px;font-weight:600;color:var(--muted);margin-bottom:4px;">URL Video
+              (YouTube/Loom...)</label>
+            <input class="search-input" style="width:100%" id="lsnVideo"
+              placeholder="Dán link hoặc thẻ &lt;iframe&gt; từ YouTube đều được">
+            <div style="font-size:10px;color:var(--muted);margin-top:3px;">⚠️ Video có thể không phát được trên
+              localhost — hoạt động bình thường khi deploy lên domain thật.</div>
+          </div>
+          <div>
+            <label style="display:block;font-size:11px;font-weight:600;color:var(--muted);margin-bottom:4px;">Nội dung
+              bài học</label>
+            <textarea id="lsnContent" rows="5"
+              style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:6px;font-family:var(--font);font-size:12px;resize:vertical;outline:none;"
+              placeholder="Nội dung, ghi chú, tài nguyên..."></textarea>
+          </div>
+          <div style="display:flex;gap:8px;">
+            <button class="btn-sm primary" id="lsnSaveBtn" onclick="saveLesson()">Thêm bài học</button>
+            <button class="btn-sm" onclick="cancelEditLesson()">Hủy sửa</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── New post modal ────────────────────────────── -->
+  <div id="newPostModal"
+    style="display:none;position:fixed;inset:0;background:rgba(15,23,42,.6);z-index:300;align-items:center;justify-content:center;padding:16px;">
+    <div
+      style="background:#fff;border-radius:12px;width:100%;max-width:600px;max-height:92vh;overflow-y:auto;box-shadow:0 24px 48px rgba(0,0,0,.2);">
+      <div
+        style="padding:18px 22px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:#fff;z-index:1;">
+        <h3 style="font-size:16px;font-weight:700;">✏️ Viết bài mới</h3>
+        <button onclick="closeNewPostModal()"
+          style="border:none;background:none;cursor:pointer;font-size:20px;color:var(--muted);">×</button>
+      </div>
+      <div style="padding:20px 22px;display:grid;gap:14px;">
+        <div>
+          <label
+            style="font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;display:block;margin-bottom:5px;">Tác
+            giả</label>
+          <select id="npAuthor" class="filter-select"
+            style="width:100%;padding:8px 10px;border-radius:6px;font-size:13px;">
+            <option value="">Đang tải...</option>
+          </select>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+          <div>
+            <label
+              style="font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;display:block;margin-bottom:5px;">Pillar</label>
+            <select id="npPillar" class="filter-select"
+              style="width:100%;padding:8px 10px;border-radius:6px;font-size:13px;">
+              <option value="">— Không chọn —</option>
+              <option value="offer">🟡 Offer</option>
+              <option value="traffic">🔵 Thu hút</option>
+              <option value="conversion">🟣 Chuyển đổi</option>
+              <option value="delivery">🟢 Cung ứng</option>
+              <option value="continuity">🩷 Continuity</option>
+            </select>
+          </div>
+          <div>
+            <label
+              style="font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;display:block;margin-bottom:5px;">Loại
+              bài</label>
+            <select id="npType" class="filter-select"
+              style="width:100%;padding:8px 10px;border-radius:6px;font-size:13px;">
+              <option value="post">📝 Bài đăng</option>
+              <option value="signal">📡 Tín hiệu</option>
+              <option value="cot">⭐ CÔT</option>
+              <option value="question">❓ Hỏi đáp</option>
+            </select>
+          </div>
+        </div>
+        <div>
+          <label
+            style="font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;display:block;margin-bottom:5px;">Tiêu
+            đề</label>
+          <input id="npTitle" class="search-input" style="width:100%;font-size:14px;"
+            placeholder="Tiêu đề bài viết (tuỳ chọn)">
+        </div>
+        <div>
+          <label
+            style="font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;display:block;margin-bottom:5px;">Nội
+            dung *</label>
+          <textarea id="npContent" rows="10"
+            style="width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:6px;font-family:var(--font);font-size:13px;resize:vertical;outline:none;line-height:1.7;"
+            placeholder="Viết nội dung bài đăng tại đây..."></textarea>
+        </div>
+      </div>
+      <div
+        style="padding:14px 22px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:10px;position:sticky;bottom:0;background:#fff;">
+        <button class="btn-sm" onclick="closeNewPostModal()">Hủy</button>
+        <button class="btn-sm primary" id="npSubmitBtn" onclick="submitNewPost()">🚀 Đăng bài</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Day list modal ─────────────────────────────── -->
+  <div id="dayListModal"
+    style="display:none;position:fixed;inset:0;background:rgba(15,23,42,.6);z-index:350;align-items:center;justify-content:center;padding:16px;">
+    <div
+      style="background:#fff;border-radius:12px;width:100%;max-width:680px;max-height:90vh;overflow-y:auto;box-shadow:0 24px 48px rgba(0,0,0,.2);">
+      <div
+        style="padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:#fff;z-index:1;">
+        <h3 style="font-size:16px;font-weight:700;" id="dayListTitle">Danh sách ngày</h3>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <button class="btn-sm primary" style="font-size:12px;" id="dayListAddBtn" onclick="">+ Thêm ngày</button>
+          <button onclick="closeDayListModal()"
+            style="border:none;background:none;cursor:pointer;font-size:20px;color:var(--muted);">×</button>
+        </div>
+      </div>
+      <div id="dayListBody" style="padding:16px 20px;"></div>
+    </div>
+  </div>
+
+  <div id="toast"></div>
+
+  <script>
+    const API = 'http://localhost:3000/api';
+    let adminKey = '';
+    let userOffset = 0;
+    let userTotal = 0;
+    const LIMIT = 20;
+    let userDebTimer, postDebTimer;
+    let currentPage = 'dashboard';
+
+    // ── Auth ──────────────────────────────────────────────────────
+    async function doLogin() {
+      const key = document.getElementById('adminKeyInput').value.trim();
+      if (!key) return;
+      try {
+        const r = await fetch(`${API}/admin/verify`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ key })
+        });
+        const d = await r.json();
+        if (!d.ok) { showLoginErr('Admin key không đúng.'); return; }
+        adminKey = key;
+        sessionStorage.setItem('adminKey', key);
+        document.getElementById('loginOverlay').style.display = 'none';
+        document.getElementById('shell').style.display = 'flex';
+        loadDashboard();
+      } catch (e) {
+        showLoginErr('Không kết nối được server. Chạy: node server.js');
+      }
+    }
+
+    function doLogout() {
+      sessionStorage.removeItem('adminKey');
+      location.reload();
+    }
+
+    function showLoginErr(msg) {
+      const el = document.getElementById('loginErr');
+      el.textContent = msg; el.style.display = 'block';
+    }
+
+    // ── Navigation ────────────────────────────────────────────────
+    const titles = {
+      dashboard: ['Dashboard', ''],
+      users: ['Thành viên', ''],
+      posts: ['Bài đăng', ''],
+      xplog: ['XP Log', '100 giao dịch gần nhất'],
+      challenges: ['Thử thách', ''],
+      enrollments: ['Đăng ký tham gia', ''],
+      submissions: ['Bài nộp', ''],
+      settings: ['Cài đặt', 'Banner thông báo'],
+      courses: ['Khóa học', ''],
+      marketplace: ['Marketplace', 'Sản phẩm & Đơn hàng'],
+    };
+
+    function showPage(name) {
+      currentPage = name;
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.sbar-item').forEach(b => b.classList.remove('active'));
+      document.getElementById(`page-${name}`).classList.add('active');
+      document.querySelector(`.sbar-item[onclick="showPage('${name}')"]`).classList.add('active');
+      const [title, sub] = titles[name];
+      document.getElementById('pageTitle').textContent = title;
+      document.getElementById('pageSubtitle').textContent = sub ? ' — ' + sub : '';
+
+      if (name === 'users') loadUsers();
+      if (name === 'posts') loadPosts();
+      if (name === 'xplog') loadXPLog();
+      if (name === 'challenges') loadChallenges();
+      if (name === 'enrollments') loadEnrollments();
+      if (name === 'submissions') loadSubmissions();
+      if (name === 'settings') loadSettings();
+      if (name === 'courses') loadAdminCourses();
+      if (name === 'marketplace') loadAdminMarketplace();
+    }
+
+    function refreshCurrent() { showPage(currentPage); }
+
+    // ── API helper ────────────────────────────────────────────────
+    async function api(path, opts = {}) {
+      const res = await fetch(`${API}${path}`, {
+        ...opts,
+        headers: { 'x-admin-key': adminKey, 'Content-Type': 'application/json', ...(opts.headers || {}) }
+      });
+      let data;
+      try { data = await res.json(); } catch { throw new Error(`Server lỗi ${res.status} — không đọc được JSON`); }
+      if (!res.ok) throw new Error(data?.error || `Lỗi ${res.status}`);
+      return data;
+    }
+
+    // ── Dashboard ─────────────────────────────────────────────────
+    async function loadDashboard() {
+      try {
+        const d = await api('/admin/stats');
+        document.getElementById('sTotal').textContent = d.total_users;
+        document.getElementById('sNew').textContent = `+${d.new_today}`;
+        document.getElementById('sPosts').textContent = d.total_posts;
+        document.getElementById('sPostsToday').textContent = `+${d.posts_today}`;
+        document.getElementById('sTotalXP').textContent = d.total_xp.toLocaleString();
+        document.getElementById('sXPToday').textContent = `+${d.xp_today}`;
+        document.getElementById('sCompletions').textContent = d.completions;
+        document.getElementById('sActive').textContent = d.active_users;
+        document.getElementById('sbUserCount').textContent = d.total_users;
+        document.getElementById('sbPostCount').textContent = d.total_posts;
+
+        renderLevelBars(d.by_level);
+        renderRecentUsers(d.recent_users);
+      } catch (e) { showToast('Lỗi kết nối server.', 'red'); }
+    }
+
+    function renderLevelBars(data) {
+      const max = Math.max(...data.map(d => d.count), 1);
+      const barsEl = document.getElementById('levelBars');
+      const labelsEl = document.getElementById('levelLabels');
+      barsEl.innerHTML = '';
+      labelsEl.innerHTML = '';
+
+      for (let lv = 1; lv <= 9; lv++) {
+        const found = data.find(d => d.level === lv);
+        const count = found ? found.count : 0;
+        const pct = Math.round((count / max) * 100);
+        barsEl.innerHTML += `
+      <div class="level-bar-wrap">
+        <div style="font-size:10px;font-weight:700;color:var(--text)">${count}</div>
+        <div class="level-bar-fill" style="height:${Math.max(pct * 0.6, 4)}px"></div>
+      </div>`;
+        labelsEl.innerHTML += `<div style="flex:1;text-align:center;font-size:10px;color:var(--muted);font-weight:600">Lv${lv}</div>`;
+      }
+    }
+
+    function renderRecentUsers(users) {
+      const el = document.getElementById('recentUsers');
+      if (!users.length) {
+        el.innerHTML = '<div class="empty-state">Chưa có thành viên nào.</div>';
+        return;
+      }
+      el.innerHTML = users.map(u => `
+    <div class="recent-item">
+      <div class="av" style="background:${avatarColor(u.id)}">${u.first_name[0]}</div>
+      <div class="recent-item-info">
+        <div class="recent-item-name">${u.first_name} ${u.last_name}</div>
+        <div class="recent-item-meta">${u.email}</div>
+      </div>
+      <div style="text-align:right">
+        <div style="font-size:11px;font-weight:700;color:var(--green)">${u.xp} XP</div>
+        <div style="font-size:11px;color:var(--muted)">${fmtDate(u.created_at)}</div>
+      </div>
+    </div>`).join('');
+    }
+
+    // ── Users ─────────────────────────────────────────────────────
+    async function loadUsers(reset = true) {
+      if (reset) userOffset = 0;
+      const search = document.getElementById('userSearch').value;
+      const status = document.getElementById('userStatusFilter').value;
+
+      const d = await api(`/admin/users?search=${encodeURIComponent(search)}&status=${status}&limit=${LIMIT}&offset=${userOffset}`);
+      userTotal = d.total;
+
+      const tbody = document.getElementById('usersTbody');
+      if (!d.users.length) {
+        tbody.innerHTML = `<tr><td colspan="8"><div class="empty-state">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+        <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" stroke-linecap="round"/>
+        <circle cx="9" cy="7" r="4"/>
+      </svg>
+      Không tìm thấy thành viên nào.</div></td></tr>`;
+        document.getElementById('userPager').innerHTML = '';
+        return;
+      }
+
+      tbody.innerHTML = d.users.map((u, i) => `
+    <tr>
+      <td style="color:var(--muted)">${userOffset + i + 1}</td>
+      <td>
+        <div style="display:flex;align-items:center">
+          <div class="av" style="background:${avatarColor(u.id)}">${u.first_name[0]}</div>
+          <div>
+            <div style="font-weight:600">${u.first_name} ${u.last_name}</div>
+            <div style="font-size:11px;color:var(--muted)">ID #${u.id}</div>
+          </div>
+        </div>
+      </td>
+      <td>${u.email}</td>
+      <td>
+        <span class="badge badge-level">Lv${u.level}</span>
+        <span style="font-size:12px;color:var(--green);font-weight:700;margin-left:4px">${u.xp} XP</span>
+        <div class="xp-bar-sm"><div class="xp-bar-sm-fill" style="width:${Math.min((u.xp % 50) * 2, 100)}%"></div></div>
+      </td>
+      <td>${u.streak > 0 ? `🔥 ${u.streak}` : '—'}</td>
+      <td><span class="badge badge-${u.status}">${statusLabel(u.status)}</span></td>
+      <td style="color:var(--muted)">${fmtDate(u.created_at)}</td>
+      <td>
+        ${u.status === 'active'
+          ? `<button class="act-btn warn" onclick="setStatus(${u.id},'suspended')">Khóa tạm</button>
+             <button class="act-btn danger" onclick="setStatus(${u.id},'banned')">Ban</button>`
+          : `<button class="act-btn success" onclick="setStatus(${u.id},'active')">Kích hoạt</button>`
+        }
+        <button class="act-btn danger" onclick="deleteUser(${u.id},'${u.first_name} ${u.last_name}')">Xoá</button>
+      </td>
+    </tr>`).join('');
+
+      // Pager
+      const total = d.total;
+      const page = Math.floor(userOffset / LIMIT) + 1;
+      const pages = Math.ceil(total / LIMIT);
+      document.getElementById('userPager').innerHTML = `
+    <span>Tổng: <strong>${total}</strong> thành viên</span>
+    <span style="flex:1"></span>
+    <button onclick="userPage(-1)" ${page <= 1 ? 'disabled' : ''}>← Trước</button>
+    <span>Trang ${page}/${pages}</span>
+    <button onclick="userPage(1)" ${page >= pages ? 'disabled' : ''}>Tiếp →</button>`;
+    }
+
+    function userPage(dir) {
+      userOffset = Math.max(0, userOffset + dir * LIMIT);
+      loadUsers(false);
+    }
+
+    async function setStatus(id, status) {
+      await api(`/admin/users/${id}/status`, { method: 'PATCH', body: JSON.stringify({ status }) });
+      showToast(`Đã cập nhật trạng thái.`, 'green');
+      loadUsers(false);
+    }
+
+    async function deleteUser(id, name) {
+      if (!confirm(`Xoá thành viên "${name}"? Hành động này không thể hoàn tác.`)) return;
+      await api(`/admin/users/${id}`, { method: 'DELETE' });
+      showToast(`Đã xoá "${name}".`);
+      loadUsers(false);
+      loadDashboard();
+    }
+
+    function debounceUsers() {
+      clearTimeout(userDebTimer);
+      userDebTimer = setTimeout(() => loadUsers(), 300);
+    }
+
+    // ── Posts ─────────────────────────────────────────────────────
+    // ── New post modal ────────────────────────────────────────────
+    async function openNewPostModal() {
+      // Load users vào dropdown tác giả
+      const sel = document.getElementById('npAuthor');
+      if (sel.options.length <= 1) {
+        const { users } = await api('/admin/users?limit=200');
+        sel.innerHTML = users.map(u =>
+          `<option value="${u.id}">${u.first_name} ${u.last_name} (${u.email})</option>`
+        ).join('');
+      }
+      document.getElementById('npTitle').value = '';
+      document.getElementById('npContent').value = '';
+      document.getElementById('npPillar').value = '';
+      document.getElementById('npType').value = 'post';
+      document.getElementById('newPostModal').style.display = 'flex';
+      setTimeout(() => document.getElementById('npContent').focus(), 50);
+    }
+
+    function closeNewPostModal() {
+      document.getElementById('newPostModal').style.display = 'none';
+    }
+
+    async function submitNewPost() {
+      const content = document.getElementById('npContent').value.trim();
+      if (!content) {
+        document.getElementById('npContent').style.borderColor = 'var(--red)';
+        document.getElementById('npContent').focus();
+        return;
+      }
+      document.getElementById('npContent').style.borderColor = '';
+      const btn = document.getElementById('npSubmitBtn');
+      btn.disabled = true;
+      btn.textContent = 'Đang đăng...';
+      const body = {
+        user_id: document.getElementById('npAuthor').value || undefined,
+        title: document.getElementById('npTitle').value.trim(),
+        content,
+        pillar: document.getElementById('npPillar').value || undefined,
+        post_type: document.getElementById('npType').value,
+      };
+      const res = await api('/admin/posts', { method: 'POST', body: JSON.stringify(body) });
+      btn.disabled = false;
+      btn.textContent = '🚀 Đăng bài';
+      if (res.error) { showToast(res.error, 'red'); return; }
+      showToast('Đã đăng bài thành công!', 'green');
+      closeNewPostModal();
+      loadPosts();
+    }
+
+    async function loadPosts() {
+      const search = document.getElementById('postSearch').value;
+      const pillar = document.getElementById('postPillarFilter').value;
+      const d = await api(`/admin/posts?search=${encodeURIComponent(search)}&pillar=${pillar}`);
+
+      const tbody = document.getElementById('postsTbody');
+      if (!d.posts.length) {
+        tbody.innerHTML = `<tr><td colspan="9"><div class="empty-state">Không có bài đăng nào.</div></td></tr>`;
+        return;
+      }
+      tbody.innerHTML = d.posts.map((p, i) => `
+    <tr>
+      <td style="color:var(--muted)">${i + 1}</td>
+      <td style="max-width:240px">
+        <div style="font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${p.title}</div>
+      </td>
+      <td>
+        <div style="font-size:12px;font-weight:600">${p.author_name}</div>
+        <div style="font-size:11px;color:var(--muted)">${p.author_email}</div>
+      </td>
+      <td>${p.pillar ? `<span class="badge badge-pillar pillar-${p.pillar}">${pillarLabel(p.pillar)}</span>` : '—'}</td>
+      <td><span style="font-size:12px;color:var(--muted);text-transform:uppercase;font-weight:600">${p.post_type}</span></td>
+      <td>♥ ${p.likes_count}</td>
+      <td>💬 ${p.comments_count}</td>
+      <td style="color:var(--muted)">${fmtDate(p.created_at)}</td>
+      <td>
+        <button class="act-btn danger" onclick="deletePost(${p.id})">Xoá</button>
+      </td>
+    </tr>`).join('');
+    }
+
+    async function deletePost(id) {
+      if (!confirm('Xoá bài đăng này?')) return;
+      await api(`/admin/posts/${id}`, { method: 'DELETE' });
+      showToast('Đã xoá bài đăng.');
+      loadPosts();
+    }
+
+    function debouncePosts() {
+      clearTimeout(postDebTimer);
+      postDebTimer = setTimeout(() => loadPosts(), 300);
+    }
+
+    // ── XP Log ────────────────────────────────────────────────────
+    async function loadXPLog() {
+      const d = await api('/admin/xp-log');
+      const tbody = document.getElementById('xpTbody');
+      if (!d.rows.length) {
+        tbody.innerHTML = `<tr><td colspan="6"><div class="empty-state">Chưa có giao dịch XP nào.</div></td></tr>`;
+        return;
+      }
+      tbody.innerHTML = d.rows.map((r, i) => `
+    <tr>
+      <td style="color:var(--muted)">${i + 1}</td>
+      <td>
+        <div style="font-weight:600">${r.user_name}</div>
+        <div style="font-size:11px;color:var(--muted)">${r.email}</div>
+      </td>
+      <td><span class="${r.amount >= 0 ? 'xp-pos' : 'xp-neg'}">${r.amount >= 0 ? '+' : ''}${r.amount} XP</span></td>
+      <td style="font-size:12px">${r.source}</td>
+      <td style="color:var(--muted);font-size:12px">${r.note || '—'}</td>
+      <td style="color:var(--muted)">${fmtDate(r.created_at)}</td>
+    </tr>`).join('');
+    }
+
+    // ── Helpers ───────────────────────────────────────────────────
+    function avatarColor(id) {
+      const colors = ['#0ea5e9', '#8b5cf6', '#10b981', '#f59e0b', '#ec4899', '#3b82f6', '#ef4444', '#14b8a6'];
+      return colors[id % colors.length];
+    }
+
+    function statusLabel(s) {
+      return { active: 'Active', banned: 'Banned', suspended: 'Tạm khoá' }[s] || s;
+    }
+
+    function pillarLabel(p) {
+      return { offer: 'Offer', traffic: 'Thu hút', conversion: 'Chuyển đổi', delivery: 'Cung ứng', continuity: 'Continuity' }[p] || p;
+    }
+
+    function fmtDate(d) {
+      if (!d) return '—';
+      const dt = new Date(d);
+      return dt.toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' })
+        + ' ' + dt.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });
+    }
+
+    let toastTimer;
+    function showToast(msg, type = '') {
+      const el = document.getElementById('toast');
+      el.textContent = msg;
+      el.className = 'show' + (type ? ' ' + type : '');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => { el.className = ''; }, 2500);
+    }
+
+    // ── Challenges ────────────────────────────────────────────────
+    async function loadChallenges() {
+      const { challenges } = await api('/admin/challenges');
+      const tbody = document.getElementById('challengesTbody');
+      if (!challenges.length) {
+        tbody.innerHTML = `<tr><td colspan="7"><div class="empty-state">Chưa có thử thách nào.</div></td></tr>`;
+        return;
+      }
+      const statusLabel = { active: 'Đang mở', draft: 'Bản nháp', archived: 'Kết thúc' };
+      const statusCls = { active: 'badge-active', draft: 'badge-suspended', archived: 'badge-banned' };
+      tbody.innerHTML = challenges.map((c, i) => `
+    <tr>
+      <td style="color:var(--muted)">${i + 1}</td>
+      <td>
+        <div style="display:flex;align-items:center;gap:8px;cursor:pointer;" onclick="openChallengeDetail(${c.id})" title="Bấm để xem & chỉnh sửa từng ngày">
+          <div style="width:10px;height:10px;border-radius:50%;background:${c.cover_color};flex-shrink:0;"></div>
+          <div>
+            <div style="font-weight:600;color:var(--primary);text-decoration:underline;text-underline-offset:2px;">${c.title}</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:2px">${(c.description || '').slice(0, 60)}${c.description && c.description.length > 60 ? '...' : ''}</div>
+          </div>
+        </div>
+      </td>
+      <td><span class="badge ${statusCls[c.status] || ''}">${statusLabel[c.status] || c.status}</span></td>
+      <td style="font-weight:600;cursor:pointer;" onclick="openChallengeDetail(${c.id})">${c.day_count} ngày →</td>
+      <td>${c.pending_count > 0 ? `<span class="badge" style="background:#fef3c7;color:#92400e;">${c.pending_count} chờ duyệt</span>` : `<span style="color:var(--muted)">—</span>`}</td>
+      <td style="color:var(--muted)">${fmtDate(c.created_at)}</td>
+      <td>
+        <button class="act-btn" onclick="openEditChallenge(${c.id},'${escJs(c.title)}','${escJs(c.description || '')}',${c.duration},'${c.cover_color}','${c.status}')">Sửa TT</button>
+        <button class="act-btn success" onclick="openAddDay(${c.id})">+ Ngày</button>
+      </td>
+    </tr>`).join('');
+    }
+
+    let challengeListForFilter = [];
+    async function loadChallengeFilter() {
+      try {
+        const { challenges } = await api('/admin/challenges');
+        challengeListForFilter = challenges;
+        // Populate both submission and enrollment filters
+        ['subChallengeFilter', 'enrollChallengeFilter'].forEach(id => {
+          const sel = document.getElementById(id);
+          // remove old options (keep first "all" option)
+          while (sel.options.length > 1) sel.remove(1);
+          challenges.forEach(c => {
+            const opt = document.createElement('option');
+            opt.value = c.id; opt.textContent = c.title;
+            sel.appendChild(opt);
+          });
+        });
+        // Submission pending badge
+        const totalPending = challenges.reduce((s, c) => s + c.pending_count, 0);
+        const badge = document.getElementById('sbPendingCount');
+        badge.textContent = totalPending;
+        badge.style.display = totalPending > 0 ? 'inline' : 'none';
+        // Enrollment pending badge
+        const { pending_count } = await api('/admin/enrollments?limit=1');
+        const eBadge = document.getElementById('sbEnrollPending');
+        eBadge.textContent = pending_count;
+        eBadge.style.display = pending_count > 0 ? 'inline' : 'none';
+        // Product pending_review badge
+        try {
+          const allProds = await api('/admin/products');
+          const pendingProds = allProds.filter(p => p.status === 'pending_review').length;
+          const pBadge = document.getElementById('sbProductPending');
+          if (pBadge) { pBadge.textContent = pendingProds; pBadge.style.display = pendingProds > 0 ? 'inline' : 'none'; }
+        } catch (e) { }
+      } catch (e) { }
+    }
+
+    function openCreateChallenge() {
+      document.getElementById('challengeModalTitle').textContent = 'Tạo thử thách mới';
+      document.getElementById('editChallengeId').value = '';
+      document.getElementById('cTitle').value = '';
+      document.getElementById('cDesc').value = '';
+      document.getElementById('cDuration').value = 21;
+      document.getElementById('cColor').value = '#0ea5e9';
+      document.getElementById('cStatus').value = 'draft';
+      document.getElementById('createChallengeModal').style.display = 'flex';
+    }
+
+    function openEditChallenge(id, title, desc, duration, color, status) {
+      document.getElementById('challengeModalTitle').textContent = 'Chỉnh sửa thử thách';
+      document.getElementById('editChallengeId').value = id;
+      document.getElementById('cTitle').value = title;
+      document.getElementById('cDesc').value = desc;
+      document.getElementById('cDuration').value = duration;
+      document.getElementById('cColor').value = color;
+      document.getElementById('cStatus').value = status;
+      document.getElementById('createChallengeModal').style.display = 'flex';
+    }
+
+    function closeChallengeModal() {
+      document.getElementById('createChallengeModal').style.display = 'none';
+    }
+
+    async function saveChallengeModal() {
+      const id = document.getElementById('editChallengeId').value;
+      const title = document.getElementById('cTitle').value.trim();
+      if (!title) { showToast('Vui lòng nhập tên thử thách.', 'red'); return; }
+      const body = {
+        title,
+        description: document.getElementById('cDesc').value.trim(),
+        duration: parseInt(document.getElementById('cDuration').value, 10),
+        cover_color: document.getElementById('cColor').value,
+        status: document.getElementById('cStatus').value,
+      };
+      try {
+        if (id) {
+          await api(`/admin/challenges/${id}`, { method: 'PATCH', body: JSON.stringify(body) });
+          showToast('Đã cập nhật thử thách.', 'green');
+        } else {
+          await api('/admin/challenges', { method: 'POST', body: JSON.stringify(body) });
+          showToast('Đã tạo thử thách mới.', 'green');
+        }
+        closeChallengeModal();
+        loadChallenges();
+      } catch (e) { showToast('Lỗi kết nối.', 'red'); }
+    }
+
+    // Challenge days management
+    let dayModalChallengeId = null;
+    function openAddDay(challengeId) {
+      dayModalChallengeId = challengeId;
+      document.getElementById('dayModalTitle').textContent = 'Thêm ngày mới';
+      document.getElementById('editDayId').value = '';
+      document.getElementById('editDayChallengeId').value = challengeId;
+      document.getElementById('dTitle').value = '';
+      document.getElementById('dDesc').value = '';
+      document.getElementById('dInstructions').value = '';
+      document.getElementById('dXp').value = 5;
+      document.getElementById('dDuration').value = 24;
+      document.getElementById('dDeadline').value = '';
+      document.getElementById('dayModal').style.display = 'flex';
+    }
+
+    function closeDayModal() {
+      document.getElementById('dayModal').style.display = 'none';
+    }
+
+    async function saveDayModal() {
+      const id = document.getElementById('editDayId').value;
+      const challengeId = document.getElementById('editDayChallengeId').value;
+      const title = document.getElementById('dTitle').value.trim();
+      if (!title) { showToast('Vui lòng nhập tiêu đề ngày.', 'red'); return; }
+      const deadlineVal = document.getElementById('dDeadline').value;
+      const body = {
+        title,
+        description: document.getElementById('dDesc').value.trim(),
+        instructions: document.getElementById('dInstructions').value.trim(),
+        xp_reward: parseInt(document.getElementById('dXp').value, 10) || 5,
+        duration_hours: parseInt(document.getElementById('dDuration').value, 10) || 24,
+        submission_deadline: deadlineVal ? deadlineVal.replace('T', ' ') + ':00' : null,
+      };
+      try {
+        if (id) {
+          await api(`/admin/challenge-days/${id}`, { method: 'PATCH', body: JSON.stringify(body) });
+          showToast('Đã cập nhật ngày.', 'green');
+        } else {
+          await api(`/admin/challenges/${challengeId}/days`, { method: 'POST', body: JSON.stringify(body) });
+          showToast('Đã thêm ngày mới.', 'green');
+        }
+        closeDayModal();
+        if (currentDayListChallengeId) refreshDayList();
+        else loadChallenges();
+      } catch (e) { showToast('Lỗi kết nối.', 'red'); }
+    }
+
+    // Challenge day list modal
+    let currentDayListChallengeId = null;
+
+    async function openChallengeDetail(challengeId) {
+      currentDayListChallengeId = challengeId;
+      document.getElementById('dayListModal').style.display = 'flex';
+      document.getElementById('dayListAddBtn').onclick = () => openAddDay(challengeId);
+      await refreshDayList();
+    }
+
+    async function refreshDayList() {
+      const challengeId = currentDayListChallengeId;
+      const body = document.getElementById('dayListBody');
+      body.innerHTML = '<div style="text-align:center;padding:20px;color:var(--muted);">Đang tải...</div>';
+      const res = await api(`/challenges/${challengeId}`);
+      const { challenge, days } = res;
+      document.getElementById('dayListTitle').textContent = `${challenge.title} — ${days.length} ngày`;
+      if (!days.length) {
+        body.innerHTML = '<div style="text-align:center;padding:20px;color:var(--muted);">Chưa có ngày nào. Bấm "+ Thêm ngày" để bắt đầu.</div>';
+        return;
+      }
+      body.innerHTML = days.map(d => {
+        const dlRaw = d.submission_deadline || '';
+        const dlInput = dlRaw ? dlRaw.slice(0, 16).replace(' ', 'T') : '';
+        const dlExpired = dlRaw && new Date() > new Date(dlRaw);
+        const dlBadge = dlRaw
+          ? `<span style="font-size:10px;padding:2px 6px;border-radius:4px;background:${dlExpired ? '#fee2e2' : '#fef3c7'};color:${dlExpired ? 'var(--red)' : '#92400e'};">⏰ ${dlRaw.slice(0, 16)}</span>`
+          : `<span style="font-size:10px;color:var(--light);">Không hạn</span>`;
+        return `
+    <div class="day-accordion" id="acc-${d.id}" style="border:1px solid var(--border);border-radius:8px;margin-bottom:8px;overflow:hidden;">
+      <!-- Header row -->
+      <div onclick="toggleDayAccordion(${d.id})" style="display:flex;align-items:center;gap:10px;padding:10px 12px;cursor:pointer;background:#fff;transition:background .15s;" onmouseenter="this.style.background='#f8fafc'" onmouseleave="this.style.background='#fff'">
+        <span style="width:30px;height:30px;background:#e0f2fe;color:#0284c7;border-radius:6px;display:inline-flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;">${d.day_number}</span>
+        <div style="flex:1;min-width:0;">
+          <div style="font-size:13px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escHtml(d.title)}</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:1px;display:flex;gap:8px;align-items:center;">
+            <span style="color:var(--green);font-weight:600;">+${d.xp_reward} XP</span>
+            ${dlBadge}
+            ${d.instructions ? `<span style="color:var(--primary);">✓ Có hướng dẫn</span>` : `<span style="color:var(--light);">Chưa có hướng dẫn</span>`}
+          </div>
+        </div>
+        <div style="display:flex;gap:6px;flex-shrink:0;">
+          <button class="act-btn danger" onclick="event.stopPropagation();deleteDayInList(${d.id},'${escJs(d.title)}')" style="font-size:10px;padding:2px 7px;">Xoá</button>
+          <span style="font-size:16px;color:var(--muted);line-height:1;" id="acc-arrow-${d.id}">›</span>
+        </div>
+      </div>
+      <!-- Inline edit form (hidden by default) -->
+      <div id="acc-form-${d.id}" style="display:none;padding:14px 14px 16px;border-top:1px solid var(--border);background:#fafafa;">
+        <div style="display:grid;gap:10px;">
+          <div>
+            <label style="font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;display:block;margin-bottom:4px;">Tiêu đề *</label>
+            <input id="ai-title-${d.id}" class="search-input" style="width:100%;font-size:13px;" value="${escHtml(d.title)}">
+          </div>
+          <div>
+            <label style="font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;display:block;margin-bottom:4px;">Mô tả ngắn</label>
+            <input id="ai-desc-${d.id}" class="search-input" style="width:100%;font-size:13px;" value="${escHtml(d.description || '')}">
+          </div>
+          <div>
+            <label style="font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;display:block;margin-bottom:4px;">Hướng dẫn chi tiết</label>
+            <textarea id="ai-instr-${d.id}" rows="6" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:6px;font-family:var(--font);font-size:12px;resize:vertical;outline:none;line-height:1.6;">${escHtml(d.instructions || '')}</textarea>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+            <div>
+              <label style="font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;display:block;margin-bottom:4px;">XP thưởng</label>
+              <input id="ai-xp-${d.id}" class="search-input" type="number" style="width:100%;font-size:13px;" value="${d.xp_reward}" min="1" max="100">
+            </div>
+            <div>
+              <label style="font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;display:block;margin-bottom:4px;">Thời gian chờ (giờ)</label>
+              <input id="ai-dur-${d.id}" class="search-input" type="number" style="width:100%;font-size:13px;" value="${d.duration_hours ?? 24}" min="0" max="720" title="Số giờ tối thiểu trước khi mở ngày tiếp theo">
+            </div>
+          </div>
+          <div>
+            <label style="font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;display:block;margin-bottom:4px;">Hạn nộp bài (tuỳ chọn)</label>
+            <input id="ai-dl-${d.id}" class="search-input" type="datetime-local" style="width:100%;font-size:12px;" value="${dlInput}">
+            <div style="font-size:11px;color:var(--muted);margin-top:3px;">Để trống = không giới hạn thời gian.</div>
+          </div>
+        </div>
+        <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:12px;">
+          <button class="btn-sm" onclick="toggleDayAccordion(${d.id})">Hủy</button>
+          <button class="btn-sm primary" onclick="saveDayInline(${d.id})">💾 Lưu thay đổi</button>
+        </div>
+      </div>
+    </div>`;
+      }).join('');
+    }
+
+    function toggleDayAccordion(dayId) {
+      const form = document.getElementById(`acc-form-${dayId}`);
+      const arrow = document.getElementById(`acc-arrow-${dayId}`);
+      const isOpen = form.style.display !== 'none';
+      form.style.display = isOpen ? 'none' : 'block';
+      arrow.textContent = isOpen ? '›' : '˅';
+      arrow.style.transform = isOpen ? '' : 'rotate(0deg)';
+    }
+
+    async function saveDayInline(dayId) {
+      const title = document.getElementById(`ai-title-${dayId}`).value.trim();
+      if (!title) { showToast('Tiêu đề không được để trống.', 'red'); return; }
+      const dlVal = document.getElementById(`ai-dl-${dayId}`).value;
+      const body = {
+        title,
+        description: document.getElementById(`ai-desc-${dayId}`).value.trim(),
+        instructions: document.getElementById(`ai-instr-${dayId}`).value.trim(),
+        xp_reward: parseInt(document.getElementById(`ai-xp-${dayId}`).value, 10) || 5,
+        duration_hours: parseInt(document.getElementById(`ai-dur-${dayId}`).value, 10) || 24,
+        submission_deadline: dlVal ? dlVal.replace('T', ' ') + ':00' : null,
+      };
+      const res = await api(`/admin/challenge-days/${dayId}`, { method: 'PATCH', body: JSON.stringify(body) });
+      if (res.error) { showToast(res.error, 'red'); return; }
+      showToast('Đã lưu.', 'green');
+      await refreshDayList();
+    }
+
+    function closeDayListModal() {
+      document.getElementById('dayListModal').style.display = 'none';
+      currentDayListChallengeId = null;
+      loadChallenges();
+    }
+
+    async function deleteDayInList(dayId, title) {
+      if (!confirm(`Xoá ngày "${title}"?\nChỉ xoá được nếu chưa có bài nộp.`)) return;
+      const res = await api(`/admin/challenge-days/${dayId}`, { method: 'DELETE' });
+      if (res.error) { showToast(res.error, 'red'); return; }
+      showToast('Đã xoá ngày.', 'green');
+      await refreshDayList();
+    }
+
+    function openEditDay(dayId, challengeId) {
+      document.getElementById('dayModalTitle').textContent = 'Chỉnh sửa ngày';
+      document.getElementById('editDayId').value = dayId;
+      document.getElementById('editDayChallengeId').value = challengeId;
+      document.getElementById('dTitle').value = '';
+      document.getElementById('dDesc').value = '';
+      document.getElementById('dInstructions').value = '';
+      document.getElementById('dXp').value = 5;
+      document.getElementById('dDuration').value = 24;
+      document.getElementById('dDeadline').value = '';
+      document.getElementById('dayModal').style.display = 'flex';
+      // Load current data
+      api(`/challenges/${challengeId}`).then(res => {
+        const day = res.days.find(d => d.id === dayId);
+        if (!day) return;
+        document.getElementById('dTitle').value = day.title || '';
+        document.getElementById('dDesc').value = day.description || '';
+        document.getElementById('dInstructions').value = day.instructions || '';
+        document.getElementById('dXp').value = day.xp_reward || 5;
+        document.getElementById('dDuration').value = day.duration_hours ?? 24;
+        document.getElementById('dDeadline').value = day.submission_deadline
+          ? day.submission_deadline.slice(0, 16).replace(' ', 'T')
+          : '';
+      }).catch(() => { });
+    }
+
+    // ── Enrollments ──────────────────────────────────────────────
+    let enrollOffset = 0;
+    const ENROLL_LIMIT = 20;
+
+    async function loadEnrollments(reset = true) {
+      if (reset) enrollOffset = 0;
+      const challengeId = document.getElementById('enrollChallengeFilter').value;
+      const status = document.getElementById('enrollStatusFilter').value;
+      const params = new URLSearchParams({ limit: ENROLL_LIMIT, offset: enrollOffset });
+      if (challengeId) params.set('challenge_id', challengeId);
+      if (status) params.set('status', status);
+      const d = await api(`/admin/enrollments?${params}`);
+
+      // Update enrollment pending badge
+      const eBadge = document.getElementById('sbEnrollPending');
+      eBadge.textContent = d.pending_count;
+      eBadge.style.display = d.pending_count > 0 ? 'inline' : 'none';
+
+      const tbody = document.getElementById('enrollTbody');
+      if (!d.enrollments.length) {
+        tbody.innerHTML = `<tr><td colspan="7"><div class="empty-state">Chưa có đăng ký nào.</div></td></tr>`;
+      } else {
+        const stLabel = { pending: 'Chờ duyệt', approved: 'Đã duyệt', rejected: 'Từ chối' };
+        const stCls = { pending: 'badge-suspended', approved: 'badge-active', rejected: 'badge-banned' };
+        tbody.innerHTML = d.enrollments.map((e, i) => `
+      <tr>
+        <td style="color:var(--muted)">${enrollOffset + i + 1}</td>
+        <td>
+          <div style="font-weight:600">${e.first_name} ${e.last_name}</div>
+          <div style="font-size:11px;color:var(--muted)">${e.email}</div>
+        </td>
+        <td style="font-size:13px">${e.challenge_title}</td>
+        <td><span class="badge ${stCls[e.status] || ''}">${stLabel[e.status] || e.status}</span></td>
+        <td style="color:var(--muted)">${fmtDate(e.enrolled_at)}</td>
+        <td style="color:var(--muted)">${e.started_at ? fmtDate(e.started_at) : '—'}</td>
+        <td>
+          ${e.status === 'pending' ? `
+            <button class="act-btn success" onclick="enrollAction(${e.id},'approve')">✅ Duyệt</button>
+            <button class="act-btn warn" onclick="enrollAction(${e.id},'reject')">❌ Từ chối</button>` :
+            e.status === 'approved' ? `<span style="font-size:11px;color:var(--green);">Đã duyệt</span>` :
+              `<button class="act-btn success" onclick="enrollAction(${e.id},'approve')">↩ Duyệt lại</button>`
+          }
+        </td>
+      </tr>`).join('');
+      }
+
+      // Pager
+      const pager = document.getElementById('enrollPager');
+      const totalPages = Math.ceil(d.total / ENROLL_LIMIT);
+      const curPage = Math.floor(enrollOffset / ENROLL_LIMIT) + 1;
+      pager.innerHTML = totalPages <= 1 ? '' :
+        `<button class="page-btn" ${curPage === 1 ? 'disabled' : ''} onclick="enrollPage(-1)">‹ Trước</button>
+     <span style="font-size:12px;color:var(--muted)">Trang ${curPage} / ${totalPages}</span>
+     <button class="page-btn" ${curPage === totalPages ? 'disabled' : ''} onclick="enrollPage(1)">Sau ›</button>`;
+    }
+
+    function enrollPage(dir) {
+      enrollOffset = Math.max(0, enrollOffset + dir * ENROLL_LIMIT);
+      loadEnrollments(false);
+    }
+
+    async function enrollAction(id, action) {
+      try {
+        await api(`/admin/enrollments/${id}`, { method: 'PATCH', body: JSON.stringify({ action }) });
+        showToast(action === 'approve' ? 'Đã duyệt tham gia.' : 'Đã từ chối.', action === 'approve' ? 'green' : 'red');
+        loadEnrollments(false);
+        loadChallengeFilter(); // refresh badge counts
+      } catch (e) { showToast('Lỗi kết nối.', 'red'); }
+    }
+
+    // ── Submissions ───────────────────────────────────────────────
+    let subOffset = 0;
+    const SUB_LIMIT = 20;
+    let reviewingSubId = null;
+
+    async function loadSubmissions(reset = true) {
+      if (reset) subOffset = 0;
+      const challengeId = document.getElementById('subChallengeFilter').value;
+      const status = document.getElementById('subStatusFilter').value;
+
+      const d = await api(`/admin/submissions?challenge_id=${challengeId}&status=${status}&limit=${SUB_LIMIT}&offset=${subOffset}`);
+
+      // Update pending badge
+      const badge = document.getElementById('sbPendingCount');
+      badge.textContent = d.pending_count;
+      badge.style.display = d.pending_count > 0 ? 'inline' : 'none';
+
+      const tbody = document.getElementById('subsTbody');
+      if (!d.submissions.length) {
+        tbody.innerHTML = `<tr><td colspan="6"><div class="empty-state">Không có bài nộp nào.</div></td></tr>`;
+        document.getElementById('subPager').innerHTML = '';
+        return;
+      }
+
+      const statusLabel = { pending: 'Chờ duyệt', approved: 'Đã duyệt', needs_revision: 'Cần sửa' };
+      const statusStyle = {
+        pending: 'background:#fef3c7;color:#92400e;',
+        approved: 'background:#dcfce7;color:#166534;',
+        needs_revision: 'background:#fee2e2;color:#991b1b;',
+      };
+
+      tbody.innerHTML = d.submissions.map((s, i) => `
+    <tr>
+      <td style="color:var(--muted)">${subOffset + i + 1}</td>
+      <td>
+        <div class="av" style="background:${avatarColor(s.user_id)};display:inline-flex;margin-right:6px;vertical-align:middle;">${s.first_name[0]}</div>
+        <span style="font-weight:600;">${s.first_name} ${s.last_name}</span>
+        <div style="font-size:11px;color:var(--muted)">${s.email}</div>
+      </td>
+      <td>
+        <div style="font-size:12px;font-weight:600;">${s.challenge_title}</div>
+        <div style="font-size:11px;color:var(--muted);">Ngày ${s.day_number}: ${s.day_title}</div>
+      </td>
+      <td><span class="badge" style="${statusStyle[s.status] || ''}">${statusLabel[s.status] || s.status}</span></td>
+      <td style="color:var(--muted)">${fmtDate(s.submitted_at)}</td>
+      <td>
+        <button class="act-btn" onclick="openReview(${s.id})">Xem & Duyệt</button>
+      </td>
+    </tr>`).join('');
+
+      const page = Math.floor(subOffset / SUB_LIMIT) + 1;
+      const pages = Math.ceil(d.total / SUB_LIMIT);
+      document.getElementById('subPager').innerHTML = `
+    <span>Tổng: <strong>${d.total}</strong> bài nộp · <strong>${d.pending_count}</strong> chờ duyệt</span>
+    <span style="flex:1"></span>
+    <button onclick="subPage(-1)" ${page <= 1 ? 'disabled' : ''}>← Trước</button>
+    <span>Trang ${page}/${pages || 1}</span>
+    <button onclick="subPage(1)" ${page >= pages ? 'disabled' : ''}>Tiếp →</button>`;
+    }
+
+    function subPage(dir) {
+      subOffset = Math.max(0, subOffset + dir * SUB_LIMIT);
+      loadSubmissions(false);
+    }
+
+    async function openReview(subId) {
+      reviewingSubId = subId;
+      // Find in DOM data from last load
+      const d = await api(`/admin/submissions?limit=1&offset=0`); // fallback load
+      const all = await api(`/admin/submissions?limit=200&offset=0`);
+      const sub = all.submissions.find(s => s.id === subId);
+      if (!sub) { showToast('Không tìm thấy bài nộp.', 'red'); return; }
+
+      document.getElementById('reviewInfo').innerHTML = `
+    <div style="font-weight:600;">${sub.first_name} ${sub.last_name} — ${sub.email}</div>
+    <div style="color:var(--muted);margin-top:4px;">${sub.challenge_title} · Ngày ${sub.day_number}: ${sub.day_title}</div>
+    <div style="margin-top:6px;">Nộp lúc: ${fmtDate(sub.submitted_at)}</div>
+    ${sub.status === 'needs_revision' ? `<div style="color:#dc2626;margin-top:4px;">Ghi chú trước: ${sub.admin_note || ''}</div>` : ''}`;
+      document.getElementById('reviewContent').textContent = sub.content;
+      document.getElementById('reviewNote').value = '';
+      document.getElementById('reviewModal').style.display = 'flex';
+    }
+
+    function closeReviewModal() {
+      document.getElementById('reviewModal').style.display = 'none';
+      reviewingSubId = null;
+    }
+
+    async function reviewAction(action) {
+      if (!reviewingSubId) return;
+      const note = document.getElementById('reviewNote').value.trim();
+      if (action === 'revision' && !note) {
+        document.getElementById('reviewNote').focus();
+        document.getElementById('reviewNote').style.borderColor = '#ef4444';
+        showToast('Vui lòng nhập ghi chú hướng dẫn sửa bài.', 'red');
+        return;
+      }
+      document.getElementById('reviewNote').style.borderColor = '';
+      try {
+        await api(`/admin/submissions/${reviewingSubId}`, {
+          method: 'PATCH',
+          body: JSON.stringify({ action, admin_note: note }),
+        });
+        showToast(action === 'approve' ? '✅ Đã duyệt bài!' : '⚠️ Đã yêu cầu chỉnh sửa.', action === 'approve' ? 'green' : '');
+        closeReviewModal();
+        loadSubmissions(false);
+        loadChallenges(); // refresh pending count
+      } catch (e) { showToast('Lỗi kết nối.', 'red'); }
+    }
+
+    function escHtml(s) { return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+    function escJs(s) { return String(s || '').replace(/'/g, "\\'").replace(/\n/g, '\\n'); }
+
+    // ── Init ──────────────────────────────────────────────────────
+    const saved = sessionStorage.getItem('adminKey');
+    if (saved) {
+      adminKey = saved;
+      document.getElementById('loginOverlay').style.display = 'none';
+      document.getElementById('shell').style.display = 'flex';
+      loadDashboard();
+      loadChallengeFilter();
+    }
+
+    // ── Settings ──────────────────────────────────────────────────
+    async function loadSettings() {
+      try {
+        const s = await fetch(`${API}/settings`).then(r => r.json());
+        document.getElementById('settingAnnoEnabled').checked = s.announcement_enabled === '1';
+        document.getElementById('settingAnnoIcon').value = s.announcement_icon || '📢';
+        document.getElementById('settingAnnoText').value = s.announcement_text || '';
+        updateAnnoPreview();
+      } catch (e) { showToast('Không tải được cài đặt.', 'red'); }
+    }
+
+    function updateAnnoPreview() {
+      const icon = document.getElementById('settingAnnoIcon').value.trim() || '📢';
+      const text = document.getElementById('settingAnnoText').value.trim() || 'Nội dung thông báo sẽ hiển thị ở đây...';
+      document.getElementById('settingPreviewIcon').textContent = icon;
+      document.getElementById('settingPreviewText').textContent = text;
+    }
+
+    async function saveSettings() {
+      const enabled = document.getElementById('settingAnnoEnabled').checked ? '1' : '0';
+      const icon = document.getElementById('settingAnnoIcon').value.trim() || '📢';
+      const text = document.getElementById('settingAnnoText').value.trim();
+      const res = await api('/admin/settings', {
+        method: 'PATCH',
+        body: JSON.stringify({ announcement_enabled: enabled, announcement_icon: icon, announcement_text: text })
+      });
+      if (res.error) { showToast(res.error, 'red'); return; }
+      showToast('Đã lưu cài đặt thông báo.', 'green');
+    }
+
+    // Live preview
+    document.addEventListener('DOMContentLoaded', () => {
+      ['settingAnnoIcon', 'settingAnnoText'].forEach(id => {
+        document.getElementById(id)?.addEventListener('input', updateAnnoPreview);
+      });
+    });
+
+    // ── Admin Courses ─────────────────────────────────────────────
+    let editingCourseId = null;
+    let managingCourseId = null;
+    let editingLessonId = null;
+
+    async function loadAdminCourses() {
+      const data = await api('/admin/courses');
+      const tbody = document.getElementById('coursesTbody');
+      if (!data.courses?.length) {
+        tbody.innerHTML = '<tr><td colspan="7"><div class="empty-state">Chưa có khóa học nào.</div></td></tr>';
+        return;
+      }
+      tbody.innerHTML = data.courses.map(c => `
+    <tr>
+      <td>${c.id}</td>
+      <td style="max-width:240px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${escHtml(c.title)}">${escHtml(c.title)}</td>
+      <td>${escHtml(c.instructor || '—')}</td>
+      <td style="text-align:center">${c.lesson_count}</td>
+      <td><span style="font-size:11px;padding:2px 8px;border-radius:99px;font-weight:600;background:${c.status === 'published' ? '#d1fae5' : '#f1f5f9'};color:${c.status === 'published' ? '#065f46' : '#64748b'}">${c.status === 'published' ? 'Đã xuất bản' : 'Bản nháp'}</span></td>
+      <td style="text-align:center">${c.order_num}</td>
+      <td style="white-space:nowrap;display:flex;gap:6px;padding:10px 16px;">
+        <button class="btn-sm" onclick="openLessonsModal(${c.id},'${escHtml(c.title).replace(/'/g, "\\'")}')">📚 Bài học</button>
+        <button class="btn-sm primary" onclick="openCourseModal(${c.id})">Sửa</button>
+        <button class="btn-sm" style="color:#ef4444" onclick="deleteCourse(${c.id})">Xoá</button>
+      </td>
+    </tr>`).join('');
+    }
+
+    function openCourseModal(id = null) {
+      editingCourseId = id;
+      document.getElementById('courseModalTitle').textContent = id ? 'Sửa khóa học' : 'Tạo khóa học mới';
+      document.getElementById('crsTitle').value = '';
+      document.getElementById('crsDesc').value = '';
+      document.getElementById('crsInstructor').value = '';
+      document.getElementById('crsCover').value = '#6366f1';
+      document.getElementById('crsStatus').value = 'draft';
+      document.getElementById('crsOrder').value = '0';
+      if (id) {
+        api(`/admin/courses`).then(d => {
+          const c = d.courses?.find(x => x.id === id);
+          if (!c) return;
+          document.getElementById('crsTitle').value = c.title;
+          document.getElementById('crsDesc').value = c.description || '';
+          document.getElementById('crsInstructor').value = c.instructor || '';
+          document.getElementById('crsCover').value = c.cover_color || '#6366f1';
+          document.getElementById('crsStatus').value = c.status;
+          document.getElementById('crsOrder').value = c.order_num;
+        });
+      }
+      document.getElementById('courseModal').style.display = 'flex';
+    }
+    function closeCourseModal() { document.getElementById('courseModal').style.display = 'none'; }
+
+    async function saveCourse() {
+      const body = {
+        title: document.getElementById('crsTitle').value.trim(),
+        description: document.getElementById('crsDesc').value.trim(),
+        instructor: document.getElementById('crsInstructor').value.trim(),
+        cover_color: document.getElementById('crsCover').value,
+        status: document.getElementById('crsStatus').value,
+        order_num: Number(document.getElementById('crsOrder').value) || 0,
+      };
+      if (!body.title) { showToast('Vui lòng nhập tên khóa học.', 'red'); return; }
+      let res;
+      if (editingCourseId) {
+        res = await api(`/admin/courses/${editingCourseId}`, { method: 'PATCH', body: JSON.stringify(body) });
+      } else {
+        res = await api('/admin/courses', { method: 'POST', body: JSON.stringify(body) });
+      }
+      if (res.error) { showToast(res.error, 'red'); return; }
+      showToast(editingCourseId ? 'Đã cập nhật khóa học.' : 'Đã tạo khóa học mới.', 'green');
+      closeCourseModal();
+      loadAdminCourses();
+    }
+
+    async function deleteCourse(id) {
+      if (!confirm('Xoá khóa học này và toàn bộ bài học bên trong?')) return;
+      await api(`/admin/courses/${id}`, { method: 'DELETE' });
+      showToast('Đã xoá khóa học.', 'green');
+      loadAdminCourses();
+    }
+
+    // ── Lessons modal ───────────────────────────────────────────
+    async function openLessonsModal(courseId, courseTitle) {
+      managingCourseId = courseId;
+      document.getElementById('lessonsModalTitle').textContent = `Bài học — ${courseTitle}`;
+      document.getElementById('lsnTitle').value = '';
+      document.getElementById('lsnContent').value = '';
+      document.getElementById('lsnVideo').value = '';
+      document.getElementById('lsnDuration').value = '';
+      document.getElementById('lsnOrder').value = '';
+      editingLessonId = null;
+      document.getElementById('lessonsModal').style.display = 'flex';
+      await refreshLessons();
+    }
+    function closeLessonsModal() { document.getElementById('lessonsModal').style.display = 'none'; }
+
+    async function refreshLessons() {
+      const data = await api(`/admin/courses/${managingCourseId}/lessons`);
+      const list = document.getElementById('lessonsList');
+      if (!data.lessons?.length) {
+        list.innerHTML = '<div style="padding:16px;text-align:center;color:#94a3b8;font-size:13px;">Chưa có bài học nào.</div>';
+        return;
+      }
+      list.innerHTML = data.lessons.map(l => `
+    <div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);">
+      <span style="width:28px;height:28px;border-radius:50%;background:#e0e7ff;color:#4f46e5;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;">${l.order_num || '—'}</span>
+      <div style="flex:1;min-width:0;">
+        <div style="font-size:13px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escHtml(l.title)}</div>
+        <div style="font-size:11px;color:#94a3b8;">${l.duration_min ? l.duration_min + ' phút' : ''} ${l.video_url ? '· 🎬 Video' : ''}</div>
+      </div>
+      <button class="btn-sm primary" onclick="editLesson(${l.id})">Sửa</button>
+      <button class="btn-sm" style="color:#ef4444" onclick="deleteLesson(${l.id})">Xoá</button>
+    </div>`).join('');
+    }
+
+    async function editLesson(id) {
+      const data = await api(`/admin/courses/${managingCourseId}/lessons`);
+      const l = data.lessons?.find(x => x.id === id);
+      if (!l) return;
+      editingLessonId = id;
+      document.getElementById('lsnTitle').value = l.title;
+      document.getElementById('lsnContent').value = l.content || '';
+      document.getElementById('lsnVideo').value = l.video_url || '';
+      document.getElementById('lsnDuration').value = l.duration_min || '';
+      document.getElementById('lsnOrder').value = l.order_num || '';
+      document.getElementById('lsnFormTitle').textContent = 'Sửa bài học';
+      document.getElementById('lsnSaveBtn').textContent = 'Cập nhật bài học';
+    }
+
+    function cancelEditLesson() {
+      editingLessonId = null;
+      document.getElementById('lsnTitle').value = '';
+      document.getElementById('lsnContent').value = '';
+      document.getElementById('lsnVideo').value = '';
+      document.getElementById('lsnDuration').value = '';
+      document.getElementById('lsnOrder').value = '';
+      document.getElementById('lsnFormTitle').textContent = 'Thêm bài học mới';
+      document.getElementById('lsnSaveBtn').textContent = 'Thêm bài học';
+    }
+
+    async function saveLesson() {
+      const body = {
+        title: document.getElementById('lsnTitle').value.trim(),
+        content: document.getElementById('lsnContent').value.trim(),
+        video_url: extractVideoUrl(document.getElementById('lsnVideo').value.trim()),
+        duration_min: Number(document.getElementById('lsnDuration').value) || 0,
+        order_num: Number(document.getElementById('lsnOrder').value) || 0,
+      };
+      if (!body.title) { showToast('Vui lòng nhập tên bài học.', 'red'); return; }
+      let res;
+      if (editingLessonId) {
+        res = await api(`/admin/lessons/${editingLessonId}`, { method: 'PATCH', body: JSON.stringify(body) });
+      } else {
+        res = await api(`/admin/courses/${managingCourseId}/lessons`, { method: 'POST', body: JSON.stringify(body) });
+      }
+      if (res.error) { showToast(res.error, 'red'); return; }
+      showToast(editingLessonId ? 'Đã cập nhật bài học.' : 'Đã thêm bài học.', 'green');
+      cancelEditLesson();
+      await refreshLessons();
+      loadAdminCourses();
+    }
+
+    function extractVideoUrl(raw) {
+      if (!raw) return '';
+      const srcMatch = raw.match(/\bsrc=["']([^"']+)["']/i);
+      return srcMatch ? srcMatch[1] : raw;
+    }
+
+    async function deleteLesson(id) {
+      if (!confirm('Xoá bài học này?')) return;
+      await api(`/admin/lessons/${id}`, { method: 'DELETE' });
+      showToast('Đã xoá.', 'green');
+      await refreshLessons();
+      loadAdminCourses();
+    }
+
+    // ── Marketplace ────────────────────────────────────────────────
+    const CAT_LABELS = {
+      prompt: '📝 Prompt', agent: '🤖 AI Agent', ebook: '📚 Ebook',
+      tool: '🔧 Công cụ', course: '🎓 Course', other: '📦 Khác',
+    };
+    const METHOD_LABELS = { bank: 'Chuyển khoản', vnpay: 'VNPay', momo: 'Momo' };
+    const ORDER_STATUS_COLORS = {
+      pending:   { bg: '#fef3c7', color: '#92400e', label: 'Chờ xử lý' },
+      claimed:   { bg: '#dbeafe', color: '#1e40af', label: 'Khách xác nhận CK' },
+      completed: { bg: '#d1fae5', color: '#065f46', label: 'Hoàn thành' },
+      cancelled: { bg: '#fee2e2', color: '#991b1b', label: 'Đã huỷ' },
+    };
+    const PROD_STATUS_COLORS = {
+      pending_review: { bg: '#fef9c3', color: '#854d0e', label: 'Chờ duyệt' },
+      published:      { bg: '#d1fae5', color: '#065f46', label: 'Đang bán' },
+      draft:          { bg: '#f1f5f9', color: '#64748b', label: 'Bản nháp' },
+      rejected:       { bg: '#fee2e2', color: '#991b1b', label: 'Từ chối' },
+      removed:        { bg: '#fce7f3', color: '#9d174d', label: 'Đã gỡ' },
+    };
+
+    async function loadAdminMarketplace() {
+      const [products, orders] = await Promise.all([
+        api('/admin/products'),
+        api('/admin/orders'),
+      ]);
+
+      // Products
+      const pt = document.getElementById('mpProductTbody');
+      document.getElementById('mpProductTotal').textContent = products.length || 0;
+      document.getElementById('sbProductCount').textContent = products.length || 0;
+      if (!products.length) {
+        pt.innerHTML = '<tr><td colspan="9"><div class="empty-state">Chưa có sản phẩm nào.</div></td></tr>';
+      } else {
+        pt.innerHTML = products.map(p => {
+          const st = PROD_STATUS_COLORS[p.status] || PROD_STATUS_COLORS.draft;
+          return `<tr>
+        <td>${p.id}</td>
+        <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${escHtml(p.title)}">${escHtml(p.title)}</td>
+        <td>${escHtml(p.first_name + ' ' + p.last_name)}</td>
+        <td style="text-align:right;font-weight:600;color:#7c3aed">${p.price === 0 ? 'Miễn phí' : p.price.toLocaleString('vi-VN') + '₫'}</td>
+        <td>${CAT_LABELS[p.category] || p.category}</td>
+        <td style="text-align:center">${p.sales_count}</td>
+        <td><span style="font-size:11px;padding:2px 8px;border-radius:99px;font-weight:600;background:${st.bg};color:${st.color}">${st.label}</span></td>
+        <td style="font-size:11px;color:var(--text-muted)">${p.created_at ? p.created_at.slice(0, 10) : '—'}</td>
+        <td>
+          <div style="display:flex;gap:6px;justify-content:flex-end;flex-wrap:wrap">
+            ${p.status === 'pending_review' ? `
+              <button onclick="setProductStatus(${p.id},'published')" style="font-size:11px;padding:3px 8px;border-radius:4px;border:1px solid #6ee7b7;background:#d1fae5;color:#065f46;cursor:pointer;font-family:var(--font-body);font-weight:700">✅ Duyệt</button>
+              <button onclick="setProductStatus(${p.id},'rejected')" style="font-size:11px;padding:3px 8px;border-radius:4px;border:1px solid #fca5a5;background:#fee2e2;color:#991b1b;cursor:pointer;font-family:var(--font-body);font-weight:700">❌ Từ chối</button>
+            ` : ''}
+            <button onclick="editMpProduct(${p.id})" style="font-size:11px;padding:3px 8px;border-radius:4px;border:1px solid var(--border);background:#fff;color:var(--text);cursor:pointer;font-family:var(--font-body)">Sửa</button>
+            ${p.status === 'published' ? `<button onclick="setProductStatus(${p.id},'removed')" style="font-size:11px;padding:3px 8px;border-radius:4px;border:1px solid #fca5a5;background:#fee2e2;color:#991b1b;cursor:pointer;font-family:var(--font-body)">Gỡ</button>` : ''}
+            ${p.status === 'removed' ? `<button onclick="setProductStatus(${p.id},'published')" style="font-size:11px;padding:3px 8px;border-radius:4px;border:1px solid #6ee7b7;background:#d1fae5;color:#065f46;cursor:pointer;font-family:var(--font-body)">Khôi phục</button>` : ''}
+            <button onclick="deleteProduct(${p.id})" style="font-size:11px;padding:3px 8px;border-radius:4px;border:1px solid var(--border);background:#fff;color:var(--text-muted);cursor:pointer;font-family:var(--font-body)">Xoá</button>
+          </div>
+        </td>
+      </tr>`;
+        }).join('');
+      }
+
+      // Orders
+      const ot = document.getElementById('mpOrderTbody');
+      document.getElementById('mpOrderTotal').textContent = orders.length || 0;
+      if (!orders.length) {
+        ot.innerHTML = '<tr><td colspan="8"><div class="empty-state">Chưa có đơn hàng nào.</div></td></tr>';
+      } else {
+        ot.innerHTML = orders.map(o => {
+          const st = ORDER_STATUS_COLORS[o.status] || ORDER_STATUS_COLORS.pending;
+          return `<tr>
+        <td>#${o.id}</td>
+        <td style="max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${escHtml(o.product_title)}">${escHtml(o.product_title)}</td>
+        <td>${escHtml(o.buyer_first + ' ' + o.buyer_last)}<div style="font-size:11px;color:var(--text-muted)">${escHtml(o.buyer_email || '')}</div></td>
+        <td style="text-align:right;font-weight:600;color:#7c3aed">${o.amount === 0 ? 'Miễn phí' : o.amount.toLocaleString('vi-VN') + '₫'}</td>
+        <td>${METHOD_LABELS[o.payment_method] || o.payment_method}</td>
+        <td><span style="font-size:11px;padding:2px 8px;border-radius:99px;font-weight:600;background:${st.bg};color:${st.color}">${st.label}</span></td>
+        <td style="font-size:11px;color:var(--text-muted)">${o.created_at ? o.created_at.slice(0, 10) : '—'}</td>
+        <td>
+          <select onchange="setOrderStatus(${o.id}, this.value)" style="font-size:11px;padding:3px 6px;border:1px solid var(--border);border-radius:4px;font-family:var(--font-body)">
+            <option value="pending"   ${o.status === 'pending' ? 'selected' : ''}>Chờ xử lý</option>
+            <option value="completed" ${o.status === 'completed' ? 'selected' : ''}>Hoàn thành</option>
+            <option value="cancelled" ${o.status === 'cancelled' ? 'selected' : ''}>Đã huỷ</option>
+          </select>
+        </td>
+      </tr>`;
+        }).join('');
+      }
+    }
+
+    async function editMpProduct(id) {
+      const products = await api('/admin/products');
+      const p = products.find(x => x.id === id);
+      if (p) openMpProductModal(p);
+    }
+
+    async function setProductStatus(id, status) {
+      await api(`/admin/products/${id}`, { method: 'PATCH', body: JSON.stringify({ status }) });
+      showToast('Đã cập nhật trạng thái.', 'green');
+      loadAdminMarketplace();
+    }
+
+    async function deleteProduct(id) {
+      if (!confirm('Xoá sản phẩm này? Hành động không thể hoàn tác.')) return;
+      await api(`/admin/products/${id}`, { method: 'DELETE' });
+      showToast('Đã xoá sản phẩm.', 'green');
+      loadAdminMarketplace();
+    }
+
+    async function setOrderStatus(id, status) {
+      await api(`/admin/orders/${id}`, { method: 'PATCH', body: JSON.stringify({ status }) });
+      showToast('Đã cập nhật đơn hàng.', 'green');
+    }
+
+    // ── Marketplace product modal ──────────────────────────────────
+    const MP_COLORS = ['#7c3aed', '#0ea5e9', '#10b981', '#f59e0b', '#ec4899', '#3b82f6', '#ef4444', '#0f172a'];
+    let editingMpProductId = null;
+
+    function buildMpColorPicker() {
+      const wrap = document.getElementById('mpProdColorPicker');
+      if (wrap.children.length) return;
+      MP_COLORS.forEach((c, i) => {
+        const sw = document.createElement('div');
+        sw.style.cssText = `width:26px;height:26px;border-radius:50%;background:${c};cursor:pointer;border:2px solid transparent;transition:transform .15s,border-color .15s;flex-shrink:0;`;
+        sw.dataset.color = c;
+        if (i === 0) { sw.style.border = '2px solid #1e293b'; sw.dataset.selected = '1'; }
+        sw.onclick = () => {
+          wrap.querySelectorAll('div').forEach(s => { s.style.border = '2px solid transparent'; delete s.dataset.selected; });
+          sw.style.border = '2px solid #1e293b'; sw.dataset.selected = '1';
+        };
+        wrap.appendChild(sw);
+      });
+    }
+
+    function openMpProductModal(product) {
+      buildMpColorPicker();
+      editingMpProductId = product ? product.id : null;
+      document.getElementById('mpProductModalTitle').textContent = product ? 'Sửa sản phẩm' : 'Thêm sản phẩm';
+      document.getElementById('mpProdTitle').value = product?.title || '';
+      document.getElementById('mpProdCat').value = product?.category || 'prompt';
+      document.getElementById('mpProdPrice').value = product?.price ?? '';
+      document.getElementById('mpProdDesc').value = product?.description || '';
+      document.getElementById('mpProdLong').value = product?.long_description || '';
+      document.getElementById('mpProdStatus').value = product?.status || 'published';
+      // Set color swatch
+      const targetColor = product?.cover_color || MP_COLORS[0];
+      const wrap = document.getElementById('mpProdColorPicker');
+      wrap.querySelectorAll('div').forEach(s => {
+        const match = s.dataset.color === targetColor;
+        s.style.border = match ? '2px solid #1e293b' : '2px solid transparent';
+        if (match) s.dataset.selected = '1';
+        else delete s.dataset.selected;
+      });
+      document.getElementById('mpProductModal').style.display = 'flex';
+    }
+
+    function closeMpProductModal() {
+      document.getElementById('mpProductModal').style.display = 'none';
+      editingMpProductId = null;
+    }
+
+    async function saveMpProduct() {
+      const title = document.getElementById('mpProdTitle').value.trim();
+      const category = document.getElementById('mpProdCat').value;
+      const price = parseInt(document.getElementById('mpProdPrice').value || '0');
+      const description = document.getElementById('mpProdDesc').value.trim();
+      const long_description = document.getElementById('mpProdLong').value.trim();
+      const status = document.getElementById('mpProdStatus').value;
+      const cover_color = document.querySelector('#mpProdColorPicker div[data-selected="1"]')?.dataset.color || MP_COLORS[0];
+
+      if (!title) return showToast('Vui lòng nhập tên sản phẩm.', 'red');
+      if (!description) return showToast('Vui lòng nhập mô tả ngắn.', 'red');
+      if (isNaN(price) || price < 0) return showToast('Giá không hợp lệ.', 'red');
+
+      const btn = document.getElementById('mpProdSaveBtn');
+      btn.disabled = true; btn.textContent = 'Đang lưu...';
+
+      try {
+        const body = JSON.stringify({ title, description, long_description, price, category, cover_color, status });
+        if (editingMpProductId) {
+          await api(`/admin/products/${editingMpProductId}`, { method: 'PATCH', body });
+          showToast('Đã cập nhật sản phẩm.', 'green');
+        } else {
+          await api('/admin/products', { method: 'POST', body });
+          showToast('Đã thêm sản phẩm.', 'green');
+        }
+        closeMpProductModal();
+      } catch (e) {
+        showToast(e.message || 'Có lỗi xảy ra.', 'red');
+        btn.disabled = false; btn.textContent = 'Lưu sản phẩm';
+        return;
+      }
+      btn.disabled = false; btn.textContent = 'Lưu sản phẩm';
+      loadAdminMarketplace();
+    }
+  </script>
+</body>
+
+</html>

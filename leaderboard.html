@@ -1,0 +1,1639 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Leaderboard — AI AGENTS CC</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/base.css">
+  <link rel="stylesheet" href="assets/css/components.css">
+  <link rel="stylesheet" href="assets/css/layout.css">
+  <style>
+    /* ── My Rank Hero ─────────────────────────────────── */
+    .my-rank-hero {
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 60%, #0c2040 100%);
+      border-radius: var(--radius-lg);
+      padding: 28px 32px;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 28px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .my-rank-hero::before {
+      content: '';
+      position: absolute;
+      top: -40px;
+      right: -40px;
+      width: 180px;
+      height: 180px;
+      background: radial-gradient(circle, rgba(14, 165, 233, 0.18) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .my-rank-avatar-wrap {
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    .my-rank-avatar {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      border: 3px solid var(--color-primary);
+      object-fit: cover;
+      display: block;
+    }
+
+    .my-rank-avatar-placeholder {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      border: 3px solid var(--color-primary);
+      background: linear-gradient(135deg, #0ea5e9, #8b5cf6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-heading);
+      font-size: 24px;
+      font-weight: 700;
+      color: #fff;
+      flex-shrink: 0;
+    }
+
+    .my-rank-badge {
+      position: absolute;
+      bottom: -4px;
+      right: -4px;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--accent-purple);
+      border: 2px solid #1e293b;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: 800;
+      color: #fff;
+      font-family: var(--font-heading);
+    }
+
+    .my-rank-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .my-rank-name {
+      font-family: var(--font-heading);
+      font-size: 20px;
+      font-weight: 800;
+      color: #f0f6ff;
+      margin-bottom: 2px;
+    }
+
+    .my-rank-title {
+      font-size: var(--fs-xs);
+      color: #94a3b8;
+      margin-bottom: 14px;
+    }
+
+    .my-rank-meta {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .my-rank-stat {}
+
+    .my-rank-stat-val {
+      font-family: var(--font-heading);
+      font-size: 18px;
+      font-weight: 800;
+      color: #f0f6ff;
+      line-height: 1;
+      margin-bottom: 2px;
+    }
+
+    .my-rank-stat-val.gold {
+      color: #fbbf24;
+    }
+
+    .my-rank-stat-val.green {
+      color: #34d399;
+    }
+
+    .my-rank-stat-val.purple {
+      color: #c4b5fd;
+    }
+
+    .my-rank-stat-label {
+      font-size: 11px;
+      color: #64748b;
+    }
+
+    .my-rank-xp-section {
+      flex-shrink: 0;
+      text-align: right;
+    }
+
+    .my-rank-xp-label {
+      font-size: var(--fs-xs);
+      color: #94a3b8;
+      margin-bottom: 6px;
+    }
+
+    .my-rank-xp-val {
+      font-family: var(--font-heading);
+      font-size: 28px;
+      font-weight: 800;
+      color: #34d399;
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+
+    .my-rank-xp-sub {
+      font-size: 11px;
+      color: #64748b;
+      margin-bottom: 10px;
+    }
+
+    .my-rank-xp-bar {
+      width: 140px;
+      height: 6px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 99px;
+      overflow: hidden;
+      margin-left: auto;
+      margin-bottom: 4px;
+    }
+
+    .my-rank-xp-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #34d399, #0ea5e9);
+      border-radius: 99px;
+    }
+
+    .my-rank-xp-next {
+      font-size: 11px;
+      color: #64748b;
+      text-align: right;
+    }
+
+    /* ── Level Grid ───────────────────────────────────── */
+    .level-grid-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 20px 24px;
+      margin-bottom: 28px;
+    }
+
+    .level-grid-title {
+      font-size: var(--fs-sm);
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .level-grid-title svg {
+      width: 16px;
+      height: 16px;
+      color: var(--accent-purple);
+    }
+
+    .level-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+      gap: 8px;
+    }
+
+    .level-cell {
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 10px 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      position: relative;
+      transition: background 0.15s;
+    }
+
+    .level-cell.current {
+      background: #f0f9ff;
+      border-color: var(--color-primary);
+    }
+
+    .level-cell.locked {
+      opacity: 0.55;
+    }
+
+    .level-cell-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-heading);
+      font-size: 11px;
+      font-weight: 800;
+      flex-shrink: 0;
+    }
+
+    .level-cell.current .level-cell-icon {
+      background: var(--color-primary);
+      color: #fff;
+    }
+
+    .level-cell.unlocked .level-cell-icon {
+      background: #e0f2fe;
+      color: var(--color-primary);
+    }
+
+    .level-cell.locked .level-cell-icon {
+      background: var(--bg-hover);
+      color: var(--text-muted);
+    }
+
+    .level-cell-info {
+      min-width: 0;
+    }
+
+    .level-cell-name {
+      font-size: var(--fs-xs);
+      font-weight: 700;
+      color: var(--text);
+      white-space: nowrap;
+    }
+
+    .level-cell.locked .level-cell-name {
+      color: var(--text-muted);
+    }
+
+    .level-cell-pct {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .level-cell-lock-icon {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      color: var(--text-light);
+    }
+
+    .level-cell-lock-icon svg {
+      width: 11px;
+      height: 11px;
+    }
+
+    /* ── Leaderboard Columns ─────────────────────────── */
+    .lb-section-title {
+      font-family: var(--font-heading);
+      font-size: var(--fs-md);
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .lb-section-title svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    .lb-section-title .period-badge {
+      font-size: var(--fs-xs);
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 99px;
+      background: var(--bg-hover);
+      color: var(--text-muted);
+    }
+
+    .lb-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 40px;
+    }
+
+    @media (max-width: 1000px) {
+      .lb-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .lb-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+    }
+
+    .lb-card-header {
+      padding: 14px 18px 12px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .lb-card-header-icon {
+      width: 30px;
+      height: 30px;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .lb-card-header h3 {
+      font-size: var(--fs-sm);
+      font-weight: 700;
+      color: var(--text);
+      flex: 1;
+    }
+
+    .lb-card-header .entry-count {
+      font-size: var(--fs-xs);
+      color: var(--text-muted);
+      background: var(--bg-hover);
+      padding: 2px 7px;
+      border-radius: 99px;
+    }
+
+    .lb-list {
+      padding: 8px 0;
+    }
+
+    .lb-entry {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 18px;
+      transition: background 0.12s;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .lb-entry:hover {
+      background: var(--bg-hover);
+    }
+
+    .lb-entry.is-me {
+      background: #f0f9ff;
+    }
+
+    .lb-entry.is-me::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 3px;
+      background: var(--color-primary);
+      border-radius: 0 2px 2px 0;
+    }
+
+    .lb-rank {
+      width: 24px;
+      text-align: center;
+      flex-shrink: 0;
+    }
+
+    .lb-rank-num {
+      font-family: var(--font-heading);
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-muted);
+    }
+
+    .rank-medal {
+      font-size: 16px;
+      line-height: 1;
+    }
+
+    .lb-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+
+    .lb-avatar-placeholder {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 700;
+      color: #fff;
+      flex-shrink: 0;
+      font-family: var(--font-heading);
+    }
+
+    .lb-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .lb-name {
+      font-size: var(--fs-sm);
+      font-weight: 600;
+      color: var(--text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .lb-entry.is-me .lb-name {
+      color: var(--color-primary);
+    }
+
+    .lb-level {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .lb-points {
+      font-family: var(--font-heading);
+      font-size: var(--fs-sm);
+      font-weight: 700;
+      color: var(--accent-green);
+      flex-shrink: 0;
+      white-space: nowrap;
+    }
+
+    .lb-points::before {
+      content: '+';
+    }
+
+    .lb-me-label {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--color-primary);
+      background: #e0f2fe;
+      padding: 1px 6px;
+      border-radius: 99px;
+      flex-shrink: 0;
+    }
+
+    .lb-separator {
+      padding: 6px 18px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .lb-separator span {
+      font-size: 18px;
+      color: var(--text-muted);
+      line-height: 1;
+      letter-spacing: 2px;
+    }
+
+    .lb-load-more {
+      padding: 10px 18px;
+      text-align: center;
+      border-top: 1px solid var(--border);
+    }
+
+    .lb-load-more button {
+      font-size: var(--fs-xs);
+      font-weight: 600;
+      color: var(--color-primary);
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-family: var(--font-body);
+      transition: opacity 0.15s;
+    }
+
+    .lb-load-more button:hover {
+      opacity: 0.7;
+    }
+
+    /* ── Right panel extras ──────────────────────────── */
+    .rp-stat-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .rp-stat-box {
+      background: var(--bg-hover);
+      border-radius: var(--radius-md);
+      padding: 10px 12px;
+      text-align: center;
+    }
+
+    .rp-stat-box-val {
+      font-family: var(--font-heading);
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--text);
+      line-height: 1;
+      margin-bottom: 2px;
+    }
+
+    .rp-stat-box-label {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .rp-tip {
+      background: #fffbeb;
+      border: 1px solid #fde68a;
+      border-radius: var(--radius-md);
+      padding: 12px 14px;
+      font-size: var(--fs-xs);
+      color: #92400e;
+      line-height: 1.6;
+    }
+
+    .rp-tip strong {
+      color: #78350f;
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    /* ── Profile Modal ─────────────────────────────────── */
+    .profile-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, .55);
+      z-index: 200;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 20px 16px;
+      backdrop-filter: blur(3px);
+      overflow-y: auto;
+    }
+
+    .profile-overlay.open {
+      display: flex;
+    }
+
+    .profile-card {
+      background: #fff;
+      border-radius: 16px;
+      width: 100%;
+      max-width: 620px;
+      box-shadow: 0 24px 48px rgba(0, 0, 0, .2);
+      animation: profileIn .2s ease;
+      display: flex;
+      flex-direction: column;
+      margin: auto;
+    }
+
+    @keyframes profileIn {
+      from {
+        transform: translateY(12px);
+        opacity: 0;
+      }
+
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    .profile-pheader {
+      padding: 22px 24px 18px;
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+
+    .profile-ph-top {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+
+    .profile-ph-avatar {
+      width: 68px;
+      height: 68px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-heading);
+      font-size: 24px;
+      font-weight: 800;
+      color: #fff;
+      flex-shrink: 0;
+    }
+
+    .profile-ph-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .profile-ph-name {
+      font-family: var(--font-heading);
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--text);
+      margin-bottom: 6px;
+      line-height: 1.2;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .profile-ph-badges {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+      margin-bottom: 5px;
+    }
+
+    .badge-role {
+      padding: 3px 10px;
+      border-radius: 99px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .badge-lv {
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      border: 1.5px solid;
+    }
+
+    .badge-me {
+      font-size: 10px;
+      font-weight: 700;
+      background: #e0f2fe;
+      color: #0369a1;
+      padding: 2px 7px;
+      border-radius: 99px;
+    }
+
+    .profile-ph-subtitle {
+      font-size: var(--fs-xs);
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+
+    .profile-msg-btn {
+      padding: 5px 12px;
+      font-size: var(--fs-xs);
+      font-weight: 600;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      background: #fff;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-family: var(--font-body);
+      transition: border-color .15s, color .15s;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .profile-msg-btn:hover {
+      border-color: var(--color-primary);
+      color: var(--color-primary);
+    }
+
+    .profile-close-btn {
+      width: 30px;
+      height: 30px;
+      border: none;
+      border-radius: 50%;
+      background: var(--bg-hover);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-muted);
+      font-size: 18px;
+      flex-shrink: 0;
+      transition: background .15s;
+    }
+
+    .profile-close-btn:hover {
+      background: #fee2e2;
+      color: #ef4444;
+    }
+
+    .profile-xp-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      margin-bottom: 5px;
+    }
+
+    .profile-xp-cur {
+      color: #22c55e;
+      font-weight: 700;
+    }
+
+    .profile-xp-next {
+      color: var(--text-muted);
+    }
+
+    .profile-xp-track {
+      height: 8px;
+      background: #e2e8f0;
+      border-radius: 99px;
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+
+    .profile-xp-track-fill {
+      height: 100%;
+      background: #22c55e;
+      border-radius: 99px;
+      transition: width .6s ease;
+    }
+
+    .profile-stat-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+    }
+
+    .profile-stat-item {
+      text-align: center;
+      flex: 1;
+      padding: 4px 0;
+    }
+
+    .profile-stat-val {
+      font-family: var(--font-heading);
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--text);
+      line-height: 1;
+      margin-bottom: 3px;
+    }
+
+    .profile-stat-lbl {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .profile-stat-sep {
+      width: 1px;
+      height: 32px;
+      background: var(--border);
+      flex-shrink: 0;
+    }
+
+    .profile-pbody {
+      flex: 1;
+      overflow-y: auto;
+      max-height: 58vh;
+    }
+
+    .profile-section {
+      padding: 14px 24px;
+    }
+
+    .profile-section-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .07em;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+      text-transform: uppercase;
+    }
+
+    .profile-divider {
+      height: 1px;
+      background: var(--border);
+    }
+
+    .power-symbols-row {
+      display: flex;
+      gap: 4px;
+      justify-content: space-around;
+    }
+
+    .power-sym {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .power-sym-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      border: 2px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      background: #f8fafc;
+      transition: border-color .2s, background .2s;
+    }
+
+    .power-sym.active .power-sym-icon {
+      border-color: var(--sym-color, var(--color-primary));
+      background: var(--sym-bg, #e0f2fe);
+    }
+
+    .power-sym-label {
+      font-size: 10px;
+      color: var(--text-muted);
+      font-weight: 600;
+      text-align: center;
+    }
+
+    .power-sym.active .power-sym-label {
+      color: var(--text);
+    }
+
+    .profile-tabs-bar {
+      display: flex;
+      border-bottom: 2px solid var(--border);
+      padding: 0 24px;
+      flex-shrink: 0;
+    }
+
+    .profile-tab {
+      padding: 10px 14px;
+      font-size: var(--fs-sm);
+      font-weight: 600;
+      color: var(--text-muted);
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-family: var(--font-body);
+      border-bottom: 2px solid transparent;
+      margin-bottom: -2px;
+      transition: color .15s;
+    }
+
+    .profile-tab.active {
+      color: var(--color-primary);
+      border-bottom-color: var(--color-primary);
+    }
+
+    .profile-posts-list {
+      padding: 4px 24px 16px;
+    }
+
+    .profile-post-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .profile-post-item:last-child {
+      border-bottom: none;
+    }
+
+    .profile-post-pillar {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      margin-top: 7px;
+    }
+
+    .profile-post-body {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .profile-post-title {
+      font-size: var(--fs-sm);
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 3px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .profile-post-meta {
+      font-size: 11px;
+      color: var(--text-muted);
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .profile-post-tag {
+      font-size: 10px;
+      font-weight: 600;
+      padding: 1px 6px;
+      border-radius: 99px;
+      white-space: nowrap;
+    }
+
+    .profile-empty {
+      padding: 28px;
+      text-align: center;
+      font-size: var(--fs-sm);
+      color: var(--text-muted);
+    }
+
+    /* ── Responsive ───────────────────────────────────── */
+    @media (max-width: 768px) {
+      .my-rank-hero {
+        flex-wrap: wrap;
+        padding: 20px;
+        gap: 16px;
+      }
+
+      .my-rank-xp-section {
+        text-align: left;
+      }
+
+      .my-rank-xp-bar {
+        margin-left: 0;
+      }
+
+      .profile-pheader {
+        padding: 16px 16px 14px;
+      }
+
+      .profile-section {
+        padding: 12px 16px;
+      }
+
+      .profile-tabs-bar {
+        padding: 0 16px;
+      }
+
+      .profile-posts-list {
+        padding: 4px 16px 12px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="app">
+
+    <!-- Sidebar -->
+    <aside id="sidebar">
+      <div id="sidebar-logo">
+        <div class="sidebar-logo-mark">
+          <svg viewBox="0 0 20 20" fill="none">
+            <circle cx="10" cy="10" r="3" fill="currentColor" />
+            <path d="M10 3v2M10 15v2M3 10h2M15 10h2" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+            <path d="M5.5 5.5l1.5 1.5M13 13l1.5 1.5M14.5 5.5L13 7M7 13l-1.5 1.5" stroke="currentColor"
+              stroke-width="1.5" stroke-linecap="round" />
+          </svg>
+        </div>
+        <div class="sidebar-logo-text">AI AGENTS <span>CC</span></div>
+      </div>
+
+      <nav id="sidebar-nav">
+        <div class="nav-section-label">Cộng đồng</div>
+
+        <a href="feed.html" class="nav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
+          </svg>
+          Bảng tin
+        </a>
+
+        <a href="cot.html" class="nav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <polygon
+              points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+          </svg>
+          CÔT
+        </a>
+
+        <a href="signal.html" class="nav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+          </svg>
+          Tín hiệu
+        </a>
+
+        <a href="qa.html" class="nav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path
+              d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          Hỏi đáp
+        </a>
+
+        <div class="nav-section-label" style="margin-top:8px;">Học tập</div>
+
+        <a href="courses.html" class="nav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
+          </svg>
+          Khóa học
+        </a>
+
+        <a href="challenge.html" class="nav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path
+              d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z" />
+          </svg>
+          Challenge
+        </a>
+
+        <a href="leaderboard.html" class="nav-item active">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path
+              d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"
+              stroke-linecap="round" />
+          </svg>
+          Leaderboard
+        </a>
+
+        <div class="nav-section-label" style="margin-top:8px;">Khác</div>
+
+        <a href="marketplace.html" class="nav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path
+              d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z" />
+          </svg>
+          Marketplace
+        </a>
+
+        <a href="members.html" class="nav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path
+              d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
+          </svg>
+          Thành viên
+        </a>
+
+      </nav>
+
+      <!-- Sidebar user -->
+      <div id="sidebar-user">
+        <div class="sidebar-avatar-wrap">
+          <div class="sidebar-avatar-placeholder" id="sbAvatar">?</div>
+          <span class="sidebar-online"></span>
+        </div>
+        <div class="sidebar-user-info">
+          <div class="sidebar-user-name" id="sbName">—</div>
+          <div class="sidebar-user-meta" id="sbLevel">—</div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <div id="main">
+
+      <!-- Topbar -->
+      <header id="topbar">
+        <button class="topbar-hamburger" id="hamburger" onclick="openSidebar()" aria-label="Mở menu">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path d="M4 6h16M4 12h16M4 18h16" stroke-linecap="round" />
+          </svg>
+        </button>
+
+        <div class="topbar-title">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            style="width:18px;height:18px;color:var(--accent-purple)">
+            <path
+              d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"
+              stroke-linecap="round" />
+          </svg>
+          Leaderboard
+        </div>
+
+        <div class="topbar-right">
+          <button class="topbar-btn" aria-label="Thông báo">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <path
+                d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+            </svg>
+            <span class="notif-dot"></span>
+          </button>
+          <div class="topbar-avatar-wrap">
+            <div class="topbar-avatar-placeholder">T</div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Content row -->
+      <div id="content-row">
+
+        <!-- Feed / main area -->
+        <div id="feed" style="padding: 24px;">
+
+          <!-- My rank hero — rendered by JS -->
+          <div class="my-rank-hero" id="rankHero">
+            <div style="text-align:center;color:rgba(255,255,255,0.4);font-size:13px;padding:20px 0">Đang tải...</div>
+          </div>
+
+          <!-- Level progression grid — rendered by JS -->
+          <div class="level-grid-card">
+            <div class="level-grid-title">
+              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <path d="M13 10V3L4 14h7v7l9-11h-7z" />
+              </svg>
+              <span id="levelGridTitle">Tiến trình cấp độ</span>
+            </div>
+            <div class="level-grid" id="levelGrid">
+              <div style="color:var(--text-muted);font-size:13px;padding:8px">Đang tải...</div>
+            </div>
+          </div>
+
+          <!-- Leaderboard section title -->
+          <div class="lb-section-title">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              style="color:var(--accent-purple)">
+              <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
+              <circle cx="9" cy="7" r="4" />
+              <path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" />
+            </svg>
+            Bảng xếp hạng cộng đồng
+            <span class="period-badge" id="memberCount">—</span>
+          </div>
+
+          <!-- Three leaderboard columns — rendered by JS -->
+          <div class="lb-grid" id="lbGrid">
+            <div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--text-muted)">Đang tải...</div>
+          </div>
+
+        </div><!-- /feed -->
+
+        <!-- Right panel -->
+        <aside id="right-panel">
+
+          <div class="rp-card" id="rpMyStats">
+            <div style="font-size:var(--fs-sm);color:var(--text-muted);text-align:center;padding:8px 0">Đang tải...
+            </div>
+          </div>
+
+          <div class="rp-card">
+            <div style="font-size:var(--fs-sm);font-weight:700;color:var(--text);margin-bottom:10px">Cách kiếm XP nhanh
+            </div>
+            <div class="rp-tip">
+              <strong>💡 Mẹo hôm nay</strong>
+              Đăng bài chia sẻ kinh nghiệm hoặc trả lời câu hỏi của thành viên khác để kiếm thêm XP và leo hạng.
+            </div>
+            <div style="margin-top:10px;display:flex;flex-direction:column;gap:6px">
+              <div
+                style="display:flex;align-items:center;justify-content:space-between;font-size:var(--fs-xs);color:var(--text-muted)">
+                <span>📝 Đăng bài mới</span>
+                <span style="font-weight:700;color:var(--accent-green)">+3 XP</span>
+              </div>
+              <div
+                style="display:flex;align-items:center;justify-content:space-between;font-size:var(--fs-xs);color:var(--text-muted)">
+                <span>💬 Bình luận chất lượng</span>
+                <span style="font-weight:700;color:var(--accent-green)">+1 XP</span>
+              </div>
+              <div
+                style="display:flex;align-items:center;justify-content:space-between;font-size:var(--fs-xs);color:var(--text-muted)">
+                <span>✅ Hoàn thành challenge</span>
+                <span style="font-weight:700;color:var(--accent-green)">+5 XP</span>
+              </div>
+              <div
+                style="display:flex;align-items:center;justify-content:space-between;font-size:var(--fs-xs);color:var(--text-muted)">
+                <span>🔥 Duy trì streak 7 ngày</span>
+                <span style="font-weight:700;color:var(--accent-green)">+10 XP</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="rp-card">
+            <div style="font-size:var(--fs-sm);font-weight:700;color:var(--text);margin-bottom:10px">Cập nhật lần cuối
+            </div>
+            <div style="font-size:var(--fs-xs);color:var(--text-muted);line-height:1.6">
+              Leaderboard được cập nhật theo thời gian thực. Điểm số dựa trên XP tích lũy trong khung thời gian tương
+              ứng.
+            </div>
+            <div style="margin-top:8px;font-size:11px;color:var(--text-muted)" id="rpUpdateTime">—</div>
+          </div>
+
+        </aside>
+
+      </div><!-- /content-row -->
+
+      <!-- Mobile nav -->
+      <nav id="mobile-nav">
+        <a href="feed.html" class="mob-nav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
+          </svg>
+          <span>Bảng tin</span>
+        </a>
+        <a href="challenge.html" class="mob-nav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path
+              d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z" />
+          </svg>
+          <span>Challenge</span>
+        </a>
+        <a href="leaderboard.html" class="mob-nav-item active">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path
+              d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"
+              stroke-linecap="round" />
+          </svg>
+          <span>Leaderboard</span>
+        </a>
+        <a href="#" class="mob-nav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+          </svg>
+          <span>Tôi</span>
+        </a>
+      </nav>
+
+    </div><!-- /main -->
+
+  </div><!-- /app -->
+
+  <!-- Mobile sidebar overlay -->
+  <div id="mob-overlay" onclick="closeSidebar()"></div>
+  <div id="mob-sidebar">
+    <div class="mob-sidebar-header">
+      <div class="mob-sidebar-logo">
+        <div class="sidebar-logo-mark" style="width:28px;height:28px">
+          <svg viewBox="0 0 20 20" fill="none">
+            <circle cx="10" cy="10" r="3" fill="currentColor" />
+            <path d="M10 3v2M10 15v2M3 10h2M15 10h2" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+          </svg>
+        </div>
+        <span style="font-family:var(--font-heading);font-size:13px;font-weight:700;color:var(--text)">AI AGENT <span
+            style="color:var(--color-primary)">CC</span></span>
+      </div>
+      <button onclick="closeSidebar()" class="mob-sidebar-close" aria-label="Đóng">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" />
+        </svg>
+      </button>
+    </div>
+    <nav style="padding:8px">
+      <a href="feed.html" class="nav-item">Bảng tin</a>
+      <a href="challenge.html" class="nav-item">Challenge</a>
+      <a href="leaderboard.html" class="nav-item active">Leaderboard</a>
+      <a href="#" class="nav-item">Hỏi đáp</a>
+      <a href="#" class="nav-item">Khóa học</a>
+    </nav>
+  </div>
+
+  <!-- Profile Modal -->
+  <div class="profile-overlay" id="profileOverlay" onclick="handleOverlayClick(event)">
+    <div class="profile-card" id="profileCard">
+      <div style="text-align:center;padding:40px;color:var(--text-muted)">Đang tải...</div>
+    </div>
+  </div>
+
+  <script src="assets/js/app.js"></script>
+  <script>
+    const API = 'http://localhost:3000/api';
+
+    const LEVELS = [
+      { level: 1, name: 'Khởi động', xpMin: 0, xpMax: 45 },
+      { level: 2, name: 'Học viên', xpMin: 45, xpMax: 120 },
+      { level: 3, name: 'Thực hành', xpMin: 120, xpMax: 250 },
+      { level: 4, name: 'Nâng cao', xpMin: 250, xpMax: 450 },
+      { level: 5, name: 'Chuyên gia', xpMin: 450, xpMax: 700 },
+      { level: 6, name: 'Bậc thầy', xpMin: 700, xpMax: 1000 },
+      { level: 7, name: 'Huyền thoại', xpMin: 1000, xpMax: 1500 },
+      { level: 8, name: 'Tiên tri', xpMin: 1500, xpMax: 2200 },
+      { level: 9, name: 'Thần thánh', xpMin: 2200, xpMax: 9999 },
+    ];
+
+    const LEVEL_COLORS = [
+      '#64748b', '#3b82f6', '#10b981', '#8b5cf6', '#f59e0b', '#ef4444', '#ec4899', '#0ea5e9', '#f97316'
+    ];
+    const PILLAR_MAP = {
+      offer: { label: 'Offer', color: '#f59e0b' },
+      traffic: { label: 'Thu hút', color: '#3b82f6' },
+      conversion: { label: 'Chuyển đổi', color: '#8b5cf6' },
+      delivery: { label: 'Cung ứng', color: '#10b981' },
+      continuity: { label: 'Continuity', color: '#ec4899' },
+    };
+    const AV_COLORS = ['#0ea5e9', '#8b5cf6', '#10b981', '#f59e0b', '#ec4899', '#3b82f6', '#ef4444', '#14b8a6'];
+
+    function getLevel(xp) {
+      for (let i = LEVELS.length - 1; i >= 0; i--) {
+        if (xp >= LEVELS[i].xpMin) return LEVELS[i];
+      }
+      return LEVELS[0];
+    }
+
+    function avColor(id) { return AV_COLORS[(id || 0) % AV_COLORS.length]; }
+    function initials(u) { return ((u.first_name || '?')[0] + ((u.last_name || '')[0] || '')).toUpperCase(); }
+    function fmtDate(s) {
+      if (!s) return '—';
+      const d = new Date(s);
+      return `${d.getDate()}/${d.getMonth() + 1}/${d.getFullYear()}`;
+    }
+    function fmtRelative(s) {
+      if (!s) return '—';
+      const diff = (Date.now() - new Date(s)) / 1000;
+      if (diff < 60) return 'vừa xong';
+      if (diff < 3600) return Math.floor(diff / 60) + ' phút trước';
+      if (diff < 86400) return Math.floor(diff / 3600) + ' giờ trước';
+      if (diff < 86400 * 30) return Math.floor(diff / 86400) + ' ngày trước';
+      return fmtDate(s);
+    }
+    function escHtml(s) {
+      return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+
+    function avatarGrad(name) {
+      const colors = [
+        ['#f59e0b', '#ef4444'], ['#6366f1', '#8b5cf6'], ['#10b981', '#0ea5e9'],
+        ['#ec4899', '#8b5cf6'], ['#3b82f6', '#10b981'], ['#0ea5e9', '#8b5cf6'],
+        ['#8b5cf6', '#3b82f6'], ['#f59e0b', '#10b981'], ['#ec4899', '#f59e0b'],
+      ];
+      const idx = (name || '?').charCodeAt(0) % colors.length;
+      return `linear-gradient(135deg,${colors[idx][0]},${colors[idx][1]})`;
+    }
+
+    function initUser() {
+      const raw = sessionStorage.getItem('currentUser');
+      if (!raw) { location.href = 'index.html'; return null; }
+      const u = JSON.parse(raw);
+      const lv = getLevel(u.xp || 0);
+      const initials = ((u.first_name || '?')[0] + (u.last_name ? u.last_name[0] : '')).toUpperCase();
+      document.getElementById('sbAvatar').textContent = initials;
+      document.getElementById('sbAvatar').style.background = avatarGrad(u.first_name);
+      document.getElementById('sbName').textContent = `${u.first_name} ${u.last_name || ''}`.trim();
+      document.getElementById('sbLevel').textContent = `Level ${lv.level} · ${u.xp || 0} XP`;
+
+      const ta = document.querySelector('.topbar-avatar-placeholder');
+      if (ta) { ta.textContent = initials; ta.style.background = avatarGrad(u.first_name); }
+      return u;
+    }
+
+    async function loadRankHero(user) {
+      const heroEl = document.getElementById('rankHero');
+      try {
+        const [r7, r30, rAll] = await Promise.all([
+          fetch(`${API}/leaderboard?period=7day&limit=200&user_id=${user.id}`).then(r => r.json()),
+          fetch(`${API}/leaderboard?period=30day&limit=200&user_id=${user.id}`).then(r => r.json()),
+          fetch(`${API}/leaderboard?period=alltime&limit=200&user_id=${user.id}`).then(r => r.json()),
+        ]);
+
+        const rank7 = r7.my_rank ? r7.my_rank.rank : '—';
+        const rank30 = r30.my_rank ? r30.my_rank.rank : '—';
+        const rankAll = rAll.my_rank ? rAll.my_rank.rank : '—';
+
+        const lv = getLevel(user.xp || 0);
+        const xpInLevel = (user.xp || 0) - lv.xpMin;
+        const xpNeeded = lv.xpMax - lv.xpMin;
+        const pct = Math.min(100, Math.round(xpInLevel / xpNeeded * 100));
+        const initials = ((user.first_name || '?')[0] + (user.last_name ? user.last_name[0] : '')).toUpperCase();
+
+        heroEl.innerHTML = `
+      <div class="my-rank-avatar-wrap">
+        <div class="my-rank-avatar-placeholder" style="background:${avatarGrad(user.first_name)}">${initials}</div>
+        <div class="my-rank-badge">${lv.level}</div>
+      </div>
+      <div class="my-rank-info">
+        <div class="my-rank-name">${user.first_name} ${user.last_name || ''}</div>
+        <div class="my-rank-title">${lv.name} · Tham gia cộng đồng</div>
+        <div class="my-rank-meta">
+          <div class="my-rank-stat">
+            <div class="my-rank-stat-val gold">#${rank7}</div>
+            <div class="my-rank-stat-label">7 ngày</div>
+          </div>
+          <div class="my-rank-stat">
+            <div class="my-rank-stat-val purple">#${rank30}</div>
+            <div class="my-rank-stat-label">30 ngày</div>
+          </div>
+          <div class="my-rank-stat">
+            <div class="my-rank-stat-val green">#${rankAll}</div>
+            <div class="my-rank-stat-label">All-time</div>
+          </div>
+          <div class="my-rank-stat">
+            <div class="my-rank-stat-val" style="color:#94a3b8">🔥 ${user.streak || 0}</div>
+            <div class="my-rank-stat-label">Streak</div>
+          </div>
+        </div>
+      </div>
+      <div class="my-rank-xp-section">
+        <div class="my-rank-xp-label">Tổng XP</div>
+        <div class="my-rank-xp-val">${user.xp || 0}</div>
+        <div class="my-rank-xp-sub">Level ${lv.level} — ${lv.name}</div>
+        <div class="my-rank-xp-bar">
+          <div class="my-rank-xp-fill" style="width:${pct}%"></div>
+        </div>
+        <div class="my-rank-xp-next">${lv.xpMax - (user.xp || 0)} XP → Level ${lv.level + 1}</div>
+      </div>`;
+
+        const totalRes = await fetch(`${API}/leaderboard?period=alltime&limit=9999`).then(r => r.json()).catch(() => ({}));
+        const total = (totalRes.ranked || []).length;
+        document.getElementById('memberCount').textContent = `${total} thành viên`;
+      } catch (e) {
+        heroEl.innerHTML = `<div style="color:rgba(255,255,255,0.4);padding:20px">Không thể tải dữ liệu</div>`;
+      }
+    }
+
+    function loadLevelGrid(user) {
+      const grid = document.getElementById('levelGrid');
+      const titleEl = document.getElementById('levelGridTitle');
+      const lv = getLevel(user.xp || 0);
+      titleEl.textContent = `Tiến trình cấp độ — bạn đang ở Level ${lv.level}`;
+
+      grid.innerHTML = LEVELS.map(lvDef => {
+        const state = lvDef.level < lv.level ? 'unlocked' :
+          lvDef.level === lv.level ? 'current' : 'locked';
+        const xpInLevel = (user.xp || 0) - lvDef.xpMin;
+        const pct = state === 'current' ? Math.min(100, Math.round(xpInLevel / (lvDef.xpMax - lvDef.xpMin) * 100)) : (state === 'unlocked' ? 100 : 0);
+        const lock = state === 'locked' ? `<span class="level-cell-lock-icon"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></span>` : '';
+        return `<div class="level-cell ${state}">
+      <div class="level-cell-icon">${lvDef.level}</div>
+      <div class="level-cell-info">
+        <div class="level-cell-name">${lvDef.name}</div>
+        <div class="level-cell-pct">${state === 'locked' ? lvDef.xpMin + ' XP' : pct + '%'}</div>
+      </div>
+      ${lock}
+    </div>`;
+      }).join('');
+    }
+
+    function renderLbCard(cfg, entries, user) {
+      const medals = ['🥇', '🥈', '🥉'];
+      const rows = entries.map((e, i) => {
+        const isMe = e.id === user.id;
+        const rank = i < 3 ? `<span class="rank-medal">${medals[i]}</span>` : `<span class="lb-rank-num">${i + 1}</span>`;
+        const init = initials(e);
+        const lv = getLevel(e.xp || 0);
+        return `<div class="lb-entry${isMe ? ' is-me' : ''}" onclick="openProfile(${e.id})" title="Xem hồ sơ">
+      <div class="lb-rank">${rank}</div>
+      <div class="lb-avatar-placeholder" style="background:${avColor(e.id)}">${init}</div>
+      <div class="lb-info">
+        <div class="lb-name">${escHtml(e.first_name)} ${escHtml(e.last_name || '')}</div>
+        <div class="lb-level">Level ${lv.level}</div>
+      </div>
+      <div class="lb-points">${e.period_xp !== undefined ? e.period_xp : e.xp}</div>
+      ${isMe ? '<span class="lb-me-label">Bạn</span>' : ''}
+    </div>`;
+      }).join('');
+
+      const myIdx = entries.findIndex(e => e.id === user.id);
+      let myRow = '';
+      if (myIdx === -1) {
+        const init = ((user.first_name || '?')[0] + (user.last_name ? user.last_name[0] : '')).toUpperCase();
+        const lv = getLevel(user.xp || 0);
+        myRow = `<div class="lb-separator"><span>···</span></div>
+    <div class="lb-entry is-me">
+      <div class="lb-rank"><span class="lb-rank-num">—</span></div>
+      <div class="lb-avatar-placeholder" style="background:${avatarGrad(user.first_name)}">${init}</div>
+      <div class="lb-info">
+        <div class="lb-name">${user.first_name} ${user.last_name || ''}</div>
+        <div class="lb-level">Level ${lv.level}</div>
+      </div>
+      <div class="lb-points">0</div>
+      <span class="lb-me-label">Bạn</span>
+    </div>`;
+      }
+
+      return `<div class="lb-card">
+    <div class="lb-card-header">
+      <div class="lb-card-header-icon" style="background:${cfg.iconBg}">
+        ${cfg.iconSvg}
+      </div>
+      <h3>${cfg.title}</h3>
+      <span class="entry-count">Top ${entries.length}</span>
+    </div>
+    <div class="lb-list">${rows}${myRow}</div>
+  </div>`;
+    }
+
+    async function loadLeaderboards(user) {
+      const grid = document.getElementById('lbGrid');
+      try {
+        const [r7, r30, rAll] = await Promise.all([
+          fetch(`${API}/leaderboard?period=7day&limit=10&user_id=${user.id}`).then(r => r.json()),
+          fetch(`${API}/leaderboard?period=30day&limit=10&user_id=${user.id}`).then(r => r.json()),
+          fetch(`${API}/leaderboard?period=alltime&limit=10&user_id=${user.id}`).then(r => r.json()),
+        ]);
+
+        const cfgs = [
+          {
+            title: '7 ngày gần nhất',
+            iconBg: '#fef3c7',
+            iconSvg: `<svg fill="none" viewBox="0 0 24 24" stroke="#d97706" stroke-width="2" stroke-linecap="round" style="width:16px;height:16px"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>`,
+            entries: r7.ranked || [],
+          },
+          {
+            title: '30 ngày gần nhất',
+            iconBg: '#ede9fe',
+            iconSvg: `<svg fill="none" viewBox="0 0 24 24" stroke="#7c3aed" stroke-width="2" stroke-linecap="round" style="width:16px;height:16px"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>`,
+            entries: r30.ranked || [],
+          },
+          {
+            title: 'Tổng thể (All-time)',
+            iconBg: '#fce7f3',
+            iconSvg: `<svg fill="none" viewBox="0 0 24 24" stroke="#db2777" stroke-width="2" stroke-linecap="round" style="width:16px;height:16px"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`,
+            entries: rAll.ranked || [],
+          },
+        ];
+
+        grid.innerHTML = cfgs.map(cfg => renderLbCard(cfg, cfg.entries, user)).join('');
+      } catch (e) {
+        grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--text-muted)">Không thể tải leaderboard. Đảm bảo server đang chạy.</div>`;
+      }
+    }
+
+    async function loadRpStats(user) {
+      const card = document.getElementById('rpMyStats');
+      try {
+        const data = await fetch(`${API}/users/${user.id}`).then(r => r.json());
+        const u = data.id ? data : user;
+        const lv = getLevel(u.xp || 0);
+        const xpInLevel = (u.xp || 0) - lv.xpMin;
+        const xpNeeded = lv.xpMax - lv.xpMin;
+        const pct = Math.min(100, Math.round(xpInLevel / xpNeeded * 100));
+
+        sessionStorage.setItem('currentUser', JSON.stringify(u));
+
+        card.innerHTML = `
+      <div style="font-size:var(--fs-sm);font-weight:700;color:var(--text);margin-bottom:12px;display:flex;align-items:center;gap:6px">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="width:14px;height:14px;color:var(--accent-green)">
+          <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+        </svg>
+        Thống kê của bạn
+      </div>
+      <div class="rp-stat-grid">
+        <div class="rp-stat-box">
+          <div class="rp-stat-box-val" style="color:var(--accent-green)">${u.xp || 0}</div>
+          <div class="rp-stat-box-label">Tổng XP</div>
+        </div>
+        <div class="rp-stat-box">
+          <div class="rp-stat-box-val" style="color:var(--accent-purple)">${lv.level}</div>
+          <div class="rp-stat-box-label">Level</div>
+        </div>
+        <div class="rp-stat-box">
+          <div class="rp-stat-box-val" style="color:#f59e0b">🔥 ${u.streak || 0}</div>
+          <div class="rp-stat-box-label">Streak ngày</div>
+        </div>
+        <div class="rp-stat-box">
+          <div class="rp-stat-box-val">${u.post_count || 0}</div>
+          <div class="rp-stat-box-label">Bài đăng</div>
+        </div>
+      </div>
+      <div style="font-size:var(--fs-xs);color:var(--text-muted);display:flex;justify-content:space-between;margin-bottom:4px">
+        <span>Level ${lv.level}</span>
+        <span style="color:var(--accent-green);font-weight:700">${u.xp || 0} / ${lv.xpMax} XP</span>
+      </div>
+      <div class="xp-bar" style="margin-bottom:4px">
+        <div class="xp-bar-fill" style="width:${pct}%"></div>
+      </div>
+      <div style="font-size:11px;color:var(--text-light);text-align:right">${lv.xpMax - (u.xp || 0)} XP nữa lên Level ${lv.level + 1}</div>`;
+
+        const now = new Date();
+        document.getElementById('rpUpdateTime').textContent =
+          `Cập nhật: ${now.getDate()} Tháng ${now.getMonth() + 1}, ${now.getFullYear()} · ${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+      } catch (e) {
+        card.innerHTML = `<div style="font-size:var(--fs-xs);color:var(--text-muted);padding:12px">Không thể tải thống kê.</div>`;
+      }
+    }
+
+    function openProfile(userId) {
+      location.href = 'profile.html?id=' + userId;
+    }
+
+    async function init() {
+      const user = initUser();
+      if (!user) return;
+      await Promise.all([
+        loadRankHero(user),
+        loadLeaderboards(user),
+        loadRpStats(user),
+      ]);
+      loadLevelGrid(JSON.parse(sessionStorage.getItem('currentUser') || '{}'));
+    }
+
+    init();
+  </script>
+</body>
+
+</html>
