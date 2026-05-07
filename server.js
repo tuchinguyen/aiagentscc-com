@@ -641,6 +641,70 @@ const CHALLENGE_DAYS = [
     });
   });
 
+  // Google OAuth
+  app.post('/api/auth/google', async (req, res) => {
+    const { access_token } = req.body;
+    if (!access_token) return res.status(400).json({ error: 'Thiếu access_token.' });
+
+    let gUser;
+    try {
+      const gRes = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+        headers: { Authorization: `Bearer ${access_token}` },
+      });
+      if (!gRes.ok) return res.status(401).json({ error: 'Token Google không hợp lệ.' });
+      gUser = await gRes.json();
+    } catch (err) {
+      return res.status(502).json({ error: 'Không thể xác thực với Google.' });
+    }
+
+    if (!gUser.email_verified) return res.status(401).json({ error: 'Email Google chưa xác minh.' });
+
+    const { sub: google_id, email, given_name, family_name, picture } = gUser;
+    const first_name = given_name || (gUser.name || '').split(' ').pop() || 'Thành viên';
+    const last_name  = family_name || (gUser.name || '').split(' ').slice(0, -1).join(' ') || '';
+
+    let user = db.get('SELECT * FROM users WHERE google_id = ?', [google_id]);
+
+    if (!user) {
+      user = db.get('SELECT * FROM users WHERE email = ?', [email]);
+      if (user) {
+        // Liên kết Google vào tài khoản email đã có
+        db.run('UPDATE users SET google_id = ?, avatar_url = COALESCE(avatar_url, ?) WHERE id = ?',
+          [google_id, picture, user.id]);
+        user = db.get('SELECT * FROM users WHERE id = ?', [user.id]);
+      } else {
+        // Tạo tài khoản mới qua Google
+        const result = db.run(
+          'INSERT INTO users (first_name, last_name, email, google_id, avatar_url, status, level, xp) VALUES (?,?,?,?,?,?,?,?)',
+          [first_name, last_name, email, google_id, picture, 'active', 1, 0]
+        );
+        addXP(result.lastInsertRowid, 10, 'register', 'Chào mừng thành viên mới');
+        user = db.get('SELECT * FROM users WHERE id = ?', [result.lastInsertRowid]);
+        sendEmail({
+          to: email,
+          subject: '🎉 Chào mừng bạn đến với AI AGENTS CC!',
+          html: emailWrap('Chào mừng đến với cộng đồng!', `
+            <p>Xin chào <strong>${first_name}</strong>,</p>
+            <p>Bạn đã đăng ký thành công tài khoản tại <strong>AI AGENTS CC</strong> qua Google.</p>
+            <a class="btn" href="https://aiagentscc.com/feed.html">Vào Bảng Tin Ngay</a>
+          `)
+        });
+      }
+    }
+
+    if (user.status === 'banned') return res.status(403).json({ error: 'Tài khoản đã bị khoá.' });
+
+    db.run("UPDATE users SET last_active_at = datetime('now','localtime') WHERE id = ?", [user.id]);
+    res.json({
+      success: true,
+      user: {
+        id: user.id, first_name: user.first_name, last_name: user.last_name,
+        email: user.email, level: user.level, xp: user.xp,
+        avatar: user.avatar_url || picture,
+      },
+    });
+  });
+
   // Forgot password — generate reset token
   app.post('/api/auth/forgot-password', (req, res) => {
     const { email } = req.body;

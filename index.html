@@ -298,19 +298,72 @@
   </div>
 </div>
 
+<script src="https://accounts.google.com/gsi/client" async defer></script>
 <script src="assets/js/app.js"></script>
 <script>
-function handleGoogleLogin() {
-  // Google OAuth chưa tích hợp — hiển thị thông báo
-  const btn  = document.getElementById('googleBtn');
-  const text = document.getElementById('googleBtnText');
-  text.textContent = 'Google OAuth — sắp ra mắt';
-  btn.style.opacity = '0.6';
-  setTimeout(() => {
-    text.textContent = 'Tiếp tục với Google';
-    btn.style.opacity = '';
-  }, 2500);
+const GOOGLE_CLIENT_ID = '879415234564-unts08kj8pfh8pkspvhh404gqg0g3ce1.apps.googleusercontent.com';
+let gTokenClient;
+
+function initGoogleClient() {
+  if (typeof google === 'undefined') return;
+  gTokenClient = google.accounts.oauth2.initTokenClient({
+    client_id: GOOGLE_CLIENT_ID,
+    scope: 'openid email profile',
+    callback: async (resp) => {
+      if (resp.error) {
+        setGoogleBtnState('Tiếp tục với Google', false);
+        return;
+      }
+      await handleGoogleToken(resp.access_token);
+    },
+  });
 }
+
+function setGoogleBtnState(text, disabled) {
+  const btn  = document.getElementById('googleBtn');
+  const span = document.getElementById('googleBtnText');
+  span.textContent = text;
+  btn.disabled = disabled;
+  btn.style.opacity = disabled ? '0.7' : '';
+}
+
+function handleGoogleLogin() {
+  if (typeof google === 'undefined') {
+    setGoogleBtnState('Đang tải...', true);
+    setTimeout(() => setGoogleBtnState('Tiếp tục với Google', false), 2000);
+    return;
+  }
+  if (!gTokenClient) initGoogleClient();
+  gTokenClient.requestAccessToken({ prompt: '' });
+}
+
+async function handleGoogleToken(access_token) {
+  setGoogleBtnState('Đang xác thực...', true);
+  try {
+    const res  = await fetch('/api/auth/google', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ access_token }),
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      const msgEl = document.querySelector('#errorBanner [data-msg]');
+      if (msgEl) msgEl.textContent = data.error || 'Đăng nhập Google thất bại.';
+      showAlert('errorBanner');
+      setGoogleBtnState('Tiếp tục với Google', false);
+      return;
+    }
+    sessionStorage.setItem('currentUser', JSON.stringify(data.user));
+    window.location.href = 'feed.html';
+  } catch {
+    const msgEl = document.querySelector('#errorBanner [data-msg]');
+    if (msgEl) msgEl.textContent = 'Lỗi kết nối server.';
+    showAlert('errorBanner');
+    setGoogleBtnState('Tiếp tục với Google', false);
+  }
+}
+
+window.addEventListener('load', initGoogleClient);
 
 // Email/password form
 const loginForm = document.getElementById('loginForm');
@@ -337,7 +390,7 @@ loginForm.addEventListener('submit', async (e) => {
   setLoading(true);
 
   try {
-    const res = await fetch('http://localhost:3000/api/auth/login', {
+    const res = await fetch('/api/auth/login', {
       method:  'POST',
       headers: { 'Content-Type': 'application/json' },
       body:    JSON.stringify({ email, password: pw }),
