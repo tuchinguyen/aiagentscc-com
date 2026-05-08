@@ -316,7 +316,8 @@ html, body { height: 100%; overflow: hidden; }
   padding-bottom: env(safe-area-inset-bottom, 0);
 }
 
-.mob-nav-btn {
+.mob-nav-btn,
+.mob-nav-item {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -325,12 +326,19 @@ html, body { height: 100%; overflow: hidden; }
   font-weight: 500;
   color: var(--text-muted);
   text-decoration: none;
-  padding: 6px 14px;
+  padding: 6px 10px;
   border-radius: var(--radius-sm);
   transition: color 0.1s;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-body);
+  min-width: 52px;
 }
-.mob-nav-btn svg { width: 22px; height: 22px; }
-.mob-nav-btn.active { color: var(--color-primary); }
+.mob-nav-btn svg,
+.mob-nav-item svg { width: 22px; height: 22px; }
+.mob-nav-btn.active,
+.mob-nav-item.active { color: var(--color-primary); }
 
 /* ── Mobile Sidebar ── */
 #mob-overlay {
