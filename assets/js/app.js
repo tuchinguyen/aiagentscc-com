@@ -184,7 +184,7 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   function _setup() {
-    const user = JSON.parse(sessionStorage.getItem('user') || 'null');
+    const user = JSON.parse(sessionStorage.getItem('currentUser') || 'null');
     if (!user) return;
     _notifUserId = user.id;
     const bell = document.getElementById('notifBell');
