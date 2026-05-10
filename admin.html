@@ -984,6 +984,12 @@
       </button>
 
       <div class="sbar-section">Hệ thống</div>
+      <button class="sbar-item" onclick="showPage('notifications')">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+        </svg>
+        Thông báo
+      </button>
       <button class="sbar-item" onclick="showPage('settings')">
         <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
           <path
@@ -1644,6 +1650,63 @@
         </div>
       </section>
 
+      <!-- ── Notifications ──────────────────────────── -->
+      <section class="page" id="page-notifications">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start;">
+
+          <!-- Left: Compose -->
+          <div class="table-card">
+            <div class="table-card-header">
+              <h2>🔔 Gửi thông báo</h2>
+            </div>
+            <div style="padding:16px 20px;display:flex;flex-direction:column;gap:14px;">
+              <div>
+                <label style="display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:5px;text-transform:uppercase;">Người nhận *</label>
+                <select id="notifUserId" class="search-input" style="width:100%">
+                  <option value="all">📢 Tất cả thành viên (active)</option>
+                </select>
+              </div>
+              <div>
+                <label style="display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:5px;text-transform:uppercase;">Loại thông báo *</label>
+                <select id="notifType" class="search-input" style="width:100%">
+                  <option value="system">⚙️ Hệ thống</option>
+                  <option value="challenge">🔥 Thử thách</option>
+                  <option value="course">📚 Khóa học</option>
+                  <option value="feed">💬 Bảng tin</option>
+                  <option value="marketplace">🛍️ Chợ</option>
+                </select>
+              </div>
+              <div>
+                <label style="display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:5px;text-transform:uppercase;">Tiêu đề *</label>
+                <input class="search-input" style="width:100%" id="notifTitle" placeholder="VD: Thử thách tháng 6 đã mở">
+              </div>
+              <div>
+                <label style="display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:5px;text-transform:uppercase;">Nội dung *</label>
+                <textarea id="notifContent" class="search-input" style="width:100%;height:80px;resize:vertical;" placeholder="Nội dung thông báo..."></textarea>
+              </div>
+              <div>
+                <label style="display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:5px;text-transform:uppercase;">Link (tuỳ chọn)</label>
+                <input class="search-input" style="width:100%" id="notifLink" placeholder="VD: challenge-detail.html?id=1">
+              </div>
+              <div style="display:flex;gap:10px;align-items:center;">
+                <button class="btn-sm primary" onclick="sendAdminNotif()">📤 Gửi thông báo</button>
+                <span id="notifSendStatus" style="font-size:13px;color:var(--muted);"></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right: History -->
+          <div class="table-card">
+            <div class="table-card-header">
+              <h2>Lịch sử đã gửi</h2>
+              <button class="btn-sm" onclick="loadAdminNotifications()">↺ Làm mới</button>
+            </div>
+            <div id="notifHistoryBody" style="padding:12px 20px;font-size:13px;color:var(--muted);">Đang tải...</div>
+          </div>
+
+        </div>
+      </section>
+
     </div><!-- /main -->
   </div><!-- /shell -->
 
@@ -1936,6 +1999,7 @@
       courses: ['Khóa học', ''],
       'course-lessons': ['Bài học', ''],
       marketplace: ['Marketplace', 'Sản phẩm & Đơn hàng'],
+      notifications: ['Thông báo', 'Gửi thông báo đến thành viên'],
     };
 
     function showPage(name) {
@@ -1958,6 +2022,7 @@
       if (name === 'settings') loadSettings();
       if (name === 'courses') loadAdminCourses();
       if (name === 'marketplace') loadAdminMarketplace();
+      if (name === 'notifications') { loadAdminNotifications(); loadNotifUserDropdown(); }
     }
 
     function refreshCurrent() { showPage(currentPage); }
@@ -2851,6 +2916,73 @@
         document.getElementById(id)?.addEventListener('input', updateAnnoPreview);
       });
     });
+
+    // ── Admin Notifications ───────────────────────────────────────
+    async function loadNotifUserDropdown() {
+      try {
+        const data = await api('/admin/users');
+        const sel = document.getElementById('notifUserId');
+        if (!sel) return;
+        const opts = data.users.map(u =>
+          `<option value="${u.id}">${u.first_name} ${u.last_name} (${u.email})</option>`
+        ).join('');
+        sel.innerHTML = `<option value="all">📢 Tất cả thành viên (active)</option>${opts}`;
+      } catch (e) { /* silent */ }
+    }
+
+    async function loadAdminNotifications() {
+      const body = document.getElementById('notifHistoryBody');
+      if (!body) return;
+      try {
+        const data = await api('/admin/notifications');
+        if (!data.length) {
+          body.innerHTML = '<div style="padding:8px 0;color:var(--muted);">Chưa có thông báo nào được gửi.</div>';
+          return;
+        }
+        const typeIcon = { system:'⚙️', challenge:'🔥', course:'📚', feed:'💬', marketplace:'🛍️' };
+        body.innerHTML = data.map(n => `
+          <div style="padding:10px 0;border-bottom:1px solid var(--border);display:flex;flex-direction:column;gap:3px;">
+            <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+              <span style="font-size:13px;">${typeIcon[n.type] || '🔔'}</span>
+              <span style="font-size:13px;font-weight:600;color:var(--text);">${escHtml(n.title)}</span>
+              ${!n.is_read ? '<span style="font-size:10px;padding:1px 6px;border-radius:99px;background:#fee2e2;color:#dc2626;font-weight:600;">Chưa đọc</span>' : ''}
+            </div>
+            <div style="font-size:12px;color:var(--muted);">${escHtml(n.content)}</div>
+            <div style="font-size:11px;color:#94a3b8;">→ ${escHtml(n.first_name)} ${escHtml(n.last_name)} · ${n.created_at}</div>
+          </div>
+        `).join('');
+      } catch (e) {
+        body.innerHTML = `<div style="color:#ef4444;font-size:13px;">Lỗi: ${e.message}</div>`;
+      }
+    }
+
+    async function sendAdminNotif() {
+      const user_id = document.getElementById('notifUserId').value;
+      const type    = document.getElementById('notifType').value;
+      const title   = document.getElementById('notifTitle').value.trim();
+      const content = document.getElementById('notifContent').value.trim();
+      const link    = document.getElementById('notifLink').value.trim();
+      const status  = document.getElementById('notifSendStatus');
+
+      if (!title || !content) { showToast('Vui lòng điền tiêu đề và nội dung.', 'red'); return; }
+
+      status.textContent = 'Đang gửi...';
+      try {
+        const res = await api('/admin/notifications', {
+          method: 'POST',
+          body: JSON.stringify({ user_id, type, title, content, link: link || undefined })
+        });
+        status.textContent = '';
+        showToast(`Đã gửi thành công đến ${res.sent} người dùng.`, 'green');
+        document.getElementById('notifTitle').value = '';
+        document.getElementById('notifContent').value = '';
+        document.getElementById('notifLink').value = '';
+        await loadAdminNotifications();
+      } catch (e) {
+        status.textContent = '';
+        showToast(`Lỗi: ${e.message}`, 'red');
+      }
+    }
 
     // ── Admin Courses ─────────────────────────────────────────────
     let editingCourseId = null;

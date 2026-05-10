@@ -461,6 +461,21 @@ const CHALLENGE_DAYS = [
     console.log('  Migrated challenge_submissions: added is_late.');
   }
 
+  // Migrate notifications: add title, link, sent_by_admin
+  const notifCols = db.all('PRAGMA table_info(notifications)').map(c => c.name);
+  if (!notifCols.includes('title')) {
+    db.exec('ALTER TABLE notifications ADD COLUMN title TEXT');
+    console.log('  Migrated notifications: added title.');
+  }
+  if (!notifCols.includes('link')) {
+    db.exec('ALTER TABLE notifications ADD COLUMN link TEXT');
+    console.log('  Migrated notifications: added link.');
+  }
+  if (!notifCols.includes('sent_by_admin')) {
+    db.exec('ALTER TABLE notifications ADD COLUMN sent_by_admin INTEGER DEFAULT 0');
+    console.log('  Migrated notifications: added sent_by_admin.');
+  }
+
   const dayCount = db.get('SELECT COUNT(*) AS n FROM challenge_days').n;
   if (dayCount === 0) {
     CHALLENGE_DAYS.forEach(([num, title, desc, instructions, xp]) =>
@@ -1608,6 +1623,72 @@ const CHALLENGE_DAYS = [
       db.run('INSERT INTO site_settings (key, value) VALUES (?,?) ON CONFLICT(key) DO UPDATE SET value=excluded.value', [key, String(value)]);
     });
     res.json({ success: true });
+  });
+
+  // ── Notifications (user) ──────────────────────────────────
+  app.get('/api/notifications', (req, res) => {
+    const { user_id } = req.query;
+    if (!user_id) return res.status(400).json({ error: 'Thiếu user_id.' });
+    const notifications = db.all(
+      'SELECT * FROM notifications WHERE user_id = ? ORDER BY created_at DESC LIMIT 50',
+      [user_id]
+    );
+    const unread = notifications.filter(n => !n.is_read).length;
+    res.json({ notifications, unread });
+  });
+
+  app.patch('/api/notifications/:id/read', (req, res) => {
+    const { user_id } = req.body;
+    if (!user_id) return res.status(400).json({ error: 'Thiếu user_id.' });
+    db.run('UPDATE notifications SET is_read = 1 WHERE id = ? AND user_id = ?', [req.params.id, user_id]);
+    res.json({ success: true });
+  });
+
+  app.post('/api/notifications/read-all', (req, res) => {
+    const { user_id } = req.body;
+    if (!user_id) return res.status(400).json({ error: 'Thiếu user_id.' });
+    db.run('UPDATE notifications SET is_read = 1 WHERE user_id = ?', [user_id]);
+    res.json({ success: true });
+  });
+
+  // ── Admin notifications ────────────────────────────────────
+  app.get('/api/admin/notifications', requireAdmin, (_req, res) => {
+    const notifs = db.all(`
+      SELECT n.id, n.user_id, n.type, n.title, n.content, n.link, n.is_read, n.created_at,
+             u.first_name, u.last_name, u.email
+      FROM notifications n
+      JOIN users u ON u.id = n.user_id
+      WHERE n.sent_by_admin = 1
+      ORDER BY n.created_at DESC
+      LIMIT 100
+    `);
+    res.json(notifs);
+  });
+
+  app.post('/api/admin/notifications', requireAdmin, (req, res) => {
+    const { user_id, type, title, content, link } = req.body;
+    if (!type || !title || !content) return res.status(400).json({ error: 'Thiếu type, title hoặc content.' });
+
+    if (user_id === 'all') {
+      const users = db.all("SELECT id FROM users WHERE status = 'active'");
+      for (const u of users) {
+        db.run(
+          'INSERT INTO notifications (user_id, type, title, content, link, sent_by_admin) VALUES (?,?,?,?,?,1)',
+          [u.id, type, title, content, link || null]
+        );
+      }
+      res.json({ success: true, sent: users.length });
+    } else {
+      const uid = Number(user_id);
+      if (!uid) return res.status(400).json({ error: 'user_id không hợp lệ.' });
+      const user = db.get('SELECT id FROM users WHERE id = ?', [uid]);
+      if (!user) return res.status(404).json({ error: 'Không tìm thấy user.' });
+      db.run(
+        'INSERT INTO notifications (user_id, type, title, content, link, sent_by_admin) VALUES (?,?,?,?,?,1)',
+        [uid, type, title, content, link || null]
+      );
+      res.json({ success: true, sent: 1 });
+    }
   });
 
   // ══════════════════════════════════════════════════════════
