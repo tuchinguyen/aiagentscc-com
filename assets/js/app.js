@@ -128,7 +128,7 @@ document.addEventListener('DOMContentLoaded', () => {
   function _renderBadge(unread) {
     const el = document.getElementById('notifBadge');
     if (!el) return;
-    if (unread > 0) { el.textContent = unread > 99 ? '99+' : unread; el.style.display = 'flex'; }
+    if (unread > 0) { el.textContent = unread > 99 ? '99+' : unread; el.style.display = 'inline-flex'; el.style.alignItems = 'center'; el.style.justifyContent = 'center'; }
     else { el.style.display = 'none'; }
   }
 

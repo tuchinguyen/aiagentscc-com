@@ -1654,12 +1654,13 @@ const CHALLENGE_DAYS = [
   // ── Admin notifications ────────────────────────────────────
   app.get('/api/admin/notifications', requireAdmin, (_req, res) => {
     const notifs = db.all(`
-      SELECT n.id, n.user_id, n.type, n.title, n.content, n.link, n.is_read, n.created_at,
-             u.first_name, u.last_name, u.email
-      FROM notifications n
-      JOIN users u ON u.id = n.user_id
-      WHERE n.sent_by_admin = 1
-      ORDER BY n.created_at DESC
+      SELECT type, title, content, link,
+             MAX(created_at) AS created_at,
+             COUNT(*) AS sent_count
+      FROM notifications
+      WHERE sent_by_admin = 1
+      GROUP BY title, content, type, link
+      ORDER BY created_at DESC
       LIMIT 100
     `);
     res.json(notifs);
