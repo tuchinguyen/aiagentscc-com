@@ -1232,6 +1232,20 @@
         </div>
       </section>
 
+      <!-- ── Challenge Days sub-page ──────────────────── -->
+      <section class="page" id="page-challenge-days">
+        <div class="table-card">
+          <div class="table-card-header">
+            <div style="display:flex;align-items:center;gap:12px;">
+              <button class="btn-sm" onclick="showPage('challenges')">← Quay lại</button>
+              <h2 id="dayListTitle">Danh sách ngày</h2>
+            </div>
+            <button class="btn-sm primary" id="dayListAddBtn">+ Thêm ngày</button>
+          </div>
+          <div id="dayListBody" style="padding:8px 0;"></div>
+        </div>
+      </section>
+
       <!-- ── Enrollments ───────────────────────────── -->
       <section class="page" id="page-enrollments">
         <div class="table-card">
@@ -1341,6 +1355,61 @@
                 </tr>
               </tbody>
             </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── Course Lessons sub-page ──────────────────── -->
+      <section class="page" id="page-course-lessons">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start;">
+          <!-- Danh sách bài học -->
+          <div class="table-card">
+            <div class="table-card-header">
+              <div style="display:flex;align-items:center;gap:12px;">
+                <button class="btn-sm" onclick="showPage('courses')">← Quay lại</button>
+                <h2 id="lessonsModalTitle">Bài học</h2>
+              </div>
+            </div>
+            <div id="lessonsList" style="padding:16px;">
+              <div style="text-align:center;padding:20px;color:#94a3b8;font-size:13px;">Đang tải...</div>
+            </div>
+          </div>
+          <!-- Form thêm/sửa bài học -->
+          <div class="table-card">
+            <div class="table-card-header">
+              <h2 id="lsnFormTitle">Thêm bài học mới</h2>
+            </div>
+            <div style="padding:16px;display:flex;flex-direction:column;gap:12px;">
+              <div>
+                <label style="display:block;font-size:11px;font-weight:600;color:var(--muted);margin-bottom:4px;">Tên bài học *</label>
+                <input class="search-input" style="width:100%" id="lsnTitle" placeholder="VD: Bài 1 — Giới thiệu">
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+                <div>
+                  <label style="display:block;font-size:11px;font-weight:600;color:var(--muted);margin-bottom:4px;">Thứ tự</label>
+                  <input class="search-input" style="width:100%" type="number" id="lsnOrder" placeholder="1" min="0">
+                </div>
+                <div>
+                  <label style="display:block;font-size:11px;font-weight:600;color:var(--muted);margin-bottom:4px;">Thời lượng (phút)</label>
+                  <input class="search-input" style="width:100%" type="number" id="lsnDuration" placeholder="15" min="0">
+                </div>
+              </div>
+              <div>
+                <label style="display:block;font-size:11px;font-weight:600;color:var(--muted);margin-bottom:4px;">URL Video (YouTube/Loom...)</label>
+                <input class="search-input" style="width:100%" id="lsnVideo" placeholder="Dán link hoặc thẻ &lt;iframe&gt; từ YouTube đều được">
+                <div style="font-size:10px;color:var(--muted);margin-top:3px;">⚠️ Video có thể không phát được trên localhost — hoạt động bình thường khi deploy lên domain thật.</div>
+              </div>
+              <div>
+                <label style="display:block;font-size:11px;font-weight:600;color:var(--muted);margin-bottom:4px;">Nội dung bài học</label>
+                <textarea id="lsnContent" rows="5"
+                  style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:6px;font-family:var(--font);font-size:12px;resize:vertical;outline:none;"
+                  placeholder="Nội dung, ghi chú, tài nguyên..."></textarea>
+              </div>
+              <div style="display:flex;gap:8px;">
+                <button class="btn-sm primary" id="lsnSaveBtn" onclick="saveLesson()">Thêm bài học</button>
+                <button class="btn-sm" onclick="cancelEditLesson()">Hủy sửa</button>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -1770,71 +1839,6 @@
     </div>
   </div>
 
-  <!-- ── Lessons manage modal ───────────────────────── -->
-  <div id="lessonsModal"
-    style="display:none;position:fixed;inset:0;background:rgba(15,23,42,.6);z-index:400;align-items:center;justify-content:center;padding:16px;">
-    <div
-      style="background:#fff;border-radius:12px;width:100%;max-width:680px;max-height:92vh;display:flex;flex-direction:column;box-shadow:0 24px 48px rgba(0,0,0,.2);">
-      <div
-        style="padding:18px 22px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;">
-        <h3 style="font-size:16px;font-weight:700;" id="lessonsModalTitle">Bài học</h3>
-        <button onclick="closeLessonsModal()"
-          style="border:none;background:none;cursor:pointer;font-size:20px;color:var(--muted);">×</button>
-      </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;flex:1;min-height:0;overflow:hidden;">
-        <!-- Danh sách bài học -->
-        <div style="border-right:1px solid var(--border);overflow-y:auto;padding:16px;">
-          <div style="font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;margin-bottom:12px;">
-            Danh sách bài học</div>
-          <div id="lessonsList">
-            <div style="text-align:center;padding:20px;color:#94a3b8;font-size:13px;">Đang tải...</div>
-          </div>
-        </div>
-        <!-- Form thêm/sửa bài học -->
-        <div style="overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;">
-          <div style="font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;" id="lsnFormTitle">
-            Thêm bài học mới</div>
-          <div>
-            <label style="display:block;font-size:11px;font-weight:600;color:var(--muted);margin-bottom:4px;">Tên bài
-              học *</label>
-            <input class="search-input" style="width:100%" id="lsnTitle" placeholder="VD: Bài 1 — Giới thiệu">
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
-            <div>
-              <label style="display:block;font-size:11px;font-weight:600;color:var(--muted);margin-bottom:4px;">Thứ
-                tự</label>
-              <input class="search-input" style="width:100%" type="number" id="lsnOrder" placeholder="1" min="0">
-            </div>
-            <div>
-              <label style="display:block;font-size:11px;font-weight:600;color:var(--muted);margin-bottom:4px;">Thời
-                lượng (phút)</label>
-              <input class="search-input" style="width:100%" type="number" id="lsnDuration" placeholder="15" min="0">
-            </div>
-          </div>
-          <div>
-            <label style="display:block;font-size:11px;font-weight:600;color:var(--muted);margin-bottom:4px;">URL Video
-              (YouTube/Loom...)</label>
-            <input class="search-input" style="width:100%" id="lsnVideo"
-              placeholder="Dán link hoặc thẻ &lt;iframe&gt; từ YouTube đều được">
-            <div style="font-size:10px;color:var(--muted);margin-top:3px;">⚠️ Video có thể không phát được trên
-              localhost — hoạt động bình thường khi deploy lên domain thật.</div>
-          </div>
-          <div>
-            <label style="display:block;font-size:11px;font-weight:600;color:var(--muted);margin-bottom:4px;">Nội dung
-              bài học</label>
-            <textarea id="lsnContent" rows="5"
-              style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:6px;font-family:var(--font);font-size:12px;resize:vertical;outline:none;"
-              placeholder="Nội dung, ghi chú, tài nguyên..."></textarea>
-          </div>
-          <div style="display:flex;gap:8px;">
-            <button class="btn-sm primary" id="lsnSaveBtn" onclick="saveLesson()">Thêm bài học</button>
-            <button class="btn-sm" onclick="cancelEditLesson()">Hủy sửa</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
   <!-- ── New post modal ────────────────────────────── -->
   <div id="newPostModal"
     style="display:none;position:fixed;inset:0;background:rgba(15,23,42,.6);z-index:300;align-items:center;justify-content:center;padding:16px;">
@@ -1907,23 +1911,6 @@
     </div>
   </div>
 
-  <!-- ── Day list modal ─────────────────────────────── -->
-  <div id="dayListModal"
-    style="display:none;position:fixed;inset:0;background:rgba(15,23,42,.6);z-index:350;align-items:center;justify-content:center;padding:16px;">
-    <div
-      style="background:#fff;border-radius:12px;width:100%;max-width:680px;max-height:90vh;overflow-y:auto;box-shadow:0 24px 48px rgba(0,0,0,.2);">
-      <div
-        style="padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:#fff;z-index:1;">
-        <h3 style="font-size:16px;font-weight:700;" id="dayListTitle">Danh sách ngày</h3>
-        <div style="display:flex;gap:8px;align-items:center;">
-          <button class="btn-sm primary" style="font-size:12px;" id="dayListAddBtn" onclick="">+ Thêm ngày</button>
-          <button onclick="closeDayListModal()"
-            style="border:none;background:none;cursor:pointer;font-size:20px;color:var(--muted);">×</button>
-        </div>
-      </div>
-      <div id="dayListBody" style="padding:16px 20px;"></div>
-    </div>
-  </div>
 
   <div id="toast"></div>
 
@@ -1975,10 +1962,12 @@
       posts: ['Bài đăng', ''],
       xplog: ['XP Log', '100 giao dịch gần nhất'],
       challenges: ['Thử thách', ''],
+      'challenge-days': ['Ngày thử thách', ''],
       enrollments: ['Đăng ký tham gia', ''],
       submissions: ['Bài nộp', ''],
       settings: ['Cài đặt', 'Banner thông báo'],
       courses: ['Khóa học', ''],
+      'course-lessons': ['Bài học', ''],
       marketplace: ['Marketplace', 'Sản phẩm & Đơn hàng'],
     };
 
@@ -1987,8 +1976,9 @@
       document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
       document.querySelectorAll('.sbar-item').forEach(b => b.classList.remove('active'));
       document.getElementById(`page-${name}`).classList.add('active');
-      document.querySelector(`.sbar-item[onclick="showPage('${name}')"]`).classList.add('active');
-      const [title, sub] = titles[name];
+      const sbarEl = document.querySelector(`.sbar-item[onclick="showPage('${name}')"]`);
+      if (sbarEl) sbarEl.classList.add('active');
+      const [title, sub] = titles[name] || [name, ''];
       document.getElementById('pageTitle').textContent = title;
       document.getElementById('pageSubtitle').textContent = sub ? ' — ' + sub : '';
 
@@ -2490,8 +2480,8 @@
 
     async function openChallengeDetail(challengeId) {
       currentDayListChallengeId = challengeId;
-      document.getElementById('dayListModal').style.display = 'flex';
       document.getElementById('dayListAddBtn').onclick = () => openAddDay(challengeId);
+      showPage('challenge-days');
       await refreshDayList();
     }
 
@@ -2617,9 +2607,8 @@
     }
 
     function closeDayListModal() {
-      document.getElementById('dayListModal').style.display = 'none';
       currentDayListChallengeId = null;
-      loadChallenges();
+      showPage('challenges');
     }
 
     async function deleteDayInList(dayId, title) {
@@ -2995,10 +2984,10 @@
       document.getElementById('lsnDuration').value = '';
       document.getElementById('lsnOrder').value = '';
       editingLessonId = null;
-      document.getElementById('lessonsModal').style.display = 'flex';
+      showPage('course-lessons');
       await refreshLessons();
     }
-    function closeLessonsModal() { document.getElementById('lessonsModal').style.display = 'none'; }
+    function closeLessonsModal() { showPage('courses'); }
 
     async function refreshLessons() {
       const data = await api(`/admin/courses/${managingCourseId}/lessons`);
