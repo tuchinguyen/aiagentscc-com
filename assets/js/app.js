@@ -99,6 +99,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const NOTIF_API = '/api';
   let _notifOpen = false;
   let _notifUserId = null;
+  let _seenIds = null; // null = first load (don't toast), Set after first load
 
   function _esc(s) {
     return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
@@ -115,21 +116,65 @@ document.addEventListener('DOMContentLoaded', () => {
     return Math.floor(d/86400000) + ' ngày trước';
   }
 
+  function _showToast(notif) {
+    const icon = _icon(notif.type);
+    const wrap = document.createElement('div');
+    wrap.className = 'notif-toast';
+    wrap.innerHTML = `
+      <div class="notif-toast-icon">${icon}</div>
+      <div class="notif-toast-body">
+        ${notif.title ? `<div class="notif-toast-title">${_esc(notif.title)}</div>` : ''}
+        <div class="notif-toast-text">${_esc(notif.content)}</div>
+      </div>
+      <button class="notif-toast-close" onclick="this.closest('.notif-toast').remove()">×</button>
+    `;
+    if (notif.link) {
+      wrap.style.cursor = 'pointer';
+      wrap.addEventListener('click', (e) => {
+        if (e.target.closest('.notif-toast-close')) return;
+        wrap.remove();
+        window._notifClick && window._notifClick(notif.id, notif.link);
+      });
+    }
+    document.body.appendChild(wrap);
+    // Stack toasts vertically
+    const existing = document.querySelectorAll('.notif-toast');
+    let top = 72;
+    existing.forEach(el => { if (el !== wrap) top += el.offsetHeight + 8; });
+    wrap.style.top = top + 'px';
+    // Auto-dismiss after 6s
+    setTimeout(() => { wrap.style.opacity = '0'; setTimeout(() => wrap.remove(), 400); }, 6000);
+  }
+
   async function _load() {
     if (!_notifUserId) return;
     try {
       const r = await fetch(`${NOTIF_API}/notifications?user_id=${_notifUserId}`);
       const data = await r.json();
+      const notifs = data.notifications || [];
       _renderBadge(data.unread);
-      _renderDropdown(data.notifications);
+      _renderDropdown(notifs);
+      // Show toast for new unread notifications (skip on first load)
+      if (_seenIds !== null) {
+        notifs
+          .filter(n => !n.is_read && !_seenIds.has(n.id))
+          .forEach(_showToast);
+      }
+      _seenIds = new Set(notifs.map(n => n.id));
     } catch(e) {}
   }
 
   function _renderBadge(unread) {
     const el = document.getElementById('notifBadge');
     if (!el) return;
-    if (unread > 0) { el.textContent = unread > 99 ? '99+' : unread; el.style.display = 'inline-flex'; el.style.alignItems = 'center'; el.style.justifyContent = 'center'; }
-    else { el.style.display = 'none'; }
+    if (unread > 0) {
+      el.textContent = unread > 99 ? '99+' : unread;
+      el.style.display = 'inline-flex';
+      el.style.alignItems = 'center';
+      el.style.justifyContent = 'center';
+    } else {
+      el.style.display = 'none';
+    }
   }
 
   function _renderDropdown(notifs) {
@@ -192,7 +237,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!bell || !dd) return;
 
     _load();
-    setInterval(_load, 60000);
+    setInterval(_load, 15000); // poll every 15s for faster notification display
 
     bell.addEventListener('click', (e) => {
       e.preventDefault(); e.stopPropagation();

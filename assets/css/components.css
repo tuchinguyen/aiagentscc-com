@@ -471,3 +471,35 @@
   padding: 32px 16px; text-align: center;
   color: #94a3b8; font-size: 13px;
 }
+
+/* ── Notification Toast Popup ─────────────────────────────── */
+.notif-toast {
+  position: fixed; right: 16px; z-index: 9999;
+  background: #fff; border: 1px solid var(--border);
+  border-left: 3px solid #0ea5e9; border-radius: 10px;
+  padding: 12px 14px; max-width: 320px; min-width: 260px;
+  box-shadow: 0 8px 28px rgba(0,0,0,.14);
+  display: flex; align-items: flex-start; gap: 10px;
+  animation: notifToastIn .3s ease;
+  transition: opacity .4s ease;
+}
+.notif-toast-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+.notif-toast-body { flex: 1; min-width: 0; }
+.notif-toast-title {
+  font-size: 13px; font-weight: 700; color: #0f172a;
+  margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.notif-toast-text {
+  font-size: 12px; color: #64748b; line-height: 1.4;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+.notif-toast-close {
+  border: none; background: none; cursor: pointer;
+  color: #94a3b8; font-size: 18px; line-height: 1;
+  flex-shrink: 0; padding: 0; margin-top: -2px;
+}
+.notif-toast-close:hover { color: #475569; }
+@keyframes notifToastIn {
+  from { opacity: 0; transform: translateX(24px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
