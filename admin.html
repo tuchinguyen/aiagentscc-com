@@ -1606,15 +1606,38 @@
           <label
             style="display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:5px;text-transform:uppercase;">Mô
             tả ngắn</label>
-          <input class="search-input" style="width:100%" id="dDesc" placeholder="Mô tả tóm tắt task...">
+          <textarea id="dDesc" rows="3"
+            style="width:100%;padding:8px 12px;border:1px solid var(--border);border-radius:6px;font-family:var(--font);font-size:13px;resize:vertical;outline:none;line-height:1.6;"
+            placeholder="Mô tả tóm tắt task..."></textarea>
+        </div>
+        <div style="background:#f0f9ff;border:1px solid #bae6fd;border-radius:8px;padding:10px 14px;margin-bottom:14px;font-size:11px;color:#0369a1;line-height:1.6;">
+          📋 Nội dung bên dưới sẽ hiển thị trên trang chi tiết ngày theo đúng thứ tự: <strong>SOP → Hướng dẫn nộp → Tiêu chí duyệt</strong>
         </div>
         <div style="margin-bottom:14px;">
-          <label
-            style="display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:5px;text-transform:uppercase;">Hướng
-            dẫn chi tiết</label>
-          <textarea id="dInstructions" rows="5"
-            style="width:100%;padding:8px 12px;border:1px solid var(--border);border-radius:6px;font-family:var(--font);font-size:13px;resize:vertical;outline:none;"
-            placeholder="Hướng dẫn chi tiết cho học viên..."></textarea>
+          <label style="display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:3px;text-transform:uppercase;">
+            🛠 SOP — Hướng dẫn chi tiết <span style="font-weight:400;text-transform:none;">(Section 2)</span>
+          </label>
+          <div style="font-size:11px;color:var(--muted);margin-bottom:5px;">Các bước thực hiện. Dùng "1. Bước" cho số, "- item" cho bullet.</div>
+          <textarea id="dSop" rows="6"
+            style="width:100%;padding:8px 12px;border:1px solid var(--border);border-radius:6px;font-family:var(--font);font-size:13px;resize:vertical;outline:none;line-height:1.6;"
+            placeholder="1. Bước đầu tiên&#10;2. Bước thứ hai&#10;- Gợi ý thêm"></textarea>
+        </div>
+        <div style="margin-bottom:14px;">
+          <label style="display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:3px;text-transform:uppercase;">
+            📬 Hướng dẫn nộp bài <span style="font-weight:400;text-transform:none;">(Section 3)</span>
+          </label>
+          <div style="font-size:11px;color:var(--muted);margin-bottom:5px;">Danh sách những gì cần nộp. Mỗi dòng = 1 yêu cầu (có hoặc không có "- " đầu dòng).</div>
+          <textarea id="dSubmitGuide" rows="4"
+            style="width:100%;padding:8px 12px;border:1px solid var(--border);border-radius:6px;font-family:var(--font);font-size:13px;resize:vertical;outline:none;line-height:1.6;"
+            placeholder="- Link website đang chạy&#10;- Screenshot màn hình&#10;- Link Google Sheet"></textarea>
+        </div>
+        <div style="margin-bottom:14px;">
+          <label style="display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:3px;text-transform:uppercase;">
+            ✅ Tiêu chí duyệt <span style="font-weight:400;text-transform:none;">(Section 3 — green box)</span>
+          </label>
+          <div style="font-size:11px;color:var(--muted);margin-bottom:5px;">Điều kiện để bài được duyệt. Hiển thị trong khung xanh.</div>
+          <input class="search-input" style="width:100%" id="dApproval"
+            placeholder="VD: Có đủ 3 link, website mở được, form submit được">
         </div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;">
           <div>
@@ -2415,7 +2438,9 @@
       document.getElementById('editDayChallengeId').value = challengeId;
       document.getElementById('dTitle').value = '';
       document.getElementById('dDesc').value = '';
-      document.getElementById('dInstructions').value = '';
+      document.getElementById('dSop').value = '';
+      document.getElementById('dSubmitGuide').value = '';
+      document.getElementById('dApproval').value = '';
       document.getElementById('dXp').value = 5;
       document.getElementById('dDuration').value = 24;
       document.getElementById('dDeadline').value = '';
@@ -2432,10 +2457,16 @@
       const title = document.getElementById('dTitle').value.trim();
       if (!title) { showToast('Vui lòng nhập tiêu đề ngày.', 'red'); return; }
       const deadlineVal = document.getElementById('dDeadline').value;
+      const sop         = document.getElementById('dSop').value.trim();
+      const submitGuide = document.getElementById('dSubmitGuide').value.trim();
+      const approval    = document.getElementById('dApproval').value.trim();
+      let instructions  = sop;
+      if (submitGuide) instructions += (instructions ? '\nNộp bài:\n' : 'Nộp bài:\n') + submitGuide;
+      if (approval)    instructions += '\n✅ Được duyệt khi: ' + approval;
       const body = {
         title,
         description: document.getElementById('dDesc').value.trim(),
-        instructions: document.getElementById('dInstructions').value.trim(),
+        instructions,
         xp_reward: parseInt(document.getElementById('dXp').value, 10) || 5,
         duration_hours: parseInt(document.getElementById('dDuration').value, 10) || 24,
         submission_deadline: deadlineVal ? deadlineVal.replace('T', ' ') + ':00' : null,
@@ -2479,6 +2510,7 @@
         const dlRaw = d.submission_deadline || '';
         const dlInput = dlRaw ? dlRaw.slice(0, 16).replace(' ', 'T') : '';
         const dlExpired = dlRaw && new Date() > new Date(dlRaw);
+        const { sop: parsedSop, submitLines: parsedSubmit, approvalText: parsedApproval } = parseInstructionsAdmin(d.instructions || '');
         const dlBadge = dlRaw
           ? `<span style="font-size:10px;padding:2px 6px;border-radius:4px;background:${dlExpired ? '#fee2e2' : '#fef3c7'};color:${dlExpired ? 'var(--red)' : '#92400e'};">⏰ ${dlRaw.slice(0, 16)}</span>`
           : `<span style="font-size:10px;color:var(--light);">Không hạn</span>`;
@@ -2509,11 +2541,22 @@
           </div>
           <div>
             <label style="font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;display:block;margin-bottom:4px;">Mô tả ngắn</label>
-            <input id="ai-desc-${d.id}" class="search-input" style="width:100%;font-size:13px;" value="${escHtml(d.description || '')}">
+            <textarea id="ai-desc-${d.id}" rows="3" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:6px;font-family:var(--font);font-size:13px;resize:vertical;outline:none;line-height:1.6;">${escHtml(d.description || '')}</textarea>
+          </div>
+          <div style="background:#f0f9ff;border:1px solid #bae6fd;border-radius:6px;padding:8px 12px;font-size:11px;color:#0369a1;line-height:1.5;">
+            📋 Nội dung bên dưới hiển thị theo thứ tự: <strong>SOP → Hướng dẫn nộp → Tiêu chí duyệt</strong>
           </div>
           <div>
-            <label style="font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;display:block;margin-bottom:4px;">Hướng dẫn chi tiết</label>
-            <textarea id="ai-instr-${d.id}" rows="6" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:6px;font-family:var(--font);font-size:12px;resize:vertical;outline:none;line-height:1.6;">${escHtml(d.instructions || '')}</textarea>
+            <label style="font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;display:block;margin-bottom:4px;">🛠 SOP — Hướng dẫn chi tiết</label>
+            <textarea id="ai-sop-${d.id}" rows="5" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:6px;font-family:var(--font);font-size:12px;resize:vertical;outline:none;line-height:1.6;" placeholder="1. Bước đầu tiên&#10;2. Bước thứ hai&#10;- Gợi ý thêm">${escHtml(parsedSop)}</textarea>
+          </div>
+          <div>
+            <label style="font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;display:block;margin-bottom:4px;">📬 Hướng dẫn nộp bài</label>
+            <textarea id="ai-submit-${d.id}" rows="3" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:6px;font-family:var(--font);font-size:12px;resize:vertical;outline:none;line-height:1.6;" placeholder="- Link website&#10;- Screenshot màn hình">${escHtml(parsedSubmit)}</textarea>
+          </div>
+          <div>
+            <label style="font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;display:block;margin-bottom:4px;">✅ Tiêu chí duyệt</label>
+            <input id="ai-approval-${d.id}" class="search-input" style="width:100%;font-size:12px;" value="${escHtml(parsedApproval)}" placeholder="VD: Có đủ 3 link, website mở được">
           </div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
             <div>
@@ -2553,10 +2596,16 @@
       const title = document.getElementById(`ai-title-${dayId}`).value.trim();
       if (!title) { showToast('Tiêu đề không được để trống.', 'red'); return; }
       const dlVal = document.getElementById(`ai-dl-${dayId}`).value;
+      const sop         = document.getElementById(`ai-sop-${dayId}`).value.trim();
+      const submitGuide = document.getElementById(`ai-submit-${dayId}`).value.trim();
+      const approval    = document.getElementById(`ai-approval-${dayId}`).value.trim();
+      let instructions  = sop;
+      if (submitGuide) instructions += (instructions ? '\nNộp bài:\n' : 'Nộp bài:\n') + submitGuide;
+      if (approval)    instructions += '\n✅ Được duyệt khi: ' + approval;
       const body = {
         title,
         description: document.getElementById(`ai-desc-${dayId}`).value.trim(),
-        instructions: document.getElementById(`ai-instr-${dayId}`).value.trim(),
+        instructions,
         xp_reward: parseInt(document.getElementById(`ai-xp-${dayId}`).value, 10) || 5,
         duration_hours: parseInt(document.getElementById(`ai-dur-${dayId}`).value, 10) || 24,
         submission_deadline: dlVal ? dlVal.replace('T', ' ') + ':00' : null,
@@ -2581,24 +2630,41 @@
       await refreshDayList();
     }
 
+    function parseInstructionsAdmin(raw) {
+      const nobaiIdx = raw.indexOf('\nNộp bài:');
+      const sop = nobaiIdx >= 0 ? raw.slice(0, nobaiIdx).trim() : raw.trim();
+      const afterNobai = nobaiIdx >= 0 ? raw.slice(nobaiIdx + '\nNộp bài:'.length).trim() : '';
+      const approvalMarker = '\n✅ Được duyệt khi:';
+      const approvalIdx = afterNobai.indexOf(approvalMarker);
+      return {
+        sop,
+        submitLines: approvalIdx >= 0 ? afterNobai.slice(0, approvalIdx).trim() : afterNobai,
+        approvalText: approvalIdx >= 0 ? afterNobai.slice(approvalIdx + approvalMarker.length).trim() : '',
+      };
+    }
+
     function openEditDay(dayId, challengeId) {
       document.getElementById('dayModalTitle').textContent = 'Chỉnh sửa ngày';
       document.getElementById('editDayId').value = dayId;
       document.getElementById('editDayChallengeId').value = challengeId;
       document.getElementById('dTitle').value = '';
       document.getElementById('dDesc').value = '';
-      document.getElementById('dInstructions').value = '';
+      document.getElementById('dSop').value = '';
+      document.getElementById('dSubmitGuide').value = '';
+      document.getElementById('dApproval').value = '';
       document.getElementById('dXp').value = 5;
       document.getElementById('dDuration').value = 24;
       document.getElementById('dDeadline').value = '';
       document.getElementById('dayModal').style.display = 'flex';
-      // Load current data
       api(`/challenges/${challengeId}`).then(res => {
         const day = res.days.find(d => d.id === dayId);
         if (!day) return;
         document.getElementById('dTitle').value = day.title || '';
         document.getElementById('dDesc').value = day.description || '';
-        document.getElementById('dInstructions').value = day.instructions || '';
+        const parsed = parseInstructionsAdmin(day.instructions || '');
+        document.getElementById('dSop').value = parsed.sop;
+        document.getElementById('dSubmitGuide').value = parsed.submitLines;
+        document.getElementById('dApproval').value = parsed.approvalText;
         document.getElementById('dXp').value = day.xp_reward || 5;
         document.getElementById('dDuration').value = day.duration_hours ?? 24;
         document.getElementById('dDeadline').value = day.submission_deadline

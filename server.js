@@ -233,6 +233,17 @@ const SCHEMA = `
     admin_note   TEXT,
     submitted_at TEXT DEFAULT (datetime('now','localtime')),
     reviewed_at  TEXT,
+    is_late      INTEGER DEFAULT 0,
+    UNIQUE(user_id, day_id)
+  );
+  CREATE TABLE IF NOT EXISTS late_reminders (
+    id           INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id      INTEGER NOT NULL REFERENCES users(id),
+    challenge_id INTEGER NOT NULL REFERENCES challenges(id),
+    day_id       INTEGER NOT NULL REFERENCES challenge_days(id),
+    first_sent_at TEXT DEFAULT (datetime('now','localtime')),
+    last_sent_at  TEXT DEFAULT (datetime('now','localtime')),
+    sent_count   INTEGER DEFAULT 1,
     UNIQUE(user_id, day_id)
   );
   CREATE TABLE IF NOT EXISTS challenge_enrollments (
@@ -441,6 +452,13 @@ const CHALLENGE_DAYS = [
     db.exec('ALTER TABLE orders ADD COLUMN mail_2d  INTEGER DEFAULT 0');
     db.exec('ALTER TABLE orders ADD COLUMN mail_4d  INTEGER DEFAULT 0');
     console.log('  Migrated orders: added email drip flag columns.');
+  }
+
+  // Migrate challenge_submissions: add is_late flag
+  const subCols = db.all('PRAGMA table_info(challenge_submissions)').map(c => c.name);
+  if (!subCols.includes('is_late')) {
+    db.exec('ALTER TABLE challenge_submissions ADD COLUMN is_late INTEGER DEFAULT 0');
+    console.log('  Migrated challenge_submissions: added is_late.');
   }
 
   const dayCount = db.get('SELECT COUNT(*) AS n FROM challenge_days').n;
@@ -1251,21 +1269,20 @@ const CHALLENGE_DAYS = [
     const DAY_MS = 24 * 3600 * 1000;
     const startMs = new Date(enrollment.started_at).getTime();
     const closeMs = startMs + day.day_number * DAY_MS;
-    if (Date.now() > closeMs)
-      return res.status(410).json({ error: 'Thời gian nộp bài ngày này đã kết thúc.' });
+    const isLate = Date.now() > closeMs ? 1 : 0;
     const existing = db.get('SELECT id, status FROM challenge_submissions WHERE user_id = ? AND day_id = ?', [user_id, day_id]);
     if (existing) {
       if (existing.status === 'pending')  return res.status(409).json({ error: 'Bài đang chờ duyệt.' });
       if (existing.status === 'approved') return res.status(409).json({ error: 'Bài đã được duyệt.' });
       db.run(
-        "UPDATE challenge_submissions SET content = ?, status = 'pending', admin_note = NULL, submitted_at = datetime('now','localtime') WHERE id = ?",
-        [content.trim(), existing.id]
+        "UPDATE challenge_submissions SET content = ?, status = 'pending', admin_note = NULL, submitted_at = datetime('now','localtime'), is_late = ? WHERE id = ?",
+        [content.trim(), isLate, existing.id]
       );
       return res.json({ success: true, action: 'resubmitted' });
     }
     const result = db.run(
-      'INSERT INTO challenge_submissions (user_id, challenge_id, day_id, content) VALUES (?,?,?,?)',
-      [user_id, challenge_id, day_id, content.trim()]
+      'INSERT INTO challenge_submissions (user_id, challenge_id, day_id, content, is_late) VALUES (?,?,?,?,?)',
+      [user_id, challenge_id, day_id, content.trim(), isLate]
     );
     res.status(201).json({ success: true, submission_id: result.lastInsertRowid });
   });
@@ -2179,6 +2196,72 @@ const CHALLENGE_DAYS = [
       }
     }
   }, 30 * 60 * 1000); // check every 30 min
+
+  // ── Late submission reminder cron (every hour) ──────────────
+  setInterval(async () => {
+    const DAY_MS = 24 * 3600 * 1000;
+    const now = Date.now();
+    // Find all active enrollments
+    const enrollments = db.all(
+      "SELECT e.*, u.email, u.first_name, c.title AS challenge_title FROM challenge_enrollments e JOIN users u ON u.id = e.user_id JOIN challenges c ON c.id = e.challenge_id WHERE e.status = 'approved' AND e.started_at IS NOT NULL"
+    );
+    for (const e of enrollments) {
+      const startMs = new Date(e.started_at).getTime();
+      // Get all days for this challenge
+      const days = db.all('SELECT * FROM challenge_days WHERE challenge_id = ? ORDER BY day_number', [e.challenge_id]);
+      for (const day of days) {
+        const closeMs = startMs + day.day_number * DAY_MS;
+        // Only process days whose deadline has passed
+        if (now <= closeMs) continue;
+        // Check if already submitted
+        const sub = db.get(
+          "SELECT id FROM challenge_submissions WHERE user_id = ? AND day_id = ? AND status != 'rejected'",
+          [e.user_id, day.id]
+        );
+        if (sub) continue; // already submitted (pending/approved/revision)
+        // Check if we already sent a reminder today
+        const reminder = db.get('SELECT * FROM late_reminders WHERE user_id = ? AND day_id = ?', [e.user_id, day.id]);
+        const lastSentMs = reminder ? new Date(reminder.last_sent_at).getTime() : 0;
+        const hoursSinceLast = (now - lastSentMs) / (3600 * 1000);
+        if (reminder && hoursSinceLast < 20) continue; // send at most once per ~day
+        // Compose email
+        const isFirst = !reminder;
+        const subject = isFirst
+          ? `⚠️ Ngày ${day.day_number} thử thách chưa hoàn thành — ${e.challenge_title}`
+          : `🔔 Nhắc nhở: Ngày ${day.day_number} vẫn đang chờ bạn nộp bài`;
+        const bodyIntro = isFirst
+          ? `<p>Xin chào <strong>${e.first_name}</strong>,</p>
+             <p>Thử thách ngày thứ <strong>${day.day_number}</strong> đã hết hạn mà chưa thấy bài nộp từ bạn. Mặc dù thử thách <strong>không còn được tính là hoàn thành đúng hạn</strong>, bạn <strong>vẫn phải nộp bài</strong> để mở khóa ngày tiếp theo.</p>`
+          : `<p>Xin chào <strong>${e.first_name}</strong>,</p>
+             <p>Bạn vẫn chưa nộp bài ngày thứ <strong>${day.day_number}</strong>. Hãy hoàn thành để tiếp tục hành trình nhé!</p>`;
+        await sendEmail({
+          to: e.email,
+          subject,
+          html: emailWrap(isFirst ? 'Thử thách chưa hoàn thành đúng hạn' : 'Nhắc nhở nộp bài', `
+            ${bodyIntro}
+            <div class="rule">
+              📅 <strong>${e.challenge_title}</strong><br>
+              Ngày ${day.day_number}: <strong>${day.title}</strong>
+            </div>
+            <p>Dù trễ hạn, bài nộp của bạn vẫn được chấp nhận. Ngày tiếp theo sẽ mở sau khi bài được duyệt.</p>
+            <a class="btn" href="https://aiagentscc.com/challenge-day-detail.html?challenge_id=${e.challenge_id}&day_id=${day.id}">Nộp bài ngay</a>
+          `)
+        });
+        // Update late_reminders table
+        if (reminder) {
+          db.run(
+            "UPDATE late_reminders SET last_sent_at = datetime('now','localtime'), sent_count = sent_count + 1 WHERE id = ?",
+            [reminder.id]
+          );
+        } else {
+          db.run(
+            'INSERT INTO late_reminders (user_id, challenge_id, day_id) VALUES (?,?,?)',
+            [e.user_id, e.challenge_id, day.id]
+          );
+        }
+      }
+    }
+  }, 60 * 60 * 1000); // check every hour
 
   // ── Start ──────────────────────────────────────────────────
   app.listen(PORT, () => {

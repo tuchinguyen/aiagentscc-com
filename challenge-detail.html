@@ -49,19 +49,19 @@
 .days-section { margin-bottom:24px; }
 .days-section h2 { font-size:var(--fs-md);font-weight:700;color:var(--text);margin-bottom:12px;display:flex;align-items:center;gap:8px; }
 .days-section h2 span { font-size:var(--fs-sm);font-weight:500;color:var(--text-muted); }
-.days-grid { display:grid;grid-template-columns:repeat(auto-fill, minmax(260px, 1fr));gap:10px; }
+.days-grid { display:grid;grid-template-columns:1fr;gap:10px; }
 
 .day-card {
   background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);
   padding:14px 16px;display:flex;gap:12px;align-items:flex-start;
   transition:box-shadow .15s,border-color .15s,transform .15s;cursor:pointer;
 }
-.day-card:hover:not(.locked):not(.missed) { box-shadow:var(--shadow-sm); }
+.day-card:hover:not(.locked) { box-shadow:var(--shadow-sm); }
 .day-card.done     { border-left:3px solid var(--accent-green); }
 .day-card.active   { border-left:3px solid var(--color-primary);box-shadow:0 0 0 1px rgba(14,165,233,.2),var(--shadow-sm); }
 .day-card.pending  { border-left:3px solid #f59e0b; }
 .day-card.revision { border-left:3px solid #ef4444; }
-.day-card.missed   { border-left:3px solid #cbd5e1;opacity:.7;cursor:default; }
+.day-card.missed   { border-left:3px solid #cbd5e1;opacity:.7; }
 .day-card.locked   { opacity:.5;cursor:not-allowed; }
 .day-card.active:hover { box-shadow:0 0 0 1px rgba(14,165,233,.3),var(--shadow-md);transform:translateY(-1px); }
 .day-card-num { width:36px;height:36px;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-size:var(--fs-sm);font-weight:700;flex-shrink:0; }
@@ -74,86 +74,19 @@
 .day-card-body { flex:1;min-width:0; }
 .day-card-title { font-size:var(--fs-sm);font-weight:600;color:var(--text);margin-bottom:3px; }
 .day-card.locked .day-card-title { color:var(--text-muted); }
-.day-card.missed .day-card-title { color:var(--text-muted); }
+.day-card.missed .day-card-title { color:var(--text); }
 .day-card-desc { font-size:var(--fs-xs);color:var(--text-muted);line-height:1.5; }
 .day-card-status { font-size:11px;font-weight:600;margin-top:6px;display:flex;align-items:center;gap:4px; }
 .day-card.done     .day-card-status { color:var(--accent-green); }
 .day-card.active   .day-card-status { color:var(--color-primary); }
 .day-card.pending  .day-card-status { color:#d97706; }
 .day-card.revision .day-card-status { color:#dc2626; }
-.day-card.missed   .day-card-status { color:#94a3b8; }
+.day-card.missed   .day-card-status { color:#ef4444; }
 .day-card.locked   .day-card-status { color:var(--text-light); }
 .day-card-xp { font-size:10px;font-weight:600;color:var(--accent-green);background:#d1fae5;border-radius:99px;padding:2px 7px;align-self:flex-start;flex-shrink:0;margin-top:2px; }
 .day-card.missed .day-card-xp { background:#f1f5f9;color:#94a3b8; }
 
-/* ── Modal ────────────────────────────────────────── */
-.modal-overlay {
-  display:none;position:fixed;inset:0;background:rgba(15,23,42,.6);
-  z-index:200;align-items:center;justify-content:center;padding:16px;
-  backdrop-filter:blur(2px);
-}
-.modal-overlay.open { display:flex; }
-.modal-card {
-  background:#fff;border-radius:16px;width:100%;max-width:640px;
-  max-height:90vh;overflow:hidden;display:flex;flex-direction:column;
-  box-shadow:0 24px 48px rgba(0,0,0,.18);
-  animation:modalIn .2s ease;
-}
-@keyframes modalIn { from { transform:translateY(12px);opacity:0; } to { transform:translateY(0);opacity:1; } }
 
-.modal-header {
-  padding:20px 24px 16px;border-bottom:1px solid var(--border);
-  display:flex;align-items:flex-start;gap:12px;flex-shrink:0;
-}
-.modal-day-badge {
-  background:var(--color-primary);color:#fff;border-radius:var(--radius-sm);
-  padding:4px 10px;font-size:var(--fs-xs);font-weight:700;white-space:nowrap;flex-shrink:0;margin-top:3px;
-}
-.modal-header-text { flex:1;min-width:0; }
-.modal-header-text h2 { font-size:var(--fs-lg);font-weight:700;color:var(--text);line-height:1.3; }
-.modal-header-text p { font-size:var(--fs-sm);color:var(--text-muted);margin-top:4px;line-height:1.5; }
-.modal-close { width:32px;height:32px;border:none;background:var(--bg-hover);border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:18px;color:var(--text-muted);flex-shrink:0;transition:background .15s; }
-.modal-close:hover { background:var(--border);color:var(--text); }
-
-.modal-body { padding:20px 24px;overflow-y:auto;flex:1; }
-
-.modal-instructions {
-  background:var(--bg-hover);border-radius:var(--radius-md);
-  padding:14px 16px;margin-bottom:20px;
-  font-size:var(--fs-sm);color:var(--text);line-height:1.7;
-  white-space:pre-wrap;
-}
-.modal-instructions-label { font-size:var(--fs-xs);font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px; }
-
-.modal-status-box {
-  border-radius:var(--radius-md);padding:14px 16px;margin-bottom:16px;
-}
-.modal-status-box.pending  { background:#fffbeb;border:1px solid #fde68a; }
-.modal-status-box.approved { background:#f0fdf4;border:1px solid #86efac; }
-.modal-status-box.revision { background:#fef2f2;border:1px solid #fca5a5; }
-.modal-status-label { font-size:var(--fs-xs);font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px; }
-.modal-status-box.pending  .modal-status-label { color:#d97706; }
-.modal-status-box.approved .modal-status-label { color:#16a34a; }
-.modal-status-box.revision .modal-status-label { color:#dc2626; }
-.modal-status-content { font-size:var(--fs-sm);color:var(--text);line-height:1.6;white-space:pre-wrap; }
-
-.modal-submit-label { font-size:var(--fs-xs);font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px; }
-.modal-textarea {
-  width:100%;min-height:120px;padding:12px 14px;
-  border:1px solid var(--border);border-radius:var(--radius-md);
-  font-family:var(--font-body);font-size:var(--fs-sm);color:var(--text);
-  resize:vertical;outline:none;transition:border-color .15s;line-height:1.6;
-}
-.modal-textarea:focus { border-color:var(--color-primary); }
-
-.modal-footer {
-  padding:14px 24px;border-top:1px solid var(--border);
-  display:flex;align-items:center;justify-content:flex-end;gap:10px;flex-shrink:0;
-}
-.modal-xp-badge {
-  margin-right:auto;font-size:var(--fs-xs);font-weight:700;color:var(--accent-green);
-  background:#d1fae5;border-radius:99px;padding:4px 10px;
-}
 </style>
 </head>
 <body>
@@ -349,21 +282,6 @@
   </a>
 </nav>
 
-<!-- ── Day Modal ─────────────────────────────────────────── -->
-<div class="modal-overlay" id="dayModal" onclick="handleModalOverlayClick(event)">
-  <div class="modal-card">
-    <div class="modal-header">
-      <div class="modal-day-badge">Ngày <span id="mDayNum"></span></div>
-      <div class="modal-header-text">
-        <h2 id="mDayTitle"></h2>
-        <p id="mDayDesc"></p>
-      </div>
-      <button class="modal-close" onclick="closeModal()" aria-label="Đóng">×</button>
-    </div>
-    <div class="modal-body" id="mBody"></div>
-    <div class="modal-footer" id="mFooter"></div>
-  </div>
-</div>
 
 <script src="assets/js/app.js"></script>
 <script>
@@ -382,7 +300,6 @@ function getLevel(xp) { for(let i=LEVELS.length-1;i>=0;i--) if(xp>=LEVELS[i].xpM
 let currentUser = null;
 let challengeId = null;
 let challengeData = null; // { challenge, days, submissions, enrollment }
-let modalDay = null;
 
 // Auth
 (function() {
@@ -559,14 +476,14 @@ function renderDayCard(day, days, submissions, enrollment) {
     </div>`;
   }
 
-  // Missed: hiện tên + nội dung nhưng không clickable nộp bài
+  // Missed: hiện tên + nội dung, vẫn xem được hướng dẫn
   if (cls === 'missed') {
-    return `<div class="day-card missed" id="dc-${day.id}" onclick="openModal(${day.id})">
+    return `<div class="day-card missed" id="dc-${day.id}" onclick="location.href='challenge-day-detail.html?challenge_id=${challengeId}&day_id=${day.id}'">
       <div class="day-card-num">${day.day_number}</div>
       <div class="day-card-body">
         <div class="day-card-title">${day.title}</div>
         <div class="day-card-desc">${day.description||''}</div>
-        <div class="day-card-status">❌ Không hoàn thành</div>
+        <div class="day-card-status">⚠️ Trễ hạn — Cần nộp bài</div>
       </div>
       <div class="day-card-xp">+0 XP</div>
     </div>`;
@@ -592,7 +509,7 @@ function renderDayCard(day, days, submissions, enrollment) {
     </div>`;
   }
 
-  return `<div class="day-card ${cls}" onclick="openModal(${day.id})" id="dc-${day.id}">
+  return `<div class="day-card ${cls}" onclick="location.href='challenge-day-detail.html?challenge_id=${challengeId}&day_id=${day.id}'" id="dc-${day.id}">
     <div class="day-card-num">${day.day_number}</div>
     <div class="day-card-body">
       <div class="day-card-title">${day.title}</div>
@@ -634,125 +551,6 @@ function setWeek(num, btn) {
   });
   document.querySelectorAll('.week-tab').forEach(t => t.classList.remove('active'));
   btn.classList.add('active');
-}
-
-// ── Modal ─────────────────────────────────────────────────
-function openModal(dayId) {
-  if (!challengeData) return;
-  const { challenge, days, submissions, enrollment } = challengeData;
-  const day = days.find(d => d.id === dayId);
-  if (!day) return;
-  modalDay = day;
-  const cls = getDayClass(day, days, submissions, enrollment);
-  const sub = submissions[day.id];
-
-  document.getElementById('mDayNum').textContent = day.day_number;
-  document.getElementById('mDayTitle').textContent = day.title;
-  document.getElementById('mDayDesc').textContent = day.description || '';
-
-  let bodyHtml = '';
-  if (day.instructions) {
-    bodyHtml += `<div class="modal-instructions">
-      <div class="modal-instructions-label">📋 Hướng dẫn</div>
-      ${escHtml(day.instructions)}
-    </div>`;
-  }
-
-  if (cls === 'done' && sub) {
-    bodyHtml += `<div class="modal-status-box approved">
-      <div class="modal-status-label">✅ Bài đã được duyệt</div>
-      <div class="modal-status-content">${escHtml(sub.content)}</div>
-    </div>`;
-  } else if (cls === 'pending' && sub) {
-    bodyHtml += `<div class="modal-status-box pending">
-      <div class="modal-status-label">⏳ Đang chờ duyệt</div>
-      <div class="modal-status-content">${escHtml(sub.content)}</div>
-    </div>`;
-  } else if (cls === 'revision' && sub) {
-    bodyHtml += `<div class="modal-status-box revision">
-      <div class="modal-status-label">⚠️ Cần chỉnh sửa</div>
-      <div class="modal-status-content" style="color:#dc2626;margin-bottom:10px;">${escHtml(sub.admin_note||'Vui lòng chỉnh sửa và nộp lại.')}</div>
-      <div style="border-top:1px solid #fca5a5;padding-top:10px;font-size:var(--fs-xs);color:#64748b;">Bài nộp trước của bạn:</div>
-      <div class="modal-status-content" style="margin-top:6px;">${escHtml(sub.content)}</div>
-    </div>
-    <div class="modal-submit-label" style="margin-top:16px;">✏️ Nộp lại bài</div>
-    <textarea class="modal-textarea" id="mTextarea" placeholder="Chỉnh sửa và nhập nội dung bài nộp của bạn...">${escHtml(sub.content)}</textarea>`;
-  } else if (cls === 'active') {
-    const { closeMs } = getDayWindow(day, enrollment);
-    const remain = closeMs - Date.now();
-    const urgent = remain < 3 * 3600000;
-    const closeFmt = new Date(closeMs).toLocaleString('vi-VN', { weekday:'long', day:'2-digit', month:'2-digit', year:'numeric', hour:'2-digit', minute:'2-digit' });
-    bodyHtml += `<div style="margin-bottom:12px;padding:10px 14px;background:${urgent?'#fee2e2':'#fef3c7'};border-radius:8px;font-size:var(--fs-xs);color:${urgent?'#991b1b':'#92400e'};line-height:1.8;">
-      🕐 <strong>Hết hạn nộp bài:</strong> ${closeFmt}<br>
-      ⏳ Còn lại: <strong>${fmtCountdown(remain)}</strong>
-    </div>`;
-    bodyHtml += `<div class="modal-submit-label">✏️ Nội dung bài nộp</div>
-    <textarea class="modal-textarea" id="mTextarea" placeholder="Nhập nội dung bài nộp của bạn tại đây..."></textarea>`;
-  } else if (cls === 'missed') {
-    bodyHtml += `<div style="padding:16px;background:#f8fafc;border-radius:var(--radius-md);font-size:var(--fs-sm);color:#64748b;text-align:center;">
-      ❌ Bạn đã không nộp bài trong thời gian quy định.<br>
-      <span style="font-size:var(--fs-xs);margin-top:6px;display:block;color:#94a3b8;">Ngày này được tính là không hoàn thành.</span>
-    </div>`;
-  }
-
-  document.getElementById('mBody').innerHTML = bodyHtml;
-
-  let footerHtml = `<span class="modal-xp-badge">+${cls === 'done' ? day.xp_reward : 0} XP</span>`;
-  if (cls === 'active' || cls === 'revision') {
-    footerHtml += `<button class="btn btn-secondary" onclick="closeModal()">Hủy</button>
-      <button class="btn btn-primary" id="mSubmitBtn" onclick="submitDay(${day.id})">
-        <span id="mSubmitText">Nộp bài</span>
-      </button>`;
-  } else {
-    footerHtml += `<button class="btn btn-primary" onclick="closeModal()">Đóng</button>`;
-  }
-  document.getElementById('mFooter').innerHTML = footerHtml;
-
-  document.getElementById('dayModal').classList.add('open');
-  document.body.style.overflow = 'hidden';
-}
-
-function closeModal() {
-  document.getElementById('dayModal').classList.remove('open');
-  document.body.style.overflow = '';
-  modalDay = null;
-}
-
-function handleModalOverlayClick(e) {
-  if (e.target === document.getElementById('dayModal')) closeModal();
-}
-
-async function submitDay(dayId) {
-  const textarea = document.getElementById('mTextarea');
-  if (!textarea) return;
-  const content = textarea.value.trim();
-  if (!content) { textarea.focus(); textarea.style.borderColor = '#ef4444'; return; }
-  textarea.style.borderColor = '';
-
-  const btn = document.getElementById('mSubmitBtn');
-  const txt = document.getElementById('mSubmitText');
-  btn.disabled = true;
-  txt.textContent = 'Đang nộp...';
-
-  try {
-    const res  = await fetch(`${API}/challenges/${challengeId}/days/${dayId}/submit`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ user_id: currentUser.id, content }),
-    });
-    const data = await res.json();
-    if (!res.ok) { alert(data.error); btn.disabled = false; txt.textContent = 'Nộp bài'; return; }
-    closeModal();
-    await loadDetail(); // refresh
-  } catch(e) {
-    alert('Lỗi kết nối server.');
-    btn.disabled = false;
-    txt.textContent = 'Nộp bài';
-  }
-}
-
-function escHtml(s) {
-  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
 // ── Challenge leaderboard widget ──────────────────────────

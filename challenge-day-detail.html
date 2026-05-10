@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chi tiết ngày thử thách — AI AGENTS CC</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/base.css">
+<link rel="stylesheet" href="assets/css/components.css">
+<link rel="stylesheet" href="assets/css/layout.css">
+<style>
+/* ── Hero ── */
+.challenge-hero {
+  background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 50%, #0c4a6e 100%);
+  border-radius: var(--radius-lg); padding: 28px 32px;
+  margin-bottom: 20px; color: #fff; position: relative; overflow: hidden;
+}
+.challenge-hero::before {
+  content: ''; position: absolute; inset: 0;
+  background-image: linear-gradient(rgba(14,165,233,.06) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(14,165,233,.06) 1px,transparent 1px);
+  background-size: 32px 32px;
+}
+.challenge-hero-content { position: relative; z-index: 1; }
+.challenge-back {
+  display:inline-flex;align-items:center;gap:5px;font-size:var(--fs-xs);
+  color:#94a3b8;text-decoration:none;margin-bottom:14px;transition:color .15s;
+}
+.challenge-back:hover { color:#fff; }
+.day-hero-badge {
+  display:inline-flex;align-items:center;gap:6px;
+  background:rgba(14,165,233,.2);border:1px solid rgba(14,165,233,.3);
+  border-radius:99px;padding:5px 14px;
+  font-size:var(--fs-sm);font-weight:700;color:#7dd3fc;
+  margin-bottom:12px;
+}
+.day-hero-title {
+  font-family:var(--font-heading);font-size:clamp(20px,3vw,28px);
+  font-weight:800;color:#fff;line-height:1.25;margin-bottom:8px;
+}
+.day-hero-desc {
+  font-size:var(--fs-sm);color:#94a3b8;line-height:1.7;
+  max-width:520px;margin-bottom:18px;
+}
+.day-hero-meta { display:flex;gap:10px;flex-wrap:wrap;align-items:center; }
+.day-xp-badge {
+  display:inline-flex;align-items:center;gap:5px;
+  background:rgba(16,185,129,.2);border:1px solid rgba(16,185,129,.3);
+  border-radius:99px;padding:5px 13px;
+  font-size:var(--fs-xs);font-weight:700;color:#6ee7b7;
+}
+.day-status-badge {
+  display:inline-flex;align-items:center;gap:5px;
+  border-radius:99px;padding:5px 13px;
+  font-size:var(--fs-xs);font-weight:700;
+}
+.day-status-badge.done     { background:rgba(16,185,129,.2);color:#6ee7b7; }
+.day-status-badge.active   { background:rgba(14,165,233,.2);color:#7dd3fc; }
+.day-status-badge.pending  { background:rgba(245,158,11,.2);color:#fcd34d; }
+.day-status-badge.revision { background:rgba(239,68,68,.2);color:#fca5a5; }
+.day-status-badge.missed   { background:rgba(239,68,68,.15);color:#fca5a5; }
+.day-status-badge.locked   { background:rgba(148,163,184,.1);color:#64748b; }
+
+/* ── Content sections ── */
+.day-section {
+  background:var(--bg-card);border:1px solid var(--border);
+  border-radius:var(--radius-lg);padding:22px 24px;margin-bottom:16px;
+}
+.day-section-title {
+  font-family:var(--font-heading);font-size:var(--fs-md);font-weight:700;
+  color:var(--text);margin-bottom:16px;display:flex;align-items:center;gap:10px;
+  padding-bottom:14px;border-bottom:1px solid var(--border);
+}
+.section-num {
+  width:26px;height:26px;border-radius:50%;
+  background:var(--color-primary);color:#fff;
+  display:flex;align-items:center;justify-content:center;
+  font-size:var(--fs-xs);font-weight:700;flex-shrink:0;
+}
+
+/* ── Section 1: Description ── */
+.day-description {
+  font-size:var(--fs-base);color:var(--text);line-height:1.8;
+}
+
+/* ── Section 2: SOP ── */
+.sop-block { font-size:var(--fs-sm);color:var(--text);line-height:1.8; }
+.sop-step {
+  display:flex;gap:10px;align-items:flex-start;
+  padding:8px 0;border-bottom:1px solid var(--border);
+}
+.sop-step:last-child { border-bottom:none; }
+.sop-step-num {
+  min-width:24px;height:24px;border-radius:50%;
+  background:var(--color-primary);color:#fff;
+  display:flex;align-items:center;justify-content:center;
+  font-size:var(--fs-xs);font-weight:700;flex-shrink:0;margin-top:2px;
+}
+.sop-bullet {
+  display:flex;gap:10px;align-items:flex-start;padding:5px 0;
+}
+.sop-bullet-dot {
+  color:var(--color-primary);font-size:18px;line-height:1.2;
+  flex-shrink:0;margin-top:-1px;font-weight:700;
+}
+.sop-subheader {
+  font-weight:700;color:var(--text);padding:8px 0 4px;font-size:var(--fs-sm);
+}
+.sop-plain {
+  padding:3px 0;color:var(--text-muted);font-size:var(--fs-sm);line-height:1.7;
+}
+.sop-empty { height:6px; }
+
+/* ── Section 3: Submission guide ── */
+.submit-guide-list { list-style:none;padding:0;margin:0; }
+.submit-guide-item {
+  display:flex;gap:10px;padding:9px 0;
+  border-bottom:1px solid var(--border);
+  font-size:var(--fs-sm);color:var(--text);line-height:1.6;
+}
+.submit-guide-item:last-child { border-bottom:none; }
+.submit-guide-arrow {
+  color:var(--color-primary);font-weight:700;flex-shrink:0;margin-top:1px;
+}
+.approval-criteria {
+  margin-top:16px;padding:13px 16px;
+  background:#f0fdf4;border:1px solid #86efac;border-radius:var(--radius-md);
+  font-size:var(--fs-sm);color:#166534;line-height:1.7;
+}
+.approval-criteria-label {
+  display:block;font-size:var(--fs-xs);font-weight:700;
+  text-transform:uppercase;letter-spacing:.06em;color:#16a34a;margin-bottom:6px;
+}
+.no-guide { font-size:var(--fs-sm);color:var(--text-muted);padding:4px 0; }
+
+/* ── Section 4: Submission ── */
+.submit-textarea {
+  width:100%;min-height:140px;padding:13px 15px;
+  border:1px solid var(--border);border-radius:var(--radius-md);
+  font-family:var(--font-body);font-size:var(--fs-sm);color:var(--text);
+  resize:vertical;outline:none;transition:border-color .15s,box-shadow .15s;
+  line-height:1.7;box-sizing:border-box;
+}
+.submit-textarea:focus {
+  border-color:var(--color-primary);
+  box-shadow:0 0 0 3px rgba(14,165,233,.1);
+}
+.submit-textarea.error { border-color:#ef4444; }
+.submit-label {
+  font-size:var(--fs-xs);font-weight:700;color:var(--text-muted);
+  text-transform:uppercase;letter-spacing:.06em;margin-bottom:9px;
+}
+.submit-actions {
+  display:flex;justify-content:flex-end;gap:10px;margin-top:14px;
+}
+.deadline-warn {
+  border-radius:var(--radius-md);padding:11px 15px;
+  font-size:var(--fs-xs);line-height:1.85;margin-bottom:16px;
+}
+.deadline-warn.urgent { background:#fee2e2;color:#991b1b; }
+.deadline-warn.normal { background:#fef3c7;color:#92400e; }
+.status-card {
+  border-radius:var(--radius-md);padding:16px 18px;margin-bottom:14px;
+}
+.status-card.approved { background:#f0fdf4;border:1px solid #86efac; }
+.status-card.pending  { background:#fffbeb;border:1px solid #fde68a; }
+.status-card.revision { background:#fef2f2;border:1px solid #fca5a5; }
+.status-card-label {
+  font-size:var(--fs-xs);font-weight:700;text-transform:uppercase;
+  letter-spacing:.06em;margin-bottom:9px;
+}
+.status-card.approved .status-card-label { color:#16a34a; }
+.status-card.pending  .status-card-label { color:#d97706; }
+.status-card.revision .status-card-label { color:#dc2626; }
+.status-card-content {
+  font-size:var(--fs-sm);color:var(--text);line-height:1.7;white-space:pre-wrap;
+}
+.empty-state {
+  text-align:center;padding:28px 16px;
+}
+.empty-state-icon { font-size:42px;margin-bottom:12px; }
+.empty-state-title {
+  font-size:var(--fs-sm);font-weight:600;color:var(--text);margin-bottom:6px;
+}
+.empty-state-desc { font-size:var(--fs-xs);color:var(--text-muted);line-height:1.6; }
+</style>
+</head>
+<body>
+
+<div id="app">
+  <aside id="sidebar">
+    <div id="sidebar-logo">
+      <div class="sidebar-logo-mark">
+        <svg viewBox="0 0 20 20" fill="none">
+          <circle cx="10" cy="10" r="3" fill="currentColor"/>
+          <path d="M10 3v2M10 15v2M3 10h2M15 10h2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <path d="M5.5 5.5l1.5 1.5M13 13l1.5 1.5M14.5 5.5L13 7M7 13l-1.5 1.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="sidebar-logo-text">AI AGENTS <span>CC</span></div>
+    </div>
+    <nav id="sidebar-nav">
+      <div class="nav-section-label">Cộng đồng</div>
+      <a href="feed.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
+        </svg>
+        Bảng tin
+      </a>
+      <a href="cot.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+        </svg>
+        CÔT
+      </a>
+      <a href="signal.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+        </svg>
+        Tín hiệu
+      </a>
+      <a href="qa.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <path d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        Hỏi đáp
+      </a>
+      <div class="nav-section-label" style="margin-top:8px;">Học tập</div>
+      <a href="courses.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
+        </svg>
+        Khóa học
+      </a>
+      <a href="challenge.html" class="nav-item active">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <path d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z" />
+        </svg>
+        Challenge
+      </a>
+      <a href="leaderboard.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <path d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" stroke-linecap="round" />
+        </svg>
+        Leaderboard
+      </a>
+      <div class="nav-section-label" style="margin-top:8px;">Khác</div>
+      <a href="marketplace.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z" />
+        </svg>
+        Marketplace
+      </a>
+      <a href="members.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
+        </svg>
+        Thành viên
+      </a>
+    </nav>
+    <div id="sidebar-user">
+      <div class="user-avatar-wrap">
+        <div class="avatar-placeholder avatar-md" id="sbAvatar" style="background:#7c3aed;"></div>
+        <div class="user-status-dot"></div>
+      </div>
+      <div class="user-info">
+        <div class="user-name" id="sbName">—</div>
+        <div class="user-level" id="sbLevel">—</div>
+      </div>
+      <a href="index.html" class="icon-btn" title="Đăng xuất" style="margin-left:auto;" onclick="doLogout()">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4" />
+          <polyline points="16 17 21 12 16 7" />
+          <line x1="21" y1="12" x2="9" y2="12" />
+        </svg>
+      </a>
+    </div>
+  </aside>
+
+  <div id="main">
+    <div id="mobile-topbar">
+      <button class="mob-menu-btn" onclick="openSidebar()" aria-label="Menu">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+        </svg>
+      </button>
+      <span style="flex:1;font-size:var(--fs-md);font-weight:600;color:var(--text)" id="mobTitle">Chi tiết ngày</span>
+    </div>
+    <div id="topbar">
+      <div class="topbar-title" id="topbarTitle">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="width:17px;height:17px"><path d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z"/></svg>
+        Đang tải...
+      </div>
+      <div class="topbar-right">
+        <a href="#" class="icon-btn" aria-label="Thông báo">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <div id="content-row">
+      <main id="feed">
+
+        <!-- Hero -->
+        <div class="challenge-hero">
+          <div class="challenge-hero-content">
+            <a href="#" class="challenge-back" id="backLink">
+              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" width="14" height="14" stroke-linecap="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+              Quay về thử thách
+            </a>
+            <div class="day-hero-badge" id="heroDayBadge">Ngày thứ —</div>
+            <h1 class="day-hero-title" id="heroDayTitle">Đang tải...</h1>
+            <p class="day-hero-desc" id="heroDayDesc"></p>
+            <div class="day-hero-meta">
+              <div class="day-xp-badge" id="heroXpBadge">+— XP</div>
+              <div class="day-status-badge" id="heroStatusBadge"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 1: Nội dung nhiệm vụ -->
+        <div class="day-section">
+          <div class="day-section-title">
+            <div class="section-num">1</div>
+            📋 Nội dung nhiệm vụ
+          </div>
+          <div class="day-description" id="dayDescContent">Đang tải...</div>
+        </div>
+
+        <!-- Section 2: SOP -->
+        <div class="day-section">
+          <div class="day-section-title">
+            <div class="section-num">2</div>
+            🛠 SOP — Hướng dẫn chi tiết
+          </div>
+          <div class="sop-block" id="sopContent">Đang tải...</div>
+        </div>
+
+        <!-- Section 3: Hướng dẫn nộp bài -->
+        <div class="day-section">
+          <div class="day-section-title">
+            <div class="section-num">3</div>
+            📬 Hướng dẫn nộp bài
+          </div>
+          <div id="nobaiContent">Đang tải...</div>
+          <div class="approval-criteria" id="approvalBlock" style="display:none;">
+            <span class="approval-criteria-label">✅ Được duyệt khi</span>
+            <span id="approvalText"></span>
+          </div>
+        </div>
+
+        <!-- Section 4: Nộp bài -->
+        <div class="day-section">
+          <div class="day-section-title">
+            <div class="section-num">4</div>
+            ✍️ Nộp bài
+          </div>
+          <div id="submissionSection">Đang tải...</div>
+        </div>
+
+      </main>
+
+      <aside id="right-panel">
+        <div class="rp-card" id="myProgress">
+          <div style="text-align:center;padding:16px 0;color:var(--text-muted);font-size:var(--fs-sm)">Đang tải...</div>
+        </div>
+        <div class="rp-card" style="background:linear-gradient(135deg,#fffbeb,#fef3c7);border-color:#fde68a;">
+          <p class="widget-title" style="color:#92400e;">💡 TIPS HÔM NAY</p>
+          <p style="font-size:var(--fs-xs);color:#78716c;line-height:1.6;">
+            Đọc kỹ SOP trước khi làm. Mỗi task đều có hướng dẫn chi tiết từng bước — chỉ cần làm theo là đủ. Nộp bài có link và ảnh chứng minh để được duyệt nhanh nhất.
+          </p>
+        </div>
+      </aside>
+    </div>
+  </div>
+</div>
+
+<div id="mob-overlay"></div>
+<div id="mob-sidebar">
+  <div style="padding:14px 16px;border-bottom:1px solid var(--border);font-size:var(--fs-md);font-weight:700;color:var(--text);">Menu</div>
+  <nav style="flex:1;overflow-y:auto;padding:8px;">
+    <a href="feed.html" class="nav-item">Bảng tin</a>
+    <a href="challenge.html" class="nav-item">Challenge</a>
+    <a href="leaderboard.html" class="nav-item">Leaderboard</a>
+    <a href="members.html" class="nav-item">Thành viên</a>
+  </nav>
+</div>
+
+<nav id="mobile-nav">
+  <a href="feed.html" class="mob-nav-btn">
+    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
+    Home
+  </a>
+  <a href="challenge.html" class="mob-nav-btn active">
+    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z"/></svg>
+    Challenge
+  </a>
+  <a href="leaderboard.html" class="mob-nav-btn">
+    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 12l2 2 4-4"/></svg>
+    BXH
+  </a>
+</nav>
+
+<script src="assets/js/app.js"></script>
+<script>
+const API = '/api';
+const AV_COLORS = ['#0ea5e9','#8b5cf6','#10b981','#f59e0b','#ec4899','#3b82f6','#ef4444','#14b8a6'];
+const LEVELS = [
+  {level:1,name:'Khởi động',xpMin:0,xpMax:45},{level:2,name:'Học viên',xpMin:45,xpMax:120},
+  {level:3,name:'Thực hành',xpMin:120,xpMax:250},{level:4,name:'Nâng cao',xpMin:250,xpMax:450},
+  {level:5,name:'Chuyên gia',xpMin:450,xpMax:700},{level:6,name:'Master',xpMin:700,xpMax:1000},
+  {level:7,name:'Elite',xpMin:1000,xpMax:1500},{level:8,name:'Legend',xpMin:1500,xpMax:2200},
+  {level:9,name:'Grandmaster',xpMin:2200,xpMax:3000},
+];
+function getLevel(xp) { for(let i=LEVELS.length-1;i>=0;i--) if(xp>=LEVELS[i].xpMin) return LEVELS[i]; return LEVELS[0]; }
+
+let currentUser = null;
+let challengeId = null;
+let dayId = null;
+let challengeData = null;
+let currentDay = null;
+let countdownInterval = null;
+
+// ── Auth ──────────────────────────────────────────────────
+(function() {
+  const raw = sessionStorage.getItem('currentUser');
+  if (!raw) { window.location.href = 'index.html'; return; }
+  currentUser = JSON.parse(raw);
+  const initials = (currentUser.first_name[0] + (currentUser.last_name||'')[0]).toUpperCase();
+  const color = AV_COLORS[currentUser.id % AV_COLORS.length];
+  document.getElementById('sbAvatar').textContent = initials;
+  document.getElementById('sbAvatar').style.background = color;
+  document.getElementById('sbName').textContent = currentUser.first_name + ' ' + currentUser.last_name;
+  const lv = getLevel(currentUser.xp||0);
+  document.getElementById('sbLevel').textContent = lv.name + ' · Lv.' + lv.level;
+})();
+
+function doLogout() {
+  sessionStorage.removeItem('currentUser');
+  window.location.href = 'index.html';
+}
+
+// ── URL params ────────────────────────────────────────────
+const params = new URLSearchParams(location.search);
+challengeId = parseInt(params.get('challenge_id') || '1', 10);
+dayId       = parseInt(params.get('day_id')       || '0', 10);
+
+// ── Day status helpers (copied from challenge-detail.html) ─
+const DAY_MS = 24 * 3600 * 1000;
+
+function getDayWindow(day, enrollment) {
+  const startMs = new Date(enrollment.started_at).getTime();
+  return {
+    openMs:  startMs + (day.day_number - 1) * DAY_MS,
+    closeMs: startMs +  day.day_number      * DAY_MS,
+  };
+}
+
+function getDayClass(day, days, submissions, enrollment) {
+  if (!enrollment || enrollment.status !== 'approved' || !enrollment.started_at)
+    return 'locked';
+  const sub = submissions[day.id];
+  const { openMs, closeMs } = getDayWindow(day, enrollment);
+  const now = Date.now();
+  if (now < openMs) return 'locked';
+  if (sub) {
+    if (sub.status === 'approved')       return 'done';
+    if (sub.status === 'needs_revision') return 'revision';
+    return 'pending';
+  }
+  if (now > closeMs) return 'missed';
+  return 'active';
+}
+
+function fmtCountdown(ms) {
+  if (ms <= 0) return '0 giờ';
+  const h = Math.floor(ms / 3600000);
+  const m = Math.floor((ms % 3600000) / 60000);
+  if (h >= 24) return `${Math.floor(h/24)} ngày ${h%24} giờ`;
+  return m > 0 ? `${h} giờ ${m} phút` : `${h} giờ`;
+}
+
+function escHtml(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ── Text parsing ──────────────────────────────────────────
+function parseInstructions(instructions) {
+  const nobaiIdx = instructions.indexOf('\nNộp bài:');
+  const sopRaw = nobaiIdx >= 0
+    ? instructions.slice(0, nobaiIdx).trim()
+    : instructions.trim();
+  const afterNobai = nobaiIdx >= 0
+    ? instructions.slice(nobaiIdx + '\nNộp bài:'.length).trim()
+    : '';
+  const approvalMarker = '\n✅ Được duyệt khi:';
+  const approvalIdx = afterNobai.indexOf(approvalMarker);
+  return {
+    sopRaw,
+    submitLines: approvalIdx >= 0 ? afterNobai.slice(0, approvalIdx).trim() : afterNobai,
+    approvalText: approvalIdx >= 0 ? afterNobai.slice(approvalIdx + approvalMarker.length).trim() : '',
+  };
+}
+
+function renderSopLines(text) {
+  if (!text.trim()) {
+    return '<div class="sop-plain">Chưa có hướng dẫn chi tiết.</div>';
+  }
+  return text.split('\n').map(line => {
+    const trimmed = line.trim();
+    if (!trimmed) return '<div class="sop-empty"></div>';
+    const numMatch = trimmed.match(/^(\d+)\.\s+(.+)$/);
+    if (numMatch) {
+      return `<div class="sop-step">
+        <div class="sop-step-num">${numMatch[1]}</div>
+        <div>${escHtml(numMatch[2])}</div>
+      </div>`;
+    }
+    if (trimmed.startsWith('- ') || trimmed.startsWith('• ')) {
+      const content = trimmed.slice(2).trim();
+      return `<div class="sop-bullet">
+        <div class="sop-bullet-dot">·</div>
+        <div>${escHtml(content)}</div>
+      </div>`;
+    }
+    if (trimmed.endsWith(':') && trimmed.length < 60) {
+      return `<div class="sop-subheader">${escHtml(trimmed)}</div>`;
+    }
+    return `<div class="sop-plain">${escHtml(trimmed)}</div>`;
+  }).join('');
+}
+
+function renderSubmitGuideLines(text) {
+  if (!text.trim()) {
+    return '<p class="no-guide">Xem phần hướng dẫn bên trên để biết cần nộp gì.</p>';
+  }
+  const lines = text.split('\n').filter(l => l.trim());
+  return '<ul class="submit-guide-list">' +
+    lines.map(l => {
+      const content = l.trim().replace(/^[-•]\s*/, '');
+      return `<li class="submit-guide-item">
+        <span class="submit-guide-arrow">→</span>
+        <span>${escHtml(content)}</span>
+      </li>`;
+    }).join('') +
+    '</ul>';
+}
+
+// ── Render page ───────────────────────────────────────────
+function renderPage(data) {
+  const { challenge, days, submissions, enrollment } = data;
+  const day = days.find(d => d.id === dayId);
+
+  if (!day) {
+    document.getElementById('feed').innerHTML = `
+      <div style="padding:40px;text-align:center;">
+        <div style="font-size:var(--fs-lg);color:#ef4444;margin-bottom:12px;">⚠️ Không tìm thấy ngày này</div>
+        <a href="challenge-detail.html?id=${challengeId}" class="btn btn-secondary">← Quay về</a>
+      </div>`;
+    return;
+  }
+
+  currentDay = day;
+  const cls = getDayClass(day, days, submissions, enrollment);
+  const sub = submissions[day.id];
+
+  // Document title & topbar
+  document.title = `Ngày ${day.day_number}: ${day.title} — AI AGENTS CC`;
+  document.getElementById('topbarTitle').innerHTML = `<svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="width:17px;height:17px"><path d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z"/></svg>Ngày ${day.day_number} — ${day.title}`;
+  document.getElementById('mobTitle').textContent = `Ngày ${day.day_number}`;
+
+  // Back link
+  document.getElementById('backLink').href = `challenge-detail.html?id=${challengeId}`;
+
+  // Hero
+  document.getElementById('heroDayBadge').textContent = `Ngày thứ ${day.day_number}`;
+  document.getElementById('heroDayTitle').textContent = day.title;
+  document.getElementById('heroDayDesc').textContent  = day.description || '';
+  document.getElementById('heroXpBadge').textContent  = `+${day.xp_reward} XP`;
+
+  const statusLabels = {
+    done:     '✅ Đã hoàn thành',
+    active:   '🔥 Đang mở — chờ bài nộp',
+    pending:  '⏳ Đang chờ duyệt',
+    revision: '⚠️ Cần chỉnh sửa',
+    missed:   '⚠️ Trễ hạn — Cần nộp bài',
+    locked:   '🔒 Chưa mở',
+  };
+  const statusBadgeEl = document.getElementById('heroStatusBadge');
+  statusBadgeEl.textContent = statusLabels[cls] || '';
+  statusBadgeEl.className = `day-status-badge ${cls}`;
+
+  // Section 1: description
+  document.getElementById('dayDescContent').textContent = day.description || '—';
+
+  // Sections 2 & 3: parse instructions
+  const { sopRaw, submitLines, approvalText } = parseInstructions(day.instructions || '');
+  document.getElementById('sopContent').innerHTML   = renderSopLines(sopRaw);
+  document.getElementById('nobaiContent').innerHTML = renderSubmitGuideLines(submitLines);
+
+  if (approvalText) {
+    document.getElementById('approvalText').textContent = approvalText;
+    document.getElementById('approvalBlock').style.display = 'block';
+  }
+
+  // Section 4: submission
+  renderSubmissionSection(day, cls, sub, enrollment);
+
+  // Right panel: progress
+  const approved = Object.values(submissions).filter(s => s.status === 'approved').length;
+  renderMyProgress(approved, days.length);
+
+  // Countdown interval for active days
+  if (countdownInterval) clearInterval(countdownInterval);
+  if (cls === 'active' && enrollment && enrollment.started_at) {
+    countdownInterval = setInterval(() => {
+      const { closeMs } = getDayWindow(day, enrollment);
+      if (Date.now() > closeMs) {
+        clearInterval(countdownInterval);
+        location.reload();
+      } else {
+        const remain = closeMs - Date.now();
+        const urgent = remain < 3 * 3600000;
+        const warnEl = document.querySelector('.deadline-warn');
+        if (warnEl) {
+          warnEl.className = `deadline-warn ${urgent ? 'urgent' : 'normal'}`;
+          const closeFmt = new Date(closeMs).toLocaleString('vi-VN', {weekday:'long',day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});
+          warnEl.innerHTML = `🕐 <strong>Hết hạn nộp bài:</strong> ${closeFmt}<br>⏳ Còn lại: <strong>${fmtCountdown(remain)}</strong>`;
+        }
+      }
+    }, 60000);
+  }
+}
+
+// ── Submission section ────────────────────────────────────
+function renderSubmissionSection(day, cls, sub, enrollment) {
+  const container = document.getElementById('submissionSection');
+
+  if (cls === 'locked') {
+    container.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-state-icon">🔒</div>
+        <div class="empty-state-title">Nhiệm vụ chưa mở</div>
+        <div class="empty-state-desc">Ngày này sẽ mở sau khi bạn hoàn thành ngày trước đó.<br>Duy trì streak mỗi ngày để mở khóa nhiệm vụ tiếp theo.</div>
+      </div>`;
+    return;
+  }
+
+  if (cls === 'missed') {
+    container.innerHTML = `
+      <div style="background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.3);border-radius:10px;padding:14px 16px;margin-bottom:16px;display:flex;gap:10px;align-items:flex-start;">
+        <span style="font-size:18px;flex-shrink:0;">⚠️</span>
+        <div>
+          <div style="font-weight:700;color:#dc2626;font-size:var(--fs-sm);margin-bottom:4px;">Nộp bài không đúng thời hạn</div>
+          <div style="font-size:var(--fs-xs);color:#ef4444;line-height:1.6;">Thời hạn nộp bài đã qua nhưng bạn vẫn cần hoàn thành ngày này để mở khóa ngày tiếp theo. Bài nộp sẽ bị đánh dấu là <strong>trễ hạn</strong>.</div>
+        </div>
+      </div>
+      ${buildSubmitForm(day.id, 'Nộp bài (trễ hạn)', '')}`;
+    return;
+  }
+
+  if (cls === 'done' && sub) {
+    const lateBanner = sub.is_late ? `<div style="background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.2);border-radius:8px;padding:8px 12px;font-size:var(--fs-xs);color:#ef4444;margin-bottom:10px;">⚠️ Bài nộp trễ hạn — hoàn thành tốt dù muộn!</div>` : '';
+    container.innerHTML = `
+      ${lateBanner}
+      <div class="status-card approved">
+        <div class="status-card-label">✅ Bài đã được duyệt</div>
+        <div class="status-card-content">${escHtml(sub.content)}</div>
+      </div>
+      <div style="text-align:center;margin-top:8px;">
+        <a href="challenge-detail.html?id=${challengeId}" class="btn btn-secondary">← Quay về danh sách</a>
+      </div>`;
+    return;
+  }
+
+  if (cls === 'pending' && sub) {
+    const lateBanner = sub.is_late ? `<div style="background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.2);border-radius:8px;padding:8px 12px;font-size:var(--fs-xs);color:#ef4444;margin-bottom:10px;">⚠️ Bài nộp trễ hạn</div>` : '';
+    container.innerHTML = `
+      ${lateBanner}
+      <div class="status-card pending">
+        <div class="status-card-label">⏳ Đang chờ admin duyệt</div>
+        <div class="status-card-content">${escHtml(sub.content)}</div>
+      </div>
+      <div style="font-size:var(--fs-xs);color:var(--text-muted);text-align:center;margin-top:8px;">
+        Admin thường duyệt bài trong vòng 24 giờ.
+      </div>`;
+    return;
+  }
+
+  if (cls === 'revision' && sub) {
+    container.innerHTML = `
+      <div class="status-card revision">
+        <div class="status-card-label">⚠️ Cần chỉnh sửa</div>
+        <div class="status-card-content" style="color:#dc2626;margin-bottom:10px;">${escHtml(sub.admin_note || 'Vui lòng chỉnh sửa và nộp lại.')}</div>
+        <div style="border-top:1px solid #fca5a5;padding-top:10px;font-size:var(--fs-xs);color:#64748b;margin-bottom:6px;">Bài nộp trước của bạn:</div>
+        <div class="status-card-content">${escHtml(sub.content)}</div>
+      </div>
+      ${buildSubmitForm(day.id, 'Nộp lại bài', sub.content)}`;
+    return;
+  }
+
+  if (cls === 'active') {
+    const { closeMs } = getDayWindow(day, enrollment);
+    const remain = closeMs - Date.now();
+    const urgent = remain < 3 * 3600000;
+    const closeFmt = new Date(closeMs).toLocaleString('vi-VN', {
+      weekday:'long', day:'2-digit', month:'2-digit', year:'numeric',
+      hour:'2-digit', minute:'2-digit',
+    });
+    container.innerHTML = `
+      <div class="deadline-warn ${urgent ? 'urgent' : 'normal'}">
+        🕐 <strong>Hết hạn nộp bài:</strong> ${closeFmt}<br>
+        ⏳ Còn lại: <strong>${fmtCountdown(remain)}</strong>
+      </div>
+      ${buildSubmitForm(day.id, 'Nộp bài', '')}`;
+  }
+}
+
+function buildSubmitForm(dayDbId, btnLabel, prefill) {
+  return `
+    <div>
+      <div class="submit-label">✏️ Nội dung bài nộp</div>
+      <textarea class="submit-textarea" id="submitTextarea"
+        placeholder="Nhập link website, ảnh chụp màn hình (Google Drive), hoặc mô tả chi tiết bài làm của bạn..."
+      >${escHtml(prefill || '')}</textarea>
+    </div>
+    <div class="submit-actions">
+      <a href="challenge-detail.html?id=${challengeId}" class="btn btn-secondary">Hủy</a>
+      <button class="btn btn-primary" id="submitBtn" onclick="handleSubmit(${dayDbId})">
+        <span id="submitBtnText">${btnLabel}</span>
+      </button>
+    </div>`;
+}
+
+async function handleSubmit(dayDbId) {
+  const textarea = document.getElementById('submitTextarea');
+  if (!textarea) return;
+  const content = textarea.value.trim();
+  if (!content) {
+    textarea.classList.add('error');
+    textarea.focus();
+    return;
+  }
+  textarea.classList.remove('error');
+
+  const btn  = document.getElementById('submitBtn');
+  const text = document.getElementById('submitBtnText');
+  btn.disabled = true;
+  text.textContent = 'Đang nộp...';
+
+  try {
+    const res = await fetch(`${API}/challenges/${challengeId}/days/${dayDbId}/submit`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ user_id: currentUser.id, content }),
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      alert(data.error);
+      btn.disabled = false;
+      text.textContent = 'Nộp bài';
+      return;
+    }
+    location.reload();
+  } catch(e) {
+    alert('Lỗi kết nối server.');
+    btn.disabled = false;
+    text.textContent = 'Nộp bài';
+  }
+}
+
+// ── My progress widget ────────────────────────────────────
+function renderMyProgress(approved, total) {
+  const initials = (currentUser.first_name[0]+(currentUser.last_name||'')[0]).toUpperCase();
+  const color = AV_COLORS[currentUser.id % AV_COLORS.length];
+  const pct = total ? Math.round(approved / total * 100) : 0;
+  document.getElementById('myProgress').innerHTML = `
+    <p class="widget-title">📊 TIẾN ĐỘ CỦA TÔI</p>
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+      <div style="width:42px;height:42px;background:${color};border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:#fff;flex-shrink:0;">${initials}</div>
+      <div>
+        <div style="font-size:var(--fs-sm);font-weight:700;color:var(--text);">${currentUser.first_name} ${currentUser.last_name}</div>
+        <div style="font-size:var(--fs-xs);color:var(--color-primary);font-weight:600;">Lv.${getLevel(currentUser.xp||0).level}</div>
+      </div>
+    </div>
+    <div style="display:flex;justify-content:space-between;font-size:var(--fs-xs);color:var(--text-muted);margin-bottom:5px;">
+      <span>Tiến độ</span><span style="font-weight:600;color:var(--text);">${approved}/${total}</span>
+    </div>
+    <div class="xp-bar" style="margin-bottom:10px;height:7px;"><div class="xp-bar-fill" style="width:${pct}%"></div></div>
+    <div class="stat-row">
+      <div class="stat-item"><div class="stat-value" style="color:var(--accent-green)">${currentUser.xp||0}</div><div class="stat-label">Tổng XP</div></div>
+      <div class="stat-item"><div class="stat-value" style="color:#f59e0b">${currentUser.streak||0}</div><div class="stat-label">🔥 Streak</div></div>
+    </div>`;
+}
+
+// ── Main load ─────────────────────────────────────────────
+async function loadPage() {
+  try {
+    const data = await fetch(`${API}/challenges/${challengeId}?user_id=${currentUser.id}`).then(r => r.json());
+    if (data.error) {
+      document.getElementById('feed').innerHTML = `<div style="padding:24px;color:#ef4444">⚠️ ${data.error}</div>`;
+      return;
+    }
+    challengeData = data;
+    renderPage(data);
+  } catch(e) {
+    document.getElementById('feed').innerHTML =
+      '<div style="padding:24px;color:#ef4444">⚠️ Không kết nối được server. Chạy: node server.js</div>';
+  }
+}
+
+loadPage();
+</script>
+</body>
+</html>

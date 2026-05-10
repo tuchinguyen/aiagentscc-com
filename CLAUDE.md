@@ -121,6 +121,8 @@ continuity:  #ec4899 (pink-500)
 | `register.html` | Đăng ký tài khoản mới |
 | `feed.html` | Bảng tin chính — hiện bài đăng cộng đồng |
 | `challenge.html` | Thử thách 21 ngày AI Agent |
+| `challenge-detail.html` | Chi tiết thử thách — danh sách 21 ngày, URL: `challenge-detail.html?id=X` |
+| `challenge-day-detail.html` | Chi tiết ngày thử thách — SOP, hướng dẫn nộp bài, form nộp, URL: `challenge-day-detail.html?challenge_id=X&day_id=Y` |
 | `leaderboard.html` | Bảng xếp hạng cộng đồng — 7-day, 30-day, all-time + level grid |
 | `profile.html` | Trang hồ sơ thành viên — URL: `profile.html?id=X`, xem hoạt động + bài viết + bình luận |
 | `marketplace.html` | Chợ sản phẩm số — đăng bán, tìm kiếm, lọc theo danh mục, xem chi tiết, mua |
