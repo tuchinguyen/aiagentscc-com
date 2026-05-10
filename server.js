@@ -95,7 +95,13 @@ const DB_PATH  = path.join(__dirname, 'brain.db');
 
 app.use(cors());
 app.use(express.json());
-app.use(express.static(path.join(__dirname)));
+app.use(express.static(path.join(__dirname), {
+  setHeaders(res, filePath) {
+    if (filePath.endsWith('.js') || filePath.endsWith('.css')) {
+      res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+    }
+  }
+}));
 
 // ── Thin wrapper: sql.js → better-sqlite3-style API ──────────
 class DB {

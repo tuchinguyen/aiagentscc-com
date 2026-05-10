@@ -99,7 +99,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const NOTIF_API = '/api';
   let _notifOpen = false;
   let _notifUserId = null;
-  let _seenIds = null; // null = first load (don't toast), Set after first load
+  let _seenIds = new Set();
+  let _firstLoad = true;
 
   function _esc(s) {
     return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
@@ -154,13 +155,18 @@ document.addEventListener('DOMContentLoaded', () => {
       const notifs = data.notifications || [];
       _renderBadge(data.unread);
       _renderDropdown(notifs);
-      // Show toast for new unread notifications (skip on first load)
-      if (_seenIds !== null) {
-        notifs
-          .filter(n => !n.is_read && !_seenIds.has(n.id))
-          .forEach(_showToast);
-      }
+      // On first load: toast unread from last 5 min. On polls: toast all new unread.
+      const RECENT = 5 * 60 * 1000;
+      const now = Date.now();
+      notifs
+        .filter(n => {
+          if (n.is_read || _seenIds.has(n.id)) return false;
+          if (_firstLoad) return (now - new Date(n.created_at).getTime()) < RECENT;
+          return true;
+        })
+        .forEach(_showToast);
       _seenIds = new Set(notifs.map(n => n.id));
+      _firstLoad = false;
     } catch(e) {}
   }
 
