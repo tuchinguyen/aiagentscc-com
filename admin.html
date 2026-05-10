@@ -1234,15 +1234,70 @@
 
       <!-- ── Challenge Days sub-page ──────────────────── -->
       <section class="page" id="page-challenge-days">
-        <div class="table-card">
-          <div class="table-card-header">
-            <div style="display:flex;align-items:center;gap:12px;">
-              <button class="btn-sm" onclick="showPage('challenges')">← Quay lại</button>
-              <h2 id="dayListTitle">Danh sách ngày</h2>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start;">
+          <!-- Danh sách ngày -->
+          <div class="table-card">
+            <div class="table-card-header">
+              <div style="display:flex;align-items:center;gap:12px;">
+                <button class="btn-sm" onclick="showPage('challenges')">← Quay lại</button>
+                <h2 id="dayListTitle">Danh sách ngày</h2>
+              </div>
+              <button class="btn-sm primary" id="dayListAddBtn" onclick="resetDayForm()">+ Thêm ngày</button>
             </div>
-            <button class="btn-sm primary" id="dayListAddBtn">+ Thêm ngày</button>
+            <div id="dayListBody" style="padding:8px 0;"></div>
           </div>
-          <div id="dayListBody" style="padding:8px 0;"></div>
+          <!-- Form thêm/sửa ngày -->
+          <div class="table-card">
+            <div class="table-card-header">
+              <h2 id="dayModalTitle">Thêm ngày mới</h2>
+            </div>
+            <div style="padding:16px;display:flex;flex-direction:column;gap:12px;">
+              <input type="hidden" id="editDayId">
+              <input type="hidden" id="editDayChallengeId">
+              <div>
+                <label style="display:block;font-size:11px;font-weight:600;color:var(--muted);margin-bottom:4px;text-transform:uppercase;">Tiêu đề ngày *</label>
+                <input class="search-input" style="width:100%" id="dTitle" placeholder="VD: Giới thiệu bản thân">
+              </div>
+              <div>
+                <label style="display:block;font-size:11px;font-weight:600;color:var(--muted);margin-bottom:4px;text-transform:uppercase;">Mô tả ngắn</label>
+                <textarea id="dDesc" rows="3" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:6px;font-family:var(--font);font-size:13px;resize:vertical;outline:none;line-height:1.6;" placeholder="Mô tả tóm tắt task..."></textarea>
+              </div>
+              <div style="background:#f0f9ff;border:1px solid #bae6fd;border-radius:6px;padding:8px 12px;font-size:11px;color:#0369a1;line-height:1.5;">
+                📋 Thứ tự hiển thị: <strong>SOP → Hướng dẫn nộp → Tiêu chí duyệt</strong>
+              </div>
+              <div>
+                <label style="display:block;font-size:11px;font-weight:600;color:var(--muted);margin-bottom:4px;text-transform:uppercase;">🛠 SOP — Hướng dẫn chi tiết</label>
+                <textarea id="dSop" rows="5" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:6px;font-family:var(--font);font-size:12px;resize:vertical;outline:none;line-height:1.6;" placeholder="1. Bước đầu tiên&#10;2. Bước thứ hai&#10;- Gợi ý thêm"></textarea>
+              </div>
+              <div>
+                <label style="display:block;font-size:11px;font-weight:600;color:var(--muted);margin-bottom:4px;text-transform:uppercase;">📬 Hướng dẫn nộp bài</label>
+                <textarea id="dSubmitGuide" rows="3" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:6px;font-family:var(--font);font-size:12px;resize:vertical;outline:none;line-height:1.6;" placeholder="- Link website&#10;- Screenshot màn hình"></textarea>
+              </div>
+              <div>
+                <label style="display:block;font-size:11px;font-weight:600;color:var(--muted);margin-bottom:4px;text-transform:uppercase;">✅ Tiêu chí duyệt</label>
+                <input class="search-input" style="width:100%" id="dApproval" placeholder="VD: Có đủ 3 link, website mở được">
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+                <div>
+                  <label style="display:block;font-size:11px;font-weight:600;color:var(--muted);margin-bottom:4px;text-transform:uppercase;">XP thưởng</label>
+                  <input class="search-input" style="width:100%" type="number" id="dXp" value="5" min="1" max="100">
+                </div>
+                <div>
+                  <label style="display:block;font-size:11px;font-weight:600;color:var(--muted);margin-bottom:4px;text-transform:uppercase;">Thời gian chờ (giờ)</label>
+                  <input class="search-input" style="width:100%" type="number" id="dDuration" value="24" min="0" max="720">
+                </div>
+              </div>
+              <div>
+                <label style="display:block;font-size:11px;font-weight:600;color:var(--muted);margin-bottom:4px;text-transform:uppercase;">Hạn nộp bài (tuỳ chọn)</label>
+                <input class="search-input" style="width:100%" type="datetime-local" id="dDeadline">
+                <div style="font-size:10px;color:var(--muted);margin-top:3px;">Để trống = không giới hạn thời gian.</div>
+              </div>
+              <div style="display:flex;gap:8px;">
+                <button class="btn-sm primary" onclick="saveDayModal()">💾 Lưu</button>
+                <button class="btn-sm" onclick="resetDayForm()">Hủy / Thêm mới</button>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -1647,94 +1702,6 @@
       <div style="padding:14px 24px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:10px;">
         <button class="btn-sm" onclick="closeChallengeModal()">Hủy</button>
         <button class="btn-sm primary" onclick="saveChallengeModal()">Lưu</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- ── Add/Edit day modal ─────────────────────────── -->
-  <div id="dayModal"
-    style="display:none;position:fixed;inset:0;background:rgba(15,23,42,.6);z-index:400;align-items:center;justify-content:center;padding:16px;">
-    <div
-      style="background:#fff;border-radius:12px;width:100%;max-width:520px;max-height:90vh;overflow-y:auto;box-shadow:0 24px 48px rgba(0,0,0,.2);">
-      <div
-        style="padding:20px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:#fff;z-index:1;">
-        <h3 style="font-size:16px;font-weight:700;" id="dayModalTitle">Thêm ngày mới</h3>
-        <button onclick="closeDayModal()"
-          style="border:none;background:none;cursor:pointer;font-size:20px;color:var(--muted);">×</button>
-      </div>
-      <div style="padding:20px 24px;">
-        <input type="hidden" id="editDayId">
-        <input type="hidden" id="editDayChallengeId">
-        <div style="margin-bottom:14px;">
-          <label
-            style="display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:5px;text-transform:uppercase;">Tiêu
-            đề ngày *</label>
-          <input class="search-input" style="width:100%" id="dTitle" placeholder="VD: Giới thiệu bản thân">
-        </div>
-        <div style="margin-bottom:14px;">
-          <label
-            style="display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:5px;text-transform:uppercase;">Mô
-            tả ngắn</label>
-          <textarea id="dDesc" rows="3"
-            style="width:100%;padding:8px 12px;border:1px solid var(--border);border-radius:6px;font-family:var(--font);font-size:13px;resize:vertical;outline:none;line-height:1.6;"
-            placeholder="Mô tả tóm tắt task..."></textarea>
-        </div>
-        <div style="background:#f0f9ff;border:1px solid #bae6fd;border-radius:8px;padding:10px 14px;margin-bottom:14px;font-size:11px;color:#0369a1;line-height:1.6;">
-          📋 Nội dung bên dưới sẽ hiển thị trên trang chi tiết ngày theo đúng thứ tự: <strong>SOP → Hướng dẫn nộp → Tiêu chí duyệt</strong>
-        </div>
-        <div style="margin-bottom:14px;">
-          <label style="display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:3px;text-transform:uppercase;">
-            🛠 SOP — Hướng dẫn chi tiết <span style="font-weight:400;text-transform:none;">(Section 2)</span>
-          </label>
-          <div style="font-size:11px;color:var(--muted);margin-bottom:5px;">Các bước thực hiện. Dùng "1. Bước" cho số, "- item" cho bullet.</div>
-          <textarea id="dSop" rows="6"
-            style="width:100%;padding:8px 12px;border:1px solid var(--border);border-radius:6px;font-family:var(--font);font-size:13px;resize:vertical;outline:none;line-height:1.6;"
-            placeholder="1. Bước đầu tiên&#10;2. Bước thứ hai&#10;- Gợi ý thêm"></textarea>
-        </div>
-        <div style="margin-bottom:14px;">
-          <label style="display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:3px;text-transform:uppercase;">
-            📬 Hướng dẫn nộp bài <span style="font-weight:400;text-transform:none;">(Section 3)</span>
-          </label>
-          <div style="font-size:11px;color:var(--muted);margin-bottom:5px;">Danh sách những gì cần nộp. Mỗi dòng = 1 yêu cầu (có hoặc không có "- " đầu dòng).</div>
-          <textarea id="dSubmitGuide" rows="4"
-            style="width:100%;padding:8px 12px;border:1px solid var(--border);border-radius:6px;font-family:var(--font);font-size:13px;resize:vertical;outline:none;line-height:1.6;"
-            placeholder="- Link website đang chạy&#10;- Screenshot màn hình&#10;- Link Google Sheet"></textarea>
-        </div>
-        <div style="margin-bottom:14px;">
-          <label style="display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:3px;text-transform:uppercase;">
-            ✅ Tiêu chí duyệt <span style="font-weight:400;text-transform:none;">(Section 3 — green box)</span>
-          </label>
-          <div style="font-size:11px;color:var(--muted);margin-bottom:5px;">Điều kiện để bài được duyệt. Hiển thị trong khung xanh.</div>
-          <input class="search-input" style="width:100%" id="dApproval"
-            placeholder="VD: Có đủ 3 link, website mở được, form submit được">
-        </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;">
-          <div>
-            <label
-              style="display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:5px;text-transform:uppercase;">XP
-              thưởng</label>
-            <input class="search-input" style="width:100%" type="number" id="dXp" value="5" min="1" max="100">
-          </div>
-          <div>
-            <label
-              style="display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:5px;text-transform:uppercase;">Thời
-              gian chờ (giờ)</label>
-            <input class="search-input" style="width:100%" type="number" id="dDuration" value="24" min="0" max="720"
-              title="Số giờ tối thiểu trước khi mở ngày tiếp theo sau khi bài được duyệt">
-          </div>
-        </div>
-        <div style="margin-bottom:4px;">
-          <label
-            style="display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:5px;text-transform:uppercase;">Hạn
-            nộp bài (tuỳ chọn)</label>
-          <input class="search-input" style="width:100%" type="datetime-local" id="dDeadline"
-            title="Sau thời điểm này, form nộp bài sẽ tự đóng">
-          <div style="font-size:11px;color:var(--muted);margin-top:4px;">Để trống = không giới hạn thời gian.</div>
-        </div>
-      </div>
-      <div style="padding:14px 24px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:10px;">
-        <button class="btn-sm" onclick="closeDayModal()">Hủy</button>
-        <button class="btn-sm primary" onclick="saveDayModal()">Lưu</button>
       </div>
     </div>
   </div>
@@ -2421,11 +2388,9 @@
 
     // Challenge days management
     let dayModalChallengeId = null;
-    function openAddDay(challengeId) {
-      dayModalChallengeId = challengeId;
+    function resetDayForm() {
       document.getElementById('dayModalTitle').textContent = 'Thêm ngày mới';
       document.getElementById('editDayId').value = '';
-      document.getElementById('editDayChallengeId').value = challengeId;
       document.getElementById('dTitle').value = '';
       document.getElementById('dDesc').value = '';
       document.getElementById('dSop').value = '';
@@ -2434,12 +2399,15 @@
       document.getElementById('dXp').value = 5;
       document.getElementById('dDuration').value = 24;
       document.getElementById('dDeadline').value = '';
-      document.getElementById('dayModal').style.display = 'flex';
     }
 
-    function closeDayModal() {
-      document.getElementById('dayModal').style.display = 'none';
+    function openAddDay(challengeId) {
+      dayModalChallengeId = challengeId;
+      document.getElementById('editDayChallengeId').value = challengeId;
+      resetDayForm();
     }
+
+    function closeDayModal() { resetDayForm(); }
 
     async function saveDayModal() {
       const id = document.getElementById('editDayId').value;
@@ -2469,7 +2437,7 @@
           await api(`/admin/challenges/${challengeId}/days`, { method: 'POST', body: JSON.stringify(body) });
           showToast('Đã thêm ngày mới.', 'green');
         }
-        closeDayModal();
+        resetDayForm();
         if (currentDayListChallengeId) refreshDayList();
         else loadChallenges();
       } catch (e) { showToast('Lỗi kết nối.', 'red'); }
@@ -2636,15 +2604,6 @@
       document.getElementById('dayModalTitle').textContent = 'Chỉnh sửa ngày';
       document.getElementById('editDayId').value = dayId;
       document.getElementById('editDayChallengeId').value = challengeId;
-      document.getElementById('dTitle').value = '';
-      document.getElementById('dDesc').value = '';
-      document.getElementById('dSop').value = '';
-      document.getElementById('dSubmitGuide').value = '';
-      document.getElementById('dApproval').value = '';
-      document.getElementById('dXp').value = 5;
-      document.getElementById('dDuration').value = 24;
-      document.getElementById('dDeadline').value = '';
-      document.getElementById('dayModal').style.display = 'flex';
       api(`/challenges/${challengeId}`).then(res => {
         const day = res.days.find(d => d.id === dayId);
         if (!day) return;
@@ -2659,6 +2618,7 @@
         document.getElementById('dDeadline').value = day.submission_deadline
           ? day.submission_deadline.slice(0, 16).replace(' ', 'T')
           : '';
+        document.getElementById('dTitle').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
       }).catch(() => { });
     }
 
