@@ -489,8 +489,12 @@ function renderDayCard(day, days, submissions, enrollment) {
     </div>`;
   }
 
+  const sub = submissions[day.id];
+  const lateTag = (cls === 'done' && sub && sub.is_late)
+    ? ' <span style="font-size:10px;font-weight:600;background:#fee2e2;color:#dc2626;border-radius:99px;padding:1px 7px;margin-left:4px;">Trễ hạn</span>'
+    : '';
   const statusText = {
-    done:     '✅ Đã hoàn thành',
+    done:     '✅ Đã hoàn thành' + lateTag,
     pending:  '⏳ Đang chờ duyệt',
     revision: '⚠️ Cần chỉnh sửa',
     active:   '🔥 Bấm để nộp bài',

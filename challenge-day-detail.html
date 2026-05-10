@@ -662,11 +662,12 @@ function renderSubmissionSection(day, cls, sub, enrollment) {
   }
 
   if (cls === 'done' && sub) {
-    const lateBanner = sub.is_late ? `<div style="background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.2);border-radius:8px;padding:8px 12px;font-size:var(--fs-xs);color:#ef4444;margin-bottom:10px;">⚠️ Bài nộp trễ hạn — hoàn thành tốt dù muộn!</div>` : '';
+    const lateNote = sub.is_late
+      ? `<span style="font-size:var(--fs-xs);font-weight:600;background:#fee2e2;color:#dc2626;border-radius:99px;padding:2px 9px;margin-left:8px;">⚠️ Nộp trễ hạn — hoàn thành tốt dù muộn!</span>`
+      : '';
     container.innerHTML = `
-      ${lateBanner}
       <div class="status-card approved">
-        <div class="status-card-label">✅ Bài đã được duyệt</div>
+        <div class="status-card-label">✅ Bài đã được duyệt ${lateNote}</div>
         <div class="status-card-content">${escHtml(sub.content)}</div>
       </div>
       <div style="text-align:center;margin-top:8px;">
@@ -676,11 +677,12 @@ function renderSubmissionSection(day, cls, sub, enrollment) {
   }
 
   if (cls === 'pending' && sub) {
-    const lateBanner = sub.is_late ? `<div style="background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.2);border-radius:8px;padding:8px 12px;font-size:var(--fs-xs);color:#ef4444;margin-bottom:10px;">⚠️ Bài nộp trễ hạn</div>` : '';
+    const lateNote = sub.is_late
+      ? `<span style="font-size:var(--fs-xs);font-weight:600;background:#fee2e2;color:#dc2626;border-radius:99px;padding:2px 9px;margin-left:8px;">⚠️ Nộp trễ hạn</span>`
+      : '';
     container.innerHTML = `
-      ${lateBanner}
       <div class="status-card pending">
-        <div class="status-card-label">⏳ Đang chờ admin duyệt</div>
+        <div class="status-card-label">⏳ Đang chờ admin duyệt ${lateNote}</div>
         <div class="status-card-content">${escHtml(sub.content)}</div>
       </div>
       <div style="font-size:var(--fs-xs);color:var(--text-muted);text-align:center;margin-top:8px;">
