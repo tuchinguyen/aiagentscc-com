@@ -1295,11 +1295,11 @@
               </div>
               <div>
                 <label style="display:block;font-size:11px;font-weight:600;color:var(--muted);margin-bottom:4px;text-transform:uppercase;">📬 Hướng dẫn nộp bài</label>
-                <textarea id="dSubmitGuide" rows="3" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:6px;font-family:var(--font);font-size:12px;resize:vertical;outline:none;line-height:1.6;" placeholder="- Link website&#10;- Screenshot màn hình"></textarea>
+                <div id="dSubmitGuideWrap"></div>
               </div>
               <div>
                 <label style="display:block;font-size:11px;font-weight:600;color:var(--muted);margin-bottom:4px;text-transform:uppercase;">✅ Tiêu chí duyệt</label>
-                <input class="search-input" style="width:100%" id="dApproval" placeholder="VD: Có đủ 3 link, website mở được">
+                <div id="dApprovalWrap"></div>
               </div>
               <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
                 <div>
@@ -2485,8 +2485,8 @@
       document.getElementById('dTitle').value = '';
       setRteContent('dDescWrap', '');
       setRteContent('dSopWrap', '');
-      document.getElementById('dSubmitGuide').value = '';
-      document.getElementById('dApproval').value = '';
+      setRteContent('dSubmitGuideWrap', '');
+      setRteContent('dApprovalWrap', '');
       document.getElementById('dXp').value = 5;
       document.getElementById('dDuration').value = 24;
       document.getElementById('dDeadline').value = '';
@@ -2508,8 +2508,8 @@
       if (!challengeId) { showToast('Chưa chọn thử thách. Vui lòng quay lại và chọn thử thách.', 'red'); return; }
       const deadlineVal = document.getElementById('dDeadline').value;
       const sop         = getRteContent('dSopWrap');
-      const submitGuide = document.getElementById('dSubmitGuide').value.trim();
-      const approval    = document.getElementById('dApproval').value.trim();
+      const submitGuide = getRteContent('dSubmitGuideWrap');
+      const approval    = getRteContent('dApprovalWrap');
       let instructions  = sop;
       if (submitGuide) instructions += (instructions ? '\nNộp bài:\n' : 'Nộp bài:\n') + submitGuide;
       if (approval)    instructions += '\n✅ Được duyệt khi: ' + approval;
@@ -2603,11 +2603,11 @@
           </div>
           <div>
             <label style="font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;display:block;margin-bottom:4px;">📬 Hướng dẫn nộp bài</label>
-            <textarea id="ai-submit-${d.id}" rows="3" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:6px;font-family:var(--font);font-size:12px;resize:vertical;outline:none;line-height:1.6;" placeholder="- Link website&#10;- Screenshot màn hình">${escHtml(parsedSubmit)}</textarea>
+            <div id="ai-submit-wrap-${d.id}"></div>
           </div>
           <div>
             <label style="font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;display:block;margin-bottom:4px;">✅ Tiêu chí duyệt</label>
-            <input id="ai-approval-${d.id}" class="search-input" style="width:100%;font-size:12px;" value="${escHtml(parsedApproval)}" placeholder="VD: Có đủ 3 link, website mở được">
+            <div id="ai-approval-wrap-${d.id}"></div>
           </div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
             <div>
@@ -2635,11 +2635,15 @@
 
       // Store init data for lazy RTE initialization
       _days.forEach(d => {
-        const { sop: parsedSop } = parseInstructionsAdmin(d.instructions || '');
+        const { sop: parsedSop, submitLines: parsedSubmit, approvalText: parsedApproval } = parseInstructionsAdmin(d.instructions || '');
         const sopWrap = document.getElementById(`ai-sop-wrap-${d.id}`);
         if (sopWrap) sopWrap._rteInitHtml = parsedSop;
         const descWrap = document.getElementById(`ai-desc-wrap-${d.id}`);
         if (descWrap) descWrap._rteInitHtml = d.description || '';
+        const submitWrap = document.getElementById(`ai-submit-wrap-${d.id}`);
+        if (submitWrap) submitWrap._rteInitHtml = parsedSubmit;
+        const approvalWrap = document.getElementById(`ai-approval-wrap-${d.id}`);
+        if (approvalWrap) approvalWrap._rteInitHtml = parsedApproval;
       });
     }
 
@@ -2659,6 +2663,20 @@
           descWrap.innerHTML = buildRteHtml(descWrap._rteInitHtml || '', 'Mô tả tóm tắt task...', '80px');
           descWrap._rteReady = true;
         }
+        const submitWrap = document.getElementById(`ai-submit-wrap-${dayId}`);
+        if (submitWrap && !submitWrap._rteReady) {
+          const raw = submitWrap._rteInitHtml || '';
+          const initHtml = raw && !/<[a-z][\s\S]*>/i.test(raw) ? escHtml(raw).replace(/\n/g, '<br>') : raw;
+          submitWrap.innerHTML = buildRteHtml(initHtml, '- Link website<br>- Screenshot màn hình', '80px');
+          submitWrap._rteReady = true;
+        }
+        const approvalWrap = document.getElementById(`ai-approval-wrap-${dayId}`);
+        if (approvalWrap && !approvalWrap._rteReady) {
+          const raw = approvalWrap._rteInitHtml || '';
+          const initHtml = raw && !/<[a-z][\s\S]*>/i.test(raw) ? escHtml(raw).replace(/\n/g, '<br>') : raw;
+          approvalWrap.innerHTML = buildRteHtml(initHtml, 'VD: Có đủ 3 link, website mở được', '60px');
+          approvalWrap._rteReady = true;
+        }
       }
       form.style.display = isOpen ? 'none' : 'block';
       arrow.textContent = isOpen ? '›' : '˅';
@@ -2671,8 +2689,10 @@
       const dlVal = document.getElementById(`ai-dl-${dayId}`).value;
       const sopEl = document.querySelector(`#ai-sop-wrap-${dayId} .rte-editor`);
       const sop = sopEl ? sopEl.innerHTML.trim().replace(/^<br>$/, '') : '';
-      const submitGuide = document.getElementById(`ai-submit-${dayId}`).value.trim();
-      const approval    = document.getElementById(`ai-approval-${dayId}`).value.trim();
+      const submitEl = document.querySelector(`#ai-submit-wrap-${dayId} .rte-editor`);
+      const submitGuide = submitEl ? submitEl.innerHTML.trim().replace(/^<br>$/, '') : '';
+      const approvalEl2 = document.querySelector(`#ai-approval-wrap-${dayId} .rte-editor`);
+      const approval    = approvalEl2 ? approvalEl2.innerHTML.trim().replace(/^<br>$/, '') : '';
       let instructions  = sop;
       if (submitGuide) instructions += (instructions ? '\nNộp bài:\n' : 'Nộp bài:\n') + submitGuide;
       if (approval)    instructions += '\n✅ Được duyệt khi: ' + approval;
@@ -2728,8 +2748,8 @@
         setRteContent('dDescWrap', day.description || '');
         const parsed = parseInstructionsAdmin(day.instructions || '');
         setRteContent('dSopWrap', parsed.sop);
-        document.getElementById('dSubmitGuide').value = parsed.submitLines;
-        document.getElementById('dApproval').value = parsed.approvalText;
+        setRteContent('dSubmitGuideWrap', parsed.submitLines);
+        setRteContent('dApprovalWrap', parsed.approvalText);
         document.getElementById('dXp').value = day.xp_reward || 5;
         document.getElementById('dDuration').value = day.duration_hours ?? 24;
         document.getElementById('dDeadline').value = day.submission_deadline
@@ -2978,7 +2998,13 @@
 
     function setRteContent(containerId, html) {
       const editor = document.querySelector(`#${containerId} .rte-editor`);
-      if (editor) editor.innerHTML = html || '';
+      if (!editor) return;
+      if (!html) { editor.innerHTML = ''; return; }
+      if (/<[a-z][\s\S]*>/i.test(html)) {
+        editor.innerHTML = html;
+      } else {
+        editor.innerHTML = escHtml(html).replace(/\n/g, '<br>');
+      }
     }
     function escJs(s) { return String(s || '').replace(/'/g, "\\'").replace(/\n/g, '\\n'); }
 
@@ -2986,6 +3012,8 @@
     // Initialize static RTEs in the add/edit day form
     initRTE('dDescWrap', '', '80px');
     initRTE('dSopWrap', '', '120px');
+    initRTE('dSubmitGuideWrap', '', '80px');
+    initRTE('dApprovalWrap', '', '60px');
 
     const saved = sessionStorage.getItem('adminKey');
     if (saved) {

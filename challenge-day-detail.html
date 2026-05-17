@@ -643,10 +643,19 @@ function renderPage(data) {
   } else {
     sopEl.innerHTML = renderSopLines(sopRaw);
   }
-  document.getElementById('nobaiContent').innerHTML = renderSubmitGuideLines(submitLines);
+  if (isHtmlContent(submitLines)) {
+    document.getElementById('nobaiContent').innerHTML = sanitizeHtml(submitLines);
+  } else {
+    document.getElementById('nobaiContent').innerHTML = renderSubmitGuideLines(submitLines);
+  }
 
   if (approvalText) {
-    document.getElementById('approvalText').textContent = approvalText;
+    const approvalEl = document.getElementById('approvalText');
+    if (isHtmlContent(approvalText)) {
+      approvalEl.innerHTML = sanitizeHtml(approvalText);
+    } else {
+      approvalEl.textContent = approvalText;
+    }
     document.getElementById('approvalBlock').style.display = 'block';
   }
 
