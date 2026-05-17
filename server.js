@@ -505,16 +505,16 @@ const CHALLENGE_DAYS = [
     }
   }
 
-  // Migration: update days 8,9,13-21 with complete Nộp bài + ✅ format
-  const day9check = db.get('SELECT instructions FROM challenge_days WHERE day_number = 9 LIMIT 1');
-  const needsFormatUpdate = day9check && day9check.instructions &&
-    !day9check.instructions.includes('✅ Được duyệt khi:');
+  // Migration: update days 13-21 with complete Nộp bài + ✅ format
+  const day19check = db.get('SELECT instructions FROM challenge_days WHERE day_number = 19 LIMIT 1');
+  const needsFormatUpdate = day19check && day19check.instructions &&
+    day19check.instructions.includes('chưa unlock');
   if (needsFormatUpdate) {
-    [8, 9, 13, 14, 15, 16, 17, 18, 19, 20, 21].forEach(num => {
+    [13, 14, 15, 16, 17, 18, 19, 20, 21].forEach(num => {
       const d = CHALLENGE_DAYS.find(c => c[0] === num);
       if (d) db.run('UPDATE challenge_days SET title=?,description=?,instructions=?,xp_reward=? WHERE day_number=?', [d[1], d[2], d[3], d[4], num]);
     });
-    console.log('  Updated challenge days 8,9,13-21: added Nộp bài + ✅ Được duyệt khi sections.');
+    console.log('  Updated challenge days 13-21: added Nộp bài + ✅ Được duyệt khi sections.');
   }
 
   // Seed default site settings
