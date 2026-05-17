@@ -42,7 +42,7 @@
 }
 .day-hero-desc {
   font-size:var(--fs-sm);color:#94a3b8;line-height:1.7;
-  max-width:520px;margin-bottom:18px;
+  margin-bottom:18px;
 }
 .day-hero-meta { display:flex;gap:10px;flex-wrap:wrap;align-items:center; }
 .day-xp-badge {
@@ -307,6 +307,11 @@
     <div id="content-row">
       <main id="feed">
 
+        <!-- Progress (inline) -->
+        <div class="rp-card" id="myProgress" style="margin-bottom:16px;">
+          <div style="text-align:center;padding:8px 0;color:var(--text-muted);font-size:var(--fs-sm)">Đang tải...</div>
+        </div>
+
         <!-- Hero -->
         <div class="challenge-hero">
           <div class="challenge-hero-content">
@@ -365,18 +370,6 @@
         </div>
 
       </main>
-
-      <aside id="right-panel">
-        <div class="rp-card" id="myProgress">
-          <div style="text-align:center;padding:16px 0;color:var(--text-muted);font-size:var(--fs-sm)">Đang tải...</div>
-        </div>
-        <div class="rp-card" style="background:linear-gradient(135deg,#fffbeb,#fef3c7);border-color:#fde68a;">
-          <p class="widget-title" style="color:#92400e;">💡 TIPS HÔM NAY</p>
-          <p style="font-size:var(--fs-xs);color:#78716c;line-height:1.6;">
-            Đọc kỹ SOP trước khi làm. Mỗi task đều có hướng dẫn chi tiết từng bước — chỉ cần làm theo là đủ. Nộp bài có link và ảnh chứng minh để được duyệt nhanh nhất.
-          </p>
-        </div>
-      </aside>
     </div>
   </div>
 </div>
