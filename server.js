@@ -343,7 +343,7 @@ const CHALLENGE_DAYS = [
    10],
   [8,  'Relax Day (Nghỉ Lễ 30/4–1/5)',
    'Không có task bắt buộc. Nghỉ ngơi, tái nạp năng lượng.',
-   'Ngày nghỉ — không có yêu cầu bắt buộc.\n\nGợi ý: Nghiên cứu thêm về hệ thống AI agents, xem lại ghi chú tuần 1, hoặc đơn giản là nghỉ ngơi.\n\n✅ Được duyệt khi: Nộp bất cứ nội dung nào — ảnh, note, suy nghĩ về hành trình 7 ngày đầu.',
+   'Ngày nghỉ — không có yêu cầu bắt buộc.\n\nGợi ý:\n- Nghiên cứu thêm về AI agents, xem video về MCP hoặc Claude\n- Xem lại ghi chú tuần 1, ôn lại những gì đã học được\n- Hoặc đơn giản là nghỉ ngơi — bạn xứng đáng!\n\nNộp bài:\n- Ảnh hoặc note bất kỳ — suy nghĩ về hành trình 7 ngày đầu, điều thú vị học được, hoặc ảnh bạn đang nghỉ ngơi\n\n✅ Được duyệt khi: Nộp bất cứ nội dung nào — ảnh, note, suy nghĩ về hành trình 7 ngày đầu.',
    3],
   [9,  'Build Chatbot Bán Hàng 24/7',
    'Gắn chatbot có kịch bản bán hàng thật vào website. Khách vào là chatbot chào và tư vấn.',
@@ -363,39 +363,39 @@ const CHALLENGE_DAYS = [
    10],
   [13, 'Build AI Agent (Goclaw) trên VPS',
    'Thiết lập AI Agent hoàn chỉnh để hỗ trợ công việc + hỗ trợ mọi người trong group Telegram.',
-   'Tool: goclaw — open source AI agent framework\nRepo: github.com/nextlevelbuilder/goclaw\n\nPrompt mẫu paste vào AI coding agent:\n"Tôi muốn clone repo goclaw từ https://github.com/nextlevelbuilder/goclaw về và chạy trên VPS. GitHub để deploy bằng GitHub Actions là: [LINK GITHUB]. Đọc repo goclaw chi tiết và lên kế hoạch cài đặt theo thông tin VPS bên dưới. Domain [TÊN DOMAIN] đã được trỏ tới IP VPS rồi. Đảm bảo phân tích sâu để tôi chỉ cần vào domain là dùng được goclaw.\nTHÔNG TIN VPS: [Điền thông tin VPS — IP, OS, RAM, CPU...]"\n\nNộp bài: Screenshot goclaw đang chạy trên domain + theo hướng dẫn trong meeting.',
+   'Tool: goclaw — open source AI agent framework\nRepo: github.com/nextlevelbuilder/goclaw\n\nPrompt mẫu paste vào AI coding agent:\n"Tôi muốn clone repo goclaw từ https://github.com/nextlevelbuilder/goclaw về và chạy trên VPS. GitHub để deploy bằng GitHub Actions là: [LINK GITHUB]. Đọc repo goclaw chi tiết và lên kế hoạch cài đặt theo thông tin VPS bên dưới. Domain [TÊN DOMAIN] đã được trỏ tới IP VPS rồi. Đảm bảo phân tích sâu để tôi chỉ cần vào domain là dùng được goclaw.\nTHÔNG TIN VPS: [Điền thông tin VPS — IP, OS, RAM, CPU...]"\n\nNộp bài:\n- Screenshot goclaw đang chạy trên domain thật (URL hiển thị rõ trên thanh địa chỉ)\n- Screenshot terminal hoặc dashboard cho thấy service đang active\n- Theo hướng dẫn bổ sung được chia sẻ trong meeting\n\n✅ Được duyệt khi: Vào domain thấy goclaw hoạt động, agent phản hồi được lệnh cơ bản.',
    10],
   [14, 'Website Lên VPS + Trao Cánh Tay Cho Agent (MCP)',
    'Deploy website lên VPS Linux thật + trang bị cho AI Agent khả năng thao tác server qua MCP.',
-   'MCP (Model Context Protocol) cho phép AI agent không chỉ trả lời — mà còn thực sự thao tác được: đọc/ghi file, SSH vào server, chạy commands, gọi API...\n\nKết quả: Agent của bạn từ "biết nói" trở thành "biết làm".\n\nHướng dẫn chi tiết: taip.io/day14-vps-mcp.html (chỉ cho thành viên)\n\n⚠️ Đừng share link hướng dẫn ra nhóm hay cho người ngoài thử thách.\n\nNộp bài: Theo hướng dẫn trong trang day14.',
+   'MCP (Model Context Protocol) cho phép AI agent không chỉ trả lời — mà còn thực sự thao tác được: đọc/ghi file, SSH vào server, chạy commands, gọi API...\n\nKết quả: Agent của bạn từ "biết nói" trở thành "biết làm".\n\nHướng dẫn chi tiết: taip.io/day14-vps-mcp.html (chỉ cho thành viên)\n\n⚠️ Đừng share link hướng dẫn ra nhóm hay cho người ngoài thử thách.\n\nNộp bài:\n- Screenshot VPS đang chạy website thật (domain hiển thị rõ)\n- Screenshot Claude Desktop đã kết nối MCP (list tools hiện)\n- Screenshot demo agent thực hiện 1 thao tác thật qua MCP (tạo file, đọc log, hoặc tương tự)\n\n✅ Được duyệt khi: Website chạy trên VPS với domain thật, MCP connected, agent thao tác được ít nhất 1 việc thật trên server.',
    5],
   [15, 'Agent Trở Thành Cộng Sự Tức Thì',
    'Cho agent việc cụ thể, giọng riêng, và thói quen chủ động. Lần đầu agent tự Telegram khi có đơn mới.',
-   'Cách làm (~2-3 giờ):\n1. AI coding agent viết MCP function + MD files\n2. Upload lên VPS\n3. Bật Heartbeat qua Dashboard (không cần SSH)\n\nAgent sẽ tự động:\n- Telegram khi có đơn hàng mới\n- Telegram khi có form waitlist mới\n- Mỗi sáng: tổng kết hoạt động đêm trước\n\nHướng dẫn: taip.io/day15-agent-brain.html (chỉ cho thành viên)\n\nNộp bài: Screenshot agent đang chạy + Telegram notification thật.',
+   'Cách làm (~2-3 giờ):\n1. AI coding agent viết MCP function + MD files\n2. Upload lên VPS\n3. Bật Heartbeat qua Dashboard (không cần SSH)\n\nAgent sẽ tự động:\n- Telegram khi có đơn hàng mới\n- Telegram khi có form waitlist mới\n- Mỗi sáng: tổng kết hoạt động đêm trước\n\nHướng dẫn: taip.io/day15-agent-brain.html (chỉ cho thành viên)\n\nNộp bài:\n- Screenshot agent đang chạy trên VPS (dashboard hoặc terminal)\n- Screenshot Telegram notification thật (đơn hàng hoặc form mới)\n- Screenshot báo cáo sáng tự động (nếu đã test qua đêm)\n\n✅ Được duyệt khi: Agent gửi được ít nhất 1 Telegram notification thật từ event thực tế (đơn hàng hoặc form submission).',
    5],
   [16, 'Tự Tay Tạo Skill Cho Claude',
    'Biến tri thức thành tài sản số có thể tái sử dụng vĩnh viễn — tự tạo Claude Skill đầu tiên.',
-   '5 cấp độ Claude Skills:\nCấp 1: SKILL.md — tác vụ đơn giản, không cần file phụ\nCấp 2: SKILL.md + assets/ — cần template, file mẫu\nCấp 3: SKILL.md + scripts/ — cần code chạy được (Python, FFmpeg...)\nCấp 4: SKILL.md + references/ — cần kiến thức sâu (pháp lý, kỹ thuật...)\nCấp 5: Đầy đủ tất cả — tác vụ phức tạp tổng hợp\n\nNhiệm vụ:\n1. Làm quiz 10 câu trong hướng dẫn (mỗi câu đúng = +2 XP)\n2. Chọn 1 ý tưởng → agent coding tạo skill → test ở 2 nơi khác nhau\n\nHướng dẫn: taip.io/day16-tu-tao-skill.html (chỉ cho thành viên)\n\nNộp bài: Screenshot skill đã tạo + kết quả test ở 2 nơi.',
+   '5 cấp độ Claude Skills:\nCấp 1: SKILL.md — tác vụ đơn giản, không cần file phụ\nCấp 2: SKILL.md + assets/ — cần template, file mẫu\nCấp 3: SKILL.md + scripts/ — cần code chạy được (Python, FFmpeg...)\nCấp 4: SKILL.md + references/ — cần kiến thức sâu (pháp lý, kỹ thuật...)\nCấp 5: Đầy đủ tất cả — tác vụ phức tạp tổng hợp\n\nNhiệm vụ:\n1. Làm quiz 10 câu trong hướng dẫn (mỗi câu đúng = +2 XP)\n2. Chọn 1 ý tưởng → agent coding tạo skill → test ở 2 nơi khác nhau\n\nHướng dẫn: taip.io/day16-tu-tao-skill.html (chỉ cho thành viên)\n\nNộp bài:\n- Screenshot SKILL.md đã tạo (tên skill + nội dung hướng dẫn)\n- Screenshot kết quả test lần 1 (project hoặc context đầu tiên)\n- Screenshot kết quả test lần 2 (project hoặc context khác)\n- Bonus: Ảnh kết quả quiz 10 câu\n\n✅ Được duyệt khi: Skill tạo được, chạy đúng ở 2 context khác nhau, output có ích thật sự.',
    5],
   [17, 'Skill Sản Xuất Content + Auto-Post Facebook',
    'Agent tự gen full content (ảnh đẹp + văn bản) và tự đăng lên Facebook Page mỗi sáng 9h.',
-   '2 Mode:\n- Mode 1 — Content Free: Agent gen ý tưởng 9h sáng → Telegram bạn duyệt → tự đăng\n- Mode 2 — Creative Ads: Gen 3 bộ ảnh + copy để paste vào Ads Manager\n\n14 bước trong guide:\n1. Lấy OpenAI API key\n2. Setup project Facebook Developer\n3. Lấy Permanent Page Token ⚠️ (phần khó nhất)\n4. Test token với Token Debugger\n5-14. Build skill 2 mode, setup cron 9h sáng, test, monitoring\n\nKết quả: Dậy sáng thấy Facebook Page đã có bài đăng đầy đủ ảnh + văn bản — bạn không làm gì.\n\nHướng dẫn: taip.io/day17-skill-creative-fb.html (chỉ cho thành viên)',
+   '2 Mode:\n- Mode 1 — Content Free: Agent gen ý tưởng 9h sáng → Telegram bạn duyệt → tự đăng\n- Mode 2 — Creative Ads: Gen 3 bộ ảnh + copy để paste vào Ads Manager\n\n14 bước trong guide:\n1. Lấy OpenAI API key\n2. Setup project Facebook Developer\n3. Lấy Permanent Page Token ⚠️ (phần khó nhất)\n4. Test token với Token Debugger\n5-14. Build skill 2 mode, setup cron 9h sáng, test, monitoring\n\nKết quả: Dậy sáng thấy Facebook Page đã có bài đăng đầy đủ ảnh + văn bản — bạn không làm gì.\n\nHướng dẫn: taip.io/day17-skill-creative-fb.html (chỉ cho thành viên)\n\nNộp bài:\n- Screenshot Facebook Page có bài vừa được đăng tự động (timestamp tự động, không phải tay)\n- Screenshot Telegram nhận thông báo duyệt bài (Mode 1) hoặc 3 bộ creative đã tạo (Mode 2)\n- Screenshot cron job đang chạy hoặc scheduler đã cài\n\n✅ Được duyệt khi: Facebook Page có ít nhất 1 bài được đăng tự động bởi agent, có timestamp chứng minh không đăng tay.',
    5],
   [18, 'Skill Sản Xuất Video AI Trên Higgsfield',
    'Tạo video AI với Higgsfield (Stream 4.5 sinh ảnh + Kling 2.6/3.0 animate). Tạm dừng đến 04/05/2026.',
-   '⏸ TẠM DỪNG — Tiếp tục 04/05/2026. Timer đóng băng, không bị tính trễ.\n\n1 tool duy nhất: Higgsfield AI — vừa sinh ảnh vừa animate.\n\nChọn 1 trong 2 hướng:\nA. Sản phẩm/dịch vụ đang kinh doanh — gen video quảng bá đăng Reels/TikTok/FB Page\nB. Video vui tặng bạn bè — sinh nhật, kỷ niệm (áp lực thấp, tập trung học workflow)\n\nWorkflow 9 bước:\n1. Chọn chủ đề A hoặc B\n2. Dùng ChatGPT viết kịch bản\n3. Tạo ảnh với Stream 4.5 trong Higgsfield Image\n4. Mặc đồ cho model (nếu cần)\n5. Animate với Kling 2.6 hoặc 3.0\n6. Multishot — nối nhiều shot tự động\n7. Edit ghép trong CapCut\n8. Build skill tao-video-ai\n9. Tích hợp auto-post (mở rộng pipeline Day 17)\n\nNguyên tắc: "Ra ảnh ưng cái nào lụm cái đó, đừng mất công sửa hoài"',
+   '⏸ TẠM DỪNG — Tiếp tục 04/05/2026. Timer đóng băng, không bị tính trễ.\n\n1 tool duy nhất: Higgsfield AI — vừa sinh ảnh vừa animate.\n\nChọn 1 trong 2 hướng:\nA. Sản phẩm/dịch vụ đang kinh doanh — gen video quảng bá đăng Reels/TikTok/FB Page\nB. Video vui tặng bạn bè — sinh nhật, kỷ niệm (áp lực thấp, tập trung học workflow)\n\nWorkflow 9 bước:\n1. Chọn chủ đề A hoặc B\n2. Dùng ChatGPT viết kịch bản\n3. Tạo ảnh với Stream 4.5 trong Higgsfield Image\n4. Mặc đồ cho model (nếu cần)\n5. Animate với Kling 2.6 hoặc 3.0\n6. Multishot — nối nhiều shot tự động\n7. Edit ghép trong CapCut\n8. Build skill tao-video-ai\n9. Tích hợp auto-post (mở rộng pipeline Day 17)\n\nNguyên tắc: "Ra ảnh ưng cái nào lụm cái đó, đừng mất công sửa hoài"\n\nNộp bài:\n- Link video AI đã tạo (Reels, TikTok, YouTube Shorts, hoặc Google Drive)\n- Screenshot quy trình Higgsfield (ít nhất bước sinh ảnh + bước animate)\n- Mô tả ngắn: chọn hướng A hay B, kết quả thế nào\n\n✅ Được duyệt khi: Có video thật được tạo từ Higgsfield, độ dài ≥ 5 giây, đã đăng lên ít nhất 1 kênh hoặc chia sẻ link Google Drive.',
    5],
   [19, 'Agent Logging & Monitoring',
    'Thêm logging và monitoring cho Agent — track được usage, errors, và performance.',
-   'Nội dung đầy đủ chưa unlock.\n\nMục tiêu: Thêm logging và monitoring cho Agent — track được usage, errors, và performance. Cấu hình alert khi có lỗi, dashboard theo dõi hoạt động.',
+   'SOP 5 bước:\n1. Thêm logging vào agent: mỗi request/response ghi vào logs/agent.log với timestamp\n2. Phân loại log: INFO (request thường), WARN (chậm > 3s), ERROR (thất bại) + lưu context đầy đủ\n3. Build dashboard đơn giản tại /admin/logs — xem 50 log gần nhất, lọc theo loại\n4. Cấu hình alert: nếu ≥ 3 ERROR trong 10 phút → Telegram thông báo ngay\n5. Tạo báo cáo tự động hàng ngày: tổng requests, tỷ lệ lỗi, thời gian phản hồi trung bình\n\nNộp bài:\n- Screenshot /admin/logs đang hiển thị log thật (có dữ liệu thật)\n- Screenshot Telegram alert khi có lỗi (test bằng cách trigger lỗi cố ý)\n- Screenshot báo cáo hàng ngày của agent (hoặc preview dashboard)\n- Mô tả ngắn: agent đang log những gì, alert khi nào\n\n✅ Được duyệt khi: Logs ghi được ít nhất 10 entries thật, có ≥ 1 alert được gửi qua Telegram khi test lỗi.',
    5],
   [20, 'Optimize & Scale',
    'Tối ưu chi phí API, caching responses, xử lý concurrent requests.',
-   'Nội dung đầy đủ chưa unlock.\n\nMục tiêu: Tối ưu chi phí API, caching responses, xử lý concurrent requests. Chuẩn bị hệ thống cho nhiều người dùng.',
+   'SOP 6 bước:\n1. Audit chi phí: xem lại logs ngày 19, tính token usage và cost mỗi ngày\n2. Thêm response cache: câu hỏi đã trả lời → lưu cache 1 giờ (Redis hoặc file JSON)\n3. Xử lý concurrent: queue system đơn giản, tránh gọi API trùng lặp\n4. Rate limiting: tối đa 10 requests/user/phút để tránh lạm dụng\n5. Optimize prompt: cắt context thừa, rút ngắn system prompt\n6. Load test: gửi 50 requests cùng lúc, đo thời gian phản hồi trước và sau\n\nNộp bài:\n- Screenshot chi phí API trước và sau optimize (so sánh cụ thể)\n- Screenshot cache đang hoạt động (cache hit count > 0)\n- Kết quả load test: response time với nhiều requests cùng lúc\n- Mô tả: đã tối ưu được bao nhiêu % chi phí hoặc thời gian phản hồi\n\n✅ Được duyệt khi: Cache đang hoạt động với ít nhất 1 cache hit thật, thể hiện được số liệu cải thiện cụ thể.',
    5],
   [21, 'Demo Cuối Khoá & Tổng Kết',
    'Trình bày Agent hoàn chỉnh của bạn — chia sẻ bài học, kết quả, kế hoạch tiếp theo.',
-   'Nội dung đầy đủ chưa unlock.\n\nMục tiêu: Demo AI Agent hoàn chỉnh trước cộng đồng. Chia sẻ:\n- Agent làm được gì?\n- Kết quả thực tế (tiết kiệm bao nhiêu thời gian, bao nhiêu đơn hàng?)\n- Bài học quan trọng nhất sau 21 ngày\n- Kế hoạch tiếp theo sau khi hoàn thành',
+   'Chuẩn bị bài demo (làm trước meeting 30-60 phút):\n1. Chạy thử toàn bộ hệ thống lần cuối — đảm bảo không có lỗi\n2. Chuẩn bị số liệu thật: bao nhiêu đơn, bao nhiêu lead, tiết kiệm bao nhiêu giờ/tuần\n3. Slide hoặc demo live: agent làm được gì (chọn 3-5 tính năng nổi bật nhất)\n4. Chuẩn bị 3 bài học quan trọng nhất sau 21 ngày\n5. Chuẩn bị kế hoạch tiếp theo: bạn sẽ làm gì với agent này sau khoá học?\n\nNộp bài:\n- Link recording demo (YouTube, Google Drive, hoặc Loom)\n- Link sản phẩm/website agent đang chạy thật\n- Số liệu kết quả cụ thể (dù nhỏ): đơn hàng, lead, thời gian tiết kiệm được\n- Cảm nhận cá nhân: điều gì thay đổi nhất sau 21 ngày\n\n✅ Được duyệt khi: Có demo agent thật đang chạy (không chỉ là code), chia sẻ ≥ 1 số liệu kết quả cụ thể, và cảm nhận thật (không phải AI viết hoàn toàn).',
    10],
 ];
 
@@ -503,6 +503,18 @@ const CHALLENGE_DAYS = [
       );
       console.log('  One-time content migration: updated all 21 days with real content.');
     }
+  }
+
+  // Migration: update days 8,9,13-21 with complete Nộp bài + ✅ format
+  const day9check = db.get('SELECT instructions FROM challenge_days WHERE day_number = 9 LIMIT 1');
+  const needsFormatUpdate = day9check && day9check.instructions &&
+    !day9check.instructions.includes('✅ Được duyệt khi:');
+  if (needsFormatUpdate) {
+    [8, 9, 13, 14, 15, 16, 17, 18, 19, 20, 21].forEach(num => {
+      const d = CHALLENGE_DAYS.find(c => c[0] === num);
+      if (d) db.run('UPDATE challenge_days SET title=?,description=?,instructions=?,xp_reward=? WHERE day_number=?', [d[1], d[2], d[3], d[4], num]);
+    });
+    console.log('  Updated challenge days 8,9,13-21: added Nộp bài + ✅ Được duyệt khi sections.');
   }
 
   // Seed default site settings

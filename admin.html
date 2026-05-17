@@ -862,6 +862,24 @@
         grid-template-columns: 1fr;
       }
     }
+
+    /* ── Rich Text Editor ──────────────────────────── */
+    .rte-wrap { border: 1px solid var(--border); border-radius: var(--r-sm); overflow: hidden; background: #fff; }
+    .rte-toolbar { display: flex; gap: 2px; padding: 4px 6px; background: #f8fafc; border-bottom: 1px solid var(--border); flex-wrap: wrap; align-items: center; }
+    .rte-btn { padding: 3px 8px; border: 1px solid transparent; background: transparent; cursor: pointer; border-radius: 4px; font-size: 12px; color: var(--text); line-height: 1.4; font-family: var(--font); }
+    .rte-btn:hover { background: var(--border); border-color: var(--border); }
+    .rte-btn b, .rte-btn i { font-family: serif; font-size: 13px; }
+    .rte-sep { width: 1px; height: 16px; background: var(--border); margin: 0 3px; display: inline-block; }
+    .rte-editor { padding: 8px 10px; outline: none; font-size: 13px; line-height: 1.7; color: var(--text); min-height: 80px; }
+    .rte-editor:empty::before { content: attr(data-placeholder); color: var(--light); pointer-events: none; display: block; }
+    .rte-editor h2 { font-size: 15px; font-weight: 700; margin: 6px 0 3px; }
+    .rte-editor h3 { font-size: 13px; font-weight: 700; margin: 4px 0 2px; }
+    .rte-editor ul, .rte-editor ol { padding-left: 20px; margin: 4px 0; }
+    .rte-editor li { margin: 2px 0; }
+    .rte-editor p { margin: 2px 0; }
+    .rte-editor strong { font-weight: 700; }
+    .rte-editor em { font-style: italic; }
+    .rte-editor a { color: var(--primary); text-decoration: underline; cursor: pointer; }
   </style>
 </head>
 
@@ -1266,14 +1284,14 @@
               </div>
               <div>
                 <label style="display:block;font-size:11px;font-weight:600;color:var(--muted);margin-bottom:4px;text-transform:uppercase;">Mô tả ngắn</label>
-                <textarea id="dDesc" rows="3" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:6px;font-family:var(--font);font-size:13px;resize:vertical;outline:none;line-height:1.6;" placeholder="Mô tả tóm tắt task..."></textarea>
+                <div id="dDescWrap"></div>
               </div>
               <div style="background:#f0f9ff;border:1px solid #bae6fd;border-radius:6px;padding:8px 12px;font-size:11px;color:#0369a1;line-height:1.5;">
                 📋 Thứ tự hiển thị: <strong>SOP → Hướng dẫn nộp → Tiêu chí duyệt</strong>
               </div>
               <div>
                 <label style="display:block;font-size:11px;font-weight:600;color:var(--muted);margin-bottom:4px;text-transform:uppercase;">🛠 SOP — Hướng dẫn chi tiết</label>
-                <textarea id="dSop" rows="5" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:6px;font-family:var(--font);font-size:12px;resize:vertical;outline:none;line-height:1.6;" placeholder="1. Bước đầu tiên&#10;2. Bước thứ hai&#10;- Gợi ý thêm"></textarea>
+                <div id="dSopWrap"></div>
               </div>
               <div>
                 <label style="display:block;font-size:11px;font-weight:600;color:var(--muted);margin-bottom:4px;text-transform:uppercase;">📬 Hướng dẫn nộp bài</label>
@@ -2465,8 +2483,8 @@
       document.getElementById('dayModalTitle').textContent = 'Thêm ngày mới';
       document.getElementById('editDayId').value = '';
       document.getElementById('dTitle').value = '';
-      document.getElementById('dDesc').value = '';
-      document.getElementById('dSop').value = '';
+      setRteContent('dDescWrap', '');
+      setRteContent('dSopWrap', '');
       document.getElementById('dSubmitGuide').value = '';
       document.getElementById('dApproval').value = '';
       document.getElementById('dXp').value = 5;
@@ -2484,11 +2502,12 @@
 
     async function saveDayModal() {
       const id = document.getElementById('editDayId').value;
-      const challengeId = document.getElementById('editDayChallengeId').value;
+      const challengeId = document.getElementById('editDayChallengeId').value || currentDayListChallengeId;
       const title = document.getElementById('dTitle').value.trim();
       if (!title) { showToast('Vui lòng nhập tiêu đề ngày.', 'red'); return; }
+      if (!challengeId) { showToast('Chưa chọn thử thách. Vui lòng quay lại và chọn thử thách.', 'red'); return; }
       const deadlineVal = document.getElementById('dDeadline').value;
-      const sop         = document.getElementById('dSop').value.trim();
+      const sop         = getRteContent('dSopWrap');
       const submitGuide = document.getElementById('dSubmitGuide').value.trim();
       const approval    = document.getElementById('dApproval').value.trim();
       let instructions  = sop;
@@ -2496,7 +2515,7 @@
       if (approval)    instructions += '\n✅ Được duyệt khi: ' + approval;
       const body = {
         title,
-        description: document.getElementById('dDesc').value.trim(),
+        description: getRteContent('dDescWrap'),
         instructions,
         xp_reward: parseInt(document.getElementById('dXp').value, 10) || 5,
         duration_hours: parseInt(document.getElementById('dDuration').value, 10) || 24,
@@ -2513,7 +2532,7 @@
         resetDayForm();
         if (currentDayListChallengeId) refreshDayList();
         else loadChallenges();
-      } catch (e) { showToast('Lỗi kết nối.', 'red'); }
+      } catch (e) { showToast(e.message || 'Lỗi kết nối.', 'red'); }
     }
 
     // Challenge day list modal
@@ -2537,6 +2556,7 @@
         body.innerHTML = '<div style="text-align:center;padding:20px;color:var(--muted);">Chưa có ngày nào. Bấm "+ Thêm ngày" để bắt đầu.</div>';
         return;
       }
+      const _days = days; // keep reference for RTE init
       body.innerHTML = days.map(d => {
         const dlRaw = d.submission_deadline || '';
         const dlInput = dlRaw ? dlRaw.slice(0, 16).replace(' ', 'T') : '';
@@ -2572,14 +2592,14 @@
           </div>
           <div>
             <label style="font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;display:block;margin-bottom:4px;">Mô tả ngắn</label>
-            <textarea id="ai-desc-${d.id}" rows="3" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:6px;font-family:var(--font);font-size:13px;resize:vertical;outline:none;line-height:1.6;">${escHtml(d.description || '')}</textarea>
+            <div id="ai-desc-wrap-${d.id}"></div>
           </div>
           <div style="background:#f0f9ff;border:1px solid #bae6fd;border-radius:6px;padding:8px 12px;font-size:11px;color:#0369a1;line-height:1.5;">
             📋 Nội dung bên dưới hiển thị theo thứ tự: <strong>SOP → Hướng dẫn nộp → Tiêu chí duyệt</strong>
           </div>
           <div>
             <label style="font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;display:block;margin-bottom:4px;">🛠 SOP — Hướng dẫn chi tiết</label>
-            <textarea id="ai-sop-${d.id}" rows="5" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:6px;font-family:var(--font);font-size:12px;resize:vertical;outline:none;line-height:1.6;" placeholder="1. Bước đầu tiên&#10;2. Bước thứ hai&#10;- Gợi ý thêm">${escHtml(parsedSop)}</textarea>
+            <div id="ai-sop-wrap-${d.id}"></div>
           </div>
           <div>
             <label style="font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;display:block;margin-bottom:4px;">📬 Hướng dẫn nộp bài</label>
@@ -2612,12 +2632,34 @@
       </div>
     </div>`;
       }).join('');
+
+      // Store init data for lazy RTE initialization
+      _days.forEach(d => {
+        const { sop: parsedSop } = parseInstructionsAdmin(d.instructions || '');
+        const sopWrap = document.getElementById(`ai-sop-wrap-${d.id}`);
+        if (sopWrap) sopWrap._rteInitHtml = parsedSop;
+        const descWrap = document.getElementById(`ai-desc-wrap-${d.id}`);
+        if (descWrap) descWrap._rteInitHtml = d.description || '';
+      });
     }
 
     function toggleDayAccordion(dayId) {
       const form = document.getElementById(`acc-form-${dayId}`);
       const arrow = document.getElementById(`acc-arrow-${dayId}`);
       const isOpen = form.style.display !== 'none';
+      if (!isOpen) {
+        // Lazy-init RTEs when accordion opens
+        const sopWrap = document.getElementById(`ai-sop-wrap-${dayId}`);
+        if (sopWrap && !sopWrap._rteReady) {
+          sopWrap.innerHTML = buildRteHtml(sopWrap._rteInitHtml || '', '1. Bước đầu tiên...', '120px');
+          sopWrap._rteReady = true;
+        }
+        const descWrap = document.getElementById(`ai-desc-wrap-${dayId}`);
+        if (descWrap && !descWrap._rteReady) {
+          descWrap.innerHTML = buildRteHtml(descWrap._rteInitHtml || '', 'Mô tả tóm tắt task...', '80px');
+          descWrap._rteReady = true;
+        }
+      }
       form.style.display = isOpen ? 'none' : 'block';
       arrow.textContent = isOpen ? '›' : '˅';
       arrow.style.transform = isOpen ? '' : 'rotate(0deg)';
@@ -2627,15 +2669,17 @@
       const title = document.getElementById(`ai-title-${dayId}`).value.trim();
       if (!title) { showToast('Tiêu đề không được để trống.', 'red'); return; }
       const dlVal = document.getElementById(`ai-dl-${dayId}`).value;
-      const sop         = document.getElementById(`ai-sop-${dayId}`).value.trim();
+      const sopEl = document.querySelector(`#ai-sop-wrap-${dayId} .rte-editor`);
+      const sop = sopEl ? sopEl.innerHTML.trim().replace(/^<br>$/, '') : '';
       const submitGuide = document.getElementById(`ai-submit-${dayId}`).value.trim();
       const approval    = document.getElementById(`ai-approval-${dayId}`).value.trim();
       let instructions  = sop;
       if (submitGuide) instructions += (instructions ? '\nNộp bài:\n' : 'Nộp bài:\n') + submitGuide;
       if (approval)    instructions += '\n✅ Được duyệt khi: ' + approval;
+      const descEl = document.querySelector(`#ai-desc-wrap-${dayId} .rte-editor`);
       const body = {
         title,
-        description: document.getElementById(`ai-desc-${dayId}`).value.trim(),
+        description: descEl ? descEl.innerHTML.trim().replace(/^<br>$/, '') : '',
         instructions,
         xp_reward: parseInt(document.getElementById(`ai-xp-${dayId}`).value, 10) || 5,
         duration_hours: parseInt(document.getElementById(`ai-dur-${dayId}`).value, 10) || 24,
@@ -2681,9 +2725,9 @@
         const day = res.days.find(d => d.id === dayId);
         if (!day) return;
         document.getElementById('dTitle').value = day.title || '';
-        document.getElementById('dDesc').value = day.description || '';
+        setRteContent('dDescWrap', day.description || '');
         const parsed = parseInstructionsAdmin(day.instructions || '');
-        document.getElementById('dSop').value = parsed.sop;
+        setRteContent('dSopWrap', parsed.sop);
         document.getElementById('dSubmitGuide').value = parsed.submitLines;
         document.getElementById('dApproval').value = parsed.approvalText;
         document.getElementById('dXp').value = day.xp_reward || 5;
@@ -2876,9 +2920,73 @@
     }
 
     function escHtml(s) { return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+
+    // ── Rich Text Editor ──────────────────────────────────────────
+    function buildRteHtml(initialHtml, placeholder, minHeight) {
+      return `<div class="rte-wrap">
+        <div class="rte-toolbar">
+          <button type="button" class="rte-btn" onmousedown="event.preventDefault()" onclick="document.execCommand('bold')" title="Đậm (Ctrl+B)"><b>B</b></button>
+          <button type="button" class="rte-btn" onmousedown="event.preventDefault()" onclick="document.execCommand('italic')" title="Nghiêng (Ctrl+I)"><i>I</i></button>
+          <span class="rte-sep"></span>
+          <button type="button" class="rte-btn" onmousedown="event.preventDefault()" onclick="document.execCommand('formatBlock',false,'h2')" title="Heading 2" style="font-weight:700;">H2</button>
+          <button type="button" class="rte-btn" onmousedown="event.preventDefault()" onclick="document.execCommand('formatBlock',false,'h3')" title="Heading 3" style="font-weight:700;">H3</button>
+          <button type="button" class="rte-btn" onmousedown="event.preventDefault()" onclick="document.execCommand('formatBlock',false,'p')" title="Đoạn văn bình thường">¶</button>
+          <span class="rte-sep"></span>
+          <button type="button" class="rte-btn" onmousedown="event.preventDefault()" onclick="document.execCommand('insertUnorderedList')" title="Danh sách dấu chấm">• —</button>
+          <button type="button" class="rte-btn" onmousedown="event.preventDefault()" onclick="document.execCommand('insertOrderedList')" title="Danh sách đánh số">1.</button>
+          <span class="rte-sep"></span>
+          <button type="button" class="rte-btn" onmousedown="event.preventDefault()" onclick="rteInsertLink(this)" title="Chèn link">🔗</button>
+          <button type="button" class="rte-btn" onmousedown="event.preventDefault()" onclick="document.execCommand('unlink')" title="Xóa link">🔗̶</button>
+          <span class="rte-sep"></span>
+          <button type="button" class="rte-btn" onmousedown="event.preventDefault()" onclick="document.execCommand('removeFormat')" title="Xóa định dạng" style="text-decoration:line-through;">T</button>
+        </div>
+        <div class="rte-editor" contenteditable="true" style="min-height:${minHeight}" data-placeholder="${placeholder}">${initialHtml}</div>
+      </div>`;
+    }
+
+    function rteInsertLink(btn) {
+      const editor = btn.closest('.rte-wrap').querySelector('.rte-editor');
+      const sel = window.getSelection();
+      const selectedText = sel && sel.rangeCount ? sel.getRangeAt(0).toString() : '';
+      const url = prompt('Nhập URL link:', 'https://');
+      if (!url || url === 'https://') return;
+      editor.focus();
+      if (selectedText) {
+        document.execCommand('createLink', false, url);
+        // Open in new tab
+        const links = editor.querySelectorAll('a');
+        links.forEach(a => { if (a.href === url || a.getAttribute('href') === url) { a.target = '_blank'; a.rel = 'noopener'; } });
+      } else {
+        const linkHtml = `<a href="${url}" target="_blank" rel="noopener">${url}</a>`;
+        document.execCommand('insertHTML', false, linkHtml);
+      }
+    }
+
+    function initRTE(containerId, initialHtml, minHeight) {
+      const wrap = document.getElementById(containerId);
+      if (!wrap) return;
+      wrap.innerHTML = buildRteHtml(initialHtml || '', '', minHeight || '80px');
+    }
+
+    function getRteContent(containerId) {
+      const editor = document.querySelector(`#${containerId} .rte-editor`);
+      if (!editor) return '';
+      const html = editor.innerHTML.trim();
+      if (html === '' || html === '<br>') return '';
+      return html;
+    }
+
+    function setRteContent(containerId, html) {
+      const editor = document.querySelector(`#${containerId} .rte-editor`);
+      if (editor) editor.innerHTML = html || '';
+    }
     function escJs(s) { return String(s || '').replace(/'/g, "\\'").replace(/\n/g, '\\n'); }
 
     // ── Init ──────────────────────────────────────────────────────
+    // Initialize static RTEs in the add/edit day form
+    initRTE('dDescWrap', '', '80px');
+    initRTE('dSopWrap', '', '120px');
+
     const saved = sessionStorage.getItem('adminKey');
     if (saved) {
       adminKey = saved;

@@ -84,6 +84,15 @@
 .day-description {
   font-size:var(--fs-base);color:var(--text);line-height:1.8;
 }
+.day-description h2,.sop-block h2 { font-size:17px;font-weight:700;margin:10px 0 4px;color:var(--text); }
+.day-description h3,.sop-block h3 { font-size:15px;font-weight:700;margin:8px 0 3px;color:var(--text); }
+.day-description ul,.sop-block ul,.day-description ol,.sop-block ol { padding-left:22px;margin:6px 0; }
+.day-description li,.sop-block li { margin:3px 0; }
+.day-description strong,.sop-block strong { font-weight:700; }
+.day-description em,.sop-block em { font-style:italic; }
+.day-description p,.sop-block p { margin:4px 0; }
+.day-description a,.sop-block a { color:var(--color-primary);text-decoration:underline; }
+.day-description a:hover,.sop-block a:hover { opacity:.8; }
 
 /* ── Section 2: SOP ── */
 .sop-block { font-size:var(--fs-sm);color:var(--text);line-height:1.8; }
@@ -483,6 +492,34 @@ function escHtml(s) {
   return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
+function sanitizeHtml(html) {
+  const tmp = document.createElement('div');
+  tmp.innerHTML = html;
+  tmp.querySelectorAll('script,style,iframe,object,embed,form').forEach(n => n.remove());
+  tmp.querySelectorAll('*').forEach(el => {
+    for (const attr of [...el.attributes]) {
+      if (attr.name.startsWith('on') || (attr.name === 'href' && /^javascript:/i.test(attr.value))) {
+        el.removeAttribute(attr.name);
+      }
+    }
+  });
+  return tmp.innerHTML;
+}
+
+function isHtmlContent(str) {
+  return /<[a-z][\s\S]*>/i.test(str || '');
+}
+
+function renderRichContent(el, content) {
+  if (!content) { el.textContent = '—'; return; }
+  if (isHtmlContent(content)) {
+    el.innerHTML = sanitizeHtml(content);
+  } else {
+    el.style.whiteSpace = 'pre-wrap';
+    el.textContent = content;
+  }
+}
+
 // ── Text parsing ──────────────────────────────────────────
 function parseInstructions(instructions) {
   const nobaiIdx = instructions.indexOf('\nNộp bài:');
@@ -574,7 +611,13 @@ function renderPage(data) {
   // Hero
   document.getElementById('heroDayBadge').textContent = `Ngày thứ ${day.day_number}`;
   document.getElementById('heroDayTitle').textContent = day.title;
-  document.getElementById('heroDayDesc').textContent  = day.description || '';
+  const heroDescEl = document.getElementById('heroDayDesc');
+  if (isHtmlContent(day.description)) {
+    heroDescEl.innerHTML = sanitizeHtml(day.description);
+  } else {
+    heroDescEl.style.whiteSpace = 'pre-wrap';
+    heroDescEl.textContent = day.description || '';
+  }
   document.getElementById('heroXpBadge').textContent  = `+${day.xp_reward} XP`;
 
   const statusLabels = {
@@ -590,11 +633,16 @@ function renderPage(data) {
   statusBadgeEl.className = `day-status-badge ${cls}`;
 
   // Section 1: description
-  document.getElementById('dayDescContent').textContent = day.description || '—';
+  renderRichContent(document.getElementById('dayDescContent'), day.description || '—');
 
   // Sections 2 & 3: parse instructions
   const { sopRaw, submitLines, approvalText } = parseInstructions(day.instructions || '');
-  document.getElementById('sopContent').innerHTML   = renderSopLines(sopRaw);
+  const sopEl = document.getElementById('sopContent');
+  if (isHtmlContent(sopRaw)) {
+    sopEl.innerHTML = sanitizeHtml(sopRaw);
+  } else {
+    sopEl.innerHTML = renderSopLines(sopRaw);
+  }
   document.getElementById('nobaiContent').innerHTML = renderSubmitGuideLines(submitLines);
 
   if (approvalText) {
