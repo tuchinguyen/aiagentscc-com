@@ -442,6 +442,11 @@ const CHALLENGE_DAYS = [
     db.exec('ALTER TABLE challenge_days ADD COLUMN submission_deadline TEXT');
     console.log('  Migrated challenge_days: added submission_deadline.');
   }
+  const cdCols4 = db.all('PRAGMA table_info(challenge_days)').map(c => c.name);
+  if (!cdCols4.includes('intro')) {
+    db.exec('ALTER TABLE challenge_days ADD COLUMN intro TEXT');
+    console.log('  Migrated challenge_days: added intro.');
+  }
 
   // Migrate comments: add parent_id for nested replies
   const cmtCols = db.all('PRAGMA table_info(comments)').map(c => c.name);
@@ -1400,22 +1405,23 @@ const CHALLENGE_DAYS = [
   });
 
   app.post('/api/admin/challenges/:id/days', requireAdmin, (req, res) => {
-    const { title, description, instructions, xp_reward = 5, duration_hours = 24 } = req.body;
+    const { title, intro, description, instructions, xp_reward = 5, duration_hours = 24 } = req.body;
     const challenge_id = Number(req.params.id);
     if (!title) return res.status(400).json({ error: 'Tiêu đề ngày là bắt buộc.' });
     const maxDay = db.get('SELECT COALESCE(MAX(day_number),0) AS m FROM challenge_days WHERE challenge_id = ?', [challenge_id]);
     const day_number = maxDay.m + 1;
     const result = db.run(
-      'INSERT INTO challenge_days (challenge_id, day_number, title, description, instructions, xp_reward, duration_hours) VALUES (?,?,?,?,?,?,?)',
-      [challenge_id, day_number, title, description || '', instructions || '', Number(xp_reward), Number(duration_hours)]
+      'INSERT INTO challenge_days (challenge_id, day_number, title, intro, description, instructions, xp_reward, duration_hours) VALUES (?,?,?,?,?,?,?,?)',
+      [challenge_id, day_number, title, intro || '', description || '', instructions || '', Number(xp_reward), Number(duration_hours)]
     );
     res.status(201).json({ success: true, id: result.lastInsertRowid, day_number });
   });
 
   app.patch('/api/admin/challenge-days/:id', requireAdmin, (req, res) => {
-    const { title, description, instructions, xp_reward, duration_hours, submission_deadline } = req.body;
+    const { title, intro, description, instructions, xp_reward, duration_hours, submission_deadline } = req.body;
     const id = req.params.id;
     if (title !== undefined)               db.run('UPDATE challenge_days SET title = ? WHERE id = ?', [title, id]);
+    if (intro !== undefined)               db.run('UPDATE challenge_days SET intro = ? WHERE id = ?', [intro, id]);
     if (description !== undefined)         db.run('UPDATE challenge_days SET description = ? WHERE id = ?', [description, id]);
     if (instructions !== undefined)        db.run('UPDATE challenge_days SET instructions = ? WHERE id = ?', [instructions, id]);
     if (xp_reward !== undefined)           db.run('UPDATE challenge_days SET xp_reward = ? WHERE id = ?', [Number(xp_reward), id]);

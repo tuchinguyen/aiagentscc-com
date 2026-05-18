@@ -1283,7 +1283,11 @@
                 <input class="search-input" style="width:100%" id="dTitle" placeholder="VD: Giới thiệu bản thân">
               </div>
               <div>
-                <label style="display:block;font-size:11px;font-weight:600;color:var(--muted);margin-bottom:4px;text-transform:uppercase;">Mô tả ngắn</label>
+                <label style="display:block;font-size:11px;font-weight:600;color:var(--muted);margin-bottom:4px;text-transform:uppercase;">Giới thiệu nhiệm vụ</label>
+                <div id="dIntroWrap"></div>
+              </div>
+              <div>
+                <label style="display:block;font-size:11px;font-weight:600;color:var(--muted);margin-bottom:4px;text-transform:uppercase;">Nội dung nhiệm vụ</label>
                 <div id="dDescWrap"></div>
               </div>
               <div style="background:#f0f9ff;border:1px solid #bae6fd;border-radius:6px;padding:8px 12px;font-size:11px;color:#0369a1;line-height:1.5;">
@@ -2483,6 +2487,7 @@
       document.getElementById('dayModalTitle').textContent = 'Thêm ngày mới';
       document.getElementById('editDayId').value = '';
       document.getElementById('dTitle').value = '';
+      setRteContent('dIntroWrap', '');
       setRteContent('dDescWrap', '');
       setRteContent('dSopWrap', '');
       setRteContent('dSubmitGuideWrap', '');
@@ -2515,6 +2520,7 @@
       if (approval)    instructions += '\n✅ Được duyệt khi: ' + approval;
       const body = {
         title,
+        intro: getRteContent('dIntroWrap'),
         description: getRteContent('dDescWrap'),
         instructions,
         xp_reward: parseInt(document.getElementById('dXp').value, 10) || 5,
@@ -2591,7 +2597,11 @@
             <input id="ai-title-${d.id}" class="search-input" style="width:100%;font-size:13px;" value="${escHtml(d.title)}">
           </div>
           <div>
-            <label style="font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;display:block;margin-bottom:4px;">Mô tả ngắn</label>
+            <label style="font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;display:block;margin-bottom:4px;">Giới thiệu nhiệm vụ</label>
+            <div id="ai-intro-wrap-${d.id}"></div>
+          </div>
+          <div>
+            <label style="font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;display:block;margin-bottom:4px;">Nội dung nhiệm vụ</label>
             <div id="ai-desc-wrap-${d.id}"></div>
           </div>
           <div style="background:#f0f9ff;border:1px solid #bae6fd;border-radius:6px;padding:8px 12px;font-size:11px;color:#0369a1;line-height:1.5;">
@@ -2636,6 +2646,8 @@
       // Store init data for lazy RTE initialization
       _days.forEach(d => {
         const { sop: parsedSop, submitLines: parsedSubmit, approvalText: parsedApproval } = parseInstructionsAdmin(d.instructions || '');
+        const introWrap = document.getElementById(`ai-intro-wrap-${d.id}`);
+        if (introWrap) introWrap._rteInitHtml = d.intro || '';
         const sopWrap = document.getElementById(`ai-sop-wrap-${d.id}`);
         if (sopWrap) sopWrap._rteInitHtml = parsedSop;
         const descWrap = document.getElementById(`ai-desc-wrap-${d.id}`);
@@ -2653,6 +2665,11 @@
       const isOpen = form.style.display !== 'none';
       if (!isOpen) {
         // Lazy-init RTEs when accordion opens
+        const introWrap = document.getElementById(`ai-intro-wrap-${dayId}`);
+        if (introWrap && !introWrap._rteReady) {
+          introWrap.innerHTML = buildRteHtml(introWrap._rteInitHtml || '', 'Giới thiệu ngắn về nhiệm vụ...', '60px');
+          introWrap._rteReady = true;
+        }
         const sopWrap = document.getElementById(`ai-sop-wrap-${dayId}`);
         if (sopWrap && !sopWrap._rteReady) {
           sopWrap.innerHTML = buildRteHtml(sopWrap._rteInitHtml || '', '1. Bước đầu tiên...', '120px');
@@ -2660,7 +2677,7 @@
         }
         const descWrap = document.getElementById(`ai-desc-wrap-${dayId}`);
         if (descWrap && !descWrap._rteReady) {
-          descWrap.innerHTML = buildRteHtml(descWrap._rteInitHtml || '', 'Mô tả tóm tắt task...', '80px');
+          descWrap.innerHTML = buildRteHtml(descWrap._rteInitHtml || '', 'Mô tả chi tiết nội dung nhiệm vụ...', '80px');
           descWrap._rteReady = true;
         }
         const submitWrap = document.getElementById(`ai-submit-wrap-${dayId}`);
@@ -2696,9 +2713,11 @@
       let instructions  = sop;
       if (submitGuide) instructions += (instructions ? '\nNộp bài:\n' : 'Nộp bài:\n') + submitGuide;
       if (approval)    instructions += '\n✅ Được duyệt khi: ' + approval;
+      const introEl = document.querySelector(`#ai-intro-wrap-${dayId} .rte-editor`);
       const descEl = document.querySelector(`#ai-desc-wrap-${dayId} .rte-editor`);
       const body = {
         title,
+        intro: introEl ? introEl.innerHTML.trim().replace(/^<br>$/, '') : '',
         description: descEl ? descEl.innerHTML.trim().replace(/^<br>$/, '') : '',
         instructions,
         xp_reward: parseInt(document.getElementById(`ai-xp-${dayId}`).value, 10) || 5,
@@ -2745,6 +2764,7 @@
         const day = res.days.find(d => d.id === dayId);
         if (!day) return;
         document.getElementById('dTitle').value = day.title || '';
+        setRteContent('dIntroWrap', day.intro || '');
         setRteContent('dDescWrap', day.description || '');
         const parsed = parseInstructionsAdmin(day.instructions || '');
         setRteContent('dSopWrap', parsed.sop);
@@ -3010,6 +3030,7 @@
 
     // ── Init ──────────────────────────────────────────────────────
     // Initialize static RTEs in the add/edit day form
+    initRTE('dIntroWrap', '', '60px');
     initRTE('dDescWrap', '', '80px');
     initRTE('dSopWrap', '', '120px');
     initRTE('dSubmitGuideWrap', '', '80px');

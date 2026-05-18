@@ -612,11 +612,12 @@ function renderPage(data) {
   document.getElementById('heroDayBadge').textContent = `Ngày thứ ${day.day_number}`;
   document.getElementById('heroDayTitle').textContent = day.title;
   const heroDescEl = document.getElementById('heroDayDesc');
-  if (isHtmlContent(day.description)) {
-    heroDescEl.innerHTML = sanitizeHtml(day.description);
+  const heroText = day.intro || '';
+  if (isHtmlContent(heroText)) {
+    heroDescEl.innerHTML = sanitizeHtml(heroText);
   } else {
     heroDescEl.style.whiteSpace = 'pre-wrap';
-    heroDescEl.textContent = day.description || '';
+    heroDescEl.textContent = heroText;
   }
   document.getElementById('heroXpBadge').textContent  = `+${day.xp_reward} XP`;
 
