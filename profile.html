@@ -443,6 +443,97 @@
       margin-bottom: 12px;
     }
 
+    /* Intake profile section */
+    .intake-card {
+      background: #fff;
+      border: 1px solid #bae6fd;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+    .intake-card-head {
+      padding: 14px 18px 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #e0f2fe;
+      background: #f0f9ff;
+    }
+    .intake-card-title {
+      font-weight: 700;
+      font-size: var(--fs-sm);
+      color: #0369a1;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .intake-card-date {
+      font-size: 11px;
+      color: #64748b;
+    }
+    .intake-card-body {
+      padding: 16px 18px;
+    }
+    .intake-md h1 { display: none; }
+    .intake-md h2 {
+      font-size: 11px;
+      font-weight: 700;
+      color: #0284c7;
+      text-transform: uppercase;
+      letter-spacing: .6px;
+      margin: 16px 0 6px;
+      padding-bottom: 5px;
+      border-bottom: 1px solid #e0f2fe;
+    }
+    .intake-md h2:first-child { margin-top: 0; }
+    .intake-md p {
+      font-size: 13px;
+      line-height: 1.65;
+      color: var(--text);
+      margin-bottom: 5px;
+    }
+    .intake-md strong { font-weight: 600; }
+    .intake-md ul { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 4px; }
+    .intake-md li {
+      font-size: 13px;
+      line-height: 1.6;
+      color: var(--text);
+      padding-left: 16px;
+      position: relative;
+    }
+    .intake-md li::before {
+      content: '→';
+      position: absolute;
+      left: 0;
+      color: #0ea5e9;
+      font-weight: 700;
+    }
+    .intake-no-profile {
+      background: #f8fafc;
+      border: 1.5px dashed #cbd5e1;
+      border-radius: var(--radius-lg);
+      padding: 24px 20px;
+      text-align: center;
+      margin-bottom: 16px;
+    }
+    .intake-no-profile p { font-size: 13px; color: var(--text-muted); margin-bottom: 12px; }
+    .intake-redo {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #0284c7;
+      background: #e0f2fe;
+      border: none;
+      border-radius: 8px;
+      padding: 6px 14px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background .18s;
+    }
+    .intake-redo:hover { background: #bae6fd; }
+
     .rp-card-title {
       font-size: var(--fs-xs);
       font-weight: 700;
@@ -1145,6 +1236,9 @@
               </div>
             </div>
 
+            <!-- Intake profile (chỉ hiện với chủ trang) -->
+            <div id="intakeSectionWrap"></div>
+
             <!-- Tabs + content -->
             <div class="profile-section-card">
               <div class="profile-tabs-bar">
@@ -1374,13 +1468,18 @@
       const userId = params.get('id');
       if (!userId) { location.href = 'members.html'; return; }
 
+      const isOwnProfile = currentUser && String(currentUser.id) === String(userId);
+
       try {
-        const [uData, pData, aData, cData] = await Promise.all([
+        const fetches = [
           fetch(`${API}/users/${userId}`).then(r => r.json()),
           fetch(`${API}/users/${userId}/posts`).then(r => r.json()),
           fetch(`${API}/users/${userId}/activity`).then(r => r.json()),
           fetch(`${API}/users/${userId}/comments`).then(r => r.json()),
-        ]);
+        ];
+        if (isOwnProfile) fetches.push(fetch(`/api/intake/profile/${userId}`).then(r => r.json()));
+
+        const [uData, pData, aData, cData, intakeData] = await Promise.all(fetches);
 
         if (uData.error) { showError(); return; }
 
@@ -1389,7 +1488,7 @@
         _comments = cData.posts || [];
         const activityMap = aData.activity || {};
 
-        renderProfile(_profileUser, activityMap);
+        renderProfile(_profileUser, activityMap, intakeData || null);
       } catch (e) {
         showError();
       }
@@ -1400,7 +1499,64 @@
       document.getElementById('profileError').style.display = 'block';
     }
 
-    function renderProfile(u, activityMap) {
+    function renderIntakeSection(intakeData, isMe) {
+      const wrap = document.getElementById('intakeSectionWrap');
+      if (!wrap || !isMe) return;
+
+      if (intakeData && intakeData.profile) {
+        const date = intakeData.doneAt
+          ? new Date(intakeData.doneAt).toLocaleDateString('vi-VN', { day:'2-digit', month:'2-digit', year:'numeric' })
+          : '';
+        wrap.innerHTML = `
+          <div class="intake-card">
+            <div class="intake-card-head">
+              <div class="intake-card-title">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+                Lộ trình cá nhân hóa
+              </div>
+              <div style="display:flex;align-items:center;gap:8px;">
+                ${date ? `<span class="intake-card-date">Cập nhật ${date}</span>` : ''}
+                <a href="intake.html" class="intake-redo">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-4.95"/></svg>
+                  Làm lại
+                </a>
+              </div>
+            </div>
+            <div class="intake-card-body">
+              <div class="intake-md">${renderIntakeMd(intakeData.profile)}</div>
+            </div>
+          </div>`;
+      } else {
+        wrap.innerHTML = `
+          <div class="intake-no-profile">
+            <p>Bạn chưa cá nhân hóa lộ trình — hoàn thành intake để nhận đề bài phù hợp với sản phẩm và mục tiêu của bạn.</p>
+            <a href="intake.html" class="intake-redo">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+              Bắt đầu cá nhân hóa lộ trình
+            </a>
+          </div>`;
+      }
+    }
+
+    function renderIntakeMd(md) {
+      const lines = md.split('\n');
+      let html = '', inList = false;
+      const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+      const fmt = s => esc(s).replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>');
+      for (const raw of lines) {
+        const line = raw.trim();
+        if (!line) { if (inList) { html += '</ul>'; inList = false; } continue; }
+        if (line.startsWith('# '))       { if (inList) { html += '</ul>'; inList=false; } html += `<h1>${esc(line.slice(2))}</h1>`; }
+        else if (line.startsWith('## ')) { if (inList) { html += '</ul>'; inList=false; } html += `<h2>${esc(line.slice(3))}</h2>`; }
+        else if (line.startsWith('- '))  { if (!inList) { html += '<ul>'; inList=true; } html += `<li>${fmt(line.slice(2))}</li>`; }
+        else if (line.startsWith('*') && line.endsWith('*') && !line.startsWith('**')) { continue; }
+        else { if (inList) { html += '</ul>'; inList=false; } html += `<p>${fmt(line)}</p>`; }
+      }
+      if (inList) html += '</ul>';
+      return html;
+    }
+
+    function renderProfile(u, activityMap, intakeData = null) {
       const lv = getLevel(u.xp || 0);
       const pct = Math.min(100, Math.round(((u.xp || 0) - lv.xpMin) / (lv.xpMax - lv.xpMin) * 100));
       const col = avColor(u.id);
@@ -1460,6 +1616,9 @@
 
       // Heatmap
       renderHeatmap(activityMap);
+
+      // Intake section (chỉ hiện với chủ trang)
+      renderIntakeSection(intakeData, isMe);
 
       // Tabs count
       const cotPosts = _posts.filter(p => p.post_type === 'cot');
