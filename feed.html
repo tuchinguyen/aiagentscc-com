@@ -1068,6 +1068,16 @@
       document.getElementById('sbAvatar').style.background = color;
       document.getElementById('sbName').textContent = currentUser.first_name + ' ' + currentUser.last_name;
       document.getElementById('sbLevel').textContent = `Level ${currentUser.level} · ${currentUser.xp} XP`;
+      const sbUserWrap = document.querySelector('#sidebar-user .user-avatar-wrap');
+      if (sbUserWrap) {
+        sbUserWrap.style.cursor = 'pointer';
+        sbUserWrap.onclick = () => window.location.href = `profile.html?id=${currentUser.id}`;
+      }
+      const sbUserInfo = document.querySelector('#sidebar-user .user-info');
+      if (sbUserInfo) {
+        sbUserInfo.style.cursor = 'pointer';
+        sbUserInfo.onclick = () => window.location.href = `profile.html?id=${currentUser.id}`;
+      }
     }
 
     // ── Feed ──────────────────────────────────────────────────────
@@ -1144,13 +1154,13 @@
         const xpToNext = lv.xpMax - (u.xp || 0);
         const xpPct = Math.min(Math.round(((u.xp || 0) - lv.xpMin) / (lv.xpMax - lv.xpMin) * 100), 100);
         document.getElementById('profileCard').innerHTML = `
-      <div class="profile-user-row">
+      <a href="profile.html?id=${u.id}" class="profile-user-row" style="text-decoration:none;color:inherit;cursor:pointer;">
         <div style="width:42px;height:42px;background:${color};border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:#fff;">${initials}</div>
         <div>
           <div class="profile-name">${u.first_name} ${u.last_name}</div>
           <div class="profile-title">🏁 Level ${lv.level}</div>
         </div>
-      </div>
+      </a>
       <div class="profile-level-row">
         <span class="profile-level">Lv.${lv.level}</span>
         <span class="profile-xp">${u.xp} XP</span>
