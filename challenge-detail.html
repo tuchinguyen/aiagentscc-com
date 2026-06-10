@@ -592,6 +592,13 @@ async function loadDetail() {
   try {
     const data = await fetch(`${API}/challenges/${challengeId}?user_id=${currentUser.id}`).then(r => r.json());
     if (data.error) { document.getElementById('daySections').innerHTML = `<div style="padding:24px;color:#ef4444">⚠️ ${data.error}</div>`; return; }
+
+    // Auto-start: nếu đã duyệt nhưng chưa bắt đầu, tự động gọi start rồi reload
+    if (data.enrollment && data.enrollment.status === 'approved' && !data.enrollment.started_at) {
+      await startChallenge();
+      return;
+    }
+
     challengeData = data;
     renderChallenge(data);
     await renderChallengeLB();

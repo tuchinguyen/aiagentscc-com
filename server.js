@@ -24,7 +24,8 @@ const PORT     = process.env.PORT || 3000;
 const ADMIN_KEY   = process.env.ADMIN_KEY   || 'aiagent-admin-2025';
 const SEPAY_KEY   = process.env.SEPAY_KEY   || 'ae3066fa595768259e92553aa371405a8fa814c6';
 const GSHEET_ID   = process.env.GSHEET_ID   || '1TNzXmIR9Qcu_oqeNxYGFdnFxt2YN9xik4OPJOtac4nI';
-const RESEND_KEY  = process.env.RESEND_API_KEY || '';
+const RESEND_KEY       = process.env.RESEND_API_KEY    || '';
+const OPENROUTER_KEY   = process.env.OPENROUTER_API_KEY || '';
 const FROM_EMAIL  = process.env.FROM_EMAIL || 'AI AGENTS CC <congdong@aiagentscc.com>';
 const ADMIN_EMAIL = 'tuchinguyen.ctv@gmail.com';
 
@@ -313,21 +314,21 @@ const SCHEMA = `
 
 // [day_number, title, description, instructions, xp_reward]
 const CHALLENGE_DAYS = [
-  [1,  'Kick Off: Tham Gia Meeting & Cài Công Cụ',
-   'Nắm tổng quan thử thách, cài đặt đủ 3 công cụ cần thiết.',
-   'Công cụ cần cài:\n1. VS Code — editor viết code\n2. Claude Desktop — AI local, kết nối MCP\n3. Antigravity — AI coding agent\n\nYêu cầu:\n- Xem recording buổi kick-off\n- Tham gia nhóm Telegram cộng đồng\n\nNộp bài:\n- Ảnh chụp màn hình đã xem video kick-off\n- Ảnh đã cài VS Code\n- Ảnh đăng ký tài khoản Claude.ai\n- Ảnh đã cài Claude Desktop\n- Ảnh đã cài Antigravity\n\n✅ Được duyệt khi: Có đủ 5 ảnh chứng minh đã cài xong 3 công cụ.',
+  [1,  'Kick Off: Cài Tool & Sẵn Sàng Chiến',
+   '<h3>📋 Phần 1 — Tại sao cần những tool này?</h3>\n<p>Trước khi xây nhà cần có búa và đinh. Trước khi build hệ thống bán hàng bằng AI, bạn cần 4 công cụ này:</p>\n<ul>\n<li><strong>Claude.ai</strong> — AI cố vấn của bạn. Bí chỗ nào, hỏi nó. Nó giải thích và chỉ cách làm.</li>\n<li><strong>VS Code</strong> — Nơi AI đọc và ghi file trên máy của bạn. Không có nó, AI không biết làm việc ở đâu.</li>\n<li><strong>Claude Desktop</strong> — Phiên bản Claude chạy trực tiếp trên máy tính, kết nối với VS Code.</li>\n<li><strong>Antigravity</strong> — Tool quan trọng nhất. Bạn ra lệnh bằng tiếng Việt, nó tự viết code và chạy. Không cần biết lập trình.</li>\n<li><strong>Node.js</strong> — Nền tảng kỹ thuật để Antigravity hoạt động được. Cài một lần, không cần nghĩ đến nữa.</li>\n</ul>',
+   '<h3>🛠 Phần 2 — SOP từng bước</h3>\n<p><strong>Bước 1 — Tạo tài khoản Claude:</strong><br>Vào claude.ai → Đăng ký bằng Google hoặc email → Xác nhận email nếu được yêu cầu.</p>\n<p><strong>Bước 2 — Cài 4 tool theo thứ tự:</strong></p>\n<table><thead><tr><th>Thứ tự</th><th>Tool</th><th>Link tải</th></tr></thead><tbody>\n<tr><td>1</td><td>Node.js (cài trước tiên)</td><td>Tải Node.js</td></tr>\n<tr><td>2</td><td>VS Code</td><td>Tải VS Code</td></tr>\n<tr><td>3</td><td>Claude Desktop</td><td>Tải Claude Desktop</td></tr>\n<tr><td>4</td><td>Antigravity</td><td>Google từ khóa "Antigravity AI" → tải bản mới nhất</td></tr>\n</tbody></table>\n<blockquote>⚠️ <strong>Bị lỗi khi cài?</strong> Chụp màn hình lỗi → paste vào Claude.ai → hỏi "Lỗi này là gì, fix thế nào?" → nó giải thích được.</blockquote>\n<p><strong>Bước 3 — Tham gia cộng đồng Telegram:</strong><br>Vào nhóm "AI AGENT CHALLENGE" → Gửi tin nhắn:<br><em>"Xin chào mọi người và @cindyagentscc_bot — Tôi là [tên], tôi đang bán [sản phẩm], tôi tham gia 21 ngày để [mục tiêu của bạn]"</em></p>\n<p>Giới thiệu đầy đủ giúp cộng đồng hỗ trợ bạn đúng hơn sau này.</p>\n<p><strong>Bước 4 — ⭐ Quan trọng nhất: Chọn sản phẩm của bạn</strong><br>Đây là thứ bạn sẽ dùng suốt 21 ngày để kiếm tiền thật.<br>Chọn 1 trong 3 loại sau:</p>\n<table><thead><tr><th>Loại</th><th>Ví dụ</th><th>Khuyên dùng?</th></tr></thead><tbody>\n<tr><td>Sản phẩm số</td><td>Ebook, khóa học, template, file Canva</td><td>⭐⭐⭐ Tốt nhất — giao hàng tự động</td></tr>\n<tr><td>Dịch vụ</td><td>Thiết kế, tư vấn, viết content, chạy ads</td><td>⭐⭐ Tốt — bạn là sản phẩm</td></tr>\n<tr><td>Sản phẩm vật lý</td><td>Đồ handmade, thực phẩm, hàng có sẵn</td><td>⭐ Được — nhưng phức tạp hơn</td></tr>\n</tbody></table>\n<p>Chưa biết bán gì? Không sao. Ghi ra 3 thứ bạn biết làm tốt hơn người xung quanh. Đó có thể là sản phẩm. Hỏi cộng đồng Telegram để được góp ý.</p>\n<blockquote>📝 <strong>Ghi lại ngay:</strong> Tên sản phẩm: ___ | Giá dự kiến: ___ | Ai sẽ mua: ___</blockquote>\nNộp bài:\n<p>Chụp ảnh màn hình và gửi trực tiếp vào platform (không cần Google Drive):</p>\n<ul>\n<li>Ảnh Claude.ai đã đăng nhập (thấy giao diện chat)</li>\n<li>Ảnh VS Code đã mở (thấy cửa sổ editor)</li>\n<li>Ảnh Claude Desktop đã đăng nhập</li>\n<li>Ảnh Antigravity đã mở</li>\n<li>Ảnh Node.js đã cài (chạy lệnh <code>node -v</code> trong terminal, thấy số version)</li>\n<li>Ảnh đã vào nhóm Telegram và gửi lời chào</li>\n<li>Viết 1 dòng: "Tôi sẽ bán: ___ trong 21 ngày tới"</li>\n</ul>\n✅ Được duyệt khi: Có đủ 7 mục chứng minh hoàn thành.',
    10],
-  [2,  'Làm Landing Page Đơn Giản Bằng AI',
-   'Dùng Antigravity (AI coding agent) tạo landing page HTML hoàn chỉnh từ 0, không cần biết code.',
-   'Cách làm:\n- Mở Antigravity → tạo thư mục dự án mới\n- Ra lệnh cho AI viết landing page HTML hoàn chỉnh (giới thiệu sản phẩm/dịch vụ của bạn)\n- Deploy lên Netlify hoặc Vercel (miễn phí, không cần server)\n\nNộp bài:\n- Ảnh chụp màn hình landing page\n- Link truy cập được (VD: thuthach21ngay.netlify.app)\n\n✅ Được duyệt khi: Landing page mở được, có nội dung thật về sản phẩm/dịch vụ.',
+  [2,  'Làm Landing Page Với AI: Từ 0 Đến Website Trong 1 Buổi',
+   '<h3>📖 Bài học — Vòng lặp Agent & Visual Prompting</h3>\n\n<h3>Vòng lặp Agent — Cách agent hoạt động:</h3>\n<pre style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:14px;font-size:13px;line-height:1.7;white-space:pre-wrap">Nhận nhiệm vụ → Lên kế hoạch → Thực hiện → Kiểm tra kết quả\n→ Đúng? Tiếp tục.\n→ Sai? Đọc lỗi → Tự sửa → Thử lại\n→ Lặp đến khi hoạt động đúng → Báo cáo</pre>\n<p><em>Agent không làm đúng ngay lần đầu — và đó là bình thường, được thiết kế như vậy. Sức mạnh của agent là nó tự sửa mà không mệt mỏi.</em></p>\n\n<h3>Visual Prompting — Kỹ năng quan trọng nhất hôm nay:</h3>\n<p>Đừng mô tả bằng lời (<em>"trông hiện đại"</em>, <em>"màu xanh đẹp"</em>). AI không biết "đẹp" theo tiêu chuẩn của bạn. Thay vào đó: <strong>chụp ảnh website bạn thích → ném vào Antigravity → "làm theo phong cách này"</strong>. Kết quả tốt hơn 10 lần.</p>\n\n<h3>Khi bị lỗi — đừng hoảng:</h3>\n<p>Copy toàn bộ thông báo lỗi đỏ → paste vào Claude.ai → hỏi <em>"lỗi này nghĩa là gì, sửa thế nào?"</em> — kỹ năng này bạn dùng suốt 21 ngày.</p>\n\n<blockquote>⭐ <strong>Nguyên tắc vàng:</strong> "Cái gì bạn có thể thấy bằng mắt — AI phải tạo được bằng code. Việc của bạn là nhìn và nhận xét."</blockquote>',
+   '<h3>⚙️ SOP 5 bước — Tạo Landing Page Bằng AI</h3>\n\n<p><strong>Bước 1 — Viết nội dung trước (đừng nghĩ design trước)</strong><br>\nMở Antigravity → tạo folder <code>landing-page</code> → paste prompt sau:</p>\n<pre style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:14px;font-size:13px;line-height:1.7;white-space:pre-wrap">Tôi không biết gì về làm web và marketing. Tôi đang muốn tạo Landing Page\nđể giới thiệu/bán: [điền sản phẩm của bạn — cụ thể nhất có thể].\n\nHãy đóng vai chuyên gia copywriting, viết cho tôi đầy đủ nội dung gồm:\n(1) Tiêu đề chính gây chú ý\n(2) Vấn đề khách hàng đang gặp phải\n(3) Giải pháp của tôi\n(4) 3–5 lợi ích cụ thể\n(5) Testimonial mẫu\n(6) Nút kêu gọi hành động (CTA)\nViết theo phong cách người Việt tự nhiên, không dùng từ hoa mỹ.</pre>\n\n<p><strong>Bước 2 — Visual Prompting (làm design bằng ảnh)</strong><br>\nLên Pinterest hoặc Google → tìm <em>"landing page design 2024"</em> → chụp ảnh màn hình trang đẹp nhất → kéo thả ảnh vào Antigravity → paste:</p>\n<pre style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:14px;font-size:13px;line-height:1.7;white-space:pre-wrap">Đây là phong cách thiết kế tôi muốn. Tạo giao diện Landing Page HTML\ntheo bố cục, màu sắc, typography trong ảnh này.\nDùng nội dung bạn đã viết ở bước trước. File tên index.html.</pre>\n\n<p><strong>Bước 3 — Tinh chỉnh (yêu cầu sửa từng phần)</strong><br>\nMở <code>index.html</code> trong trình duyệt → nhìn từng phần → yêu cầu sửa cụ thể. Ví dụ:</p>\n<pre style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:14px;font-size:13px;line-height:1.7;white-space:pre-wrap">Màu nền header đang quá tối. Đổi sang màu trắng ngà #F5F5F0.\nNút CTA nhỏ quá, to hơn và đổi màu thành #E74C3C.</pre>\n\n<p><strong>Bước 4 — Deploy (đưa lên internet)</strong><br>\nKhi ưng với giao diện, paste:</p>\n<pre style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:14px;font-size:13px;line-height:1.7;white-space:pre-wrap">Xuất bản Landing Page này thành trang web thực tế trên Netlify.\nCho tôi đường link để người khác truy cập được.</pre>\n\n<p><strong>Bước 5 — Test thực tế</strong><br>\nCopy link → ném vào nhóm Telegram → nhờ mọi người click thử → hỏi <em>"giao diện trên điện thoại có bị lệch không?"</em>. Nếu bị lỗi → quay lại Antigravity báo lỗi → nó sửa.</p>\n\n<blockquote>💡 <strong>Mẹo:</strong> Đừng tự sửa HTML bằng tay — paste lỗi vào Antigravity để nó sửa. Chưa biết bán gì? Làm landing page giới thiệu bản thân trước. Ghi lại: agent thử mấy lần mới xong — đây là data quý.</blockquote>\nNộp bài:\n<p>Chụp ảnh/screenshot và gửi trực tiếp vào platform:</p>\n<ul>\n<li>Link landing page public (người khác click vào được, không phải localhost)</li>\n<li>Screenshot giao diện trên desktop</li>\n<li>Screenshot giao diện trên điện thoại (test mobile không bị vỡ layout)</li>\n</ul>\n✅ Được duyệt khi: Link landing page truy cập được công khai, có đủ tiêu đề + mô tả + CTA, đã test trên điện thoại không bị vỡ layout.\n❌ Chưa đạt khi: Chỉ nộp ảnh chụp màn hình không có link · Link mở ra thấy lỗi 404 hoặc trang trắng · Chỉ có localhost người khác không vào được.',
    5],
-  [3,  'Deploy Website Thật + Thu Lead Thật',
-   'Đưa website lên domain thật, gắn form thu thập lead → dữ liệu tự chảy vào Google Sheet.',
-   'Các bước:\n1. Đăng ký domain thật tại 123host.vn\n2. Trỏ domain vào Netlify/Vercel (thay đổi DNS)\n3. Gắn form thu lead bằng Google Forms hoặc Formspree\n4. Kết nối form → Google Sheet để lưu tự động\n\nNộp bài:\n- Link website thật (domain, không phải netlify.app)\n- Link trang đăng ký/form\n- Link Google Sheet đang nhận data (reviewer phải xem được)\n- Ảnh chứng minh từng bước\n\n✅ Được duyệt khi: Vào domain thật thấy website, điền form → data xuất hiện trong Google Sheet.',
+  [3,  'Deploy Website Thật: Domain Thật, Data Thật, Bán Hàng Thật',
+   '<h3>📖 Bài học — Sự khác biệt giữa "thử nghiệm" và "thật sự kinh doanh"</h3>\n\n<p>Link netlify ngẫu nhiên trông như dự án học sinh. Domain thật (<em>tensanpham.vn</em>) trông như business nghiêm túc. Khách hàng quyết định mua hay không trong 3 giây đầu tiên — domain là tín hiệu đầu tiên.</p>\n\n<h3>3 thành phần tạo hệ thống thu lead:</h3>\n<ul>\n<li><strong>Domain thật</strong> (.com hoặc .vn) → uy tín, khách tin tưởng, dễ nhớ và chia sẻ</li>\n<li><strong>Form thu thông tin</strong> (Google Forms hoặc Formspree) → bắt được tên + email/sđt của người quan tâm</li>\n<li><strong>Google Sheet tự động</strong> → mọi lead được lưu tự động, không sót, theo dõi real-time</li>\n</ul>\n\n<h3>Mẹo AI-First cho ngày 3:</h3>\n<p>Đừng tự nghĩ nội dung website. Dump hết thông tin thô vào AI: bạn bán gì, cho ai, giá bao nhiêu, khách hay hỏi gì — rồi để AI viết headline, mô tả, CTA. Bạn chỉ review và chỉnh. Cả bước content chỉ mất 10 phút.</p>\n\n<blockquote>⭐ <strong>Nguyên tắc vàng:</strong> "Không có lead = chưa có business. Có lead = bắt đầu có business. Domain là cánh cửa vào business đó."</blockquote>',
+   '<h3>⚙️ SOP 6 bước — Deploy Website Thật</h3>\n\n<p><strong>Bước 1 — Mua domain</strong><br>\nVào 123host.vn → tìm tên domain phù hợp → <strong>.com</strong> (~250k/năm) hoặc <strong>.vn</strong> (~350k/năm) hoặc <strong>.id.vn</strong> rẻ nhất (~10k/năm) → thanh toán → lưu thông tin đăng nhập vào file <code>notes.txt</code>.</p>\n\n<p><strong>Bước 2 — Kết nối domain với Netlify</strong><br>\nNetlify dashboard → Sites → chọn site ngày 2 → <em>Domain settings</em> → <em>Add custom domain</em> → nhập domain vừa mua → copy DNS nameservers → vào 123host → cập nhật nameservers → chờ 10–30 phút để DNS propagate.</p>\n\n<p><strong>Bước 3 — Điền nội dung thật</strong><br>\nMở Antigravity → thư mục <code>landing-page</code> → paste prompt:</p>\n<pre style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:14px;font-size:13px;line-height:1.7;white-space:pre-wrap">Tôi cần cập nhật nội dung website. Thay toàn bộ placeholder bằng:\nTên sản phẩm: [điền]\nMô tả: [điền]\nGiá: [điền]\nLợi ích: [điền]\nSố điện thoại/Zalo: [điền]\nẢnh: [mô tả hoặc đính kèm]\nGiữ nguyên design, chỉ đổi nội dung.</pre>\n\n<p><strong>Bước 4 — Tạo form thu lead</strong><br>\nTạo Google Form có các trường: Họ tên + SĐT/Zalo + Email + 1–2 câu hỏi nhu cầu → <em>Responses</em> → <em>Link to Sheets</em> → copy link embed → paste vào Antigravity:</p>\n<pre style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:14px;font-size:13px;line-height:1.7;white-space:pre-wrap">Nhúng Google Form này vào cuối landing page thay cho CTA button hiện tại.\nLink form: [dán link Google Form vào đây]</pre>\n\n<p><strong>Bước 5 — Kiểm tra trước khi mở cửa</strong></p>\n<ul>\n<li>Mở trên điện thoại — có bị lệch layout không?</li>\n<li>Tự điền form 1 lần test</li>\n<li>Kiểm tra Google Sheet — data có xuất hiện không?</li>\n</ul>\n\n<p><strong>Bước 6 — Nộp bài</strong><br>\nSubmit link website có domain thật vào platform.</p>\n\n<blockquote>💡 <strong>Mẹo:</strong> Domain .id.vn rẻ nhất (~10k/năm) | .com ~250k/năm | .vn ~350k/năm. Tag Lửng Mật trong nhóm nếu DNS chưa propagate sau 1 tiếng.</blockquote>\nNộp bài:\n<ul>\n<li>Link website domain thật (ví dụ: tensanpham.vn — không phải netlify.app)</li>\n<li>Link Google Sheet có ít nhất 1 dòng data test</li>\n<li>Screenshot website trên desktop + điện thoại</li>\n</ul>\n✅ Được duyệt khi: Website mở được trên domain thật · Form thu lead hoạt động · Google Sheet có ít nhất 1 dòng data test.\n❌ Chưa đạt khi: Vẫn dùng link netlify ngẫu nhiên · Form không hoạt động hoặc data không vào Sheet · Chỉ nộp ảnh không có link.',
    5],
-  [4,  'Traffic – Lead – Money',
-   'Chạy traffic thật vào website, kiểm tra toàn bộ luồng hoạt động từ đầu đến cuối.',
-   'Các bước:\n1. Đăng bài lên ít nhất 3 kênh mạng xã hội (Facebook, Instagram, Threads, TikTok...)\n2. Gửi email thủ công cho 1 lead đầu tiên từ Google Sheet ngày 3\n3. Kiểm tra Google Sheet có lead thật chưa\n\nNộp bài:\n- Link website (đang chạy và nhận lead)\n- Link bài đăng Facebook (link public)\n- Link ảnh bài đăng (Google Drive)\n- Link Google Sheet lưu lead\n- Screenshot email đã gửi cho lead\n\n✅ Được duyệt khi: Có lead thật trong Google Sheet, có ít nhất 1 bài đăng public.',
+  [4,  'Traffic – Lead – Money: Kéo Người Thật Vào Website',
+   '<h3>📖 Bài học — Tại sao phải làm thủ công trước khi tự động hóa</h3>\n\n<h3>Công thức Traffic → Lead → Money:</h3>\n<ul>\n<li><strong>Traffic:</strong> người thật click link website của bạn</li>\n<li><strong>Lead:</strong> họ điền form → bạn có tên + email/sđt → có thể liên hệ</li>\n<li><strong>Money:</strong> bạn liên hệ → tư vấn → chốt đơn</li>\n</ul>\n<p><em>Giai đoạn này LÀM THỦ CÔNG 100%: để hiểu từng bước, cảm nhận đau điểm, mới biết cần tự động hóa gì.</em></p>\n\n<h3>Bí quyết viết bài đăng hiệu quả:</h3>\n<p>Bài không cần dài, cần <strong>THẬT</strong>. Kể câu chuyện thật: bạn đang làm gì, tại sao làm, kết quả như thế nào. Người ta follow và click vì tò mò về hành trình của bạn — không phải vì bạn quảng cáo.</p>\n\n<blockquote>⭐ <strong>Nguyên tắc vàng:</strong> "Lead đầu tiên bao giờ cũng khó nhất — và quan trọng nhất. Lead thứ hai dễ hơn 10 lần."<br><br>\n🎯 <strong>Skill cốt lõi:</strong> Chọn 1 kênh duy nhất bạn đang có audience sẵn — đừng cố đăng khắp nơi. Tập trung > phân tán.</blockquote>',
+   '<h3>⚙️ SOP 4 bước</h3>\n\n<p><strong>Bước 1 — Nhờ AI viết bài đăng</strong><br>\nChụp màn hình website → paste vào Claude.ai hoặc ChatGPT → paste prompt:</p>\n<pre style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:14px;font-size:13px;line-height:1.7;white-space:pre-wrap">Viết 3 bài đăng Facebook theo 3 góc độ khác nhau để quảng bá trang web này.\nTone tự nhiên như người thật viết, không dùng emoji loạn.\nMỗi bài dưới 200 chữ, có câu kết kêu gọi click link.</pre>\n<p>→ Chọn bài hợp nhất → chỉnh lại giọng của bạn → đăng thật lên ít nhất 1 kênh có audience sẵn.</p>\n\n<p><strong>Bước 2 — Tăng độ phủ thủ công</strong></p>\n<ul>\n<li>Nhắn tin trực tiếp 5–10 bạn bè phù hợp nhờ vào xem + cho ý kiến</li>\n<li>Share vào 1–2 group Facebook liên quan</li>\n<li>Reply tất cả comment trong 1 giờ đầu — thuật toán thưởng bài có tương tác sớm</li>\n</ul>\n\n<p><strong>Bước 3 — Xử lý lead đầu tiên</strong><br>\nMở Google Sheet → có ai điền form chưa? → nếu có: <strong>nhắn tin/email ngay</strong> (đừng để qua ngày), giới thiệu bản thân, hỏi nhu cầu thật sự → đây là bước đầu tiên trong hành trình bán hàng.</p>\n\n<p><strong>Bước 4 — Ghi lại insight</strong><br>\nSau khi tương tác với lead, ghi lại vào <code>notes.txt</code>:</p>\n<ul>\n<li>Họ quan tâm điều gì nhất?</li>\n<li>Câu hỏi họ hỏi là gì?</li>\n<li>Lo ngại họ có là gì?</li>\n</ul>\n<p>Data này sẽ dùng để cải thiện chatbot và email sequence ở ngày 9–11.</p>\n\n<blockquote>💡 <strong>Mẹo:</strong> Chưa có audience? Đăng trong nhóm Telegram challenge — 160+ thành viên đang xem. Bài đăng hiệu quả nhất: kể về 21-day challenge bạn đang làm + kết quả thật + link website. Chưa có lead sau 24h? Thử đổi góc bài đăng hoặc đăng vào group khác.</blockquote>\nNộp bài:\n<ul>\n<li>Link bài đăng public (ít nhất 1 bài, người ngoài xem được)</li>\n<li>Screenshot Google Sheet có lead thật (email/sđt thật, không phải test của bạn)</li>\n<li>Screenshot tin nhắn/email bạn đã gửi cho lead đầu tiên (nếu có)</li>\n</ul>\n✅ Được duyệt khi: Có ít nhất 1 bài đăng public người ngoài xem được · Google Sheet có lead thật (không phải test của bản thân).\n❌ Chưa đạt khi: Link bài đăng bị private · Google Sheet trống hoặc chỉ có data test của bạn · Chưa đăng bài lên kênh nào.',
    5],
   [5,  'Build Bộ Não Thứ 2 (SQLite brain.db + Brand Voice)',
    'Tạo "bộ não kỹ thuật số" — database SQLite lưu brand voice và kiến thức của bạn.',
@@ -485,6 +486,14 @@ const CHALLENGE_DAYS = [
   if (!notifCols.includes('sent_by_admin')) {
     db.exec('ALTER TABLE notifications ADD COLUMN sent_by_admin INTEGER DEFAULT 0');
     console.log('  Migrated notifications: added sent_by_admin.');
+  }
+
+  // Migrate users: add intake_profile
+  const userCols = db.all('PRAGMA table_info(users)').map(c => c.name);
+  if (!userCols.includes('intake_profile')) {
+    db.exec('ALTER TABLE users ADD COLUMN intake_profile TEXT');
+    db.exec('ALTER TABLE users ADD COLUMN intake_done_at TEXT');
+    console.log('  Migrated users: added intake_profile.');
   }
 
   const dayCount = db.get('SELECT COUNT(*) AS n FROM challenge_days').n;
@@ -684,7 +693,10 @@ const CHALLENGE_DAYS = [
       return res.status(400).json({ error: 'Vui lòng nhập email và mật khẩu.' });
 
     const user = db.get('SELECT * FROM users WHERE email = ?', [email]);
-    if (!user || !bcrypt.compareSync(password, user.password_hash || ''))
+    if (!user) return res.status(401).json({ error: 'Email hoặc mật khẩu không đúng.' });
+    if (!user.password_hash)
+      return res.status(401).json({ error: 'Tài khoản này đăng nhập bằng Google. Vui lòng dùng nút "Đăng nhập với Google".' });
+    if (!bcrypt.compareSync(password, user.password_hash))
       return res.status(401).json({ error: 'Email hoặc mật khẩu không đúng.' });
     if (user.status !== 'active')
       return res.status(403).json({ error: 'Tài khoản này đã bị khoá.' });
@@ -1464,6 +1476,86 @@ const CHALLENGE_DAYS = [
     const total = db.get(cntSql, cntP).n;
     const pending_count = db.get("SELECT COUNT(*) AS n FROM challenge_submissions WHERE status = 'pending'").n;
     res.json({ submissions, total, pending_count });
+  });
+
+  app.get('/api/admin/challenge-progress', requireAdmin, (req, res) => {
+    try {
+      const { challenge_id } = req.query;
+      const challenges = db.all('SELECT id, title FROM challenges ORDER BY id');
+
+      const enrollWhere = challenge_id ? 'WHERE e.challenge_id = ?' : '';
+      const enrollParams = challenge_id ? [Number(challenge_id)] : [];
+      const enrollments = db.all(`
+        SELECT e.id AS enrollment_id, e.user_id, e.challenge_id, e.status AS enroll_status, e.enrolled_at, e.started_at,
+               (u.first_name || ' ' || u.last_name) AS name, u.email, u.avatar_url AS avatar,
+               c.title AS challenge_title,
+               (SELECT COUNT(*) FROM challenge_days cd WHERE cd.challenge_id = c.id) AS total_days
+        FROM challenge_enrollments e
+        JOIN users u ON e.user_id = u.id
+        JOIN challenges c ON e.challenge_id = c.id
+        ${enrollWhere}
+        ORDER BY e.challenge_id, u.first_name
+      `, enrollParams);
+
+      const subWhere = challenge_id ? 'WHERE cs.challenge_id = ?' : '';
+      const subParams = challenge_id ? [Number(challenge_id)] : [];
+      const submissions = db.all(`
+        SELECT cs.user_id, cs.challenge_id, cd.day_number, cs.status, cs.is_late
+        FROM challenge_submissions cs
+        JOIN challenge_days cd ON cs.day_id = cd.id
+        ${subWhere}
+      `, subParams);
+
+      const subMap = {};
+      for (const s of submissions) {
+        const key = `${s.user_id}_${s.challenge_id}`;
+        if (!subMap[key]) subMap[key] = {};
+        subMap[key][s.day_number] = { status: s.status, is_late: s.is_late };
+      }
+
+      const members = enrollments.map(e => {
+        const key = `${e.user_id}_${e.challenge_id}`;
+        const dayMap = subMap[key] || {};
+        const totalDays = e.total_days || 21;
+        let approved = 0, pending = 0, revision = 0, late = 0;
+        const days = [];
+        for (let d = 1; d <= totalDays; d++) {
+          const entry = dayMap[d] || {};
+          const st = entry.status || 'empty';
+          days.push({ day: d, status: st, is_late: entry.is_late || 0 });
+          if (st === 'approved') approved++;
+          else if (st === 'pending') pending++;
+          else if (st === 'needs_revision') revision++;
+          if (entry.is_late) late++;
+        }
+        return {
+          enrollment_id: e.enrollment_id,
+          user_id: e.user_id,
+          name: e.name,
+          email: e.email,
+          avatar: e.avatar,
+          challenge_id: e.challenge_id,
+          challenge_title: e.challenge_title,
+          enroll_status: e.enroll_status,
+          enrolled_at: e.enrolled_at,
+          started_at: e.started_at || null,
+          total_days: totalDays,
+          days,
+          stats: { approved, pending, revision, late, empty: totalDays - approved - pending - revision }
+        };
+      });
+
+      const total = members.length;
+      const active = members.filter(m => m.stats.approved > 0 || m.stats.pending > 0).length;
+      const completed = members.filter(m => m.stats.approved === m.total_days).length;
+      const avg_days = total > 0
+        ? Math.round(members.reduce((sum, m) => sum + m.stats.approved, 0) / total)
+        : 0;
+
+      res.json({ challenges, members, summary: { total, active, completed, avg_days } });
+    } catch (e) {
+      res.status(500).json({ error: e.message });
+    }
   });
 
   app.patch('/api/admin/submissions/:id', requireAdmin, (req, res) => {
@@ -2368,6 +2460,390 @@ const CHALLENGE_DAYS = [
       }
     }
   }, 60 * 60 * 1000); // check every hour
+
+  // ── CRM ────────────────────────────────────────────────────
+  // Seed default email templates on first run
+  function seedEmailTemplates() {
+    const existing = db.get("SELECT value FROM site_settings WHERE key='email_templates'");
+    if (existing) return;
+    const defaults = [
+      { id:1, name:'Email chào mừng', subject:'Chào mừng đến với AI Agent CC! 🎉', category:'welcome',
+        body:`<h2>Chào mừng {{first_name}} đến với AI Agent CC! 🎉</h2>
+<p>Bạn đã chính thức gia nhập cộng đồng <strong>AI Agent CC</strong> — nơi người Việt học và ứng dụng AI Agent vào công việc thực tế.</p>
+<p><strong>Bắt đầu ngay:</strong></p>
+<ul>
+  <li>🔥 <a href="https://aiagentscc.com/challenge.html">Đăng ký Thử thách 21 ngày AI Agent</a></li>
+  <li>💬 <a href="https://aiagentscc.com/feed.html">Chia sẻ bài đầu tiên trên Bảng tin</a></li>
+  <li>🛍️ <a href="https://aiagentscc.com/marketplace.html">Khám phá Chợ sản phẩm số AI</a></li>
+</ul>
+<p>Hẹn gặp bạn trong cộng đồng!<br><strong>Team AI Agent CC</strong></p>`, updated_at:'2025-04-01' },
+      { id:2, name:'Xác nhận đăng ký thử thách', subject:'Bạn đã đăng ký Thử thách 21 ngày! 🔥', category:'challenge',
+        body:`<h2>Bạn đã đăng ký Thử thách 21 ngày! 🔥</h2>
+<p>Chào <strong>{{first_name}}</strong>,</p>
+<p>Chúc mừng! Bạn đã chính thức đăng ký <strong>Thử thách 21 Ngày Làm Chủ AI Agent</strong>.</p>
+<p>📅 Bắt đầu: <strong>{{start_date}}</strong><br>
+✅ Mỗi ngày hoàn thành 1 nhiệm vụ<br>
+⭐ Nhận XP và phần thưởng khi hoàn thành</p>
+<p><a href="https://aiagentscc.com/challenge.html">Xem chi tiết thử thách →</a></p>
+<p>Chúng tôi sẽ gửi nhắc nhở mỗi ngày lúc 19:00.<br><strong>Team AI Agent CC</strong></p>`, updated_at:'2025-04-05' },
+      { id:3, name:'Nhắc nhở hoàn thành ngày', subject:'Đừng quên nhiệm vụ hôm nay — Ngày {{day_number}} 📅', category:'reminder',
+        body:`<h2>Đừng quên nhiệm vụ hôm nay! 📅</h2>
+<p>Chào <strong>{{first_name}}</strong>,</p>
+<p>Hôm nay là <strong>Ngày {{day_number}}</strong> trong hành trình 21 ngày của bạn.</p>
+<p>🎯 Nhiệm vụ: <strong>{{task_title}}</strong></p>
+<p>Hoàn thành trước nửa đêm để không mất streak!<br>Streak hiện tại: 🔥 <strong>{{streak}} ngày</strong></p>
+<p><a href="https://aiagentscc.com/challenge.html">Hoàn thành ngay →</a></p>
+<p><strong>Team AI Agent CC</strong></p>`, updated_at:'2025-04-10' },
+      { id:4, name:'Chúc mừng hoàn thành 21 ngày', subject:'🏆 Bạn đã hoàn thành Thử thách 21 ngày!', category:'completion',
+        body:`<h2>🏆 Bạn đã chinh phục 21 ngày!</h2>
+<p>Chào <strong>{{first_name}}</strong>,</p>
+<p>Bạn đã hoàn thành <strong>Thử thách 21 Ngày AI Agent</strong>! Chỉ có <strong>{{completion_pct}}%</strong> người đăng ký đạt được điều này.</p>
+<p>🌟 +{{xp_earned}} XP<br>🏆 Huy hiệu "AI Agent Master"<br>🎁 Giảm 20% cho khoá học nâng cao</p>
+<p><a href="https://aiagentscc.com/leaderboard.html">Xem bảng xếp hạng →</a></p>
+<p><strong>Team AI Agent CC</strong></p>`, updated_at:'2025-04-15' },
+      { id:5, name:'Giới thiệu sản phẩm — Email 1', subject:'Khám phá bộ tài liệu AI Agent chuyên nghiệp 🚀', category:'sales',
+        body:`<h2>Khám phá bộ tài liệu AI Agent 🚀</h2>
+<p>Chào <strong>{{first_name}}</strong>,</p>
+<p>Bộ tài liệu <strong>{{product_name}}</strong> giúp bạn rút ngắn thời gian học từ tháng xuống còn tuần.</p>
+<p><strong>Bao gồm:</strong></p>
+<ul>
+  <li>{{feature_1}}</li>
+  <li>{{feature_2}}</li>
+  <li>{{feature_3}}</li>
+</ul>
+<p>Giá: <strong>{{price}}</strong> — Hoàn tiền 7 ngày nếu không hài lòng.</p>
+<p><a href="https://aiagentscc.com/marketplace.html">Xem chi tiết →</a></p>
+<p><strong>Team AI Agent CC</strong></p>`, updated_at:'2025-05-01' },
+      { id:6, name:'Bán hàng — Social Proof', subject:'Cộng đồng nói gì về sản phẩm này? 💬', category:'sales',
+        body:`<h2>Cộng đồng nói gì? 💬</h2>
+<p>Chào <strong>{{first_name}}</strong>,</p>
+<p>Sau khi ra mắt <strong>{{product_name}}</strong>, chúng tôi nhận được rất nhiều phản hồi tích cực:</p>
+<blockquote>"{{testimonial_1}}" — <strong>{{user_1}}</strong></blockquote>
+<blockquote>"{{testimonial_2}}" — <strong>{{user_2}}</strong></blockquote>
+<p><a href="https://aiagentscc.com/marketplace.html">Mua ngay →</a></p>`, updated_at:'2025-05-02' },
+      { id:7, name:'Bán hàng — Last Chance', subject:'⏰ Còn 24 giờ — Ưu đãi sắp kết thúc!', category:'sales',
+        body:`<h2>⏰ Còn 24 giờ!</h2>
+<p>Chào <strong>{{first_name}}</strong>,</p>
+<p>Chương trình ưu đãi cho <strong>{{product_name}}</strong> kết thúc lúc 23:59 ngày <strong>{{deadline}}</strong>.</p>
+<p style="text-align:center;font-size:28px;font-weight:bold;color:#ef4444">{{discount_pct}}% OFF</p>
+<p>Còn {{hours_left}} giờ — {{spots_left}} suất cuối cùng.</p>
+<p><a href="https://aiagentscc.com/marketplace.html">Mua ngay →</a></p>`, updated_at:'2025-05-03' },
+      { id:8, name:'Tái kích hoạt — Nhớ bạn', subject:'Chúng tôi nhớ bạn! Có nhiều điều mới 👋', category:'reengagement',
+        body:`<h2>Chúng tôi nhớ bạn! 👋</h2>
+<p>Chào <strong>{{first_name}}</strong>,</p>
+<p>Đã {{days_inactive}} ngày kể từ lần cuối bạn ghé AI Agent CC. Cộng đồng có nhiều điều mới:</p>
+<ul>
+  <li>🔥 Thử thách mới: <strong>{{new_challenge}}</strong></li>
+  <li>💬 {{new_posts}} bài đăng từ cộng đồng</li>
+  <li>🛍️ {{new_products}} sản phẩm mới tại Chợ</li>
+</ul>
+<p><a href="https://aiagentscc.com/feed.html">Quay lại cộng đồng →</a></p>`, updated_at:'2025-05-10' },
+      { id:9, name:'Tái kích hoạt — Phần thưởng', subject:'🎁 Phần thưởng đặc biệt dành riêng cho bạn', category:'reengagement',
+        body:`<h2>🎁 Phần thưởng đặc biệt!</h2>
+<p>Chào <strong>{{first_name}}</strong>,</p>
+<p>Để chào đón bạn quay lại, chúng tôi tặng:</p>
+<p style="text-align:center;font-size:32px;font-weight:bold;color:#8b5cf6">+50 XP</p>
+<p>Bonus khi hoàn thành nhiệm vụ đầu tiên sau khi quay lại. Có hiệu lực trong 7 ngày.</p>
+<p><a href="https://aiagentscc.com/challenge.html">Nhận phần thưởng →</a></p>`, updated_at:'2025-05-10' },
+      { id:10, name:'Newsletter hàng tuần', subject:'Tổng hợp tuần tại AI Agent CC — {{week}}', category:'newsletter',
+        body:`<h2>📰 Tổng hợp tuần {{week}}</h2>
+<p>Chào <strong>{{first_name}}</strong>,</p>
+<p><strong>Bài nổi bật tuần này:</strong></p>
+<p>📌 <strong>{{post_1_title}}</strong><br>{{post_1_excerpt}}</p>
+<p>📌 <strong>{{post_2_title}}</strong><br>{{post_2_excerpt}}</p>
+<p><a href="https://aiagentscc.com/feed.html">Xem thêm →</a></p>`, updated_at:'2025-05-20' },
+      { id:11, name:'Thông báo sản phẩm mới', subject:'🚀 Ra mắt: {{product_name}} — Xem ngay!', category:'sales',
+        body:`<h2>🚀 Ra mắt: {{product_name}}</h2>
+<p>Chào <strong>{{first_name}}</strong>,</p>
+<p>Chúng tôi vừa ra mắt <strong>{{product_name}}</strong> — được thiết kế đặc biệt cho cộng đồng AI Agent CC.</p>
+<p style="text-align:center;font-size:28px;font-weight:bold;color:#10b981">{{launch_price}}</p>
+<p><strike>{{regular_price}}</strike> — Ưu đãi kết thúc sau {{launch_hours}} giờ.</p>
+<p><a href="https://aiagentscc.com/marketplace.html">Xem & mua ngay →</a></p>`, updated_at:'2025-05-22' },
+      { id:12, name:'Nhắc nhở hoàn thiện hồ sơ', subject:'Hồ sơ chưa hoàn chỉnh — cập nhật ngay', category:'reminder',
+        body:`<h2>Hồ sơ chưa hoàn chỉnh 📋</h2>
+<p>Chào <strong>{{first_name}}</strong>,</p>
+<p>Hồ sơ đầy đủ giúp bạn được cộng đồng tin tưởng hơn.</p>
+<p><strong>Còn thiếu:</strong></p>
+<ul>
+  <li>📷 Ảnh đại diện</li>
+  <li>📝 Bio / Giới thiệu bản thân</li>
+  <li>🌐 Website / LinkedIn</li>
+</ul>
+<p>Chỉ mất 2 phút!</p>
+<p><a href="https://aiagentscc.com/profile.html">Cập nhật hồ sơ →</a></p>`, updated_at:'2025-05-23' },
+    ];
+    db.run("INSERT OR REPLACE INTO site_settings (key,value) VALUES ('email_templates',?)", [JSON.stringify(defaults)]);
+    console.log('✅ Seeded 12 email templates');
+  }
+  seedEmailTemplates();
+
+  app.get('/api/admin/crm/stats', requireAdmin, (_req, res) => {
+    const totalUsers   = db.get("SELECT COUNT(*) as n FROM users WHERE status='active'").n;
+    const googleUsers  = db.get("SELECT COUNT(*) as n FROM users WHERE google_id IS NOT NULL").n;
+    const emailUsers   = db.get("SELECT COUNT(*) as n FROM users WHERE password_hash IS NOT NULL").n;
+    const enrolled     = db.get("SELECT COUNT(DISTINCT user_id) as n FROM challenge_enrollments WHERE status='approved'").n;
+    const buyers       = db.get("SELECT COUNT(DISTINCT buyer_id) as n FROM orders WHERE status='completed'").n;
+    const submitted    = db.get("SELECT COUNT(DISTINCT user_id) as n FROM challenge_submissions").n;
+    const notifSent    = db.get("SELECT COUNT(*) as n FROM notifications WHERE sent_by_admin=1").n;
+    const remindersSent= db.get("SELECT COUNT(*) as n FROM late_reminders").n;
+    const orderMails   = db.get("SELECT COALESCE(SUM(mail_15m+mail_1d+mail_2d+mail_4d),0) as n FROM orders").n;
+    const emailsSent   = notifSent + remindersSent + orderMails;
+
+    res.json({
+      active_contacts: totalUsers,
+      emails_sent: emailsSent,
+      lists: [
+        { id:1, name:'Tất cả thành viên (active)', desc:'Toàn bộ tài khoản đang hoạt động', count:totalUsers, tag:'all' },
+        { id:2, name:'Đăng nhập Google', desc:'Tài khoản liên kết Google OAuth', count:googleUsers, tag:'google' },
+        { id:3, name:'Đăng nhập Email/Password', desc:'Tài khoản đăng ký bằng email', count:emailUsers, tag:'email' },
+        { id:4, name:'Tham gia thử thách', desc:'Đã được duyệt tham gia ít nhất 1 thử thách', count:enrolled, tag:'challenge' },
+        { id:5, name:'Đã nộp bài', desc:'Đã nộp ít nhất 1 bài trong thử thách', count:submitted, tag:'submitted' },
+        { id:6, name:'Đã mua sản phẩm', desc:'Có ít nhất 1 đơn hàng hoàn thành', count:buyers, tag:'buyer' },
+      ],
+      tags: [
+        { name:'google-user',         count:googleUsers,   color:'#4285f4' },
+        { name:'email-user',          count:emailUsers,    color:'#0ea5e9' },
+        { name:'challenge-enrolled',  count:enrolled,      color:'#f59e0b' },
+        { name:'submitted-work',      count:submitted,     color:'#10b981' },
+        { name:'buyer',               count:buyers,        color:'#ec4899' },
+        { name:'received-reminder',   count:remindersSent, color:'#8b5cf6' },
+      ],
+      sequences: [
+        { id:1, name:'Chào mừng thành viên mới',     trigger:'Khi đăng ký tài khoản',             icon:'👋', color:'#dbeafe', emails:1, sent:totalUsers,    status:'active' },
+        { id:2, name:'Xác nhận đăng ký thử thách',   trigger:'Khi đăng ký challenge được duyệt',   icon:'🔥', color:'#fef3c7', emails:1, sent:enrolled,     status:'active' },
+        { id:3, name:'Nhắc nhở hoàn thành ngày',     trigger:'Mỗi ngày 19:00 (scheduler)',         icon:'⏰', color:'#d1fae5', emails:1, sent:remindersSent, status:'active' },
+        { id:4, name:'Email theo dõi đơn hàng',      trigger:'Sau mua: 15 phút / 1 ngày / 2 ngày / 4 ngày', icon:'📦', color:'#fce7f3', emails:4, sent:orderMails, status:'active' },
+        { id:5, name:'Thông báo admin (broadcast)',  trigger:'Thủ công từ admin panel',             icon:'📢', color:'#ede9fe', emails:1, sent:notifSent,     status:'active' },
+      ],
+    });
+  });
+
+  app.get('/api/admin/crm/templates', requireAdmin, (_req, res) => {
+    const row = db.get("SELECT value FROM site_settings WHERE key='email_templates'");
+    let tpls = [];
+    if (row) { try { tpls = JSON.parse(row.value); } catch {} }
+    res.json(tpls);
+  });
+
+  app.post('/api/admin/crm/templates', requireAdmin, (req, res) => {
+    const { name, subject, category, body } = req.body;
+    if (!name || !subject) return res.status(400).json({ error: 'Thiếu tên và subject.' });
+    const row = db.get("SELECT value FROM site_settings WHERE key='email_templates'");
+    let tpls = [];
+    if (row) { try { tpls = JSON.parse(row.value); } catch {} }
+    const maxId = tpls.reduce((m, t) => Math.max(m, t.id || 0), 0);
+    const tpl = { id: maxId + 1, name, subject, category: category || 'other', body: body || '', updated_at: new Date().toISOString().slice(0,10) };
+    tpls.push(tpl);
+    db.run("INSERT OR REPLACE INTO site_settings (key,value) VALUES ('email_templates',?)", [JSON.stringify(tpls)]);
+    res.json({ ok: true, template: tpl });
+  });
+
+  app.patch('/api/admin/crm/templates/:id', requireAdmin, (req, res) => {
+    const id = parseInt(req.params.id);
+    const { name, subject, category, body } = req.body;
+    const row = db.get("SELECT value FROM site_settings WHERE key='email_templates'");
+    let tpls = [];
+    if (row) { try { tpls = JSON.parse(row.value); } catch {} }
+    const idx = tpls.findIndex(t => t.id === id);
+    if (idx < 0) return res.status(404).json({ error: 'Template không tồn tại.' });
+    tpls[idx] = { ...tpls[idx], name, subject, category, body, updated_at: new Date().toISOString().slice(0,10) };
+    db.run("INSERT OR REPLACE INTO site_settings (key,value) VALUES ('email_templates',?)", [JSON.stringify(tpls)]);
+    res.json({ ok: true, template: tpls[idx] });
+  });
+
+  app.delete('/api/admin/crm/templates/:id', requireAdmin, (req, res) => {
+    const id = parseInt(req.params.id);
+    const row = db.get("SELECT value FROM site_settings WHERE key='email_templates'");
+    let tpls = [];
+    if (row) { try { tpls = JSON.parse(row.value); } catch {} }
+    tpls = tpls.filter(t => t.id !== id);
+    db.run("INSERT OR REPLACE INTO site_settings (key,value) VALUES ('email_templates',?)", [JSON.stringify(tpls)]);
+    res.json({ ok: true });
+  });
+
+  // ── Intake Chat ───────────────────────────────────────────
+  const INTAKE_OPENING = `Trước khi bắt đầu 21 ngày, mình muốn hiểu bạn một chút — không phải hỏi cho có form, mà để lộ trình này thật sự làm việc cho chính bạn.\n\nĐiều gì đang khiến bạn chưa hài lòng với tình trạng hiện tại? Cứ nói thật, không cần câu trả lời đẹp.`;
+
+  const INTAKE_SYSTEM = `Bạn là người dẫn đường cho "Thử thách 21 ngày AI Agent" — chương trình thực chiến giúp người Việt xây hệ thống kinh doanh số dùng AI, không cần biết code, không cần vốn lớn. Sau 21 ngày, học viên sẽ có: website thật, chatbot bán hàng 24/7, hệ thống thanh toán tự động (Sepay), email marketing (Resend), AI Agent trên VPS, và sản phẩm số đầu tiên đã bán được.
+
+Nhiệm vụ: Trò chuyện tự nhiên để hiểu sâu một người — họ đang ở đâu, muốn đi đâu, cái gì cản họ — rồi tổng hợp thành hồ sơ cá nhân hóa định hướng 21 ngày của họ.
+
+═══ NGUYÊN TẮC BẮT BUỘC ═══
+• Mỗi lượt CHỈ hỏi DUY NHẤT 1 câu — tuyệt đối không hỏi 2 câu cùng lúc
+• Luôn phản chiếu điều họ vừa chia sẻ trước khi hỏi tiếp — đừng nhảy thẳng vào câu hỏi tiếp
+• Giọng điệu: như người bạn thật sự tò mò, không phải form khảo sát hay nhân viên tư vấn
+• Câu trả lời mơ hồ/ngắn → đào sâu tại chỗ, chưa chuyển chặng
+• Câu trả lời rõ và đủ → gật đầu ngắn gọn + tiếp tục
+• Tổng cộng 8–11 lượt hỏi, không nhiều hơn
+• Toàn bộ bằng tiếng Việt, xưng "mình/bạn"
+• KHÔNG hỏi tên, email, hay thông tin cá nhân
+
+═══ 5 CHẶNG KHÁM PHÁ ═══
+
+CHẶNG 1 — LÝ DO THẬT (1–2 lượt)
+Câu mở đầu đã được gửi trước: hỏi về điều khiến họ chưa hài lòng.
+Đào sâu: nếu câu trả lời chung chung ("muốn tự do", "muốn kiếm tiền") → hỏi cụ thể hơn cái đó có nghĩa gì với họ.
+Mục tiêu: nghe được động lực thật, không phải câu trả lời "đúng".
+
+CHẶNG 2 — HIỆN TẠI (1–2 lượt)
+Họ đang làm gì để kiếm sống? Có gì trong tay rồi?
+Mục tiêu: biết điểm xuất phát thật — đừng assume.
+
+CHẶNG 3 — SẢN PHẨM / DỊCH VỤ (2–3 lượt)
+Họ muốn bán gì / giúp ai / giải quyết vấn đề gì?
+KHÔNG chấp nhận câu trả lời mơ hồ như "tôi muốn bán khóa học" — phải biết khóa học về gì, giúp ai làm được gì cụ thể.
+Mục tiêu: sản phẩm/dịch vụ đủ cụ thể để ngày 2 viết được landing page thật cho chính họ.
+
+CHẶNG 4 — KHÁCH HÀNG (1–2 lượt)
+Ai là người họ muốn phục vụ? Yêu cầu tả như tả một người thật, không phải "target audience" chung chung.
+Mục tiêu: chân dung khách hàng đủ sống động để sau này viết chatbot, email, bài đăng cho họ.
+
+CHẶNG 5 — KẾT QUẢ & FIT CHECK (2–3 lượt)
+a) "Sau 21 ngày, nếu bạn nói 'mình thắng rồi' — bạn đang thấy gì cụ thể?" → con số hoặc trạng thái
+b) "Bạn có thứ gì có thể đóng gói thành file/link để người khác tải về dùng ngay không?" → nguyên liệu ngày 19
+c) "Mỗi ngày thực tế bạn có mấy tiếng cho thử thách?" → điều chỉnh kỳ vọng tuần 3
+
+═══ KỸ THUẬT PHẢN CHIẾU ═══
+Họ nói: "Tôi muốn kiếm thêm thu nhập"
+✗ SAI: hỏi ngay câu tiếp
+✓ ĐÚNG: "Nghe có vẻ bạn đang có nguồn thu rồi nhưng nó chưa đủ hoặc chưa ổn định. Cái 'thêm' đó với bạn — bao nhiêu thì bạn thấy thật sự khác?"
+
+Họ nói: "Tôi muốn tự do"
+✓ ĐÚNG: "Tự do theo nghĩa gì với bạn — không phải đi làm thuê nữa, không bị ràng buộc lịch của người khác, hay điều gì khác?"
+
+═══ KHI ĐỦ THÔNG TIN ═══
+Sau khi có đủ thông tin 5 chặng:
+1. Viết 2–3 câu nhận xét chân thật (không quá hoa mỹ) về người này và tiềm năng 21 ngày với họ
+2. Ngay sau đó xuất markdown profile theo đúng format dưới đây, bắt đầu bằng ===PROFILE_START=== và kết thúc bằng ===PROFILE_END===
+
+===PROFILE_START===
+# Hồ Sơ Cá Nhân — Thành viên
+*Tạo: [ngày/tháng/năm hôm nay]*
+
+## Điểm xuất phát
+[1–2 câu về họ đang đứng ở đâu — công việc, tình trạng, điểm mạnh mang vào]
+
+## Sản phẩm / Dịch vụ
+**Tên:** [tên cụ thể — không chung chung]
+**Mô tả:** [giúp ai, giải quyết vấn đề gì, kết quả gì]
+**Trạng thái:** [Chưa có / Có ý tưởng / Đang làm nhưng chưa bán / Đang bán rồi]
+
+## Khách hàng mục tiêu
+[Tả như một người thật — tuổi, nghề, vấn đề cụ thể đang gặp, điều họ muốn]
+
+## Mục tiêu 21 ngày
+**Kết quả cụ thể:** [con số hoặc trạng thái họ tự định nghĩa là "thắng"]
+
+## Sản phẩm số ngày 19
+[Tên sản phẩm số cụ thể phù hợp với kiến thức/kỹ năng của họ — ebook, template, SOP pack, prompt pack, mini guide... Đặt tên thật, gợi ý giá bằng VNĐ]
+
+## Lộ trình cá nhân hóa
+- **Ngày 2–3:** Landing page bán [sản phẩm/dịch vụ cụ thể] cho [khách hàng cụ thể]
+- **Ngày 5:** Brand voice trong brain.db: [tone/phong cách cụ thể phù hợp khách hàng của họ]
+- **Ngày 9:** Chatbot trả lời "[câu hỏi thật 1 của khách]", "[câu hỏi 2]", "[câu hỏi 3]"
+- **Ngày 10–11:** Email sequence: [hành trình cụ thể từ lead → mua của khách họ]
+- **Ngày 19:** Tạo và bán [tên sản phẩm số] — giá gợi ý: [X]đ
+- **Ngày 20:** Business plan: [mô hình kinh doanh cụ thể của họ]
+
+## Lưu ý riêng
+[Điều cần chú ý dựa trên thời gian/kỹ năng/loại sản phẩm. Thẳng thắn nếu cần.]
+
+## Câu hỏi còn mở
+[Những thứ cần quyết định trước ngày 1. Nếu không có → bỏ section này]
+===PROFILE_END===`;
+
+  app.post('/api/intake/chat', async (req, res) => {
+    const { messages } = req.body;
+    if (!Array.isArray(messages)) return res.status(400).json({ error: 'messages required' });
+
+    // First load — return opening message without calling AI
+    if (messages.length === 0) {
+      return res.json({ reply: INTAKE_OPENING, isComplete: false, profile: null });
+    }
+
+    if (!OPENROUTER_KEY) {
+      return res.status(503).json({ error: 'OPENROUTER_API_KEY chưa được cấu hình. Vui lòng thêm vào file .env.' });
+    }
+
+    // Prepend opening message so AI knows the full context
+    const fullMessages = [
+      { role: 'system', content: INTAKE_SYSTEM },
+      { role: 'assistant', content: INTAKE_OPENING },
+      ...messages
+    ];
+
+    try {
+      const apiRes = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${OPENROUTER_KEY}`,
+          'HTTP-Referer': 'https://aiagentscc.com',
+          'X-Title': 'AI AGENTS CC Intake'
+        },
+        body: JSON.stringify({
+          model: 'google/gemini-2.5-flash',
+          max_tokens: 1500,
+          messages: fullMessages
+        })
+      });
+
+      if (!apiRes.ok) {
+        const errText = await apiRes.text();
+        console.error('[Intake] OpenRouter error:', apiRes.status, errText);
+        return res.status(502).json({ error: 'AI service error' });
+      }
+
+      const data = await apiRes.json();
+      const raw = data.choices?.[0]?.message?.content || '';
+
+      const profileStart = raw.indexOf('===PROFILE_START===');
+      const profileEnd   = raw.indexOf('===PROFILE_END===');
+      const isComplete   = profileStart !== -1 && profileEnd !== -1;
+
+      let reply   = raw;
+      let profile = null;
+
+      if (isComplete) {
+        reply   = raw.slice(0, profileStart).trim();
+        profile = raw.slice(profileStart + '===PROFILE_START==='.length, profileEnd).trim();
+      }
+
+      res.json({ reply, isComplete, profile });
+    } catch (err) {
+      console.error('[Intake] Error:', err.message);
+      res.status(500).json({ error: 'Server error' });
+    }
+  });
+
+  app.post('/api/intake/save', (req, res) => {
+    const { userId, profile } = req.body;
+    if (!userId || !profile) return res.status(400).json({ error: 'userId and profile required' });
+
+    const user = db.get('SELECT id FROM users WHERE id = ?', [userId]);
+    if (!user) return res.status(404).json({ error: 'User not found' });
+
+    db.run(
+      "UPDATE users SET intake_profile = ?, intake_done_at = datetime('now','localtime') WHERE id = ?",
+      [profile.trim(), userId]
+    );
+    console.log(`[Intake] Saved profile for user ${userId}`);
+    res.json({ ok: true });
+  });
+
+  app.get('/api/intake/profile/:userId', (req, res) => {
+    const user = db.get(
+      'SELECT id, first_name, last_name, intake_profile, intake_done_at FROM users WHERE id = ?',
+      [req.params.userId]
+    );
+    if (!user) return res.status(404).json({ error: 'User not found' });
+    res.json({
+      userId: user.id,
+      name: `${user.first_name} ${user.last_name}`.trim(),
+      profile: user.intake_profile || null,
+      doneAt: user.intake_done_at || null
+    });
+  });
 
   // ── Start ──────────────────────────────────────────────────
   app.listen(PORT, () => {

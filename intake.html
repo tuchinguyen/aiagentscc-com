@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Khám phá lộ trình của bạn — AI AGENTS CC</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --sky:        #0ea5e9;
+      --sky-dark:   #0284c7;
+      --sky-light:  #e0f2fe;
+      --bg:         #f8fafc;
+      --card:       #ffffff;
+      --text:       #0f172a;
+      --muted:      #64748b;
+      --border:     #e2e8f0;
+      --green:      #10b981;
+    }
+
+    html, body {
+      height: 100%;
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+      height: 100dvh;
+      overflow: hidden;
+    }
+
+    /* ── Header ── */
+    .header {
+      background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 50%, #0c4a6e 100%);
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .header::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(14,165,233,.07) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(14,165,233,.07) 1px, transparent 1px);
+      background-size: 24px 24px;
+      pointer-events: none;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .logo {
+      width: 38px;
+      height: 38px;
+      background: linear-gradient(135deg, var(--sky), #6366f1);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    .header-name {
+      color: #fff;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+
+    .header-sub {
+      color: #7dd3fc;
+      font-size: 11px;
+      margin-top: 1px;
+    }
+
+    .phase-tag {
+      position: relative;
+      z-index: 1;
+      background: rgba(255,255,255,.1);
+      color: #e0f2fe;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 4px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.15);
+      transition: opacity .3s;
+      white-space: nowrap;
+    }
+
+    /* ── Progress bar ── */
+    .progress-track {
+      height: 3px;
+      background: #1e3a5f;
+      flex-shrink: 0;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--sky), #6366f1);
+      transition: width .7s cubic-bezier(.4,0,.2,1);
+      width: 0%;
+    }
+
+    /* ── Chat area ── */
+    .chat-wrap {
+      flex: 1;
+      overflow-y: auto;
+      padding: 24px 16px 8px;
+      scroll-behavior: smooth;
+    }
+
+    .chat-wrap::-webkit-scrollbar { width: 4px; }
+    .chat-wrap::-webkit-scrollbar-track { background: transparent; }
+    .chat-wrap::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+
+    .chat-inner {
+      max-width: 660px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    /* ── Messages ── */
+    .msg {
+      display: flex;
+      gap: 9px;
+      animation: msgIn .28s ease;
+    }
+
+    @keyframes msgIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .msg.ai   { align-self: flex-start; max-width: 88%; }
+    .msg.user { align-self: flex-end; flex-direction: row-reverse; max-width: 80%; }
+
+    .av {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 700;
+      margin-top: 2px;
+    }
+
+    .av.ai-av {
+      background: linear-gradient(135deg, var(--sky), #6366f1);
+      color: #fff;
+    }
+
+    .av.user-av {
+      background: #dbeafe;
+      color: var(--sky-dark);
+    }
+
+    .bubble {
+      padding: 11px 15px;
+      font-size: 14px;
+      line-height: 1.7;
+      word-break: break-word;
+    }
+
+    .msg.ai .bubble {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 4px 16px 16px 16px;
+      color: var(--text);
+      box-shadow: 0 1px 3px rgba(0,0,0,.05);
+    }
+
+    .msg.user .bubble {
+      background: var(--sky);
+      color: #fff;
+      border-radius: 16px 4px 16px 16px;
+    }
+
+    /* Typing dots */
+    .typing {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 14px 15px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 4px 16px 16px 16px;
+      box-shadow: 0 1px 3px rgba(0,0,0,.05);
+    }
+
+    .typing span {
+      width: 6px;
+      height: 6px;
+      background: #94a3b8;
+      border-radius: 50%;
+      animation: dot 1.3s infinite;
+    }
+
+    .typing span:nth-child(2) { animation-delay: .18s; }
+    .typing span:nth-child(3) { animation-delay: .36s; }
+
+    @keyframes dot {
+      0%, 60%, 100% { transform: scale(1); opacity: .4; }
+      30% { transform: scale(1.3); opacity: 1; }
+    }
+
+    /* ── Input area ── */
+    .input-area {
+      padding: 12px 16px 20px;
+      background: var(--card);
+      border-top: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+
+    .input-row {
+      max-width: 660px;
+      margin: 0 auto;
+      display: flex;
+      gap: 9px;
+      align-items: flex-end;
+    }
+
+    textarea {
+      flex: 1;
+      border: 1.5px solid var(--border);
+      border-radius: 14px;
+      padding: 11px 15px;
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      line-height: 1.55;
+      resize: none;
+      outline: none;
+      transition: border-color .2s;
+      min-height: 46px;
+      max-height: 120px;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    textarea:focus { border-color: var(--sky); }
+    textarea::placeholder { color: #94a3b8; }
+    textarea:disabled { opacity: .5; cursor: not-allowed; }
+
+    .send-btn {
+      width: 46px;
+      height: 46px;
+      border-radius: 14px;
+      background: var(--sky);
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background .18s, transform .1s, opacity .18s;
+      flex-shrink: 0;
+    }
+
+    .send-btn:hover:not(:disabled) { background: var(--sky-dark); }
+    .send-btn:active:not(:disabled) { transform: scale(.94); }
+    .send-btn:disabled { background: #e2e8f0; cursor: not-allowed; opacity: .7; }
+
+    .input-hint {
+      text-align: center;
+      font-size: 11px;
+      color: #94a3b8;
+      margin-top: 7px;
+    }
+
+    /* ── Profile overlay ── */
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15,23,42,.65);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      z-index: 200;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .3s;
+    }
+
+    .overlay.open {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .profile-sheet {
+      background: var(--card);
+      border-radius: 24px 24px 0 0;
+      width: 100%;
+      max-width: 720px;
+      max-height: 88vh;
+      overflow-y: auto;
+      padding: 0 0 48px;
+      transform: translateY(100%);
+      transition: transform .42s cubic-bezier(.16,1,.3,1);
+    }
+
+    .profile-sheet::-webkit-scrollbar { width: 4px; }
+    .profile-sheet::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+
+    .overlay.open .profile-sheet { transform: translateY(0); }
+
+    .sheet-handle {
+      display: flex;
+      justify-content: center;
+      padding: 12px 0 4px;
+    }
+
+    .sheet-handle::after {
+      content: '';
+      width: 36px;
+      height: 4px;
+      background: #e2e8f0;
+      border-radius: 2px;
+    }
+
+    .sheet-head {
+      padding: 8px 24px 16px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .sheet-title {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 17px;
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    .sheet-badge {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      background: #dcfce7;
+      color: #15803d;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 4px 12px;
+      border-radius: 999px;
+    }
+
+    .sheet-actions {
+      padding: 16px 24px;
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .btn-copy {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 9px 18px;
+      border-radius: 10px;
+      border: 1.5px solid var(--border);
+      background: white;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      color: var(--muted);
+      transition: all .18s;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .btn-copy:hover { border-color: var(--sky); color: var(--sky); }
+
+    .btn-start {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 9px 22px;
+      border-radius: 10px;
+      border: none;
+      background: var(--sky);
+      color: white;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background .18s;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .btn-start:hover { background: var(--sky-dark); }
+
+    .save-status {
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      padding: 0 4px;
+      color: var(--muted);
+      transition: color .2s;
+    }
+
+    .save-status.saved  { color: var(--green); }
+    .save-status.saving { color: var(--sky); }
+    .save-status.error  { color: #ef4444; }
+
+    .login-prompt {
+      margin: 0 24px 16px;
+      background: #fffbeb;
+      border: 1px solid #fde68a;
+      border-radius: 12px;
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      font-size: 13px;
+      color: #92400e;
+    }
+
+    .login-prompt span { flex: 1; line-height: 1.5; }
+
+    .login-prompt a {
+      white-space: nowrap;
+      background: #f59e0b;
+      color: #fff;
+      padding: 7px 16px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 12px;
+      transition: background .18s;
+    }
+
+    .login-prompt a:hover { background: #d97706; }
+
+    /* ── Markdown rendering ── */
+    .md-body {
+      margin: 0 24px;
+      background: #f8fafc;
+      border-radius: 14px;
+      padding: 20px 22px;
+      border: 1px solid var(--border);
+    }
+
+    .md-body h1 {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 17px;
+      font-weight: 800;
+      color: var(--text);
+      margin-bottom: 2px;
+    }
+
+    .md-body .meta {
+      color: var(--muted);
+      font-size: 12px;
+      margin-bottom: 16px;
+    }
+
+    .md-body h2 {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--sky-dark);
+      text-transform: uppercase;
+      letter-spacing: .7px;
+      margin: 20px 0 8px;
+      padding-bottom: 6px;
+      border-bottom: 1px solid #e0f2fe;
+    }
+
+    .md-body p {
+      font-size: 14px;
+      line-height: 1.7;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+
+    .md-body strong {
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .md-body ul {
+      list-style: none;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .md-body li {
+      font-size: 14px;
+      line-height: 1.65;
+      color: var(--text);
+      padding-left: 18px;
+      position: relative;
+    }
+
+    .md-body li::before {
+      content: '→';
+      position: absolute;
+      left: 0;
+      color: var(--sky);
+      font-weight: 700;
+    }
+
+    .close-overlay {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      z-index: -1;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Header -->
+<header class="header">
+  <div class="header-left">
+    <div class="logo">🤖</div>
+    <div>
+      <div class="header-name">AI AGENTS CC</div>
+      <div class="header-sub">Cá nhân hóa lộ trình 21 ngày của bạn</div>
+    </div>
+  </div>
+  <div class="phase-tag" id="phaseTag">Bắt đầu</div>
+</header>
+
+<!-- Progress -->
+<div class="progress-track">
+  <div class="progress-fill" id="progressFill"></div>
+</div>
+
+<!-- Chat -->
+<div class="chat-wrap" id="chatWrap">
+  <div class="chat-inner" id="chatInner"></div>
+</div>
+
+<!-- Input -->
+<div class="input-area">
+  <div class="input-row">
+    <textarea
+      id="userInput"
+      placeholder="Chia sẻ suy nghĩ của bạn..."
+      rows="1"
+      disabled
+    ></textarea>
+    <button class="send-btn" id="sendBtn" disabled title="Gửi (Enter)">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+           stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="22" y1="2" x2="11" y2="13"/>
+        <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+      </svg>
+    </button>
+  </div>
+  <p class="input-hint">Enter để gửi &nbsp;·&nbsp; Shift+Enter xuống dòng</p>
+</div>
+
+<!-- Profile overlay -->
+<div class="overlay" id="overlay">
+  <div class="close-overlay" id="closeOverlay"></div>
+  <div class="profile-sheet" id="profileSheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-head">
+      <div class="sheet-title">Hồ sơ cá nhân hóa của bạn</div>
+      <div class="sheet-badge">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2.5">
+          <polyline points="20 6 9 17 4 12"/>
+        </svg>
+        Hoàn tất
+      </div>
+    </div>
+    <!-- Login prompt (shown only when not logged in) -->
+    <div class="login-prompt" id="loginPrompt" style="display:none">
+      <span>Đăng nhập để lưu lộ trình này vào tài khoản — bạn sẽ nhận đề bài cá nhân hóa từ ngày 1.</span>
+      <a href="index.html?redirect=intake">Đăng nhập / Đăng ký</a>
+    </div>
+
+    <div class="sheet-actions">
+      <button class="btn-copy" id="copyBtn">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2.5">
+          <rect x="9" y="9" width="13" height="13" rx="2"/>
+          <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+        </svg>
+        Sao chép
+      </button>
+      <div class="save-status" id="saveStatus" style="display:none"></div>
+      <a href="challenge.html" class="btn-start" id="btnStart">
+        Bắt đầu 21 ngày
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2.5">
+          <line x1="5" y1="12" x2="19" y2="12"/>
+          <polyline points="12 5 19 12 12 19"/>
+        </svg>
+      </a>
+    </div>
+    <div class="md-body" id="mdBody"></div>
+  </div>
+</div>
+
+<script>
+// ── State ──────────────────────────────────────────────────
+const PHASES = [
+  'Lý do của bạn',
+  'Tình trạng hiện tại',
+  'Sản phẩm / Dịch vụ',
+  'Khách hàng',
+  'Mục tiêu & Kết quả'
+];
+
+const PHASE_AT_TURN = [0, 0, 1, 2, 2, 3, 3, 4, 4, 4];
+const PROGRESS_AT_TURN = [5, 15, 30, 50, 60, 72, 80, 88, 93, 97, 100];
+
+let history = [];   // [{role, content}] gửi lên server
+let turn    = 0;
+let waiting = false;
+let profileMd = '';
+
+// ── DOM refs ──────────────────────────────────────────────
+const chatInner   = document.getElementById('chatInner');
+const chatWrap    = document.getElementById('chatWrap');
+const userInput   = document.getElementById('userInput');
+const sendBtn     = document.getElementById('sendBtn');
+const progressFill = document.getElementById('progressFill');
+const phaseTag    = document.getElementById('phaseTag');
+const overlay     = document.getElementById('overlay');
+const mdBody      = document.getElementById('mdBody');
+const copyBtn     = document.getElementById('copyBtn');
+
+// ── Helpers ───────────────────────────────────────────────
+function setProgress(pct) {
+  progressFill.style.width = pct + '%';
+}
+
+function setPhase(idx) {
+  phaseTag.textContent = PHASES[Math.min(idx, PHASES.length - 1)];
+}
+
+function scrollBottom() {
+  chatWrap.scrollTo({ top: chatWrap.scrollHeight, behavior: 'smooth' });
+}
+
+function addBubble(role, html) {
+  const isAI = role === 'ai';
+  const wrap = document.createElement('div');
+  wrap.className = `msg ${isAI ? 'ai' : 'user'}`;
+
+  const av = document.createElement('div');
+  av.className = `av ${isAI ? 'ai-av' : 'user-av'}`;
+  av.textContent = isAI ? 'AI' : '↑';
+
+  const bubble = document.createElement('div');
+  bubble.className = 'bubble';
+  bubble.innerHTML = html;
+
+  wrap.appendChild(av);
+  wrap.appendChild(bubble);
+  chatInner.appendChild(wrap);
+  scrollBottom();
+}
+
+function showTyping() {
+  const wrap = document.createElement('div');
+  wrap.className = 'msg ai';
+  wrap.id = 'typing';
+
+  const av = document.createElement('div');
+  av.className = 'av ai-av';
+  av.textContent = 'AI';
+
+  const t = document.createElement('div');
+  t.className = 'typing';
+  t.innerHTML = '<span></span><span></span><span></span>';
+
+  wrap.appendChild(av);
+  wrap.appendChild(t);
+  chatInner.appendChild(wrap);
+  scrollBottom();
+}
+
+function removeTyping() {
+  const el = document.getElementById('typing');
+  if (el) el.remove();
+}
+
+function textToHtml(text) {
+  return text
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/\n/g, '<br>');
+}
+
+// ── Markdown renderer (basic) ─────────────────────────────
+function renderMarkdown(md) {
+  const lines = md.split('\n');
+  let html = '';
+  let inList = false;
+
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i].trim();
+
+    if (!line) {
+      if (inList) { html += '</ul>'; inList = false; }
+      continue;
+    }
+
+    if (line.startsWith('# ')) {
+      if (inList) { html += '</ul>'; inList = false; }
+      html += `<h1>${esc(line.slice(2))}</h1>`;
+      // Check for italic line right after
+      if (lines[i+1] && lines[i+1].trim().startsWith('*')) {
+        i++;
+        html += `<div class="meta">${esc(lines[i].trim().replace(/^\*|\*$/g,''))}</div>`;
+      }
+    } else if (line.startsWith('## ')) {
+      if (inList) { html += '</ul>'; inList = false; }
+      html += `<h2>${esc(line.slice(3))}</h2>`;
+    } else if (line.startsWith('- ')) {
+      if (!inList) { html += '<ul>'; inList = true; }
+      html += `<li>${inlineFormat(line.slice(2))}</li>`;
+    } else if (line.startsWith('*') && line.endsWith('*') && !line.startsWith('**')) {
+      if (inList) { html += '</ul>'; inList = false; }
+      html += `<div class="meta">${esc(line.replace(/^\*|\*$/g,''))}</div>`;
+    } else {
+      if (inList) { html += '</ul>'; inList = false; }
+      html += `<p>${inlineFormat(line)}</p>`;
+    }
+  }
+
+  if (inList) html += '</ul>';
+  return html;
+}
+
+function esc(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function inlineFormat(s) {
+  return esc(s)
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\*(.+?)\*/g, '<em>$1</em>');
+}
+
+// ── Send flow ─────────────────────────────────────────────
+async function sendMessage() {
+  const text = userInput.value.trim();
+  if (!text || waiting) return;
+
+  userInput.value = '';
+  userInput.style.height = 'auto';
+  sendBtn.disabled = true;
+  userInput.disabled = true;
+  waiting = true;
+
+  addBubble('user', textToHtml(text));
+  history.push({ role: 'user', content: text });
+
+  turn++;
+  const phaseIdx = PHASE_AT_TURN[Math.min(turn, PHASE_AT_TURN.length - 1)];
+  const pct      = PROGRESS_AT_TURN[Math.min(turn, PROGRESS_AT_TURN.length - 1)];
+  setPhase(phaseIdx);
+  setProgress(pct);
+
+  showTyping();
+
+  try {
+    const res  = await fetch('/api/intake/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ messages: history })
+    });
+    const data = await res.json();
+    removeTyping();
+
+    if (data.error) {
+      addBubble('ai', `<em>${textToHtml(data.error)}</em>`);
+    } else {
+      if (data.reply) {
+        addBubble('ai', textToHtml(data.reply));
+        // Store full raw text in history (Claude needs to see it)
+        const fullContent = data.reply + (data.profile
+          ? '\n===PROFILE_START===\n' + data.profile + '\n===PROFILE_END==='
+          : '');
+        history.push({ role: 'assistant', content: fullContent });
+      }
+
+      if (data.isComplete && data.profile) {
+        setProgress(100);
+        phaseTag.textContent = 'Hoàn tất';
+        profileMd = data.profile;
+        setTimeout(() => showProfile(data.profile), 900);
+      }
+    }
+  } catch {
+    removeTyping();
+    addBubble('ai', 'Mất kết nối tới server. Vui lòng tải lại trang.');
+  }
+
+  waiting = false;
+  userInput.disabled = false;
+  userInput.focus();
+}
+
+// ── Profile panel ─────────────────────────────────────────
+function showProfile(md) {
+  mdBody.innerHTML = renderMarkdown(md);
+
+  const currentUser = (() => {
+    try { return JSON.parse(sessionStorage.getItem('currentUser') || 'null'); }
+    catch { return null; }
+  })();
+
+  if (currentUser?.id) {
+    document.getElementById('loginPrompt').style.display = 'none';
+    saveProfile(md, currentUser.id);
+  } else {
+    document.getElementById('loginPrompt').style.display = 'flex';
+    document.getElementById('saveStatus').style.display = 'none';
+    // Persist in sessionStorage so login page can retrieve and save after auth
+    sessionStorage.setItem('pendingIntakeProfile', md);
+  }
+
+  overlay.classList.add('open');
+}
+
+async function saveProfile(md, userId) {
+  const el = document.getElementById('saveStatus');
+  el.style.display = 'flex';
+  el.className = 'save-status saving';
+  el.textContent = 'Đang lưu...';
+
+  try {
+    const res = await fetch('/api/intake/save', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ userId, profile: md })
+    });
+    const data = await res.json();
+
+    if (data.ok) {
+      el.className = 'save-status saved';
+      el.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Đã lưu vào tài khoản`;
+      sessionStorage.removeItem('pendingIntakeProfile');
+    } else {
+      throw new Error(data.error);
+    }
+  } catch {
+    el.className = 'save-status error';
+    el.textContent = 'Lưu thất bại — thử lại sau';
+  }
+}
+
+copyBtn.addEventListener('click', () => {
+  navigator.clipboard.writeText(profileMd).then(() => {
+    copyBtn.innerHTML = `
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <polyline points="20 6 9 17 4 12"/>
+      </svg>
+      Đã sao chép!`;
+    setTimeout(() => {
+      copyBtn.innerHTML = `
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <rect x="9" y="9" width="13" height="13" rx="2"/>
+          <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+        </svg>
+        Sao chép markdown`;
+    }, 2200);
+  });
+});
+
+document.getElementById('closeOverlay').addEventListener('click', () => {
+  overlay.classList.remove('open');
+});
+
+// Re-open profile if clicked on chat message (optional UX)
+document.getElementById('profileSheet').addEventListener('click', e => e.stopPropagation());
+
+// ── Input events ──────────────────────────────────────────
+userInput.addEventListener('input', () => {
+  userInput.style.height = 'auto';
+  userInput.style.height = Math.min(userInput.scrollHeight, 120) + 'px';
+  sendBtn.disabled = !userInput.value.trim() || waiting;
+});
+
+userInput.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    if (!sendBtn.disabled) sendMessage();
+  }
+});
+
+sendBtn.addEventListener('click', sendMessage);
+
+// ── Boot: fetch opening message ───────────────────────────
+(async function init() {
+  setProgress(5);
+  showTyping();
+
+  try {
+    const res  = await fetch('/api/intake/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ messages: [] })
+    });
+    const data = await res.json();
+    removeTyping();
+
+    const opening = data.reply || 'Trước khi bắt đầu 21 ngày, mình muốn hiểu bạn một chút.\n\nĐiều gì đang khiến bạn chưa hài lòng với tình trạng hiện tại? Cứ nói thật, không cần câu trả lời đẹp.';
+    addBubble('ai', textToHtml(opening));
+    // Don't push to history — server prepends it automatically
+  } catch {
+    removeTyping();
+    addBubble('ai', 'Trước khi bắt đầu 21 ngày, mình muốn hiểu bạn một chút.\n\nĐiều gì đang khiến bạn chưa hài lòng với tình trạng hiện tại? Cứ nói thật, không cần câu trả lời đẹp.');
+  }
+
+  userInput.disabled = false;
+  userInput.focus();
+})();
+</script>
+</body>
+</html>

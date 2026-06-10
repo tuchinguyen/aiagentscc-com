@@ -483,6 +483,19 @@
       } catch (e) { alert('Lỗi kết nối server.'); }
     }
 
+    async function startAndGo(challengeId) {
+      try {
+        const res = await fetch(`${API}/challenges/${challengeId}/start`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ user_id: currentUser.id }),
+        });
+        const data = await res.json();
+        if (!res.ok && !data.already) { alert(data.error || 'Không thể bắt đầu thử thách.'); return; }
+        window.location.href = `challenge-detail.html?id=${challengeId}`;
+      } catch (e) { alert('Lỗi kết nối server.'); }
+    }
+
     async function loadChallenges() {
       try {
         const { challenges } = await fetch(`${API}/challenges?user_id=${currentUser.id}`).then(r => r.json());
@@ -505,7 +518,7 @@
           } else if (enroll.status === 'rejected') {
             btnHtml = `<button class="btn btn-full" style="font-size:var(--fs-sm);background:#fee2e2;color:#991b1b;border:1px solid #fca5a5;cursor:not-allowed;" disabled>❌ Không được chấp nhận</button>`;
           } else if (enroll.status === 'approved' && !enroll.started_at) {
-            btnHtml = `<a href="challenge-detail.html?id=${c.id}" class="btn btn-primary btn-full" style="font-size:var(--fs-sm);">🚀 Bắt đầu thử thách →</a>`;
+            btnHtml = `<button class="btn btn-primary btn-full" style="font-size:var(--fs-sm);" onclick="startAndGo(${c.id})">🚀 Bắt đầu thử thách →</button>`;
           } else {
             const txt = completed > 0 ? `Tiếp tục (${completed}/${c.day_count} ngày)` : 'Bắt đầu thử thách';
             btnHtml = `<a href="challenge-detail.html?id=${c.id}" class="btn btn-primary btn-full" style="font-size:var(--fs-sm);">${txt} →</a>`;

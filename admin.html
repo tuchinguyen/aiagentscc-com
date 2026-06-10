@@ -880,6 +880,70 @@
     .rte-editor strong { font-weight: 700; }
     .rte-editor em { font-style: italic; }
     .rte-editor a { color: var(--primary); text-decoration: underline; cursor: pointer; }
+
+    /* ── CRM ───────────────────────────────────────── */
+    .crm-tabs { display: flex; gap: 2px; padding: 0 16px; border-bottom: 1px solid var(--border); background: var(--card); flex-wrap: wrap; }
+    .crm-tab { padding: 11px 16px; font-size: 13px; font-weight: 600; color: var(--muted); border: none; background: none; cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; transition: all .15s; white-space: nowrap; }
+    .crm-tab.active { color: var(--primary); border-bottom-color: var(--primary); }
+    .crm-tab:hover:not(.active) { color: var(--text); }
+    .crm-tab-pane { display: none; }
+    .crm-tab-pane.active { display: block; }
+    .crm-stat-grid { display: grid; grid-template-columns: repeat(6,1fr); gap: 12px; margin-bottom: 20px; }
+    @media(max-width:1200px){ .crm-stat-grid{ grid-template-columns:repeat(3,1fr); } }
+    @media(max-width:700px){ .crm-stat-grid{ grid-template-columns:repeat(2,1fr); } }
+    .crm-stat { background: var(--card); border: 1px solid var(--border); border-radius: var(--r-md); padding: 14px 16px; box-shadow: var(--shadow); }
+    .crm-stat-num { font-family: var(--head); font-size: 26px; font-weight: 800; color: var(--text); line-height: 1.1; }
+    .crm-stat-lbl { font-size: 11px; font-weight: 600; color: var(--muted); margin-top: 4px; }
+    .seq-card { border: 1px solid var(--border); border-radius: var(--r-md); padding: 14px 18px; background: var(--card); display: flex; align-items: flex-start; gap: 14px; margin-bottom: 10px; box-shadow: var(--shadow); }
+    .seq-icon { width: 38px; height: 38px; border-radius: var(--r-sm); display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+    .seq-info { flex: 1; min-width: 0; }
+    .seq-name { font-size: 14px; font-weight: 700; color: var(--text); }
+    .seq-meta { font-size: 12px; color: var(--muted); margin-top: 2px; }
+    .seq-stats { display: flex; gap: 16px; margin-top: 8px; }
+    .seq-stat-item { font-size: 12px; color: var(--muted); }
+    .seq-stat-item strong { color: var(--text); font-weight: 700; }
+    .tpl-card { border: 1px solid var(--border); border-radius: var(--r-md); padding: 14px 16px; background: var(--card); display: flex; align-items: center; gap: 12px; box-shadow: var(--shadow); }
+    .tpl-cat-badge { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 99px; display: inline-block; }
+    .tpl-cat-welcome { background: #dbeafe; color: #1d4ed8; }
+    .tpl-cat-challenge { background: #fef3c7; color: #b45309; }
+    .tpl-cat-reminder { background: #d1fae5; color: #065f46; }
+    .tpl-cat-sales { background: #fce7f3; color: #9d174d; }
+    .tpl-cat-completion { background: #ede9fe; color: #6d28d9; }
+    .tpl-cat-reengagement { background: #fee2e2; color: #991b1b; }
+    .tpl-cat-newsletter { background: #e0f2fe; color: #0369a1; }
+    .tag-pill { display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 99px; font-size: 12px; font-weight: 600; border: 1.5px solid var(--border); margin: 4px; cursor: pointer; transition: all .15s; background: #fff; }
+    .tag-pill:hover { border-color: var(--primary); color: var(--primary); }
+    .tag-count { font-size: 11px; background: rgba(0,0,0,.06); padding: 0 5px; border-radius: 99px; }
+    .crm-email-preview { background: #f8fafc; border: 1px solid var(--border); border-radius: var(--r-md); padding: 24px; font-size: 14px; line-height: 1.7; color: var(--text); max-height: 420px; overflow-y: auto; }
+    .crm-email-preview h2 { font-size: 20px; font-weight: 800; margin-bottom: 12px; }
+    .crm-email-preview .btn-email { display: inline-block; padding: 10px 24px; background: var(--primary); color: #fff; border-radius: 6px; font-weight: 700; margin: 16px 0; text-decoration: none; font-size: 14px; }
+    .crm-email-preview .divider { border: none; border-top: 1px solid #e2e8f0; margin: 16px 0; }
+    .crm-email-preview .footer-txt { font-size: 11px; color: #94a3b8; text-align: center; }
+
+    /* ── Challenge Progress ──────────────────────── */
+    .prog-grid { display: grid; grid-template-columns: repeat(21, 1fr); gap: 3px; }
+    .prog-cell { width: 100%; aspect-ratio: 1; border-radius: 3px; cursor: default; position: relative; transition: transform .1s; }
+    .prog-cell:hover { transform: scale(1.3); z-index: 2; }
+    .prog-cell::after { content: attr(data-tip); position: absolute; bottom: calc(100% + 5px); left: 50%; transform: translateX(-50%); background: #0f172a; color: #fff; font-size: 10px; padding: 3px 7px; border-radius: 4px; white-space: nowrap; pointer-events: none; z-index: 10; opacity: 0; transition: opacity .15s; }
+    .prog-cell:hover::after { opacity: 1; }
+    .prog-approved  { background: #10b981; }
+    .prog-pending   { background: #f59e0b; }
+    .prog-revision  { background: #ef4444; }
+    .prog-empty     { background: #e2e8f0; }
+    .member-prog-card { border: 1px solid var(--border); border-radius: var(--r-md); padding: 16px 20px; background: var(--card); box-shadow: var(--shadow); margin-bottom: 10px; transition: border-color .15s; }
+    .member-prog-card:hover { border-color: #0ea5e9; }
+    .member-prog-hdr { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+    .member-prog-avatar { width: 38px; height: 38px; border-radius: 50%; background: var(--primary); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 16px; flex-shrink: 0; }
+    .member-prog-info { flex: 1; min-width: 0; }
+    .member-prog-name { font-weight: 700; font-size: 14px; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .member-prog-meta { font-size: 11px; color: var(--muted); margin-top: 2px; }
+    .member-prog-badges { margin-left: auto; display: flex; gap: 10px; flex-shrink: 0; }
+    .member-prog-badge { text-align: center; min-width: 46px; }
+    .member-prog-badge strong { display: block; font-size: 17px; font-weight: 800; }
+    .member-prog-badge span { font-size: 10px; font-weight: 600; color: var(--muted); text-transform: uppercase; }
+    .prog-legend { display: flex; gap: 16px; flex-wrap: wrap; }
+    .prog-legend-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--muted); font-weight: 500; }
+    .prog-legend-dot { width: 14px; height: 14px; border-radius: 3px; flex-shrink: 0; }
   </style>
 </head>
 
@@ -983,6 +1047,12 @@
           Bài nộp
           <span class="sbar-count" id="sbPendingCount" style="background:#ef4444;color:#fff;display:none">0</span>
         </button>
+        <button class="sbar-item" onclick="showPage('challenge-progress')">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+          </svg>
+          Tiến độ 21 ngày
+        </button>
       </nav>
 
       <button class="sbar-item" onclick="showPage('marketplace')">
@@ -1001,6 +1071,14 @@
         Khóa học
       </button>
 
+      <div class="sbar-section">Marketing</div>
+      <button class="sbar-item" onclick="showPage('crm')">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+        </svg>
+        Email CRM
+        <span class="sbar-count" id="sbCRMContacts">&#x2014;</span>
+      </button>
       <div class="sbar-section">Hệ thống</div>
       <button class="sbar-item" onclick="showPage('notifications')">
         <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
@@ -1737,8 +1815,242 @@
         </div>
       </section>
 
+      <!-- ── Email CRM ──────────────────────────────── -->
+      <section class="page" id="page-crm">
+
+        <!-- Stat row -->
+        <div class="crm-stat-grid" id="crmStatGrid">
+          <div class="crm-stat">
+            <div class="crm-stat-num" id="crmStatContacts2">692</div>
+            <div class="crm-stat-lbl">Active Contacts</div>
+          </div>
+          <div class="crm-stat">
+            <div class="crm-stat-num" id="crmStatLists">5</div>
+            <div class="crm-stat-lbl">Email Lists</div>
+          </div>
+          <div class="crm-stat">
+            <div class="crm-stat-num" id="crmStatTags">10</div>
+            <div class="crm-stat-lbl">Tags</div>
+          </div>
+          <div class="crm-stat">
+            <div class="crm-stat-num" id="crmStatSequences">6</div>
+            <div class="crm-stat-lbl">Automations</div>
+          </div>
+          <div class="crm-stat">
+            <div class="crm-stat-num" id="crmStatTemplates">12</div>
+            <div class="crm-stat-lbl">Email Templates</div>
+          </div>
+          <div class="crm-stat">
+            <div class="crm-stat-num" id="crmStatSent">6,617</div>
+            <div class="crm-stat-lbl">Emails Sent</div>
+          </div>
+        </div>
+
+        <!-- Tab card -->
+        <div class="table-card">
+          <div class="crm-tabs">
+            <button class="crm-tab active" onclick="switchCRMTab('lists',this)">&#128203; Lists</button>
+            <button class="crm-tab" onclick="switchCRMTab('tags',this)">&#127991; Tags</button>
+            <button class="crm-tab" onclick="switchCRMTab('sequences',this)">&#9889; Sequences</button>
+            <button class="crm-tab" onclick="switchCRMTab('templates',this)">&#9993; Templates</button>
+          </div>
+
+          <!-- Lists -->
+          <div class="crm-tab-pane active" id="crm-tab-lists">
+            <div class="table-card-header">
+              <h2>Email Lists</h2>
+              <span style="font-size:12px;color:var(--muted)">Tự động tính từ database</span>
+            </div>
+            <div style="overflow-x:auto">
+              <table>
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Tên list</th>
+                    <th>Mô tả</th>
+                    <th>Contacts</th>
+                    <th>Trạng thái</th>
+                    <th>Ngày tạo</th>
+                    <th>Hành động</th>
+                  </tr>
+                </thead>
+                <tbody id="crmListsTbody"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Tags -->
+          <div class="crm-tab-pane" id="crm-tab-tags">
+            <div class="table-card-header">
+              <h2>Tags</h2>
+              <span style="font-size:12px;color:var(--muted)">Tự động tính từ database</span>
+            </div>
+            <div style="padding:16px 20px" id="crmTagsWrap"></div>
+          </div>
+
+          <!-- Sequences -->
+          <div class="crm-tab-pane" id="crm-tab-sequences">
+            <div class="table-card-header">
+              <h2>Email Sequences / Automations</h2>
+            </div>
+            <div style="padding:16px 20px" id="crmSequencesWrap"></div>
+          </div>
+
+          <!-- Templates -->
+          <div class="crm-tab-pane" id="crm-tab-templates">
+            <div class="table-card-header">
+              <h2>Email Templates</h2>
+              <button class="btn-sm primary" onclick="openCRMTemplateModal(null)">+ Tạo template</button>
+            </div>
+            <div style="padding:16px 20px;display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px" id="crmTemplatesWrap"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── Challenge Progress ─────────────────────────── -->
+      <section id="page-challenge-progress" class="page">
+        <div style="padding:16px 20px 12px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;border-bottom:1px solid var(--border);margin-bottom:16px;">
+          <label style="font-size:13px;font-weight:600;color:var(--muted);">Thử thách:</label>
+          <select id="progChallengeFilter" onchange="loadChallengeProgress()" style="border:1px solid var(--border);border-radius:var(--r-sm);padding:6px 14px;font-size:13px;background:var(--card);color:var(--text);cursor:pointer;min-width:220px;">
+            <option value="">-- Tất cả --</option>
+          </select>
+          <select id="progStatusFilter" onchange="filterChallengeProgress()" style="border:1px solid var(--border);border-radius:var(--r-sm);padding:6px 14px;font-size:13px;background:var(--card);color:var(--text);cursor:pointer;">
+            <option value="">Tất cả trạng thái</option>
+            <option value="completed">✅ Hoàn thành (21/21)</option>
+            <option value="active">🔥 Đang tiến hành</option>
+            <option value="not_started">⬜ Chưa bắt đầu</option>
+            <option value="pending">🟡 Có bài chờ duyệt</option>
+            <option value="revision">🔴 Có bài cần sửa</option>
+            <option value="late">⏰ Có bài nộp trễ</option>
+          </select>
+          <div style="position:relative;flex:1;min-width:180px;max-width:280px;">
+            <svg style="position:absolute;left:10px;top:50%;transform:translateY(-50%);width:14px;height:14px;color:var(--muted);pointer-events:none;" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+            <input id="progSearch" type="text" placeholder="Tìm tên, email..." oninput="filterChallengeProgress()" style="width:100%;border:1px solid var(--border);border-radius:var(--r-sm);padding:6px 12px 6px 32px;font-size:13px;background:var(--card);color:var(--text);box-sizing:border-box;">
+          </div>
+          <button class="btn-sm primary" onclick="loadChallengeProgress()" style="margin-left:auto;">Làm mới</button>
+        </div>
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;padding:0 20px 16px;">
+          <div class="stat-card"><div class="stat-num" id="progStatTotal">—</div><div class="stat-lbl">Thành viên</div></div>
+          <div class="stat-card"><div class="stat-num" id="progStatActive" style="color:#0ea5e9">—</div><div class="stat-lbl">Đang tham gia</div></div>
+          <div class="stat-card"><div class="stat-num" id="progStatCompleted" style="color:#10b981">—</div><div class="stat-lbl">Hoàn thành</div></div>
+          <div class="stat-card"><div class="stat-num" id="progStatAvgDays" style="color:#8b5cf6">—</div><div class="stat-lbl">TB ngày đã làm</div></div>
+        </div>
+
+        <div style="padding:0 20px 14px;">
+          <div class="prog-legend">
+            <div class="prog-legend-item"><div class="prog-legend-dot prog-approved"></div>Đã duyệt</div>
+            <div class="prog-legend-item"><div class="prog-legend-dot prog-pending"></div>Chờ duyệt</div>
+            <div class="prog-legend-item"><div class="prog-legend-dot prog-revision"></div>Cần sửa lại</div>
+            <div class="prog-legend-item"><div class="prog-legend-dot prog-empty"></div>Chưa nộp</div>
+          </div>
+        </div>
+
+        <div style="padding:0 20px 8px;display:flex;align-items:center;justify-content:space-between;">
+          <span id="progFilterCount" style="font-size:12px;color:var(--muted);font-weight:500;"></span>
+        </div>
+        <div style="padding:0 20px 32px;" id="progMemberList">
+          <div style="text-align:center;padding:40px;color:var(--muted);">Đang tải...</div>
+        </div>
+      </section>
+
     </div><!-- /main -->
   </div><!-- /shell -->
+
+  <!-- ── CRM List Modal ────────────────────────────── -->
+  <div id="crmListModal" style="display:none;position:fixed;inset:0;background:rgba(15,23,42,.55);z-index:500;align-items:center;justify-content:center;padding:20px;">
+    <div style="background:#fff;border-radius:12px;width:100%;max-width:440px;box-shadow:0 20px 60px rgba(0,0,0,.2);">
+      <div style="padding:16px 20px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;">
+        <div style="font-size:15px;font-weight:700;" id="crmListModalTitle">Tạo Email List</div>
+        <button onclick="closeCRMListModal()" style="width:28px;height:28px;border-radius:50%;background:var(--bg);border:none;cursor:pointer;font-size:18px;color:var(--muted);">×</button>
+      </div>
+      <div style="padding:20px;display:flex;flex-direction:column;gap:14px;">
+        <input type="hidden" id="crmEditListId">
+        <div>
+          <label style="display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:4px;text-transform:uppercase;">Tên list *</label>
+          <input class="search-input" style="width:100%" id="crmListName" placeholder="VD: Thành viên cộng đồng">
+        </div>
+        <div>
+          <label style="display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:4px;text-transform:uppercase;">Mô tả</label>
+          <textarea id="crmListDesc" rows="2" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:6px;font-family:var(--font);font-size:13px;resize:none;outline:none;" placeholder="Mô tả ngắn về list này..."></textarea>
+        </div>
+      </div>
+      <div style="padding:12px 20px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:8px;">
+        <button class="btn-sm" onclick="closeCRMListModal()">Hủy</button>
+        <button class="btn-sm primary" onclick="saveCRMList()">Lưu</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── CRM Tag Modal ─────────────────────────────── -->
+  <div id="crmTagModal" style="display:none;position:fixed;inset:0;background:rgba(15,23,42,.55);z-index:500;align-items:center;justify-content:center;padding:20px;">
+    <div style="background:#fff;border-radius:12px;width:100%;max-width:380px;box-shadow:0 20px 60px rgba(0,0,0,.2);">
+      <div style="padding:16px 20px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;">
+        <div style="font-size:15px;font-weight:700;" id="crmTagModalTitle">Tạo Tag</div>
+        <button onclick="closeCRMTagModal()" style="width:28px;height:28px;border-radius:50%;background:var(--bg);border:none;cursor:pointer;font-size:18px;color:var(--muted);">×</button>
+      </div>
+      <div style="padding:20px;display:flex;flex-direction:column;gap:14px;">
+        <input type="hidden" id="crmEditTagId">
+        <div>
+          <label style="display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:4px;text-transform:uppercase;">Tên tag *</label>
+          <input class="search-input" style="width:100%" id="crmTagName" placeholder="VD: new-member">
+        </div>
+        <div>
+          <label style="display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:4px;text-transform:uppercase;">Màu</label>
+          <input type="color" id="crmTagColor" value="#0ea5e9" style="width:60px;height:32px;border:1px solid var(--border);border-radius:6px;cursor:pointer;padding:2px 4px;">
+        </div>
+      </div>
+      <div style="padding:12px 20px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:8px;">
+        <button class="btn-sm" onclick="closeCRMTagModal()">Hủy</button>
+        <button class="btn-sm primary" onclick="saveCRMTag()">Lưu</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── CRM Template Preview Modal ───────────────── -->
+  <div id="crmTplModal" style="display:none;position:fixed;inset:0;background:rgba(15,23,42,.55);z-index:500;align-items:center;justify-content:center;padding:20px;">
+    <div style="background:#fff;border-radius:12px;width:100%;max-width:640px;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.2);">
+      <div style="padding:16px 20px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:#fff;z-index:1;">
+        <div style="font-size:15px;font-weight:700;" id="crmTplModalTitle">Email Template</div>
+        <button onclick="closeCRMTplModal()" style="width:28px;height:28px;border-radius:50%;background:var(--bg);border:none;cursor:pointer;font-size:18px;color:var(--muted);">×</button>
+      </div>
+      <div style="padding:20px;display:flex;flex-direction:column;gap:14px;">
+        <div>
+          <label style="display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:4px;text-transform:uppercase;">Tên template *</label>
+          <input class="search-input" style="width:100%" id="crmTplName" placeholder="VD: Email chào mừng">
+        </div>
+        <div>
+          <label style="display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:4px;text-transform:uppercase;">Subject *</label>
+          <input class="search-input" style="width:100%" id="crmTplSubject" placeholder="Tiêu đề email...">
+        </div>
+        <div>
+          <label style="display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:4px;text-transform:uppercase;">Danh mục</label>
+          <select class="search-input" style="width:100%" id="crmTplCategory">
+            <option value="welcome">Chào mừng</option>
+            <option value="challenge">Thử thách</option>
+            <option value="reminder">Nhắc nhở</option>
+            <option value="sales">Bán hàng</option>
+            <option value="completion">Hoàn thành</option>
+            <option value="reengagement">Tái kích hoạt</option>
+            <option value="newsletter">Newsletter</option>
+          </select>
+        </div>
+        <div>
+          <label style="display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:4px;text-transform:uppercase;">Nội dung email</label>
+          <textarea id="crmTplBody" rows="12" style="width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:6px;font-family:var(--font);font-size:13px;resize:vertical;outline:none;line-height:1.7;" placeholder="Nhập nội dung email (HTML hoặc text)..."></textarea>
+        </div>
+        <div id="crmTplPreviewWrap" style="display:none;">
+          <label style="display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:6px;text-transform:uppercase;">Xem trước</label>
+          <div class="crm-email-preview" id="crmTplPreviewContent"></div>
+        </div>
+      </div>
+      <div style="padding:12px 20px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:8px;position:sticky;bottom:0;background:#fff;">
+        <button class="btn-sm" onclick="toggleCRMPreview()">&#128065; Xem trước</button>
+        <button class="btn-sm" onclick="closeCRMTplModal()">Hủy</button>
+        <button class="btn-sm primary" onclick="saveCRMTemplate()">Lưu template</button>
+      </div>
+    </div>
+  </div>
 
   <!-- ── Create challenge modal ────────────────────── -->
   <div id="createChallengeModal"
@@ -2030,6 +2342,8 @@
       'course-lessons': ['Bài học', ''],
       marketplace: ['Marketplace', 'Sản phẩm & Đơn hàng'],
       notifications: ['Thông báo', 'Gửi thông báo đến thành viên'],
+      crm: ['Email CRM', 'Lists · Tags · Sequences · Templates'],
+      'challenge-progress': ['Tiến độ 21 ngày', 'Theo dõi tiến độ từng thành viên'],
     };
 
     function showPage(name) {
@@ -2053,6 +2367,8 @@
       if (name === 'courses') loadAdminCourses();
       if (name === 'marketplace') loadAdminMarketplace();
       if (name === 'notifications') { loadAdminNotifications(); loadNotifUserDropdown(); }
+      if (name === 'crm') loadCRM();
+      if (name === 'challenge-progress') loadChallengeProgress();
     }
 
     function refreshCurrent() { showPage(currentPage); }
@@ -3488,6 +3804,310 @@
     function closeMpProductModal() {
       document.getElementById('mpProductModal').style.display = 'none';
       editingMpProductId = null;
+    }
+
+    // ── CRM ───────────────────────────────────────────────────────
+    let activeCRMTab = 'lists';
+    let editingTplId  = null;
+    let _crmTemplates = [];
+
+    const CRM_CAT_META = {
+      welcome:      { label:'Chào mừng',     cls:'tpl-cat-welcome' },
+      challenge:    { label:'Thử thách',      cls:'tpl-cat-challenge' },
+      reminder:     { label:'Nhắc nhở',       cls:'tpl-cat-reminder' },
+      sales:        { label:'Bán hàng',       cls:'tpl-cat-sales' },
+      completion:   { label:'Hoàn thành',     cls:'tpl-cat-completion' },
+      reengagement: { label:'Tái kích hoạt',  cls:'tpl-cat-reengagement' },
+      newsletter:   { label:'Newsletter',     cls:'tpl-cat-newsletter' },
+    };
+
+    async function loadCRM() {
+      try {
+        const [stats, tpls] = await Promise.all([
+          api('/admin/crm/stats'),
+          api('/admin/crm/templates'),
+        ]);
+        _crmTemplates = tpls;
+        document.getElementById('sbCRMContacts').textContent    = stats.active_contacts;
+        document.getElementById('crmStatContacts2').textContent = stats.active_contacts.toLocaleString('vi-VN');
+        document.getElementById('crmStatLists').textContent     = stats.lists.length;
+        document.getElementById('crmStatTags').textContent      = stats.tags.length;
+        document.getElementById('crmStatSequences').textContent = stats.sequences.length;
+        document.getElementById('crmStatTemplates').textContent = tpls.length;
+        document.getElementById('crmStatSent').textContent      = stats.emails_sent.toLocaleString('vi-VN');
+        renderCRMLists(stats.lists);
+        renderCRMTags(stats.tags);
+        renderCRMSequences(stats.sequences);
+        renderCRMTemplates(tpls);
+      } catch(e) { showToast('Lỗi tải CRM: ' + e.message, 'red'); }
+    }
+
+    function switchCRMTab(tab, el) {
+      activeCRMTab = tab;
+      document.querySelectorAll('.crm-tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.crm-tab-pane').forEach(p => p.classList.remove('active'));
+      if (el) el.classList.add('active');
+      document.getElementById('crm-tab-' + tab).classList.add('active');
+    }
+
+    function renderCRMLists(lists) {
+      const tbody = document.getElementById('crmListsTbody');
+      tbody.innerHTML = lists.map((l, i) => `
+        <tr>
+          <td>${i + 1}</td>
+          <td><strong>${l.name}</strong></td>
+          <td style="color:var(--muted);font-size:12px">${l.desc}</td>
+          <td><strong style="color:var(--primary)">${l.count.toLocaleString('vi-VN')}</strong> contacts</td>
+          <td><span class="badge badge-active">Active</span></td>
+        </tr>`).join('');
+    }
+
+    function renderCRMTags(tags) {
+      document.getElementById('crmTagsWrap').innerHTML = tags.map(t => `
+        <span class="tag-pill" style="color:${t.color};border-color:${t.color}30;background:${t.color}10">
+          <svg width="8" height="8" viewBox="0 0 8 8"><circle cx="4" cy="4" r="4" fill="${t.color}"/></svg>
+          ${t.name} <span class="tag-count">${t.count.toLocaleString('vi-VN')}</span>
+        </span>`).join('');
+    }
+
+    function renderCRMSequences(seqs) {
+      document.getElementById('crmSequencesWrap').innerHTML = seqs.map(s => `
+        <div class="seq-card">
+          <div class="seq-icon" style="background:${s.color}">${s.icon}</div>
+          <div class="seq-info">
+            <div class="seq-name">${s.name}</div>
+            <div class="seq-meta">Trigger: ${s.trigger}</div>
+            <div class="seq-stats">
+              <div class="seq-stat-item"><strong>${s.emails}</strong> email${s.emails > 1 ? 's' : ''}</div>
+              <div class="seq-stat-item"><strong>${s.sent.toLocaleString('vi-VN')}</strong> đã gửi</div>
+            </div>
+          </div>
+          <span class="badge badge-active" style="white-space:nowrap;flex-shrink:0">&#9899; Active</span>
+        </div>`).join('');
+    }
+
+    function escHtml(s) {
+      return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+
+    function renderCRMTemplates(tpls) {
+      const wrap = document.getElementById('crmTemplatesWrap');
+      if (!tpls.length) { wrap.innerHTML = '<div class="empty-state">Chưa có template nào.</div>'; return; }
+      wrap.innerHTML = tpls.map(t => {
+        const meta = CRM_CAT_META[t.category] || { label: t.category, cls: 'tpl-cat-newsletter' };
+        return `<div class="tpl-card">
+          <div style="flex:1;min-width:0;">
+            <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:4px">${escHtml(t.name)}</div>
+            <div style="font-size:12px;color:var(--muted);margin-bottom:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis"
+                 title="${escHtml(t.subject)}">${escHtml(t.subject)}</div>
+            <span class="tpl-cat-badge ${meta.cls}">${meta.label}</span>
+            <span style="font-size:11px;color:var(--light);margin-left:8px">Cập nhật ${t.updated_at}</span>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:6px;flex-shrink:0;margin-left:12px">
+            <button class="act-btn" onclick="openCRMTplModal(${t.id})">&#128065; Xem/Sửa</button>
+            <button class="act-btn danger" onclick="deleteCRMTemplate(${t.id})">Xóa</button>
+          </div>
+        </div>`;
+      }).join('');
+    }
+
+    function openCRMTplModal(id) {
+      editingTplId = id || null;
+      const tpl = id ? _crmTemplates.find(t => t.id === id) : null;
+      document.getElementById('crmTplModalTitle').textContent = id ? 'Sửa Email Template' : 'Tạo Email Template';
+      document.getElementById('crmTplName').value     = tpl ? tpl.name     : '';
+      document.getElementById('crmTplSubject').value  = tpl ? tpl.subject  : '';
+      document.getElementById('crmTplCategory').value = tpl ? (tpl.category || 'welcome') : 'welcome';
+      document.getElementById('crmTplBody').value     = tpl ? (tpl.body || '') : '';
+      document.getElementById('crmTplPreviewWrap').style.display = 'none';
+      document.getElementById('crmTplModal').style.display = 'flex';
+    }
+
+    function closeCRMTplModal() {
+      document.getElementById('crmTplModal').style.display = 'none';
+      editingTplId = null;
+    }
+
+    function toggleCRMPreview() {
+      const pw   = document.getElementById('crmTplPreviewWrap');
+      const body = document.getElementById('crmTplBody').value;
+      const subj = document.getElementById('crmTplSubject').value;
+      const name = document.getElementById('crmTplName').value;
+      const cat  = document.getElementById('crmTplCategory').value;
+      const meta = CRM_CAT_META[cat] || { label: cat };
+      if (pw.style.display !== 'none') { pw.style.display = 'none'; return; }
+      document.getElementById('crmTplPreviewContent').innerHTML =
+        '<div style="background:#0f172a;padding:12px 20px;border-radius:6px 6px 0 0">' +
+          '<span style="font-size:13px;font-weight:800;color:#fff">AI AGENT <span style="color:#0ea5e9">CC</span></span>' +
+        '</div>' +
+        '<div style="background:#fff;border:1px solid #e2e8f0;border-top:none;padding:24px 28px;border-radius:0 0 6px 6px">' +
+          '<div style="font-size:11px;font-weight:700;color:#64748b;text-transform:uppercase;margin-bottom:6px">' +
+            meta.label + ' &nbsp;&middot;&nbsp; ' + escHtml(name) +
+          '</div>' +
+          '<div style="font-size:16px;font-weight:700;color:#0f172a;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid #f1f5f9">' +
+            '&#128231; ' + escHtml(subj) +
+          '</div>' +
+          (body || '<em style="color:#94a3b8">Chưa có nội dung</em>') +
+          '<hr style="border:none;border-top:1px solid #f1f5f9;margin:20px 0">' +
+          '<p style="font-size:11px;color:#94a3b8;text-align:center;margin:0">AI Agent CC</p>' +
+        '</div>';
+      pw.style.display = 'block';
+    }
+
+    async function saveCRMTemplate() {
+      const name     = document.getElementById('crmTplName').value.trim();
+      const subject  = document.getElementById('crmTplSubject').value.trim();
+      const category = document.getElementById('crmTplCategory').value;
+      const body     = document.getElementById('crmTplBody').value;
+      if (!name || !subject) return showToast('Vui lòng nhập tên và subject.', 'red');
+      const btn = document.querySelector('#crmTplModal .btn-sm.primary');
+      if (btn) { btn.disabled = true; btn.textContent = 'Đang lưu...'; }
+      try {
+        if (editingTplId) {
+          await api('/admin/crm/templates/' + editingTplId, { method:'PATCH', body: JSON.stringify({ name, subject, category, body }) });
+          showToast('Đã cập nhật template.', 'green');
+        } else {
+          await api('/admin/crm/templates', { method:'POST', body: JSON.stringify({ name, subject, category, body }) });
+          showToast('Đã tạo template mới.', 'green');
+        }
+        closeCRMTplModal();
+        _crmTemplates = await api('/admin/crm/templates');
+        renderCRMTemplates(_crmTemplates);
+        document.getElementById('crmStatTemplates').textContent = _crmTemplates.length;
+      } catch(e) { showToast(e.message || 'Có lỗi xảy ra.', 'red'); }
+      if (btn) { btn.disabled = false; btn.textContent = 'Lưu template'; }
+    }
+
+    async function deleteCRMTemplate(id) {
+      if (!confirm('Xóa template này?')) return;
+      try {
+        await api('/admin/crm/templates/' + id, { method:'DELETE' });
+        showToast('Đã xóa template.', 'green');
+        _crmTemplates = await api('/admin/crm/templates');
+        renderCRMTemplates(_crmTemplates);
+        document.getElementById('crmStatTemplates').textContent = _crmTemplates.length;
+      } catch(e) { showToast(e.message, 'red'); }
+    }
+
+    // ── Challenge Progress ────────────────────────────────────────
+    let _progAllMembers = [];
+
+    async function loadChallengeProgress() {
+      const wrap = document.getElementById('progMemberList');
+      wrap.innerHTML = '<div style="text-align:center;padding:40px;color:var(--muted);">Đang tải...</div>';
+      try {
+        const challengeId = document.getElementById('progChallengeFilter').value;
+        const qs = challengeId ? `?challenge_id=${challengeId}` : '';
+        const data = await api('/admin/challenge-progress' + qs);
+
+        // populate challenge filter dropdown
+        const sel = document.getElementById('progChallengeFilter');
+        if (data.challenges && data.challenges.length) {
+          const cur = sel.value;
+          sel.innerHTML = '<option value="">-- Tất cả --</option>';
+          data.challenges.forEach(c => {
+            const opt = document.createElement('option');
+            opt.value = c.id;
+            opt.textContent = c.title;
+            if (String(c.id) === cur) opt.selected = true;
+            sel.appendChild(opt);
+          });
+        }
+
+        // stats
+        const s = data.summary || {};
+        document.getElementById('progStatTotal').textContent     = s.total ?? '—';
+        document.getElementById('progStatActive').textContent    = s.active ?? '—';
+        document.getElementById('progStatCompleted').textContent = s.completed ?? '—';
+        document.getElementById('progStatAvgDays').textContent   = s.avg_days ?? '—';
+
+        _progAllMembers = data.members || [];
+        filterChallengeProgress();
+      } catch (e) {
+        wrap.innerHTML = `<div style="text-align:center;padding:40px;color:#ef4444;">${escHtml(e.message)}</div>`;
+      }
+    }
+
+    function filterChallengeProgress() {
+      const search = (document.getElementById('progSearch').value || '').toLowerCase().trim();
+      const status = document.getElementById('progStatusFilter').value;
+
+      let list = _progAllMembers;
+
+      if (search) {
+        list = list.filter(m =>
+          (m.name || '').toLowerCase().includes(search) ||
+          (m.email || '').toLowerCase().includes(search)
+        );
+      }
+
+      if (status === 'completed')   list = list.filter(m => m.stats.approved === m.total_days);
+      else if (status === 'active') list = list.filter(m => m.stats.approved > 0 && m.stats.approved < m.total_days);
+      else if (status === 'not_started') list = list.filter(m => m.stats.approved === 0 && m.stats.pending === 0 && m.stats.revision === 0);
+      else if (status === 'pending') list = list.filter(m => m.stats.pending > 0);
+      else if (status === 'revision') list = list.filter(m => m.stats.revision > 0);
+      else if (status === 'late')   list = list.filter(m => (m.stats.late || 0) > 0);
+
+      const countEl = document.getElementById('progFilterCount');
+      if (countEl) countEl.textContent = `${list.length} / ${_progAllMembers.length} thành viên`;
+
+      renderChallengeProgress(list);
+    }
+
+    function renderChallengeProgress(members) {
+      const wrap = document.getElementById('progMemberList');
+      if (!members.length) {
+        wrap.innerHTML = '<div style="text-align:center;padding:40px;color:var(--muted);">Chưa có thành viên đăng ký.</div>';
+        return;
+      }
+
+      const STATUS_CLASS = { approved: 'prog-approved', pending: 'prog-pending', needs_revision: 'prog-revision', empty: 'prog-empty' };
+      const STATUS_LABEL = { approved: 'Đã duyệt', pending: 'Chờ duyệt', needs_revision: 'Cần sửa', empty: 'Chưa nộp' };
+
+      wrap.innerHTML = members.map(m => {
+        const initial = (m.name || '?').charAt(0).toUpperCase();
+        const totalDays = m.total_days || 21;
+        const pct = Math.round((m.stats.approved / totalDays) * 100);
+
+        const dayNums = Array.from({ length: totalDays }, (_, i) => i + 1);
+        const cells = (m.days || []).map(d =>
+          `<div class="prog-cell ${STATUS_CLASS[d.status] || 'prog-empty'}" data-tip="Ngày ${d.day}: ${STATUS_LABEL[d.status] || 'Chưa nộp'}"></div>`
+        ).join('');
+        const dayLabels = `<div style="display:grid;grid-template-columns:repeat(${totalDays},1fr);gap:3px;margin-top:3px;">` +
+          dayNums.map(n => `<div style="font-size:9px;color:var(--muted);text-align:center;font-weight:600;">${n}</div>`).join('') +
+          '</div>';
+
+        const enrollDate = m.enrolled_at ? m.enrolled_at.slice(0, 10) : '—';
+        const startedLabel = m.started_at
+          ? `Bắt đầu: ${m.started_at.slice(0, 16).replace('T', ' ')}`
+          : '<span style="color:#f59e0b;font-weight:600;">Chưa bắt đầu</span>';
+        const challengeLabel = m.challenge_title || '';
+
+        return `
+          <div class="member-prog-card">
+            <div class="member-prog-hdr">
+              <div class="member-prog-avatar">${initial}</div>
+              <div class="member-prog-info">
+                <div class="member-prog-name">${escHtml(m.name)}</div>
+                <div class="member-prog-meta">${escHtml(m.email)} · ${escHtml(challengeLabel)} · Đăng ký: ${enrollDate} · ${startedLabel}</div>
+              </div>
+              <div class="member-prog-badges">
+                <div class="member-prog-badge"><strong style="color:#10b981">${m.stats.approved}</strong><span>Duyệt</span></div>
+                <div class="member-prog-badge"><strong style="color:#f59e0b">${m.stats.pending}</strong><span>Chờ</span></div>
+                <div class="member-prog-badge"><strong style="color:#ef4444">${m.stats.revision}</strong><span>Sửa</span></div>
+                <div class="member-prog-badge"><strong style="color:#94a3b8">${m.stats.empty}</strong><span>Trống</span></div>
+                <div class="member-prog-badge"><strong style="color:#0ea5e9">${pct}%</strong><span>Tiến độ</span></div>
+              </div>
+            </div>
+            <div style="margin-bottom:6px;">
+              <div style="height:6px;border-radius:99px;background:#e2e8f0;overflow:hidden;">
+                <div style="height:100%;width:${pct}%;background:linear-gradient(90deg,#0ea5e9,#10b981);border-radius:99px;transition:width .4s;"></div>
+              </div>
+            </div>
+            <div class="prog-grid">${cells}</div>
+            ${dayLabels}
+          </div>`;
+      }).join('');
     }
 
     async function saveMpProduct() {

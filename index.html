@@ -354,7 +354,8 @@ async function handleGoogleToken(access_token) {
       return;
     }
     sessionStorage.setItem('currentUser', JSON.stringify(data.user));
-    window.location.href = 'feed.html';
+    await savePendingIntakeProfile(data.user.id);
+    redirectAfterLogin();
   } catch {
     const msgEl = document.querySelector('#errorBanner [data-msg]');
     if (msgEl) msgEl.textContent = 'Lỗi kết nối server.';
@@ -406,7 +407,8 @@ loginForm.addEventListener('submit', async (e) => {
     }
 
     sessionStorage.setItem('currentUser', JSON.stringify(data.user));
-    window.location.href = 'feed.html';
+    await savePendingIntakeProfile(data.user.id);
+    redirectAfterLogin();
   } catch (err) {
     setLoading(false);
     const msgEl = document.querySelector('#errorBanner [data-msg]');
@@ -414,6 +416,25 @@ loginForm.addEventListener('submit', async (e) => {
     showAlert('errorBanner');
   }
 });
+
+async function savePendingIntakeProfile(userId) {
+  const pending = sessionStorage.getItem('pendingIntakeProfile');
+  if (!pending) return;
+  try {
+    await fetch('/api/intake/save', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ userId, profile: pending })
+    });
+    sessionStorage.removeItem('pendingIntakeProfile');
+  } catch {}
+}
+
+function redirectAfterLogin() {
+  const params = new URLSearchParams(window.location.search);
+  const redirect = params.get('redirect');
+  window.location.href = redirect === 'intake' ? 'intake.html' : 'feed.html';
+}
 </script>
 </body>
 </html>
