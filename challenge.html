@@ -485,6 +485,15 @@
 
     async function startAndGo(challengeId) {
       try {
+        // Check intake profile trước khi bắt đầu
+        const profileRes = await fetch(`/api/intake/profile/${currentUser.id}`);
+        const profileData = await profileRes.json();
+        if (!profileData.profile) {
+          sessionStorage.setItem('pendingChallengeId', challengeId);
+          window.location.href = 'intake.html';
+          return;
+        }
+
         const res = await fetch(`${API}/challenges/${challengeId}/start`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -596,6 +605,14 @@
 
     loadChallenges();
     loadRpStats();
+
+    // Auto-start sau khi quay về từ intake
+    const _autostart = new URLSearchParams(window.location.search).get('autostart');
+    if (_autostart) {
+      sessionStorage.removeItem('pendingChallengeId');
+      // Đợi loadChallenges xong rồi tự start
+      setTimeout(() => startAndGo(parseInt(_autostart)), 800);
+    }
   </script>
 </body>
 

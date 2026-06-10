@@ -839,13 +839,22 @@ function showProfile(md) {
     catch { return null; }
   })();
 
+  // Nếu đến từ challenge → đổi nút CTA về lại challenge
+  const pendingId = sessionStorage.getItem('pendingChallengeId');
+  const btnStart  = document.getElementById('btnStart');
+  if (pendingId) {
+    btnStart.href        = `challenge.html?autostart=${pendingId}`;
+    btnStart.textContent = '🚀 Bắt đầu thử thách →';
+  } else {
+    btnStart.href = 'challenge.html';
+  }
+
   if (currentUser?.id) {
     document.getElementById('loginPrompt').style.display = 'none';
     saveProfile(md, currentUser.id);
   } else {
     document.getElementById('loginPrompt').style.display = 'flex';
     document.getElementById('saveStatus').style.display = 'none';
-    // Persist in sessionStorage so login page can retrieve and save after auth
     sessionStorage.setItem('pendingIntakeProfile', md);
   }
 
