@@ -2662,7 +2662,7 @@ const CHALLENGE_DAYS = [
   });
 
   // ── Intake Chat ───────────────────────────────────────────
-  const INTAKE_OPENING = `Trước khi bắt đầu 21 ngày, mình muốn hiểu bạn một chút — không phải hỏi cho có form, mà để lộ trình này thật sự làm việc cho chính bạn.\n\nĐiều gì đang khiến bạn chưa hài lòng với tình trạng hiện tại? Cứ nói thật, không cần câu trả lời đẹp.`;
+  const INTAKE_OPENING = `Điều gì đang khiến bạn chưa hài lòng với tình trạng hiện tại? Cứ nói thật, không cần câu trả lời đẹp.`;
 
   const INTAKE_SYSTEM = `Bạn là người dẫn đường cho "Thử thách 21 ngày AI Agent" — chương trình thực chiến giúp người Việt xây hệ thống kinh doanh số dùng AI, không cần biết code, không cần vốn lớn. Sau 21 ngày, học viên sẽ có: website thật, chatbot bán hàng 24/7, hệ thống thanh toán tự động (Sepay), email marketing (Resend), AI Agent trên VPS, và sản phẩm số đầu tiên đã bán được.
 

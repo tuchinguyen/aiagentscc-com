@@ -536,6 +536,120 @@
       left: 0;
       z-index: -1;
     }
+
+    /* ── Roadmap overview card ── */
+    .roadmap-card {
+      max-width: 660px;
+      margin: 0 auto 20px;
+      width: 100%;
+    }
+
+    .roadmap-intro {
+      font-size: 14px;
+      line-height: 1.7;
+      color: var(--text);
+      margin-bottom: 16px;
+    }
+
+    .roadmap-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .7px;
+      margin-bottom: 10px;
+    }
+
+    .roadmap-weeks {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    @media (max-width: 520px) {
+      .roadmap-weeks { grid-template-columns: 1fr; }
+    }
+
+    .week-block {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px 14px 12px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .week-block::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+    }
+
+    .week-block.w1::before { background: #0ea5e9; }
+    .week-block.w2::before { background: #8b5cf6; }
+    .week-block.w3::before { background: #10b981; }
+
+    .week-num {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .6px;
+      margin-bottom: 4px;
+    }
+
+    .week-block.w1 .week-num { color: #0284c7; }
+    .week-block.w2 .week-num { color: #7c3aed; }
+    .week-block.w3 .week-num { color: #059669; }
+
+    .week-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 8px;
+      line-height: 1.3;
+    }
+
+    .week-items {
+      list-style: none;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .week-items li {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.5;
+      padding-left: 14px;
+      position: relative;
+    }
+
+    .week-items li::before {
+      content: '✓';
+      position: absolute;
+      left: 0;
+      font-size: 10px;
+      font-weight: 700;
+    }
+
+    .week-block.w1 .week-items li::before { color: #0ea5e9; }
+    .week-block.w2 .week-items li::before { color: #8b5cf6; }
+    .week-block.w3 .week-items li::before { color: #10b981; }
+
+    .roadmap-outcome {
+      background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+      border: 1px solid #bae6fd;
+      border-radius: 12px;
+      padding: 12px 16px;
+      font-size: 13px;
+      color: #0369a1;
+      line-height: 1.6;
+    }
+
+    .roadmap-outcome strong { font-weight: 700; color: #0c4a6e; }
   </style>
 </head>
 <body>
@@ -559,6 +673,55 @@
 
 <!-- Chat -->
 <div class="chat-wrap" id="chatWrap">
+
+  <!-- Roadmap overview -->
+  <div class="roadmap-card">
+    <p class="roadmap-intro">
+      Trước khi bắt đầu 21 ngày, mình muốn hiểu bạn một chút — không phải hỏi cho có form,
+      mà để lộ trình này thật sự làm việc cho chính bạn.
+    </p>
+
+    <div class="roadmap-label">Sau 21 ngày, bạn sẽ tự tay build được</div>
+
+    <div class="roadmap-weeks">
+      <div class="week-block w1">
+        <div class="week-num">Tuần 1 · Ngày 1–7</div>
+        <div class="week-title">Build Hệ Thống Bán Hàng</div>
+        <ul class="week-items">
+          <li>Website thật + domain</li>
+          <li>Lead đầu tiên từ mạng xã hội</li>
+          <li>Bộ não AI (brand voice)</li>
+          <li>Trang waitlist + kế hoạch content</li>
+        </ul>
+      </div>
+      <div class="week-block w2">
+        <div class="week-num">Tuần 2 · Ngày 8–14</div>
+        <div class="week-title">Tự Động Hóa Funnel</div>
+        <ul class="week-items">
+          <li>Chatbot bán hàng 24/7</li>
+          <li>Thanh toán tự động (Sepay)</li>
+          <li>CRM + Admin panel</li>
+          <li>Email marketing (Resend)</li>
+        </ul>
+      </div>
+      <div class="week-block w3">
+        <div class="week-num">Tuần 3 · Ngày 15–21</div>
+        <div class="week-title">AI Agent Thực Sự</div>
+        <ul class="week-items">
+          <li>Agent trên VPS + tự Telegram</li>
+          <li>Auto-post Facebook + AI video</li>
+          <li>Sản phẩm số đầu tiên đã bán</li>
+          <li>Business plan + full funnel</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="roadmap-outcome">
+      Tất cả được build cho <strong>sản phẩm và khách hàng của chính bạn</strong> —
+      không phải demo mẫu, không phải bài tập lý thuyết.
+    </div>
+  </div>
+
   <div class="chat-inner" id="chatInner"></div>
 </div>
 
@@ -943,7 +1106,7 @@ sendBtn.addEventListener('click', sendMessage);
     const data = await res.json();
     removeTyping();
 
-    const opening = data.reply || 'Trước khi bắt đầu 21 ngày, mình muốn hiểu bạn một chút.\n\nĐiều gì đang khiến bạn chưa hài lòng với tình trạng hiện tại? Cứ nói thật, không cần câu trả lời đẹp.';
+    const opening = data.reply || 'Điều gì đang khiến bạn chưa hài lòng với tình trạng hiện tại? Cứ nói thật, không cần câu trả lời đẹp.';
     addBubble('ai', textToHtml(opening));
     // Don't push to history — server prepends it automatically
   } catch {
