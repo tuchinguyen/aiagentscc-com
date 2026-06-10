@@ -1414,6 +1414,7 @@
       document.getElementById('sbAvatar').style.background = avatarGrad(u.first_name);
       document.getElementById('sbName').textContent = `${u.first_name} ${u.last_name || ''}`.trim();
       document.getElementById('sbLevel').textContent = `Level ${lv.level} · ${u.xp || 0} XP`;
+      ['sbAvatar','sbName'].forEach(id => { const el = document.getElementById(id); el.style.cursor='pointer'; el.onclick=()=>location.href=`profile.html?id=${u.id}`; });
 
       const ta = document.querySelector('.topbar-avatar-placeholder');
       if (ta) { ta.textContent = initials; ta.style.background = avatarGrad(u.first_name); }
@@ -1475,6 +1476,7 @@
         </div>
         <div class="my-rank-xp-next">${lv.xpMax - (user.xp || 0)} XP → Level ${lv.level + 1}</div>
       </div>`;
+        ['.my-rank-avatar-wrap', '.my-rank-info'].forEach(sel => { const el = heroEl.querySelector(sel); if (el) { el.style.cursor='pointer'; el.onclick=()=>location.href=`profile.html?id=${user.id}`; } });
 
         const totalRes = await fetch(`${API}/leaderboard?period=alltime&limit=9999`).then(r => r.json()).catch(() => ({}));
         const total = (totalRes.ranked || []).length;

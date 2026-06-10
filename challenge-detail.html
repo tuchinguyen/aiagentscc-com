@@ -317,6 +317,7 @@ let challengeData = null; // { challenge, days, submissions, enrollment }
   document.getElementById('sbName').textContent = currentUser.first_name + ' ' + currentUser.last_name;
   const lv = getLevel(currentUser.xp||0);
   document.getElementById('sbLevel').textContent = lv.name + ' · Lv.' + lv.level;
+  ['sbAvatar','sbName'].forEach(id => { const el = document.getElementById(id); el.style.cursor='pointer'; el.onclick=()=>location.href=`profile.html?id=${currentUser.id}`; });
 })();
 
 // Read challenge ID from URL
