@@ -533,9 +533,10 @@ const CHALLENGE_DAYS = [
 
   // Seed default site settings
   const defaultSettings = [
-    ['announcement_enabled', '0'],
-    ['announcement_text',    ''],
-    ['announcement_icon',    '📢'],
+    ['announcement_enabled',   '0'],
+    ['announcement_text',      ''],
+    ['announcement_icon',      '📢'],
+    ['late_reminder_enabled',  '0'],
   ];
   defaultSettings.forEach(([key, value]) => {
     const existing = db.get('SELECT key FROM site_settings WHERE key = ?', [key]);
@@ -2397,6 +2398,9 @@ const CHALLENGE_DAYS = [
 
   // ── Late submission reminder cron (every hour) ──────────────
   setInterval(async () => {
+    const lrSetting = db.get("SELECT value FROM site_settings WHERE key='late_reminder_enabled'");
+    if (!lrSetting || lrSetting.value !== '1') return;
+
     const DAY_MS = 24 * 3600 * 1000;
     const now = Date.now();
     // Find all active enrollments
@@ -2611,7 +2615,7 @@ const CHALLENGE_DAYS = [
       sequences: [
         { id:1, name:'Chào mừng thành viên mới',     trigger:'Khi đăng ký tài khoản',             icon:'👋', color:'#dbeafe', emails:1, sent:totalUsers,    status:'active' },
         { id:2, name:'Xác nhận đăng ký thử thách',   trigger:'Khi đăng ký challenge được duyệt',   icon:'🔥', color:'#fef3c7', emails:1, sent:enrolled,     status:'active' },
-        { id:3, name:'Nhắc nhở hoàn thành ngày',     trigger:'Mỗi ngày 19:00 (scheduler)',         icon:'⏰', color:'#d1fae5', emails:1, sent:remindersSent, status:'active' },
+        { id:3, name:'Nhắc nhở hoàn thành ngày',     trigger:'Mỗi giờ (scheduler)',                icon:'⏰', color:'#d1fae5', emails:1, sent:remindersSent, status: (db.get("SELECT value FROM site_settings WHERE key='late_reminder_enabled'") || {}).value === '1' ? 'active' : 'paused', toggleable: true },
         { id:4, name:'Email theo dõi đơn hàng',      trigger:'Sau mua: 15 phút / 1 ngày / 2 ngày / 4 ngày', icon:'📦', color:'#fce7f3', emails:4, sent:orderMails, status:'active' },
         { id:5, name:'Thông báo admin (broadcast)',  trigger:'Thủ công từ admin panel',             icon:'📢', color:'#ede9fe', emails:1, sent:notifSent,     status:'active' },
       ],
