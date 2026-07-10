@@ -400,6 +400,93 @@ const CHALLENGE_DAYS = [
    10],
 ];
 
+const CHALLENGE_DAYS_TEACHER = [
+  [1,  'Kick Off: Cài Tool & Chọn Hướng Đi',
+   'Cài đặt công cụ, tham gia cộng đồng, và chọn hướng đi (thương hiệu cá nhân hay lớp học/khóa học) cho 21 ngày tới.',
+   '<h3>🛠 Việc cần làm</h3>\n<ol>\n<li>Xem recording buổi kick-off (link chia sẻ trong nhóm Telegram)</li>\n<li>Cài đặt 3 công cụ theo thứ tự: <strong>Node.js</strong> → <strong>Claude Desktop</strong> → <strong>Antigravity</strong> (AI coding agent)</li>\n<li>Tham gia nhóm Telegram hỗ trợ, gửi tin nhắn giới thiệu bản thân</li>\n<li>⭐ Chọn hướng đi: website thương hiệu cá nhân, khóa học, hay lớp học/gia sư — bạn sẽ theo đuổi hướng này suốt 21 ngày tới</li>\n</ol>\n<p>📄 Hướng dẫn chi tiết từng bước, kèm link tải công cụ và mẫu tin nhắn giới thiệu: xem <a href="/giao-vien/sop-ngay-1.html" target="_blank" rel="noopener">SOP Ngày 1</a>.</p>\nNộp bài:\n<ul>\n<li>Ảnh chụp màn hình 3 công cụ đã cài đặt thành công (Node.js, Claude Desktop, Antigravity)</li>\n<li>Ảnh đã vào nhóm Telegram và gửi lời chào</li>\n</ul>\n✅ Được duyệt khi: Có đủ ảnh chứng minh 3 công cụ đã cài đặt + đã tham gia nhóm Telegram.',
+   10],
+  [2,  'Build Website Thương Hiệu Cá Nhân Giáo Viên',
+   'Dùng Antigravity dựng landing page giới thiệu bản thân: môn dạy, kinh nghiệm, phương pháp giảng dạy, thành tích/học sinh tiêu biểu — rồi đưa lên internet miễn phí.',
+   '<h3>🛠 Việc cần làm</h3>\n<ol>\n<li>Dùng Antigravity tạo landing page giới thiệu bản thân, gồm: môn dạy, số năm kinh nghiệm, phương pháp giảng dạy, thành tích/học sinh tiêu biểu, testimonial, thông tin liên hệ</li>\n<li>Quy trình 5 bước: viết nội dung trước → visual prompting (dùng ảnh tham chiếu) → tinh chỉnh từng phần → deploy qua GitHub + Vercel → kiểm thử trên desktop và điện thoại</li>\n</ol>\n<p>📄 Hướng dẫn chi tiết + prompt mẫu: xem <a href="/giao-vien/sop-ngay-2-landing-page-giao-vien.html" target="_blank" rel="noopener">SOP Ngày 2</a>.</p>\nNộp bài:\n<ul>\n<li>Link landing page có thể truy cập công khai (dạng ...vercel.app)</li>\n</ul>\n✅ Được duyệt khi: Link mở được công khai, đủ nội dung môn dạy/kinh nghiệm/phương pháp/thành tích, không bị vỡ layout trên điện thoại.\n❌ Chưa đạt khi: Chỉ nộp ảnh chụp màn hình không có link · Link mở ra lỗi 404 hoặc trang trắng · Chỉ có localhost người khác không vào được.',
+   5],
+  [3,  'Deploy Website Thật + Form Thu Học Viên/Phụ Huynh',
+   'Mua domain thật, trỏ qua Cloudflare, kết nối lại với site Ngày 2, và gắn form thu thông tin phụ huynh/học viên tự động chảy vào Google Sheet.',
+   '<h3>🛠 Việc cần làm</h3>\n<ol>\n<li>Đăng ký domain thật tại <a href="https://inet.vn/dang-ky-ten-mien?aff=318105" target="_blank" rel="noopener">inet.vn</a></li>\n<li>Trỏ domain vào Cloudflare (nameservers), chờ Active, rồi kết nối domain đó vào Vercel (project Ngày 2)</li>\n<li>Gắn form đăng ký tư vấn/học thử (Google Form hoặc form tự tạo + Apps Script) vào landing page → data tự chảy vào Google Sheet</li>\n</ol>\n<p>📄 Hướng dẫn chi tiết + code Apps Script: xem <a href="/giao-vien/sop-ngay-3.html" target="_blank" rel="noopener">SOP Ngày 3</a>.</p>\nNộp bài:\n<ul>\n<li>Link website domain thật (VD: tensanpham.vn — không phải *.vercel.app)</li>\n<li>Link Google Sheet có ít nhất 1 dòng data test</li>\n<li>Screenshot website trên desktop + điện thoại</li>\n</ul>\n✅ Được duyệt khi: Website mở được trên domain thật, form thu lead hoạt động, Google Sheet có ít nhất 1 dòng data test.\n❌ Chưa đạt khi: Vẫn dùng link Vercel ngẫu nhiên · Form không hoạt động hoặc data không vào Sheet · Chỉ nộp ảnh không có link.',
+   5],
+  [4,  'Traffic – Lead – Liên Hệ Đầu Tiên',
+   'Đăng bài giới thiệu lớp học/khóa học lên ít nhất 3 kênh, kiểm tra lead thật trong Google Sheet, và liên hệ tư vấn ngay trong ngày.',
+   '<h3>🛠 Việc cần làm</h3>\n<ol>\n<li>Nhờ AI viết 3 bài đăng Facebook theo 3 góc độ khác nhau, chọn bài phù hợp nhất, chỉnh lại giọng văn của bạn</li>\n<li>Đăng bài lên ít nhất 3 kênh: Facebook cá nhân, nhóm phụ huynh, Zalo...</li>\n<li>Tăng độ phủ: nhắn tin trực tiếp 5–10 phụ huynh/đồng nghiệp, share vào nhóm liên quan, reply comment trong 1 giờ đầu</li>\n<li>Kiểm tra Google Sheet — có lead thật chưa? Nếu có, nhắn tin/gọi điện tư vấn ngay trong ngày, đừng để lead nguội</li>\n<li>Ghi lại insight sau khi trò chuyện với lead (họ quan tâm gì, hỏi gì, lo ngại gì) — dùng cho chatbot và email sequence ở Ngày 9–12</li>\n</ol>\n<p>📄 Hướng dẫn chi tiết + prompt mẫu: xem <a href="/giao-vien/sop-ngay-4.html" target="_blank" rel="noopener">SOP Ngày 4</a>.</p>\nNộp bài:\n<ul>\n<li>Link bài đăng public (ít nhất 1 bài, người ngoài xem được)</li>\n<li>Link Google Sheet có lead thật (không phải data tự điền test)</li>\n</ul>\n✅ Được duyệt khi: Bài đăng ở chế độ công khai, Google Sheet có lead thật, đã liên hệ lead đó trong ngày.\n❌ Chưa đạt khi: Bài đăng riêng tư/chỉ mình tôi · Google Sheet trống hoặc chỉ có data test · Có lead nhưng chưa liên hệ.',
+   5],
+  [5,  'Build Bộ Não Thứ 2 (SQLite brain.db + Brand Voice)',
+   'Tạo "bộ não kỹ thuật số" — database SQLite lưu brand voice giảng dạy của bạn, làm nền tảng để AI viết bài đúng giọng bạn.',
+   'Dùng Antigravity tạo thư mục my-brain/ chứa brain.db (SQLite database).\n\nTạo bảng brand_voice gồm: tone giảng dạy, từ hay dùng, từ không dùng, đối tượng (học sinh/phụ huynh theo cấp/môn), ví dụ bài giảng hoặc bài viết thật.\n\nTạo file brain_score.md để track điểm mỗi ngày.\n\nPrompt mẫu:\n"Tạo thư mục my-brain với file brain.db SQLite. Tạo bảng brand_voice gồm: tone, words_to_use, words_to_avoid, target_audience, writing_example. Insert 1 row dữ liệu mẫu. Tạo file brain_score.md để track điểm mỗi ngày."\n\nAI đọc bộ não → viết thử 1 bài chia sẻ kiến thức chuyên môn theo giọng của bạn → bạn nhận xét và chỉnh brand_voice.\n\n⚠️ Lưu ý bảo mật: brain.db ở ngày này chỉ chứa nội dung/brand voice (công khai) — chưa đưa dữ liệu học sinh thật vào, để tránh trộn dữ liệu cá nhân trẻ em với dữ liệu content công khai (xem thêm ghi chú ở Ngày 9).\n\nNộp bài:\n- Screenshot brain.db + bảng brand_voice đầy đủ\n- File bài AI viết từ database\n\n✅ Được duyệt khi: brain.db chạy được, brand_voice có data thật, AI đã viết được bài từ database.',
+   5],
+  [6,  'Mở Waitlist Khóa Học + Bắt Đầu 7 Ngày Đăng Bài Chia Sẻ Kiến Thức',
+   'Mở trang đăng ký khóa học/lớp học mới và bắt đầu chuỗi 7 ngày đăng bài chia sẻ kiến thức chuyên môn (chạy song song đến Ngày 12).',
+   '⚠️ Chuỗi này chạy song song từ Ngày 6 đến Ngày 12. Mỗi ngày cần đăng ≥ 3 bài.\n\nDùng AI coding agent tạo trang waitlist (/dang-ky.html) — form đăng ký khóa học/lớp học mới, lưu vào waitlist.json.\n\nDùng bộ não thứ 2 viết kế hoạch content 7 ngày (plan.md): chia sẻ kiến thức chuyên môn, mẹo học tập, câu chuyện lớp học.\n\nĐăng bài ngày 1 của chuỗi lên ít nhất 3 kênh.\n\nCập nhật brain_score.md mỗi tối.\n\nNộp bài:\n- Link trang waitlist (reviewer điền được)\n- File plan.md (7 ngày, mỗi ngày có ý tưởng/hook/CTA)\n- Link bài đăng ngày 1 (≥ 3 kênh, link public)\n\n✅ Được duyệt khi: Waitlist mở được và form submit được, plan.md có đủ 7 ngày nội dung.',
+   5],
+  [7,  'Week 1 Review Meeting',
+   'Meeting live tổng kết tuần 1 — thực hành để AI Agent tự lên lịch tuần và tự cập nhật task cho bạn.',
+   'Meeting live: 19h30 (2–2.5 giờ).\n\nBài tập thực hành trực tiếp trong meeting:\n1. Dùng Agent tạo toàn bộ cấu trúc thư mục bằng 1 câu lệnh duy nhất\n2. Dùng Agent điền nội dung vào README.md\n3. Dùng Agent tạo danh sách task trong tasks/\n4. Ra lệnh cho Agent đọc toàn bộ thư mục và phân tích\n5. Ra lệnh cho Agent lên lịch tuần tự động\n6. Ra lệnh cho Agent cập nhật task khi xong việc\n\nNộp bài:\n- Screenshot tham gia/xem lại buổi meeting\n- Screenshot từng bước thực hành (6 hạng mục)\n\n✅ Được duyệt khi: Có đủ screenshot chứng minh đã tham gia/xem lại và hoàn thành các bước thực hành.',
+   10],
+  [8,  'Relax Day',
+   'Ngày nghỉ — không có task bắt buộc.',
+   'Không có yêu cầu bắt buộc.\n\nGợi ý:\n- Xem lại ghi chú tuần 1, ôn lại những gì đã học được\n- Nghỉ ngơi, tái nạp năng lượng — bạn xứng đáng!\n\nNộp bài:\n- Ảnh hoặc note bất kỳ về hành trình 7 ngày đầu\n\n✅ Được duyệt khi: Nộp bất cứ nội dung nào — ảnh, note, suy nghĩ về hành trình 7 ngày đầu.',
+   3],
+  [9,  'Build App E-Learning + Ngân Hàng Đề Thi',
+   'Build app quản lý khóa học/bài học/học viên và ngân hàng đề thi tự sinh — nền tảng vận hành lớp học của bạn.',
+   'Dùng AI coding agent tạo app quản lý khóa học, bài học, học viên (CRUD đầy đủ). Học viên đăng nhập xem được danh sách bài học và tiến độ học của mình.\n\nThêm bảng question_bank (câu hỏi theo chủ đề/độ khó) — AI tự sinh đề kiểm tra và đáp án từ ngân hàng câu hỏi, học viên có thể tự luyện tập và nhận điểm ngay.\n\nNhờ AI viết sales_script.md giới thiệu khóa học dựa trên brain.db.\n\n⚠️ Lưu ý kiến trúc: tách riêng một file school.db cho dữ liệu học viên/điểm/học phí (dữ liệu cá nhân trẻ em), khác với brain.db nội dung công khai ở Ngày 5.\n\nNộp bài:\n- Link app e-learning\n- Screenshot bảng khóa học/bài học/học viên\n- Screenshot 1 đề tự sinh từ ngân hàng câu hỏi\n\n✅ Được duyệt khi: App CRUD hoạt động đầy đủ, question_bank sinh được đề kiểm tra, school.db tách riêng khỏi brain.db.',
+   5],
+  [10, 'App Quản Lý Lớp Học: Điểm Danh, Bảng Điểm & Chấm Bài Tự Động',
+   'Thêm điểm danh, bảng điểm và tính năng AI chấm bài tự luận vào app quản lý lớp học.',
+   'AI tạo thêm 2 bảng trong school.db: attendance (điểm danh) và grades (điểm số).\n\nBuild trang giáo viên để điểm danh, nhập điểm theo buổi học; học viên/phụ huynh xem lại kết quả.\n\nThử tính năng AI chấm bài tự luận/bài viết: học viên nộp bài text → AI chấm theo rubric (thang điểm + nhận xét), giáo viên duyệt lại trước khi công bố điểm.\n\nTest 1 buổi điểm danh + nhập điểm mẫu cho cả lớp + 1 bài tự luận được AI chấm thử.\n\nNộp bài:\n- Link trang điểm danh/bảng điểm\n- Screenshot dữ liệu mẫu\n- Screenshot 1 bài được AI chấm\n\n✅ Được duyệt khi: Điểm danh/nhập điểm hoạt động với data thật, có ít nhất 1 bài tự luận được AI chấm và giáo viên duyệt lại.',
+   5],
+  [11, 'Kết Nối Thanh Toán Học Phí + Nhắc Nợ Tự Động',
+   'Kết nối thanh toán học phí qua QR (Sepay) và tự động nhắc học viên chưa đóng học phí.',
+   'Đăng ký Sepay kết nối QR payment.\n\nAI tạo bảng orders/học phí trong school.db, gắn thanh toán vào app: học viên đóng học phí → trạng thái tự chuyển "đã thanh toán".\n\nTest nhận tiền thật 2.000đ → đơn/học phí tự cập nhật.\n\nThêm tính năng nhắc nợ: agent rà danh sách học viên chưa đóng học phí đến hạn và tự nhắc qua email/Zalo (kết nối với Ngày 12 và Ngày 18).\n\nNộp bài:\n- Link trang thanh toán\n- Screenshot nhận tiền 2.000đ\n- Screenshot danh sách nhắc nợ tự động\n\n✅ Được duyệt khi: Sepay kết nối thật, đã test nhận tiền thật, có danh sách nhắc nợ tự động hoạt động.',
+   5],
+  [12, 'Kết Nối Email Chăm Sóc Học Viên & Phụ Huynh',
+   'Kết nối Resend.com để tự động gửi email chào mừng, nhắc lịch học, và thông báo điểm/điểm danh cho phụ huynh.',
+   'Đăng ký Resend.com lấy API Key, kết nối vào app.\n\nAI viết 3 email theo brand voice: chào mừng học viên mới, nhắc lịch học, thông báo điểm/điểm danh cho phụ huynh.\n\nTest gửi email và xác nhận đã nhận.\n\nNộp bài:\n- Screenshot 3 email\n- Email test đã gửi thành công\n- File email_sequence.md\n\n✅ Được duyệt khi: Nhận được cả 3 email trong hộp thư thật sau khi test.',
+   5],
+  [13, 'Chatbot Tư Vấn Học Sinh/Phụ Huynh 24/7',
+   'Gắn chatbot tư vấn học sinh/phụ huynh 24/7 lên website, trả lời câu hỏi về học phí, lịch học, nội dung khóa học.',
+   'Tạo kho dữ liệu /data/ (khóa học, FAQ, học viên, câu hỏi/thắc mắc thường gặp).\n\nCopy brain.db (không copy school.db có dữ liệu cá nhân) vào thư mục website, nhờ AI gắn chatbot vào website.\n\nĐóng vai phụ huynh/học sinh test 3 tình huống hỏi đáp (học phí, lịch học, nội dung khóa học).\n\n⚠️ Lưu ý: chatbot chỉ trả lời thông tin chung (học phí, lịch, nội dung khóa học) — không để lộ điểm số/thông tin riêng của học viên khác qua chatbot công khai.\n\nNộp bài:\n- Link website test chatbot\n- Screenshot /data\n- Screenshot brain_score.md\n\n✅ Được duyệt khi: Chatbot trả lời được cả 3 tình huống test, không để lộ thông tin riêng tư của học viên khác.',
+   5],
+  [14, 'Kênh YouTube Bài Giảng',
+   'Quay 1 video bài giảng ngắn, nhúng vào bài học tương ứng trong app e-learning.',
+   'Quay 1 video bài giảng ngắn (5–10 phút) về chủ đề chuyên môn của bạn.\n\nDùng AI hỗ trợ viết kịch bản/dựng phụ đề, upload lên kênh YouTube.\n\nNhúng video vào bài học tương ứng trong app e-learning (Ngày 9) để học viên xem trực tiếp.\n\nNộp bài:\n- Link video YouTube\n- Link bài học đã nhúng video\n\n✅ Được duyệt khi: Video có nội dung chuyên môn thật, đã nhúng thành công vào app e-learning.',
+   5],
+  [15, 'Week 2 Review + Chuẩn Bị Deploy',
+   'Nhìn lại 2 tuần, viết review thật, chuẩn bị checklist deploy lên VPS ở tuần 3.',
+   'Tự viết week2_review.md (KHÔNG nhờ AI viết thay) trả lời 5 câu hỏi:\n- Tôi đã build được gì sau 15 ngày?\n- Số liệu thật: bao nhiêu lead, bao nhiêu học viên, đã có ai đóng học phí chưa?\n- Điều gì khó nhất tôi đã vượt qua?\n- Điều gì tôi thấy chưa tốt?\n- Nếu bắt đầu lại, tôi sẽ làm khác gì?\n\nAI biến review thành bài đăng, tạo deploy_checklist.md.\n\nNộp bài:\n- Link bài cảm nhận\n- File week2_review.md\n- File deploy_checklist.md\n- File brain_review.md\n\n✅ Được duyệt khi: Bài cảm nhận có tiếng nói thật của bạn (không phải AI viết hoàn toàn).',
+   10],
+  [16, 'Build AI Agent (Goclaw) trên VPS',
+   'Cài đặt goclaw (AI agent framework mã nguồn mở) lên VPS Linux, chuẩn bị nền tảng cho agent thực sự trong tuần 3.',
+   'Cài goclaw (open source AI agent framework) lên VPS Linux.\n\nDùng AI coding agent để clone repo và lên kế hoạch cài đặt theo domain (website + app dạy học đã có).\n\nNộp bài:\n- Screenshot goclaw đang chạy trên domain thật\n- Screenshot terminal/dashboard cho thấy service đang active\n\n✅ Được duyệt khi: Vào domain thấy goclaw hoạt động, agent phản hồi được lệnh cơ bản.',
+   10],
+  [17, 'VPS + MCP (Model Context Protocol) [Nâng cao / tuỳ chọn]',
+   'Deploy website/app e-learning lên VPS và trao cho agent khả năng thao tác server, dữ liệu lớp học qua MCP.',
+   'Deploy website/app e-learning lên VPS và trao cho agent khả năng thao tác server, dữ liệu lớp học qua MCP.\n\nThiết lập backup định kỳ cho school.db/brain.db (ví dụ: cron job đẩy bản sao lên Google Drive mỗi đêm) để không mất dữ liệu điểm/học phí nếu VPS gặp sự cố.\n\n⚠️ Ngày này khá kỹ thuật — nếu chưa quen thao tác VPS, có thể nhờ AI agent làm từng bước và tập trung hiểu luồng hoạt động thay vì tự gõ lệnh.\n\nNộp bài:\n- Screenshot website/app chạy trên VPS (domain hiển thị rõ)\n- Screenshot MCP đã kết nối (list tools hiện)\n- Screenshot cấu hình backup định kỳ\n\n✅ Được duyệt khi: Website/app chạy trên VPS với domain thật, MCP connected, có backup định kỳ cho dữ liệu lớp học.',
+   5],
+  [18, 'Agent Tương Tác Nhóm Zalo (OA) & Telegram',
+   'Agent tự nhắn vào nhóm lớp Zalo/Telegram: nhắc lịch học, điểm danh, thông báo điểm, nhắc học phí còn nợ.',
+   'Agent tự nhắn vào nhóm lớp Zalo/Telegram: nhắc lịch học, điểm danh, thông báo điểm, nhắc học phí còn nợ, tổng kết hoạt động lớp mỗi tối.\n\n⭐ Ưu tiên dùng Zalo Official Account (OA) thay vì nhóm Zalo cá nhân — Zalo OA có API chính thức, gửi broadcast ổn định và phù hợp vận hành lâu dài hơn.\n\nCách làm: AI viết MCP function + MD files, bật Heartbeat qua Dashboard.\n\nNộp bài:\n- Screenshot agent đang chạy\n- Screenshot tin nhắn thật agent gửi vào nhóm Zalo OA/Telegram (nhắc lịch, điểm, học phí, hoặc tổng kết)\n\n✅ Được duyệt khi: Agent gửi được ít nhất 1 tin nhắn thật từ event thực tế (lịch học, điểm, hoặc học phí).',
+   5],
+  [19, 'Tự Tạo Claude Skill Soạn Giáo Án + Quiz 10 Câu',
+   'Tự tạo Claude Skill soạn giáo án/bài giảng tự động theo brand voice, và làm quiz 10 câu.',
+   '5 cấp độ Claude Skill (từ chỉ tài liệu đến đầy đủ scripts) — build skill soạn giáo án/bài giảng tự động theo brand voice.\n\nLàm quiz 10 câu (mỗi câu đúng +2 XP, phải dùng Agent để giải).\n\nNộp bài:\n- Screenshot SKILL.md đã tạo\n- Screenshot kết quả test skill (soạn 1 giáo án/bài giảng mẫu)\n- Ảnh kết quả quiz 10 câu\n\n✅ Được duyệt khi: Skill tạo được và chạy đúng, có kết quả test thật, đã hoàn thành quiz.',
+   5],
+  [20, 'Kế Hoạch Tuyển Sinh Đơn Giản',
+   'Dùng AI agent xây kế hoạch tuyển sinh cho khóa học/lớp học tiếp theo — tập trung vào các file thực tế.',
+   'Dùng AI agent xây kế hoạch tuyển sinh cho khóa học/lớp học tiếp theo, tập trung vào các file thực tế thay vì thuật ngữ marketing phức tạp.\n\nOutput cần có:\n- avatar-hoc-vien.md — chân dung học viên mục tiêu\n- uu-dai-khai-giang.md — ưu đãi học phí/khai giảng\n- thu-moi-phu-huynh.md — thư mời phụ huynh\n- kich-ban-tu-van.md — kịch bản tư vấn tuyển sinh\n- video giới thiệu khóa học\n- ke-hoach-dang-bai.md — kế hoạch đăng bài tuyển sinh\n\nTạo index.html tổng hợp, deploy ke-hoach-tuyen-sinh/ lên VPS với URL public.\n\nNộp bài:\n- URL public mở được (≥6 file output thật)\n- File roadmap-90-ngay.md có kế hoạch 90 ngày tới cụ thể\n\n✅ Được duyệt khi: Có đủ 6 file output thật, URL public mở được, roadmap-90-ngay.md có kế hoạch cụ thể.',
+   5],
+  [21, 'Video Feedback Cuối Chương Trình',
+   'Quay video 5–10 phút tổng kết hành trình 21 ngày — niềm tin ban đầu, những gì đã build, turning point, và kế hoạch tiếp theo.',
+   'Quay video 5–10 phút trả lời 6 phần:\n1. Giới thiệu bản thân\n2. Niềm tin trước thử thách\n3. Những gì đã build sau 21 ngày\n4. Cột mốc turning point\n5. Cảm xúc chân thật (lúc muốn bỏ / điều bất ngờ)\n6. Kế hoạch 30–90 ngày tới\n\nUpload lên Loom / YouTube unlisted / Google Drive — set quyền "Anyone with the link can view".\n\nNộp bài:\n- Link video (có giọng nói thật, đủ 6 phần)\n- Link 1 thành quả muốn khoe\n\n✅ Được duyệt khi: Video có giọng nói thật, đủ 6 phần, và có ít nhất 1 thành quả thật được chia sẻ.',
+   10],
+];
+
 // ── Boot ──────────────────────────────────────────────────────
 (async () => {
   const SQL = await initSqlJs();
@@ -967,6 +1054,22 @@ const CHALLENGE_DAYS = [
     );
     db.exec('UPDATE challenge_days SET challenge_id = 1');
     console.log('  Seeded default challenge.');
+  }
+
+  const teacherChallengeTitle = '21 Ngày Làm Chủ AI Agent Dành Cho Giáo Viên';
+  const teacherChallenge = db.get('SELECT id FROM challenges WHERE title = ?', [teacherChallengeTitle]);
+  if (!teacherChallenge) {
+    const { lastInsertRowid: teacherChallengeId } = db.run(
+      `INSERT INTO challenges (title, description, duration, status, cover_color) VALUES (?,?,21,'active','#f59e0b')`,
+      [teacherChallengeTitle, 'Thử thách thực chiến dành riêng cho giáo viên: xây thương hiệu cá nhân, hệ thống dạy học tự động, và AI Agent thật — từ landing page đến lớp học vận hành bằng AI.']
+    );
+    CHALLENGE_DAYS_TEACHER.forEach(([num, title, desc, instructions, xp]) =>
+      db.run(
+        'INSERT INTO challenge_days (challenge_id, day_number, title, description, instructions, xp_reward) VALUES (?,?,?,?,?,?)',
+        [teacherChallengeId, num, title, desc, instructions, xp]
+      )
+    );
+    console.log('  Seeded teacher challenge (21 days).');
   }
 
   // ══════════════════════════════════════════════════════════
