@@ -159,6 +159,12 @@
 }
 .register-row a { color: var(--color-primary); font-weight: 600; text-decoration: none; }
 .register-row a:hover { text-decoration: underline; }
+.policy-links {
+  display: flex; flex-wrap: wrap; justify-content: center; gap: 4px 14px;
+  margin-top: 28px; font-size: var(--fs-xs);
+}
+.policy-links a { color: var(--text-light); text-decoration: none; }
+.policy-links a:hover { color: var(--color-primary); }
 </style>
 </head>
 <body class="auth-body">
@@ -294,6 +300,14 @@
     <div class="register-row">
       Chưa có tài khoản? <a href="register.html">Tham gia miễn phí</a>
     </div>
+
+    <nav class="policy-links" aria-label="Chính sách">
+      <a href="policies.html">Chính sách</a>
+      <a href="privacy-policy.html">Bảo mật</a>
+      <a href="refund-policy.html">Hoàn tiền</a>
+      <a href="terms.html">Điều khoản</a>
+      <a href="support.html">Hỗ trợ</a>
+    </nav>
 
   </div>
 </div>

@@ -483,6 +483,28 @@
       margin-top: 2px;
     }
 
+    .mp-policy-note {
+      font-size: 11px;
+      color: var(--text-muted);
+      text-align: right;
+      margin-top: 8px;
+    }
+
+    .mp-policy-note a, .mp-seller-agree a { color: #7c3aed; text-decoration: none; }
+    .mp-policy-note a:hover, .mp-seller-agree a:hover { text-decoration: underline; }
+
+    .mp-seller-agree {
+      display: flex;
+      gap: 8px;
+      align-items: flex-start;
+      font-size: var(--fs-sm);
+      color: var(--text-muted);
+      line-height: 1.5;
+      cursor: pointer;
+    }
+
+    .mp-seller-agree input { margin-top: 3px; accent-color: #7c3aed; flex-shrink: 0; }
+
     .mp-modal-buy {
       padding: 10px 24px;
       background: #7c3aed;
@@ -1105,6 +1127,10 @@
           </div>
           <button class="mp-modal-buy" id="detailBuyBtn" onclick="goCheckout()">🛒 Mua ngay</button>
         </div>
+        <p class="mp-policy-note">
+          Xem <a href="refund-policy.html" target="_blank" rel="noopener">chính sách hoàn tiền</a> ·
+          <a href="payment-policy.html" target="_blank" rel="noopener">thanh toán</a> trước khi mua.
+        </p>
       </div>
     </div>
   </div>
@@ -1158,6 +1184,12 @@
           <label class="form-label">Màu bìa</label>
           <div class="color-picker-row" id="pmColorPicker"></div>
         </div>
+        <label class="mp-seller-agree">
+          <input type="checkbox" id="pmAgree">
+          <span>Tôi đồng ý với <a href="service-conditions.html" target="_blank" rel="noopener">Điều kiện cung cấp dịch vụ</a>,
+            <a href="terms.html" target="_blank" rel="noopener">Quy chế hoạt động</a> và mức
+            <a href="pricing-policy.html" target="_blank" rel="noopener">phí dịch vụ 30%</a> trên mỗi đơn hàng thành công.</span>
+        </label>
       </div>
       <div class="post-modal-footer">
         <button class="btn-cancel" onclick="closePostModal()">Hủy</button>
@@ -1431,6 +1463,8 @@
       if (!title) return alert('Vui lòng nhập tên sản phẩm.');
       if (!description) return alert('Vui lòng nhập mô tả ngắn.');
       if (isNaN(price) || price < 0) return alert('Giá không hợp lệ.');
+      if (!document.getElementById('pmAgree').checked)
+        return alert('Vui lòng đồng ý với Điều kiện cung cấp dịch vụ và phí dịch vụ trước khi đăng bán.');
 
       const btn = document.getElementById('pmSubmitBtn');
       btn.disabled = true; btn.textContent = 'Đang đăng...';

@@ -128,6 +128,17 @@ continuity:  #ec4899 (pink-500)
 | `marketplace.html` | Chợ sản phẩm số — đăng bán, tìm kiếm, lọc theo danh mục, xem chi tiết, mua |
 | `checkout.html` | Thanh toán — URL: `checkout.html?id=X`, chọn phương thức (bank/VNPay/Momo), xác nhận đơn |
 | `admin.html` | Admin panel — quản lý users, posts, XP log, khóa học, marketplace, cài đặt |
+| `policies.html` | Trung tâm chính sách — danh sách 8 chính sách nộp Bộ Công Thương |
+| `privacy-policy.html` | (1) Chính sách bảo mật |
+| `complaint-policy.html` | (2) Tiếp nhận & giải quyết phản ánh, khiếu nại |
+| `pricing-policy.html` | (3) Chính sách giá |
+| `payment-policy.html` | (4) Chính sách thanh toán |
+| `service-conditions.html` | (5) Điều kiện/hạn chế cung cấp hàng hoá, dịch vụ |
+| `refund-policy.html` | (6) Cung cấp dịch vụ, chấm dứt dịch vụ & hoàn tiền |
+| `support.html` | (7) Hình thức hỗ trợ trực tuyến + FAQ |
+| `terms.html` | (8) Quy chế hoạt động & Điều khoản sử dụng |
+
+Policy pages dùng chung `assets/css/legal.css` + `assets/js/legal.js`. Thông tin doanh nghiệp (MST, địa chỉ, hotline, email, phí người bán…) sửa **một chỗ** ở `SITE_INFO` trong `legal.js`; giá trị dạng `[...]` là placeholder, hiển thị highlight vàng cho đến khi điền.
 
 ## Laravel Migration Notes
 

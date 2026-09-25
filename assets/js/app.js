@@ -92,7 +92,25 @@ document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('.tab-item[data-tab]').forEach(tab => {
     tab.addEventListener('click', () => setActiveTab(tab));
   });
+
+  injectSidebarPolicyLinks();
 });
+
+// Policy links above the user card in every sidebar (desktop + mobile)
+function injectSidebarPolicyLinks() {
+  document.querySelectorAll('[id="sidebar-user"]').forEach(userCard => {
+    if (userCard.previousElementSibling?.classList.contains('sidebar-policy')) return;
+    const links = document.createElement('nav');
+    links.className = 'sidebar-policy';
+    links.setAttribute('aria-label', 'Chính sách');
+    links.innerHTML = `
+      <a href="policies.html">Chính sách</a>
+      <a href="refund-policy.html">Hoàn tiền</a>
+      <a href="terms.html">Điều khoản</a>
+      <a href="support.html">Hỗ trợ</a>`;
+    userCard.before(links);
+  });
+}
 
 // ── Notification Bell ────────────────────────────────────────
 (function initNotifSystem() {

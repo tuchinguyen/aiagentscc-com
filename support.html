@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hỗ trợ trực tuyến — AI AGENTS CC</title>
+<meta name="description" content="Các kênh hỗ trợ trực tuyến và câu hỏi thường gặp của AI AGENTS CC.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/base.css">
+<link rel="stylesheet" href="assets/css/components.css">
+<link rel="stylesheet" href="assets/css/legal.css">
+<style>
+.faq-item { border: 1px solid var(--border); border-radius: var(--radius-md); margin-bottom: 8px; }
+.faq-item summary {
+  cursor: pointer; padding: 12px 16px; font-weight: 600; list-style: none;
+  display: flex; justify-content: space-between; gap: 12px;
+}
+.faq-item summary::-webkit-details-marker { display: none; }
+.faq-item summary::after { content: '+'; color: var(--text-muted); font-weight: 400; font-size: 18px; line-height: 1; }
+.faq-item[open] summary::after { content: '−'; }
+.faq-item[open] summary { border-bottom: 1px solid var(--border); }
+.faq-item__body { padding: 12px 16px; font-size: var(--fs-sm); }
+.faq-item__body p:last-child { margin-bottom: 0; }
+</style>
+</head>
+<body class="legal-body" data-policy="support">
+
+<header class="legal-topbar" data-legal-header></header>
+
+<div class="legal-wrap">
+  <nav class="legal-nav" data-legal-nav aria-label="Danh sách chính sách"></nav>
+
+  <main>
+    <article class="legal-doc">
+      <div class="legal-doc__eyebrow">Chính sách · 7/8</div>
+      <h1>Hình thức hỗ trợ trực tuyến</h1>
+      <p class="legal-doc__meta">Thời gian hỗ trợ: <span data-info="supportHours"></span></p>
+
+      <h2 id="kenh-ho-tro">Kênh hỗ trợ</h2>
+      <div class="legal-contact-grid">
+        <div class="legal-contact">
+          <div class="legal-contact__icon" aria-hidden="true">📞</div>
+          <div class="legal-contact__label">Hotline</div>
+          <div class="legal-contact__value" data-info="phone"></div>
+          <div class="legal-contact__note">Tư vấn, sự cố thanh toán khẩn</div>
+        </div>
+        <div class="legal-contact">
+          <div class="legal-contact__icon" aria-hidden="true">💬</div>
+          <div class="legal-contact__label">Zalo</div>
+          <div class="legal-contact__value" data-info="zalo"></div>
+          <div class="legal-contact__note">Phản hồi trong 30 phút (giờ hỗ trợ)</div>
+        </div>
+        <div class="legal-contact">
+          <div class="legal-contact__icon" aria-hidden="true">✉️</div>
+          <div class="legal-contact__label">Email</div>
+          <div class="legal-contact__value" data-info="email"></div>
+          <div class="legal-contact__note">Khiếu nại, hoàn tiền, hoá đơn — phản hồi trong 24 giờ</div>
+        </div>
+        <div class="legal-contact">
+          <div class="legal-contact__icon" aria-hidden="true">👥</div>
+          <div class="legal-contact__label">Cộng đồng</div>
+          <div class="legal-contact__value" data-info="facebook"></div>
+          <div class="legal-contact__note">Hỏi đáp chuyên môn cùng thành viên và mentor</div>
+        </div>
+      </div>
+
+      <h2 id="ho-tro-trong-ung-dung">Hỗ trợ ngay trong nền tảng</h2>
+      <ul>
+        <li><strong>Hỏi đáp (Q&amp;A):</strong> đặt câu hỏi chuyên môn tại mục <a href="qa.html">Hỏi đáp</a>, được mentor và cộng đồng trả lời.</li>
+        <li><strong>Bảng tin cộng đồng:</strong> chia sẻ vướng mắc khi làm thử thách tại <a href="feed.html">Bảng tin</a>.</li>
+        <li><strong>Thông báo trong ứng dụng:</strong> cập nhật trạng thái đơn hàng, bài nộp, phản hồi hỗ trợ.</li>
+        <li><strong>Email tự động:</strong> xác nhận đơn hàng, nhắc thanh toán, hướng dẫn truy cập sản phẩm.</li>
+      </ul>
+
+      <h2 id="muc-do-uu-tien">Thời gian phản hồi theo mức độ</h2>
+      <div class="legal-table-wrap">
+        <table class="legal-table">
+          <thead><tr><th>Mức độ</th><th>Ví dụ</th><th>Phản hồi đầu tiên</th></tr></thead>
+          <tbody>
+            <tr><td>Khẩn cấp</td><td>Đã thanh toán nhưng không truy cập được, nghi ngờ tài khoản bị chiếm</td><td>Trong 2 giờ (giờ hỗ trợ)</td></tr>
+            <tr><td>Thông thường</td><td>Lỗi hiển thị, hướng dẫn sử dụng, xuất hoá đơn</td><td>Trong 24 giờ</td></tr>
+            <tr><td>Góp ý</td><td>Đề xuất tính năng, nội dung mới</td><td>Trong 3 ngày làm việc</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2 id="cau-hoi-thuong-gap">Câu hỏi thường gặp</h2>
+      <details class="faq-item">
+        <summary>Tôi đã chuyển khoản nhưng chưa thấy sản phẩm?</summary>
+        <div class="faq-item__body">
+          <p>Chuyển khoản được xác nhận trong 1–4 giờ làm việc. Hãy chắc chắn bạn đã bấm "Tôi đã chuyển khoản" ở trang thanh toán. Quá thời gian trên, gửi ảnh biên lai kèm mã đơn qua Zalo hoặc email.</p>
+        </div>
+      </details>
+      <details class="faq-item">
+        <summary>Tôi quên mật khẩu thì làm sao?</summary>
+        <div class="faq-item__body">
+          <p>Vào <a href="forgot-password.html">Quên mật khẩu</a>, nhập email đăng ký để nhận liên kết đặt lại mật khẩu.</p>
+        </div>
+      </details>
+      <details class="faq-item">
+        <summary>Tôi có được hoàn tiền không?</summary>
+        <div class="faq-item__body">
+          <p>Tuỳ loại sản phẩm và mức độ đã sử dụng. Xem chi tiết tại <a href="refund-policy.html">Chính sách hoàn tiền</a>.</p>
+        </div>
+      </details>
+      <details class="faq-item">
+        <summary>Làm sao để đăng bán sản phẩm trên chợ?</summary>
+        <div class="faq-item__body">
+          <p>Vào <a href="marketplace.html">Chợ sản phẩm số</a>, bấm "Đăng bán", điền thông tin sản phẩm. Ban quản trị duyệt trong 24 giờ. Đọc trước <a href="service-conditions.html">Điều kiện cung cấp dịch vụ</a> để tránh bị từ chối.</p>
+        </div>
+      </details>
+      <details class="faq-item">
+        <summary>Tôi bỏ lỡ một ngày thử thách thì sao?</summary>
+        <div class="faq-item__body">
+          <p>Bạn vẫn có thể nộp bài muộn cho các ngày đã mở. Chuỗi streak có thể bị ngắt nhưng tiến độ và XP của các bài đã nộp vẫn được giữ nguyên.</p>
+        </div>
+      </details>
+      <details class="faq-item">
+        <summary>Làm sao để xoá tài khoản?</summary>
+        <div class="faq-item__body">
+          <p>Gửi yêu cầu từ email đăng ký tới <span data-info="email"></span>. Chi tiết về dữ liệu sau khi xoá xem tại <a href="privacy-policy.html">Chính sách bảo mật</a>.</p>
+        </div>
+      </details>
+
+      <div class="legal-callout legal-callout--warn">
+        <p>Nhân viên hỗ trợ của <span data-info="brand"></span> <strong>không bao giờ</strong> hỏi mật khẩu, mã OTP hoặc yêu cầu chuyển khoản vào tài khoản cá nhân khác tài khoản đã công bố tại <a href="payment-policy.html">Chính sách thanh toán</a>.</p>
+      </div>
+    </article>
+  </main>
+</div>
+
+<footer class="legal-footer" data-legal-footer></footer>
+<script src="assets/js/legal.js"></script>
+</body>
+</html>

@@ -64,6 +64,12 @@
 .login-row { text-align: center; margin-top: 20px; font-size: var(--fs-sm); color: var(--text-muted); }
 .login-row a { color: var(--color-primary); font-weight: 600; text-decoration: none; }
 .login-row a:hover { text-decoration: underline; }
+.policy-links {
+  display: flex; flex-wrap: wrap; justify-content: center; gap: 4px 14px;
+  margin-top: 28px; font-size: var(--fs-xs);
+}
+.policy-links a { color: var(--text-light); text-decoration: none; }
+.policy-links a:hover { color: var(--color-primary); }
 
 /* Password strength */
 .pw-strength { margin-top: 6px; display: none; }
@@ -238,7 +244,7 @@
 
       <label class="terms-row">
         <input type="checkbox" id="terms" name="terms" required>
-        <span>Tôi đồng ý với <a href="#">Điều khoản sử dụng</a> và <a href="#">Chính sách bảo mật</a></span>
+        <span>Tôi đồng ý với <a href="terms.html" target="_blank" rel="noopener">Điều khoản sử dụng</a> và <a href="privacy-policy.html" target="_blank" rel="noopener">Chính sách bảo mật</a></span>
       </label>
 
       <button type="submit" class="btn btn-primary btn-lg btn-full" id="submitBtn">
@@ -253,6 +259,14 @@
     <div class="login-row">
       Đã có tài khoản? <a href="index.html">Đăng nhập</a>
     </div>
+
+    <nav class="policy-links" aria-label="Chính sách">
+      <a href="policies.html">Chính sách</a>
+      <a href="privacy-policy.html">Bảo mật</a>
+      <a href="refund-policy.html">Hoàn tiền</a>
+      <a href="terms.html">Điều khoản</a>
+      <a href="support.html">Hỗ trợ</a>
+    </nav>
 
   </div>
 </div>
