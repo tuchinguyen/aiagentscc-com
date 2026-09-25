@@ -10,8 +10,7 @@ const SITE_INFO = {
   domain:        'aiagentscc.com',
   owner:         'Từ Chí Nguyện',
   legalName:     'Từ Chí Nguyện',
-  taxId:         '[Mã số thuế / Số GCN đăng ký kinh doanh]',
-  taxIssued:     '[Ngày cấp, nơi cấp]',
+  taxId:         '09608000900',
   address:       '1109, Quốc lộ 63, Khóm 16, Phường An Xuyên, Cà Mau',
   phone:         '0918 694 886',
   email:         'tuchinguyen.ctv@gmail.com',
@@ -81,7 +80,7 @@ function renderFooter(el) {
       <div class="legal-footer__biz">
         <div class="legal-footer__brand">${SITE_INFO.brand}</div>
         <p><span data-info="legalName"></span></p>
-        <p>MST/GCN ĐKKD: <span data-info="taxId"></span> — cấp ngày <span data-info="taxIssued"></span></p>
+        <p>Mã số thuế: <span data-info="taxId"></span></p>
         <p>Địa chỉ: <span data-info="address"></span></p>
         <p>Hotline: <span data-info="phone"></span> · Email: <span data-info="email"></span></p>
         <p>Người chịu trách nhiệm: <span data-info="owner"></span></p>
