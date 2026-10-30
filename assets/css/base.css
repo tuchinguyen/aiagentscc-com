@@ -32,8 +32,8 @@
 
   /* Text */
   --text:       #0f172a;
-  --text-muted: #64748b;
-  --text-light: #94a3b8;
+  --text-muted: #475569;
+  --text-light: #64748b;
 
   /* Borders */
   --border:       #e2e8f0;
@@ -111,9 +111,9 @@ html[data-theme="dark"] {
   --bg-input:   #0f172a;
   --bg-elevated: #1b263d;
 
-  --text:       #f1f5f9;
-  --text-muted: #94a3b8;
-  --text-light: #64748b;
+  --text:       #f8fafc;
+  --text-muted: #cbd5e1;
+  --text-light: #94a3b8;
 
   --border:       #334155;
   --border-focus: #0f766e;
