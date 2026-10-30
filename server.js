@@ -50,12 +50,34 @@ const ADMIN_EMAIL = process.env.ADMIN_EMAIL || '';
 
 const resendClient = RESEND_KEY ? new Resend(RESEND_KEY) : null;
 
+// AI AGENTS CC — chính sách email: chỉ gửi email người dùng tự kích hoạt (chào mừng khi tạo tài khoản,
+// mã OTP, đặt lại mật khẩu, mã đăng nhập admin, email thử của admin). Các nơi đó gọi sendEmail({ ..., essential: true }).
+// Mọi email khác (nhắc nộp bài, chuỗi nhắc đơn hàng, thông báo duyệt, CRM…) bị chặn — thành viên vẫn nhận
+// thông báo chuông trong ứng dụng. Bật lại toàn bộ: EMAIL_SEND_ALL=1 trong .env.
+// Tài khoản Resend từng bị treo vì ~1.450 email nhắc nộp bài gửi lặp cho vài người và vượt giới hạn 2 email/giây.
+const EMAIL_SEND_ALL = process.env.EMAIL_SEND_ALL === '1';
+const EMAIL_MIN_GAP_MS = 700; // Resend cho tối đa 2 request/giây
+let emailQueue = Promise.resolve();
+let emailLastAt = 0;
+
 // Trả về { ok, id, error } — phần lớn nơi gọi bỏ qua kết quả; gửi email thủ công (CRM) dùng để báo admin.
-async function sendEmail({ to, subject, html }) {
+async function sendEmail({ to, subject, html, essential = false }) {
+  if (!essential && !EMAIL_SEND_ALL) {
+    console.log(`[Email] Blocked by policy (not essential) — to ${to} | "${subject}"`);
+    return { ok: false, skipped: true, error: 'Email tự động đã tắt — chỉ gửi email tạo tài khoản và mã xác nhận.' };
+  }
   if (!resendClient) {
     console.warn('[Email] Skipped — RESEND_API_KEY not set');
     return { ok: false, error: 'Chưa cấu hình dịch vụ gửi email (RESEND_API_KEY).' };
   }
+  // Gửi lần lượt, cách nhau ít nhất EMAIL_MIN_GAP_MS
+  const turn = emailQueue.then(async () => {
+    const wait = emailLastAt + EMAIL_MIN_GAP_MS - Date.now();
+    if (wait > 0) await new Promise(r => setTimeout(r, wait));
+    emailLastAt = Date.now();
+  });
+  emailQueue = turn.catch(() => {});
+  await turn;
   try {
     console.log(`[Email] Sending to ${to} | "${subject}"`);
     const result = await resendClient.emails.send({ from: `${communityName()} <${FROM_ADDRESS}>`, to, subject, html });
@@ -2790,7 +2812,7 @@ QUY TẮC BẮT BUỘC:
   // Test email (admin only)
   app.get('/api/admin/test-email', requireAdmin, async (req, res) => {
     const to = req.query.to || ADMIN_EMAIL;
-    await sendEmail({
+    await sendEmail({ essential: true,
       to,
       subject: `🧪 Test email từ ${communityName()}`,
       html: emailWrap('Email test thành công!', `
@@ -4897,7 +4919,7 @@ QUY TẮC BẮT BUỘC:
     res.status(201).json({ success: true, user: { ...user, session_token: createUserSession(user.id) } });
 
     // Welcome email (fire-and-forget after response)
-    sendEmail({
+    sendEmail({ essential: true,
       to: email,
       subject: `🎉 Chào mừng bạn đến với ${communityName()}!`,
       html: emailWrap('Chào mừng đến với cộng đồng!', `
@@ -4977,7 +4999,7 @@ QUY TẮC BẮT BUỘC:
       db.run(`INSERT INTO login_codes (email, code_hash, expires_at)
               VALUES (?, ?, datetime('now','localtime','+${LOGIN_CODE_TTL_MIN} minutes'))`, [email, hashLoginCode(email, code)]);
       if (!resendClient) console.log(`[signup-code DEV — chưa cấu hình email] ${email}: ${code}`); // chỉ máy thử
-      sendEmail({
+      sendEmail({ essential: true,
         to: email,
         subject: `${code} là mã xác nhận tạo tài khoản ${communityName()}`,
         html: emailWrap('Mã xác nhận tạo tài khoản', `
@@ -4997,7 +5019,7 @@ QUY TẮC BẮT BUỘC:
               VALUES (?, ?, datetime('now','localtime','+${LOGIN_CODE_TTL_MIN} minutes'))`, [email, hashLoginCode(email, code)]);
       const name = String(user.first_name || '').replace(/[<>&"]/g, '');
       if (!resendClient) console.log(`[login-code DEV — chưa cấu hình email] ${email}: ${code}`); // chỉ máy thử
-      sendEmail({
+      sendEmail({ essential: true,
         to: email,
         subject: `${code} là mã đăng nhập ${communityName()}`,
         html: emailWrap('Mã đăng nhập của bạn', `
@@ -5071,7 +5093,7 @@ QUY TẮC BẮT BUỘC:
       addXP(r.lastInsertRowid, 10, 'register', 'Chào mừng thành viên mới');
       applyCourseEmailGrants(r.lastInsertRowid, t.email);
       user = db.get('SELECT * FROM users WHERE id = ?', [r.lastInsertRowid]);
-      sendEmail({
+      sendEmail({ essential: true,
         to: t.email,
         subject: `🎉 Chào mừng bạn đến với ${communityName()}!`,
         html: emailWrap('Chào mừng đến với cộng đồng!', `
@@ -5135,7 +5157,7 @@ QUY TẮC BẮT BUỘC:
         );
         addXP(result.lastInsertRowid, 10, 'register', 'Chào mừng thành viên mới');
         user = db.get('SELECT * FROM users WHERE id = ?', [result.lastInsertRowid]);
-        sendEmail({
+        sendEmail({ essential: true,
           to: email,
           subject: `🎉 Chào mừng bạn đến với ${communityName()}!`,
           html: emailWrap('Chào mừng đến với cộng đồng!', `
@@ -5761,7 +5783,7 @@ ${catalog}`;
       [user.id, token, expires_at]);
 
     const resetLink = `${SITE_URL}/reset-password.html?token=${token}${fromAdmin ? '&from=admin' : ''}`;
-    sendEmail({
+    sendEmail({ essential: true,
       to: user.email,
       subject: `🔑 Đặt lại mật khẩu — ${communityName()}`,
       html: emailWrap('Đặt lại mật khẩu', `
@@ -5848,7 +5870,7 @@ ${catalog}`;
     const hash = bcrypt.hashSync(otp, 10);
     adminOtpStore.set(email, { hash, expiresAt: Date.now() + 10 * 60 * 1000, userId: user.id, attempts: 0 });
 
-    await sendEmail({
+    await sendEmail({ essential: true,
       to: user.email,
       subject: `🔐 Mã đăng nhập admin — ${communityName()}`,
       html: emailWrap('Mã đăng nhập admin', `
