@@ -6275,7 +6275,8 @@ ${catalog}`;
     }
     return n;
   }
-  { const n = cleanupOrphanUserRows(); if (n) console.log(`  Dọn ${n} dòng còn sót của tài khoản đã xoá.`); }
+  // AI AGENTS CC: không tự xoá dữ liệu cũ lúc khởi động — đặt CLEANUP_ORPHANS_ON_START=1 nếu muốn dọn
+  if (process.env.CLEANUP_ORPHANS_ON_START === '1') { const n = cleanupOrphanUserRows(); if (n) console.log(`  Dọn ${n} dòng còn sót của tài khoản đã xoá.`); }
 
   app.delete('/api/admin/users/:id', requireAdmin, (req, res) => {
     db.run('DELETE FROM users WHERE id = ?', [req.params.id]);
@@ -13799,7 +13800,8 @@ Không bịa số liệu ngoài dữ liệu trên. Không đưa lời khuyên y 
       LEFT JOIN users u ON u.id = l.sent_by ORDER BY l.id DESC LIMIT 50`) });
   });
   // Thêm 1 lần mẫu "Cảm ơn & mời 3 buổi workshop miễn phí" (cho lead từ quảng cáo Facebook)
-  if (!db.get("SELECT value FROM site_settings WHERE key = 'email_tpl_seed_ws3'")) {
+  // AI AGENTS CC: không tự thêm mẫu email mời workshop sức khỏe của template
+  if (false && !db.get("SELECT value FROM site_settings WHERE key = 'email_tpl_seed_ws3'")) {
     const tpls = crmTemplates();
     if (!tpls.some(t => t.name === 'Cảm ơn & mời 3 buổi workshop miễn phí')) {
       tpls.push({ id: tpls.reduce((m, t) => Math.max(m, t.id || 0), 0) + 1, name: 'Cảm ơn & mời 3 buổi workshop miễn phí', category: 'welcome',
