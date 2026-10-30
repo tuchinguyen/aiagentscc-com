@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8">
+  <script src="assets/js/auth-fetch.js?v=1"></script>
+  <script>(function(){try{var t=localStorage.getItem('theme');if(t==='dark'||(!t&&window.matchMedia('(prefers-color-scheme: dark)').matches))document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex">
+  <link rel="icon" type="image/png" href="/assets/img/logo.png">
+  <link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
+  <meta name="theme-color" content="#0f766e">
+  <title>Kanban khách hàng — AI AGENTS CC</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/base.css?v=2">
+  <link rel="stylesheet" href="assets/css/van-hanh.css?v=3">
+  <style>
+    .ck-wrap { width: 100%; box-sizing: border-box; max-width: 1500px; margin: 0 auto; padding: 24px 16px 60px; display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+    .ck-head h1 { font-family: var(--font-heading); font-size: 24px; font-weight: 800; margin: 0; }
+    .ck-head p { margin: 4px 0 0; color: var(--text-muted); font-size: 13.5px; }
+    .ck-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 14px 16px; }
+    .ck-tools { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+    .ck-tools #ckSearch, .ck-tools select { border: 1px solid var(--border); background: var(--bg-card); color: var(--text); border-radius: 8px; padding: 7px 10px; font-size: 13px; font-family: inherit; }
+    .ck-tools #ckSearch { flex: 1; min-width: 200px; }
+    .ck-btn { border: 1px solid var(--border); background: var(--bg-card); color: var(--text); border-radius: 8px; padding: 7px 11px; font-size: 13px; cursor: pointer; font-family: inherit; white-space: nowrap; }
+    .ck-btn:hover { background: var(--bg-hover); }
+    .ck-btn.on { background: var(--color-primary); border-color: var(--color-primary); color: #fff; }
+    .ck-stats { display: flex; gap: 10px; flex-wrap: wrap; }
+    .ck-stat { flex: 1; min-width: 120px; border: 1px solid var(--border); border-radius: 12px; padding: 10px 12px; background: var(--bg-card); }
+    .ck-stat .v { font-family: var(--font-heading); font-size: 22px; font-weight: 800; }
+    .ck-stat .l { font-size: 12px; color: var(--text-muted); }
+    .ck-board { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(250px, 1fr); gap: 12px; overflow-x: auto; padding-bottom: 6px; align-items: start; }
+    .ck-col { background: var(--bg-hover); border-radius: 12px; padding: 10px; min-height: 220px; }
+    .ck-col.drop { outline: 2px dashed var(--color-primary); outline-offset: -2px; }
+    .ck-col h3 { font-size: 13.5px; margin: 2px 4px 10px; display: flex; justify-content: space-between; align-items: center; gap: 6px; }
+    .ck-col h3 span { color: var(--text-muted); font-weight: 700; font-size: 12px; background: var(--bg-card); border-radius: 99px; padding: 1px 8px; }
+    .ck-item { background: var(--bg-card); border: 1px solid var(--border); border-left: 4px solid var(--c, #94a3b8); border-radius: 10px; padding: 10px; margin-bottom: 8px; font-size: 13px; line-height: 1.45; cursor: grab; }
+    .ck-item.dragging { opacity: .4; }
+    .ck-item .nm { font-weight: 700; font-size: 13.5px; }
+    .ck-item .ph { font-size: 12.5px; margin-top: 2px; }
+    .ck-item .ph a { font-weight: 700; text-decoration: none; margin-left: 6px; }
+    .ck-item .meta { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 6px; }
+    .chip { display: inline-block; border-radius: 999px; padding: 1px 8px; font-size: 11px; font-weight: 700; background: var(--bg-hover); color: var(--text); white-space: nowrap; }
+    .chip.own { background: color-mix(in srgb, var(--color-primary) 15%, transparent); color: var(--color-primary-dark); }
+    [data-theme="dark"] .chip.own { color: var(--color-primary-light); }
+    .chip.none { background: #fef3c7; color: #92400e; }
+    button.chip { border: 0; cursor: pointer; font-family: inherit; }
+    button.chip:hover { filter: brightness(.95); text-decoration: underline; }
+    .ck-team { display: flex; flex-direction: column; gap: 6px; margin-top: 10px; max-height: 55vh; overflow-y: auto; }
+    .ck-team button { display: flex; justify-content: space-between; align-items: center; gap: 10px; text-align: left; border: 1px solid var(--border); background: var(--bg-card); color: var(--text); border-radius: 10px; padding: 9px 12px; cursor: pointer; font: inherit; }
+    .ck-team button:hover { background: var(--bg-hover); border-color: var(--color-primary); }
+    .ck-team button.cur { border-color: var(--color-primary); background: color-mix(in srgb, var(--color-primary) 10%, transparent); }
+    .ck-team .n { font-weight: 700; font-size: 14px; }
+    .ck-team .e { font-size: 12px; color: var(--text-muted); }
+    .ck-team .c { font-size: 12px; color: var(--text-muted); white-space: nowrap; }
+    .ck-item .nt { font-size: 12px; color: var(--text-muted); margin-top: 6px; white-space: pre-wrap; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+    .ck-item .upd { font-size: 11px; color: var(--text-light); margin-top: 6px; }
+    .ck-item .acts { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
+    .ck-item .acts button { border: 1px solid var(--border); background: var(--bg-card); color: var(--text); border-radius: 7px; padding: 3px 9px; font-size: 12px; cursor: pointer; font-family: inherit; }
+    .ck-item .acts button:hover { background: var(--bg-hover); }
+    .ck-item .acts button.pri { background: var(--color-primary); border-color: var(--color-primary); color: #fff; }
+    .ck-empty { color: var(--text-muted); font-size: 12.5px; text-align: center; padding: 18px 6px; }
+    dialog.ck-dlg { margin: auto; border: 1px solid var(--border); border-radius: 14px; padding: 18px; width: min(460px, calc(100vw - 32px)); background: var(--bg-card); color: var(--text); }
+    dialog.ck-dlg::backdrop { background: rgba(15, 23, 42, .5); }
+    .ck-dlg h3 { margin: 0 0 4px; font-size: 16px; }
+    .ck-dlg .who { font-size: 13px; color: var(--text-muted); margin-bottom: 8px; }
+    .ck-dlg label { display: block; font-size: 12.5px; font-weight: 600; margin: 10px 0 4px; }
+    .ck-dlg select, .ck-dlg textarea, .ck-dlg input[type=text] { width: 100%; box-sizing: border-box; border: 1px solid var(--border); border-radius: 8px; padding: 8px; font: inherit; font-size: 13.5px; background: var(--bg-card); color: var(--text); }
+    .ck-dlg .chk { display: flex; gap: 8px; align-items: center; font-weight: 500; }
+    .ck-dlg .row { display: flex; gap: 8px; justify-content: flex-end; margin-top: 14px; }
+    @media (max-width: 860px) { .ck-head h1 { font-size: 21px; } .ck-board { grid-auto-columns: minmax(240px, 85vw); } }
+  </style>
+</head>
+
+<body>
+  <div class="vh-shell">
+    <aside class="vh-side" id="vhSide" aria-label="Điều hướng vận hành"></aside>
+    <main class="ck-wrap vh-main">
+      <div class="ck-head">
+        <h1>🤝 Kanban khách hàng</h1>
+        <p>Khách đã vào Zoom qua link điểm danh. Kéo thẻ sang cột mới (hoặc bấm nút) mỗi khi bạn nhắn, gọi, hẹn được lịch hay chốt xong.</p>
+      </div>
+      <div id="ckNote"></div>
+
+      <div class="ck-stats" id="ckStats"></div>
+
+      <div class="ck-card ck-tools">
+        <input id="ckSearch" placeholder="🔎 Tìm tên, SĐT, email, ghi chú…" oninput="ckRender()">
+        <button class="ck-btn" type="button" data-scope="all" onclick="ckScope(this)">Tất cả</button>
+        <button class="ck-btn" type="button" data-scope="mine" onclick="ckScope(this)">👤 Của tôi</button>
+        <button class="ck-btn" type="button" data-scope="none" onclick="ckScope(this)">❓ Chưa ai nhận</button>
+        <select id="ckHeat" onchange="ckRender()" aria-label="Mức độ">
+          <option value="">Mọi mức độ</option><option value="🔥">🔥 Nóng</option><option value="🌤️">🌤️ Ấm</option><option value="❄️">❄️ Lạnh</option><option value="⭐">⭐ Học viên</option>
+        </select>
+        <select id="ckSession" onchange="ckRender()" aria-label="Buổi Zoom"><option value="">Mọi buổi Zoom</option></select>
+        <label style="display:inline-flex;gap:6px;align-items:center;font-size:13px;"><input type="checkbox" id="ckHideStudents" checked onchange="ckRender()"> Ẩn học viên</label>
+        <button class="ck-btn" type="button" onclick="ckLoad()">↻ Làm mới</button>
+      </div>
+
+      <div class="ck-board" id="ckBoard"><div class="ck-empty">Đang tải…</div></div>
+    </main>
+  </div>
+
+  <dialog class="ck-dlg" id="ckDlg">
+    <h3 id="ckDlgName"></h3>
+    <div class="who" id="ckDlgWho"></div>
+    <label for="ckDlgStatus">Trạng thái</label>
+    <select id="ckDlgStatus" onchange="document.getElementById('ckDlgReasonBox').hidden = this.value !== 'not_bought'"></select>
+    <div id="ckDlgReasonBox" hidden><label for="ckDlgReason">Lý do chưa mua</label><input type="text" id="ckDlgReason" placeholder="VD: chưa sắp xếp được thời gian, chi phí…"></div>
+    <label for="ckDlgOwner">Người phụ trách</label>
+    <select id="ckDlgOwner"></select>
+    <label for="ckDlgNote">Ghi chú (đã trao đổi gì, hẹn gọi lại khi nào…)</label>
+    <textarea id="ckDlgNote" rows="4"></textarea>
+    <label class="chk"><input type="checkbox" id="ckDlgOpt"> ⛔ Khách không muốn nhận tin chăm sóc tự động</label>
+    <div class="row"><button class="ck-btn" type="button" onclick="document.getElementById('ckDlg').close()">Huỷ</button><button class="ck-btn on" type="button" onclick="ckDlgSave()">💾 Lưu</button></div>
+  </dialog>
+
+  <dialog class="ck-dlg" id="ckAsg">
+    <h3>👤 Giao khách cho ai?</h3>
+    <div class="who" id="ckAsgWho"></div>
+    <div class="vh-note" style="margin:0;font-size:12.5px;">Chỉ hiện người <b>đã kết nối email</b> trong bảng phân công. Người được giao nhận thông báo và thấy việc chăm sóc khách này ngay trong <b>Kanban nhiệm vụ</b> hôm nay của họ.</div>
+    <div class="ck-team" id="ckAsgList"></div>
+    <div class="who" id="ckAsgUnlinked" style="margin-top:8px;"></div>
+    <div class="row"><button class="ck-btn" type="button" id="ckAsgClear" onclick="ckAssign('')">↩️ Bỏ giao</button><button class="ck-btn" type="button" onclick="document.getElementById('ckAsg').close()">Đóng</button></div>
+  </dialog>
+
+  <script src="assets/js/van-hanh.js?v=6"></script>
+  <script>
+    VH.nav('khach-hang');
+    const COLS = [
+      ['new', 'Chưa liên hệ', '#94a3b8'], ['messaged', 'Đã nhắn', '#0ea5e9'], ['called', 'Đã gọi', '#6366f1'],
+      ['booked', 'Đặt lịch 1-1', '#f59e0b'], ['bought', 'Đã mua', '#10b981'], ['not_bought', 'Chưa mua', '#ef4444'],
+    ];
+    let D = null, scope = 'all', dlgPhone = null;
+    try { scope = localStorage.getItem('ckScope') || 'all'; } catch (e) {}
+
+    async function ckLoad() {
+      try {
+        D = await VH.api('/api/care-board');
+        document.getElementById('ckNote').innerHTML = `<div class="vh-note">✏️ <b>${VH.esc(D.me.email || D.me.name)}</b>${D.me.is_admin ? ' (admin)' : ''} — bạn là: <b>${VH.esc(D.me.names.join(', ') || '—')}</b>. Bấm <b>"Nhận chăm sóc"</b> để giao khách cho mình.</div>`;
+        const sel = document.getElementById('ckSession'), cur = sel.value;
+        sel.innerHTML = '<option value="">Mọi buổi Zoom</option>' + D.sessions.map(s => `<option value="${VH.esc(s.key)}">${VH.esc(VH.fmtDate(String(s.date).slice(0, 10)).slice(0, 5))} · ${VH.esc(s.title)}</option>`).join('');
+        sel.value = cur;
+        ckRender();
+      } catch (e) {
+        document.getElementById('ckBoard').innerHTML = '';
+        document.getElementById('ckNote').innerHTML = `<div class="vh-note warn">👁️ ${VH.esc(e.message)} <button type="button" class="vh-note-btn" onclick="VH.relogin()">🔑 Đăng nhập</button></div>`;
+      }
+    }
+    function ckScope(btn) {
+      scope = btn.dataset.scope;
+      try { localStorage.setItem('ckScope', scope); } catch (e) {}
+      ckRender();
+    }
+    const isMine = p => !!p.owner && D.me.names.some(n => n.toLowerCase() === p.owner.toLowerCase());
+    function ckFiltered() {
+      const q = document.getElementById('ckSearch').value.trim().toLowerCase();
+      const heat = document.getElementById('ckHeat').value, sess = document.getElementById('ckSession').value;
+      const hideSt = document.getElementById('ckHideStudents').checked;
+      return D.people.filter(p => (scope === 'all' || (scope === 'mine' ? isMine(p) : !p.owner))
+        && (!heat || p.heat.startsWith(heat)) && (!sess || p.keys.includes(sess))
+        && (!hideSt || heat === '⭐' || !p.heat.startsWith('⭐'))
+        && (!q || [p.name, p.phone, p.email, p.note, p.owner, p.lead].some(v => String(v || '').toLowerCase().includes(q))));
+    }
+    function ckCard(p) {
+      const col = COLS.find(c => c[0] === p.status) || COLS[0];
+      const i = COLS.indexOf(col), next = COLS[i + 1] && i < 3 ? COLS[i + 1] : null;
+      const d = String(p.phone).replace(/[^0-9+]/g, '');
+      return `<div class="ck-item" draggable="true" data-phone="${VH.esc(p.phone)}" style="--c:${col[2]}">
+        <div class="nm">${VH.esc(p.name)}</div>
+        <div class="ph">${VH.esc(p.phone)}<a href="https://zalo.me/${VH.esc(d.replace(/^\+/, ''))}" target="_blank" rel="noopener" style="color:#0068ff;">Zalo</a><a href="tel:${VH.esc(d)}" style="color:var(--color-primary);">Gọi</a></div>
+        <div class="meta"><span class="chip">${VH.esc(p.heat)}</span>${p.sessions ? `<span class="chip">📹 ${p.sessions} buổi</span>` : ''}
+          ${D.me.is_admin
+            ? `<button type="button" class="chip ${p.owner ? 'own' : 'none'}" title="Bấm để giao / đổi người phụ trách" onclick="ckAssignOpen('${VH.esc(p.phone)}')">${p.owner ? '👤 ' + VH.esc(p.owner) + ' ▾' : '👉 Chưa ai nhận · Giao'}</button>`
+            : p.owner ? `<span class="chip own">👤 ${VH.esc(p.owner)}</span>` : '<span class="chip none">Chưa ai nhận</span>'}
+          ${p.user_id ? '' : '<span class="chip">Khách mới</span>'}${p.opt_out ? '<span class="chip">⛔</span>' : ''}</div>
+        ${p.lead ? `<div class="nt" style="color:#b45309;">${VH.esc(p.lead)}</div>` : ''}
+        ${p.status === 'not_bought' && p.reason ? `<div class="nt">Lý do: ${VH.esc(p.reason)}</div>` : ''}
+        ${p.note ? `<div class="nt">${VH.esc(p.note)}</div>` : ''}
+        ${p.updated_at ? `<div class="upd">Cập nhật ${VH.esc(p.updated_at.slice(5, 16).replace(/(\d+)-(\d+) /, '$2/$1 '))}${p.updated_by ? ' · ' + VH.esc(p.updated_by) : ''}</div>` : ''}
+        <div class="acts">
+          ${p.owner ? '' : `<button type="button" class="pri" onclick="ckTake('${VH.esc(p.phone)}')">🙋 Nhận chăm sóc</button>`}
+          ${next ? `<button type="button" onclick="ckMove('${VH.esc(p.phone)}','${next[0]}')">→ ${next[1]}</button>` : ''}
+          <button type="button" onclick="ckOpen('${VH.esc(p.phone)}')">✏️ Cập nhật</button>
+        </div>
+      </div>`;
+    }
+    function ckRender() {
+      if (!D) return;
+      document.querySelectorAll('[data-scope]').forEach(b => b.classList.toggle('on', b.dataset.scope === scope));
+      const list = ckFiltered();
+      const cnt = k => list.filter(p => p.status === k).length;
+      const total = list.length, bought = cnt('bought');
+      document.getElementById('ckStats').innerHTML = [
+        [total, 'Khách đang xem'], [cnt('new'), 'Chưa liên hệ'], [cnt('booked'), 'Đã đặt lịch 1-1'], [bought, 'Đã mua'],
+        [total ? Math.round(bought * 100 / total) + '%' : '—', 'Tỷ lệ chốt'],
+      ].map(([v, l]) => `<div class="ck-stat"><div class="v">${v}</div><div class="l">${l}</div></div>`).join('');
+      document.getElementById('ckBoard').innerHTML = COLS.map(([k, label, c]) => {
+        const items = list.filter(p => p.status === k);
+        return `<section class="ck-col" data-status="${k}"><h3><b style="color:${c}">● ${label}</b><span>${items.length}</span></h3>
+          ${items.length ? items.map(ckCard).join('') : '<div class="ck-empty">Kéo thẻ vào đây</div>'}</section>`;
+      }).join('');
+      ckDnD();
+    }
+    function ckDnD() {
+      document.querySelectorAll('.ck-item').forEach(el => {
+        el.addEventListener('dragstart', e => { e.dataTransfer.setData('text/plain', el.dataset.phone); el.classList.add('dragging'); });
+        el.addEventListener('dragend', () => el.classList.remove('dragging'));
+      });
+      document.querySelectorAll('.ck-col').forEach(col => {
+        col.addEventListener('dragover', e => { e.preventDefault(); col.classList.add('drop'); });
+        col.addEventListener('dragleave', () => col.classList.remove('drop'));
+        col.addEventListener('drop', e => {
+          e.preventDefault(); col.classList.remove('drop');
+          const phone = e.dataTransfer.getData('text/plain');
+          const p = D.people.find(x => x.phone === phone);
+          if (p && p.status !== col.dataset.status) ckMove(phone, col.dataset.status);
+        });
+      });
+    }
+    async function ckSave(phone, patch) {
+      try {
+        const r = await VH.api('/api/care-board/person', { method: 'PUT', body: { phone, ...patch } });
+        const i = D.people.findIndex(x => x.phone === phone);
+        if (i >= 0 && r.person) D.people[i] = r.person;
+        ckRender();
+        return true;
+      } catch (e) { alert(e.message); return false; }
+    }
+    function ckMove(phone, status) {
+      if (status === 'not_bought') { ckOpen(phone, 'not_bought'); return; }
+      const p = D.people.find(x => x.phone === phone);
+      ckSave(phone, { status, owner: p && !p.owner ? (D.me.names[0] || '') : undefined });
+    }
+    function ckTake(phone) { ckSave(phone, { owner: D.me.names[0] || D.me.name || '' }); }
+    // Admin bấm "Chưa ai nhận" / tên người phụ trách → chọn người đã kết nối email để giao
+    function ckAssignOpen(phone) {
+      const p = D.people.find(x => x.phone === phone);
+      if (!p) return;
+      dlgPhone = phone;
+      document.getElementById('ckAsgWho').textContent = `${p.name} · ${p.phone} · ${p.heat} · ${p.sessions} buổi Zoom`;
+      const team = D.team || [], cur = String(p.owner || '').toLowerCase();
+      document.getElementById('ckAsgList').innerHTML = team.length ? team.map((m, i) => `<button type="button" class="${m.name.toLowerCase() === cur ? 'cur' : ''}" onclick="ckAssign(D.team[${i}].name)">
+          <span><span class="n">${m.name.toLowerCase() === cur ? '✅ ' : ''}${VH.esc(m.name)}</span>${m.role ? ` · <span class="e">${VH.esc(m.role)}</span>` : ''}${m.email ? `<br><span class="e">✉️ ${VH.esc(m.email)}</span>` : ''}</span>
+          <span class="c">đang chăm ${m.active} khách</span></button>`).join('')
+        : '<div class="ck-empty">Chưa ai trong bảng phân công kết nối email. Vào Admin → Phân công nhiệm vụ để nhập email cho từng người.</div>';
+      const un = D.unlinked || [];
+      document.getElementById('ckAsgUnlinked').innerHTML = un.length ? `Chưa kết nối email (chưa giao được): ${un.map(VH.esc).join(', ')}` : '';
+      document.getElementById('ckAsgClear').hidden = !p.owner;
+      document.getElementById('ckAsg').showModal();
+    }
+    async function ckAssign(name) {
+      const p = D.people.find(x => x.phone === dlgPhone);
+      if (!p) return;
+      if (String(name).toLowerCase() === String(p.owner || '').toLowerCase()) { document.getElementById('ckAsg').close(); return; }
+      if (!name && !confirm(`Bỏ giao ${p.name} cho ${p.owner}?`)) return;
+      const ok = await ckSave(dlgPhone, { owner: name });
+      if (!ok) return;
+      document.getElementById('ckAsg').close();
+      ckLoad(); // cập nhật số khách mỗi người đang chăm
+    }
+    function ckOpen(phone, forceStatus) {
+      const p = D.people.find(x => x.phone === phone);
+      if (!p) return;
+      dlgPhone = phone;
+      document.getElementById('ckDlgName').textContent = p.name;
+      document.getElementById('ckDlgWho').textContent = `${p.phone} · ${p.email || ''} · ${p.heat} · ${p.sessions} buổi Zoom`;
+      const st = document.getElementById('ckDlgStatus');
+      st.innerHTML = COLS.map(([k, l]) => `<option value="${k}">${l}</option>`).join('');
+      st.value = forceStatus || p.status;
+      document.getElementById('ckDlgReasonBox').hidden = st.value !== 'not_bought';
+      document.getElementById('ckDlgReason').value = p.reason || '';
+      const names = [...new Set([...(D.staff || []), p.owner].filter(Boolean))];
+      const own = document.getElementById('ckDlgOwner');
+      own.innerHTML = '<option value="">— Chưa ai nhận —</option>' + names.map(n => `<option value="${VH.esc(n)}">${VH.esc(n)}</option>`).join('');
+      own.value = p.owner || (forceStatus ? (D.me.names[0] || '') : '');
+      document.getElementById('ckDlgNote').value = p.note || '';
+      document.getElementById('ckDlgOpt').checked = !!p.opt_out;
+      document.getElementById('ckDlg').showModal();
+    }
+    async function ckDlgSave() {
+      const status = document.getElementById('ckDlgStatus').value, reason = document.getElementById('ckDlgReason').value.trim();
+      if (status === 'not_bought' && !reason) { alert('Ghi lý do chưa mua để cả đội rút kinh nghiệm.'); return; }
+      const ok = await ckSave(dlgPhone, { status, reason, owner: document.getElementById('ckDlgOwner').value,
+        note: document.getElementById('ckDlgNote').value, opt_out: document.getElementById('ckDlgOpt').checked });
+      if (ok) document.getElementById('ckDlg').close();
+    }
+    ckLoad();
+  </script>
+</body>
+
+</html>

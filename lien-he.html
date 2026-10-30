@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8">
+  <script src="assets/js/auth-fetch.js?v=1"></script>
+  <script>(function(){try{var t=localStorage.getItem('theme');if(t==='dark'||(!t&&window.matchMedia('(prefers-color-scheme: dark)').matches))document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" href="/assets/img/logo.png">
+  <link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
+  <link rel="manifest" href="/manifest.json?v=2">
+  <meta name="apple-mobile-web-app-title" content="AI Agents CC">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="theme-color" content="#0ea5e9">
+  <title>Liên hệ BTC — AI AGENTS CC</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/base.css?v=2">
+  <link rel="stylesheet" href="assets/css/components.css?v=11">
+  <link rel="stylesheet" href="assets/css/layout.css?v=6">
+  <style>
+    .contact-wrap { max-width: 640px; margin: 0 auto; display: flex; flex-direction: column; gap: 16px; }
+
+    .contact-hero {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      text-align: center;
+    }
+    .contact-hero h1 {
+      font-family: var(--font-heading);
+      font-size: 18px;
+      line-height: 1.4;
+      color: var(--text);
+      margin: 0 0 8px;
+      text-transform: uppercase;
+      letter-spacing: .02em;
+    }
+    .contact-hero p { color: var(--text-muted); font-size: var(--fs-base); margin: 0; }
+    .contact-hero p strong { color: var(--color-primary); }
+
+    .contact-list { display: flex; flex-direction: column; gap: 12px; }
+    .contact-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 16px 18px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .contact-avatar {
+      width: 48px; height: 48px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; font-weight: 700; font-size: 17px; flex-shrink: 0;
+    }
+    .contact-info { flex: 1; min-width: 0; }
+    .contact-role {
+      font-size: var(--fs-xs); font-weight: 700; text-transform: uppercase;
+      letter-spacing: .05em; color: var(--color-primary); margin-bottom: 2px;
+    }
+    .contact-name { font-size: var(--fs-md); font-weight: 700; color: var(--text); }
+    .contact-phone { font-size: var(--fs-sm); color: var(--text-muted); margin-top: 2px; }
+    .contact-call {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 8px 14px; border-radius: 999px;
+      background: var(--bg-active); color: var(--color-primary);
+      font-size: var(--fs-sm); font-weight: 600; text-decoration: none; flex-shrink: 0;
+    }
+    .contact-call:hover { background: var(--color-primary); color: #fff; }
+    .contact-call svg { width: 15px; height: 15px; }
+
+    .bank-card {
+      background: var(--bg-card);
+      border: 2px solid var(--color-primary);
+      border-radius: var(--radius-lg);
+      padding: 22px;
+      text-align: center;
+    }
+    .bank-card h2 {
+      font-family: var(--font-heading); font-size: 15px; text-transform: uppercase;
+      color: var(--text); margin: 0 0 14px; line-height: 1.45;
+    }
+    .bank-qr {
+      display: block; margin: 0 auto;
+      width: 240px; max-width: 100%; aspect-ratio: 1 / 1; object-fit: contain;
+      background: #fff; border: 1px solid var(--border); border-radius: 12px; padding: 8px;
+    }
+    .bank-rows { margin: 14px auto 0; max-width: 360px; display: flex; flex-direction: column; gap: 8px; text-align: left; }
+    .bank-row {
+      display: flex; justify-content: space-between; align-items: center; gap: 10px;
+      background: var(--bg-app); border-radius: 8px; padding: 10px 12px; font-size: var(--fs-sm);
+    }
+    .bank-row span { color: var(--text-muted); }
+    .bank-row strong { color: var(--text); text-align: right; }
+    .bank-copy {
+      border: none; background: var(--bg-active); color: var(--color-primary);
+      font-weight: 600; font-size: var(--fs-xs); padding: 4px 10px; border-radius: 999px;
+      cursor: pointer; margin-left: 8px; font-family: inherit;
+    }
+    .bank-warning {
+      margin-top: 14px; background: #fef2f2; border: 1px solid #fecaca; color: #b91c1c;
+      border-radius: 8px; padding: 12px 14px; font-size: var(--fs-sm); font-weight: 600; line-height: 1.5;
+    }
+    [data-theme="dark"] .bank-warning { background: rgba(239,68,68,.12); border-color: rgba(239,68,68,.35); color: #fca5a5; }
+
+    .social-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+    }
+    .social-card h2 {
+      font-family: var(--font-heading); font-size: 15px; text-transform: uppercase;
+      color: var(--text); margin: 0 0 14px; text-align: center;
+    }
+    .social-list { display: flex; flex-direction: column; gap: 10px; }
+    .social-link {
+      display: flex; align-items: center; gap: 12px;
+      padding: 12px 14px; border: 1px solid var(--border); border-radius: 10px;
+      text-decoration: none; color: var(--text); transition: border-color .15s, background-color .15s;
+    }
+    .social-link:hover { border-color: var(--social-color, var(--color-primary)); background: var(--bg-hover); }
+    .social-icon {
+      width: 38px; height: 38px; border-radius: 10px; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      background: var(--social-color, var(--color-primary)); color: #fff; font-weight: 800; font-size: 13px;
+    }
+    .social-icon svg { width: 20px; height: 20px; }
+    .social-text { flex: 1; min-width: 0; }
+    .social-label { display: block; font-weight: 700; font-size: var(--fs-base); }
+    .social-url { display: block; font-size: var(--fs-xs); color: var(--text-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .social-arrow { color: var(--text-muted); font-size: 18px; }
+
+    .contact-loading { text-align: center; padding: 40px 20px; color: var(--text-muted); }
+
+    /* Form "Liên hệ Ban tổ chức" */
+    .cf-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 22px 20px;
+    }
+    .cf-card h2 {
+      font-family: var(--font-heading); font-size: 15px; text-transform: uppercase;
+      color: var(--text); margin: 0 0 4px; text-align: center;
+    }
+    .cf-sub { text-align: center; color: var(--text-muted); font-size: var(--fs-sm); margin: 0 0 16px; }
+    .cf-form { display: flex; flex-direction: column; gap: 12px; }
+    .cf-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .cf-field > label, .cf-legend {
+      display: block; font-size: 12px; font-weight: 700; color: var(--text-muted);
+      text-transform: uppercase; letter-spacing: .3px; margin-bottom: 5px;
+    }
+    .cf-req { color: #ef4444; }
+    .cf-field input, .cf-field textarea {
+      width: 100%; box-sizing: border-box;
+      border: 1px solid var(--border); background: var(--bg-input, var(--bg-card)); color: var(--text);
+      border-radius: 10px; padding: 10px 12px; font-size: 14px; font-family: inherit;
+    }
+    .cf-field textarea { resize: vertical; min-height: 110px; line-height: 1.5; }
+    .cf-field input:focus, .cf-field textarea:focus { outline: none; border-color: var(--border-focus); }
+    .cf-depts { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .cf-dept {
+      display: flex; align-items: center; gap: 10px;
+      border: 1px solid var(--border); border-radius: 10px; padding: 11px 12px;
+      cursor: pointer; font-size: 14px; font-weight: 600; color: var(--text);
+    }
+    .cf-dept input { width: 17px; height: 17px; margin: 0; accent-color: #0f766e; flex-shrink: 0; }
+    .cf-dept:has(input:checked) { border-color: var(--color-primary); background: var(--bg-active); }
+    .cf-err { color: #dc2626; font-size: 13px; }
+    .cf-submit {
+      background: var(--color-primary); color: #fff; border: none; border-radius: 10px;
+      padding: 12px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: inherit;
+    }
+    .cf-submit:disabled { opacity: .6; cursor: default; }
+    .cf-done { text-align: center; padding: 10px 0 4px; }
+    .cf-done .ico { font-size: 40px; line-height: 1; margin-bottom: 8px; }
+    .cf-done p { color: var(--text-muted); font-size: 14px; line-height: 1.6; margin: 0 0 14px; }
+    .cf-again { background: none; border: 1px solid var(--border); color: var(--text); border-radius: 10px; padding: 9px 18px; font-weight: 600; cursor: pointer; font-family: inherit; }
+    @media (max-width: 520px) { .cf-grid, .cf-depts { grid-template-columns: 1fr; } }
+
+    @media (max-width: 480px) {
+      .contact-card { flex-wrap: wrap; }
+      .contact-call { width: 100%; justify-content: center; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="app">
+
+    <!-- Sidebar -->
+    <aside id="sidebar">
+      <div id="sidebar-logo">
+        <div class="sidebar-logo-mark" style="background:transparent;"><img src="assets/img/logo.png" alt="Logo" style="width:100%;height:100%;object-fit:contain;"></div>
+        <div class="sidebar-logo-text">AI AGENTS <span>CC</span></div>
+      </div>
+
+      <nav id="sidebar-nav">
+        <div class="nav-section-label">Cộng đồng</div>
+
+        <a href="feed.html" class="nav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
+          </svg>
+          Feed
+        </a>
+
+
+
+        <div class="nav-section-label" style="margin-top:8px;">Học tập</div>
+
+        <a href="challenge.html" class="nav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path
+              d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z" />
+          </svg>
+          Challenge
+        </a>
+
+        <div class="nav-section-label" style="margin-top:8px;">Khác</div>
+
+        <a href="marketplace.html" class="nav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path
+              d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z" />
+          </svg>
+          Marketplace
+        </a>
+      </nav>
+
+      <!-- Sidebar user -->
+      <div id="sidebar-user">
+        <div class="user-avatar-wrap">
+          <div class="avatar-placeholder avatar-md" id="sbAvatar" style="background:#7c3aed;">?</div>
+          <div class="user-status-dot"></div>
+        </div>
+        <div class="user-info">
+          <div class="user-name" id="sbName">—</div>
+          <div class="user-level" id="sbLevel">—</div>
+        </div>
+        <a href="index.html" class="icon-btn" title="Đăng xuất" style="margin-left:auto;" onclick="doLogout()">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4" />
+            <polyline points="16 17 21 12 16 7" />
+            <line x1="21" y1="12" x2="9" y2="12" />
+          </svg>
+        </a>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <div id="main">
+
+      <!-- Mobile topbar -->
+      <div id="mobile-topbar">
+        <button class="mob-menu-btn" onclick="toggleSidebar()" aria-label="Menu">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+          </svg>
+        </button>
+        <span style="flex:1;font-size:var(--fs-md);font-weight:600;color:var(--text)">📞 Liên hệ BTC</span>
+        <div class="mob-topbar-right">
+          <button class="icon-btn" id="themeToggleMob" type="button" aria-label="Chuyển chế độ sáng/tối">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"></svg>
+          </button>
+          <button class="icon-btn" id="notifBellMob" aria-label="Thông báo" style="position:relative;">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+            </svg>
+            <span id="notifBadgeMob" style="display:none;position:absolute;top:2px;right:2px;background:#ef4444;color:#fff;font-size:10px;font-weight:700;border-radius:99px;min-width:16px;height:16px;padding:0 4px;line-height:16px;text-align:center;">0</span>
+          </button>
+          <div id="topbarAvatarMob" style="width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;background:#7c3aed;flex-shrink:0;"></div>
+        </div>
+      </div>
+
+      <!-- Topbar -->
+      <nav id="subnav-bar" class="subnav-bar" aria-label="Điều hướng nhanh">
+        <a href="feed.html" class="subnav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+          Feed
+        </a>
+        <a href="spaces.html" class="subnav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></svg>
+          Spaces
+        </a>
+        <a href="courses.html" class="subnav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/></svg>
+          Courses
+        </a>
+        <a href="members.html" class="subnav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+          Members
+        </a>
+        <a href="leaderboard.html" class="subnav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/></svg>
+          Leaderboard
+        </a>
+        <a href="calendar.html" class="subnav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          Calendar
+        </a>
+        <a href="about.html" class="subnav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+          About
+        </a>
+        <div class="topbar-right">
+          <button class="icon-btn" id="themeToggle" type="button" aria-label="Chuyển chế độ sáng/tối">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"></svg>
+          </button>
+          <div style="position:relative;">
+            <button class="icon-btn" id="notifBell" aria-label="Thông báo" style="position:relative;">
+              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+              </svg>
+              <span id="notifBadge" style="display:none;position:absolute;top:2px;right:2px;background:#ef4444;color:#fff;font-size:10px;font-weight:700;border-radius:99px;min-width:16px;height:16px;padding:0 4px;line-height:16px;text-align:center;">0</span>
+            </button>
+            <div id="notifDropdown" style="display:none;"></div>
+          </div>
+          <a href="#" class="icon-btn" aria-label="Tin nhắn">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <path
+                d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+            </svg>
+          </a>
+          <div class="topbar-search">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <circle cx="11" cy="11" r="8" />
+              <line x1="21" y1="21" x2="16.65" y2="16.65" />
+            </svg>
+            <input type="text" id="globalSearchInput" placeholder="Tìm kiếm..." autocomplete="off">
+            <div id="globalSearchResults" class="gsr-panel"></div>
+          </div>
+          <div id="topbarAvatar"
+            style="width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;background:#7c3aed;cursor:pointer;flex-shrink:0;">
+          </div>
+        </div>
+      </nav>
+
+      <header id="topbar">
+        <button class="topbar-hamburger" id="hamburger" onclick="toggleSidebar()" aria-label="Mở menu">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path d="M4 6h16M4 12h16M4 18h16" stroke-linecap="round" />
+          </svg>
+        </button>
+
+        <div class="topbar-title">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            style="width:18px;height:18px;color:var(--color-primary)">
+            <path d="M22 16.92v3a2 2 0 01-2.18 2 19.8 19.8 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.8 19.8 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.13.96.36 1.9.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0122 16.92z" />
+          </svg>
+          Liên hệ BTC
+        </div>
+      </header>
+
+      <!-- Content row -->
+      <div id="content-row">
+        <main id="feed" style="max-width:100%;">
+
+          <!-- Contact — rendered by JS from /api/settings (contact_*) -->
+          <div class="contact-wrap" id="contactBox">
+            <div class="contact-loading">Đang tải thông tin liên hệ...</div>
+          </div>
+
+          <!-- Form liên hệ BTC — lưu vào contact_messages, xem ở Admin → Hệ thống → Liên hệ BTC -->
+          <div class="contact-wrap" style="margin-top:16px;">
+            <section class="cf-card" aria-labelledby="cfTitle">
+              <h2 id="cfTitle">Liên hệ Ban tổ chức</h2>
+              <p class="cf-sub">Gửi câu hỏi hoặc yêu cầu, BTC sẽ phản hồi bạn sớm nhất.</p>
+              <form class="cf-form" id="cfForm" onsubmit="submitContactForm(event)" novalidate>
+                <div class="cf-field">
+                  <label for="cfName">Họ và tên <span class="cf-req">*</span></label>
+                  <input id="cfName" autocomplete="name" maxlength="120">
+                </div>
+                <div class="cf-grid">
+                  <div class="cf-field">
+                    <label for="cfPhone">Số điện thoại</label>
+                    <input id="cfPhone" type="tel" autocomplete="tel" maxlength="20">
+                  </div>
+                  <div class="cf-field">
+                    <label for="cfEmail">Email</label>
+                    <input id="cfEmail" type="email" autocomplete="email" maxlength="160">
+                  </div>
+                </div>
+                <div>
+                  <span class="cf-legend">Gửi đến <span class="cf-req">*</span></span>
+                  <div class="cf-depts" role="radiogroup" aria-label="Chọn bộ phận nhận">
+                    <label class="cf-dept"><input type="radio" name="cfDept" value="center"> Trung tâm AI Agents CC</label>
+                    <label class="cf-dept"><input type="radio" name="cfDept" value="consult"> Hỗ trợ tư vấn</label>
+                    <label class="cf-dept"><input type="radio" name="cfDept" value="payment"> Hỗ trợ thanh toán</label>
+                    <label class="cf-dept"><input type="radio" name="cfDept" value="community"> Hỗ trợ cộng đồng</label>
+                  </div>
+                </div>
+                <div class="cf-field">
+                  <label for="cfMessage">Nội dung liên hệ <span class="cf-req">*</span></label>
+                  <textarea id="cfMessage" maxlength="3000" placeholder="Nhập nội dung bạn cần BTC hỗ trợ..."></textarea>
+                </div>
+                <div class="cf-err" id="cfErr" role="alert"></div>
+                <button class="cf-submit" id="cfSubmit" type="submit">Gửi liên hệ</button>
+              </form>
+              <div class="cf-done" id="cfDone" style="display:none">
+                <div class="ico">✅</div>
+                <p>Đã gửi liên hệ thành công!<br>Ban tổ chức sẽ phản hồi bạn qua số điện thoại hoặc email đã cung cấp.</p>
+                <button class="cf-again" type="button" onclick="resetContactForm()">Gửi liên hệ khác</button>
+              </div>
+            </section>
+          </div>
+
+        </main>
+      </div>
+
+    </div><!-- /main -->
+
+  </div><!-- /app -->
+
+  <!-- Mobile sidebar overlay -->
+  <div id="mob-overlay" onclick="closeSidebar()"></div>
+  <div id="mob-sidebar">
+    <div style="padding:14px 16px;border-bottom:1px solid var(--border);font-size:var(--fs-md);font-weight:700;color:var(--text);display:flex;align-items:center;gap:8px;">
+      <div style="width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;"><img src="assets/img/logo.png" alt="Logo" style="width:100%;height:100%;object-fit:contain;"></div>
+      <span class="mob-brand-name">AI AGENTS CC</span>
+    </div>
+    <nav style="flex:1;overflow-y:auto;padding:8px;">
+      <div class="nav-section-label">Cộng đồng</div>
+      <a href="feed.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        Feed
+      </a>
+      <div class="nav-section-label">Học tập</div>
+      <a href="challenge.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z"/></svg>
+        Challenge
+      </a>
+      <div class="nav-section-label">Khác</div>
+      <a href="marketplace.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z"/></svg>
+        Marketplace
+      </a>
+    </nav>
+  </div>
+
+  <!-- Mobile bottom nav -->
+  <!-- Mobile main menu (full site navigation) -->
+  <div id="mob-mainmenu-overlay" onclick="closeMainMenu()"></div>
+  <div id="mob-mainmenu">
+    <div style="padding:14px 16px;border-bottom:1px solid var(--border);font-size:var(--fs-md);font-weight:700;color:var(--text);display:flex;align-items:center;gap:8px;">
+      <div style="width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;"><img src="assets/img/logo.png" alt="Logo" style="width:100%;height:100%;object-fit:contain;"></div>
+      Menu chính
+    </div>
+    <nav style="flex:1;overflow-y:auto;padding:8px;">
+      <a href="feed.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        Feed
+      </a>
+      <a href="spaces.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></svg>
+        Spaces
+      </a>
+      <a href="courses.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/></svg>
+        Courses
+      </a>
+      <a href="members.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+        Members
+      </a>
+      <a href="leaderboard.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/></svg>
+        Leaderboard
+      </a>
+      <a href="calendar.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        Calendar
+      </a>
+      <a href="about.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+        About
+      </a>
+    </nav>
+  </div>
+
+  <nav id="mobile-nav">
+    <a href="feed.html" class="mob-nav-btn">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
+      </svg>
+      Feed
+    </a>
+    <a href="spaces.html" class="mob-nav-btn">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></svg>
+      Spaces
+    </a>
+    <a href="courses.html" class="mob-nav-btn">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/></svg>
+      Courses
+    </a>
+    <a href="members.html" class="mob-nav-btn">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>
+      </svg>
+      Members
+    </a>
+    <button class="mob-nav-btn" onclick="toggleMainMenu()">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/>
+      </svg>
+      Menu
+    </button>
+  </nav>
+
+  <script src="assets/js/app.js?v=28"></script>
+  <script>
+    const API = '/api';
+    const AV_COLORS = ['#0ea5e9', '#8b5cf6', '#10b981', '#f59e0b', '#ec4899', '#3b82f6', '#ef4444', '#14b8a6'];
+
+    function initials(u) { return ((u.first_name || '?')[0] + ((u.last_name || '')[0] || '')).toUpperCase(); }
+    function avColor(id) { return AV_COLORS[(id || 0) % AV_COLORS.length]; }
+    function doLogout() { localStorage.removeItem('currentUser'); window.location.href = 'index.html'; }
+    const LEVELS = [
+      { level: 1, name: 'Khởi động', xpMin: 0, xpMax: 45 }, { level: 2, name: 'Học viên', xpMin: 45, xpMax: 120 },
+      { level: 3, name: 'Thực hành', xpMin: 120, xpMax: 250 }, { level: 4, name: 'Nâng cao', xpMin: 250, xpMax: 450 },
+      { level: 5, name: 'Chuyên gia', xpMin: 450, xpMax: 700 }, { level: 6, name: 'Bậc thầy', xpMin: 700, xpMax: 1000 },
+      { level: 7, name: 'Huyền thoại', xpMin: 1000, xpMax: 1500 }, { level: 8, name: 'Tiên tri', xpMin: 1500, xpMax: 2200 },
+      { level: 9, name: 'Thần thánh', xpMin: 2200, xpMax: 9999 },
+    ];
+    function getLevel(xp) { for (let i = LEVELS.length - 1; i >= 0; i--) if (xp >= LEVELS[i].xpMin) return LEVELS[i]; return LEVELS[0]; }
+
+    let currentUser = null;
+    (function () {
+      const raw = localStorage.getItem('currentUser');
+      if (!raw) { window.location.href = 'index.html'; return; }
+      currentUser = JSON.parse(raw);
+      const ini = initials(currentUser);
+      const col = avColor(currentUser.id);
+      document.getElementById('sbAvatar').textContent = ini;
+      document.getElementById('sbAvatar').style.background = col;
+      document.getElementById('sbName').textContent = currentUser.first_name + ' ' + currentUser.last_name;
+      const lv = getLevel(currentUser.xp || 0);
+      document.getElementById('sbLevel').textContent = lv.name + ' · Lv.' + lv.level;
+      const tbAv = document.getElementById('topbarAvatar');
+      if (tbAv) { tbAv.textContent = ini; tbAv.style.background = col; tbAv.onclick = () => location.href = `profile.html?id=${currentUser.id}`; }
+    })();
+
+    function esc(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+    const CONTACT_COLORS = ['#0ea5e9', '#10b981', '#8b5cf6', '#f59e0b', '#ec4899', '#3b82f6'];
+
+    // Nền tảng mạng xã hội — khớp với danh sách chọn trong Admin → Cài đặt → Thông tin liên hệ
+    const SOCIAL_PLATFORMS = {
+      facebook:  { name: 'Facebook',  color: '#1877f2', icon: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 13.5h2.5l1-4H14v-2c0-1.03 0-2 2-2h1.5V2.14A28 28 0 0014.64 2C11.93 2 10 3.66 10 6.7v2.8H7v4h3V22h4z"/></svg>' },
+      youtube:   { name: 'YouTube',   color: '#ff0000', icon: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M23 7.2a3 3 0 00-2.1-2.1C19 4.6 12 4.6 12 4.6s-7 0-8.9.5A3 3 0 001 7.2 31 31 0 00.5 12a31 31 0 00.5 4.8 3 3 0 002.1 2.1c1.9.5 8.9.5 8.9.5s7 0 8.9-.5a3 3 0 002.1-2.1 31 31 0 00.5-4.8 31 31 0 00-.5-4.8zM9.75 15.02V8.98L15.5 12z"/></svg>' },
+      tiktok:    { name: 'TikTok',    color: '#111111', icon: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M16.6 5.82A4.28 4.28 0 0115.5 3h-3.1v12.4a2.6 2.6 0 11-2.6-2.6c.27 0 .53.04.78.12V9.75a5.7 5.7 0 00-.78-.05 5.7 5.7 0 105.7 5.7V9.01a7.3 7.3 0 004.3 1.39V7.3a4.3 4.3 0 01-3.2-1.48z"/></svg>' },
+      zalo:      { name: 'Zalo',      color: '#0068ff', icon: 'Zalo' },
+      instagram: { name: 'Instagram', color: '#e1306c', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg>' },
+      website:   { name: 'Website',   color: '#0ea5e9', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 010 18M12 3a14 14 0 000 18"/></svg>' },
+      other:     { name: 'Liên kết',  color: '#64748b', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10 13a5 5 0 007.07 0l3-3a5 5 0 00-7.07-7.07l-1 1M14 11a5 5 0 00-7.07 0l-3 3a5 5 0 007.07 7.07l1-1"/></svg>' },
+    };
+
+    function contactInitials(name) {
+      const parts = String(name || '').trim().split(/\s+/).filter(Boolean);
+      if (!parts.length) return '?';
+      return (parts.length > 1 ? parts[parts.length - 2][0] + parts[parts.length - 1][0] : parts[0][0]).toUpperCase();
+    }
+
+    function copyText(text, btn) {
+      const done = () => { const old = btn.textContent; btn.textContent = 'Đã chép'; setTimeout(() => { btn.textContent = old; }, 1500); };
+      if (navigator.clipboard) navigator.clipboard.writeText(text).then(done).catch(() => {});
+    }
+
+    async function loadContact() {
+      const box = document.getElementById('contactBox');
+      let s;
+      try {
+        s = await fetch(`${API}/settings`).then(r => r.json());
+      } catch (e) {
+        box.innerHTML = '<div class="contact-loading">⚠️ Không thể tải thông tin liên hệ.</div>';
+        return;
+      }
+      let people = [];
+      try { people = JSON.parse(s.contact_people || '[]'); } catch (e) {}
+
+      const heading = s.contact_heading || 'Thông tin liên hệ';
+      const intro = s.contact_intro || '';
+      const bankName = (s.contact_bank_name || '').trim();
+      const bankAcc = (s.contact_bank_account || '').trim();
+      const bankHolder = (s.contact_bank_holder || '').trim();
+      const bankNote = (s.contact_bank_note || '').trim();
+
+      const peopleHtml = people.filter(p => p && (p.name || p.role)).map((p, i) => {
+        const tel = String(p.phone || '').replace(/[^\d+]/g, '');
+        return `
+        <div class="contact-card">
+          <div class="contact-avatar" style="background:${CONTACT_COLORS[i % CONTACT_COLORS.length]}">${esc(contactInitials(p.name))}</div>
+          <div class="contact-info">
+            <div class="contact-role">${esc(p.role)}</div>
+            <div class="contact-name">${esc(p.name)}</div>
+            ${p.phone ? `<div class="contact-phone">📞 ${esc(p.phone)}</div>` : ''}
+          </div>
+          ${tel ? `<a class="contact-call" href="tel:${esc(tel)}" aria-label="Gọi ${esc(p.name)}">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.8 19.8 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.8 19.8 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.13.96.36 1.9.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0122 16.92z"/></svg>
+            Gọi</a>` : ''}
+        </div>`;
+      }).join('');
+
+      const qrSrc = bankName && bankAcc
+        ? `https://qr.sepay.vn/img?bank=${encodeURIComponent(bankName)}&acc=${encodeURIComponent(bankAcc)}&template=compact`
+        : '';
+      const bankHtml = bankAcc ? `
+        <div class="bank-card">
+          <h2>Cộng đồng chỉ sử dụng duy nhất tài khoản<br>${esc(bankHolder)}</h2>
+          ${qrSrc ? `<img class="bank-qr" src="${esc(qrSrc)}" alt="Mã QR chuyển khoản ${esc(bankName)} ${esc(bankAcc)}">
+          <div style="font-size:var(--fs-xs);color:var(--text-muted);margin-top:6px;">Quét mã bằng app ngân hàng bất kỳ</div>` : ''}
+          <div class="bank-rows">
+            ${bankName ? `<div class="bank-row"><span>Ngân hàng</span><strong>${esc(bankName)}</strong></div>` : ''}
+            <div class="bank-row"><span>Số tài khoản</span><strong>${esc(bankAcc)}<button class="bank-copy" type="button" onclick="copyText('${esc(bankAcc)}', this)">Chép</button></strong></div>
+            ${bankHolder ? `<div class="bank-row"><span>Chủ tài khoản</span><strong>${esc(bankHolder)}</strong></div>` : ''}
+          </div>
+          ${bankNote ? `<div class="bank-warning">⚠️ ${esc(bankNote)}</div>` : ''}
+        </div>` : '';
+
+      let socials = [];
+      try { socials = JSON.parse(s.contact_socials || '[]'); } catch (e) {}
+      socials = socials.filter(x => x && /^https?:\/\//i.test(String(x.url || '').trim()));
+      const socialsHtml = socials.length ? `
+        <div class="social-card">
+          <h2>Kết nối với cộng đồng</h2>
+          <div class="social-list">
+            ${socials.map(x => {
+              const p = SOCIAL_PLATFORMS[x.platform] || SOCIAL_PLATFORMS.other;
+              const url = String(x.url).trim();
+              return `
+            <a class="social-link" href="${esc(url)}" target="_blank" rel="noopener" style="--social-color:${p.color}">
+              <span class="social-icon">${p.icon}</span>
+              <span class="social-text">
+                <span class="social-label">${esc(x.label || p.name)}</span>
+                <span class="social-url">${esc(url.replace(/^https?:\/\/(www\.)?/i, ''))}</span>
+              </span>
+              <span class="social-arrow">↗</span>
+            </a>`;
+            }).join('')}
+          </div>
+        </div>` : '';
+
+      box.innerHTML = `
+        <div class="contact-hero">
+          <h1>${esc(heading)}</h1>
+          ${intro ? `<p>${esc(intro)}</p>` : ''}
+        </div>
+        <div class="contact-list">${peopleHtml}</div>
+        ${bankHtml}
+        ${socialsHtml}`;
+    }
+
+    // ── Form "Liên hệ Ban tổ chức" ──────────────────────────────
+    function prefillContactForm() {
+      const u = currentUser || {};
+      const fill = (id, v) => { const el = document.getElementById(id); if (el && !el.value && v) el.value = v; };
+      fill('cfName', [u.first_name, u.last_name].filter(Boolean).join(' ').trim());
+      fill('cfPhone', u.phone);
+      fill('cfEmail', u.email);
+      // currentUser trong localStorage không có SĐT (và có thể thiếu email) → lấy từ hồ sơ
+      if (u.id && (!u.phone || !u.email)) {
+        fetch(`${API}/users/${u.id}?requester_id=${u.id}`).then(r => r.ok ? r.json() : null).then(p => {
+          if (!p) return;
+          fill('cfPhone', p.phone);
+          fill('cfEmail', p.email);
+        }).catch(() => {});
+      }
+    }
+
+    function resetContactForm() {
+      document.getElementById('cfForm').reset();
+      document.getElementById('cfErr').textContent = '';
+      document.getElementById('cfForm').style.display = '';
+      document.getElementById('cfDone').style.display = 'none';
+      prefillContactForm();
+    }
+
+    async function submitContactForm(e) {
+      e.preventDefault();
+      const val = id => document.getElementById(id).value.trim();
+      const err = document.getElementById('cfErr');
+      const body = {
+        user_id: currentUser?.id || null,
+        full_name: val('cfName'),
+        phone: val('cfPhone'),
+        email: val('cfEmail'),
+        department: document.querySelector('input[name="cfDept"]:checked')?.value || '',
+        message: val('cfMessage'),
+      };
+      if (!body.full_name) { err.textContent = 'Vui lòng nhập họ và tên.'; return; }
+      if (!body.phone && !body.email) { err.textContent = 'Vui lòng nhập số điện thoại hoặc email để BTC liên hệ lại.'; return; }
+      if (!body.department) { err.textContent = 'Vui lòng chọn bộ phận muốn gửi.'; return; }
+      if (body.message.length < 5) { err.textContent = 'Vui lòng nhập nội dung liên hệ.'; return; }
+      err.textContent = '';
+      const btn = document.getElementById('cfSubmit');
+      btn.disabled = true; btn.textContent = 'Đang gửi...';
+      try {
+        const res = await fetch(`${API}/contact-messages`, {
+          method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body),
+        });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) throw new Error(data.error || 'Gửi không thành công, vui lòng thử lại.');
+        document.getElementById('cfForm').style.display = 'none';
+        document.getElementById('cfDone').style.display = '';
+      } catch (ex) {
+        err.textContent = ex.message;
+      } finally {
+        btn.disabled = false; btn.textContent = 'Gửi liên hệ';
+      }
+    }
+
+    loadContact();
+    prefillContactForm();
+  </script>
+</body>
+
+</html>

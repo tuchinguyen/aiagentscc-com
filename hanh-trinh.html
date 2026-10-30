@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8">
+  <script src="assets/js/auth-fetch.js?v=1"></script>
+  <script>(function(){try{var t=localStorage.getItem('theme');if(t==='dark'||(!t&&window.matchMedia('(prefers-color-scheme: dark)').matches))document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" href="/assets/img/logo.png">
+  <link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
+  <link rel="manifest" href="/manifest.json?v=2">
+  <meta name="apple-mobile-web-app-title" content="AI Agents CC">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="theme-color" content="#0ea5e9">
+  <title>Hành trình của tôi — AI AGENTS CC</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/base.css?v=2">
+  <link rel="stylesheet" href="assets/css/components.css?v=11">
+  <link rel="stylesheet" href="assets/css/layout.css?v=6">
+  <style>
+    .ht-wrap { max-width: 1100px; margin: 0 auto; display: flex; flex-direction: column; gap: 14px; }
+    .ht-hero { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); gap: 14px; }
+    @media (max-width: 860px) { .ht-hero { grid-template-columns: minmax(0, 1fr); } }
+    .ht-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg, 14px); padding: 16px 18px; }
+    .ht-card h1 { font-family: var(--font-heading); font-size: 22px; margin: 0 0 4px; }
+    .ht-card p { margin: 0; color: var(--text-muted); font-size: 14px; line-height: 1.55; }
+    .ht-prog { height: 10px; border-radius: 8px; background: var(--bg-hover); overflow: hidden; margin: 12px 0 6px; }
+    .ht-prog span { display: block; height: 100%; border-radius: 8px; background: linear-gradient(90deg, #38bdf8, #5fbf5a, #f08a5d, #e8c547); }
+    .ht-badges { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+    .ht-badge { font-size: 12.5px; padding: 4px 9px; border-radius: 999px; border: 1px solid var(--border); color: var(--text-muted); }
+    .ht-badge.on { color: #fff; border-color: transparent; font-weight: 600; }
+    .ht-next { border: 2px solid #f59e0b; background: linear-gradient(135deg, color-mix(in srgb, #f59e0b 12%, var(--bg-card)), var(--bg-card)); }
+    .ht-next .lbl-top { font-size: 12px; font-weight: 700; color: #b45309; text-transform: uppercase; letter-spacing: .05em; }
+    .ht-next h2 { font-family: var(--font-heading); font-size: 19px; margin: 4px 0 6px; }
+    .ht-cta { display: inline-flex; align-items: center; gap: 6px; margin-top: 12px; padding: 10px 16px; border-radius: 10px; background: #f59e0b; color: #fff; font-weight: 700; text-decoration: none; font-size: 14.5px; }
+    .ht-cta:hover { background: #d97706; text-decoration: none; }
+    .ht-mapbox { position: relative; border-radius: 16px; overflow: hidden; border: 1px solid var(--border);
+      background: linear-gradient(180deg, #bfe3ff 0%, #e6f4ff 45%, #f3fbff 100%); }
+    [data-theme="dark"] .ht-mapbox { background: linear-gradient(180deg, #0b1630 0%, #13254a 50%, #1b3058 100%); }
+    .ht-map { height: min(76vh, 880px); min-height: 440px; overflow: auto; cursor: grab; }
+    .ht-map.drag { cursor: grabbing; }
+    .ht-map svg { display: block; margin: 0 auto; user-select: none; -webkit-user-select: none; }
+    .ht-zoom { position: absolute; right: 10px; top: 10px; display: flex; flex-direction: column; gap: 6px; z-index: 5; }
+    .ht-zoom button { width: 36px; height: 36px; border-radius: 10px; border: 1px solid var(--border); background: var(--bg-card); color: var(--text); font-size: 18px; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,.12); }
+    .ht-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+    .ht-chip { display: inline-flex; gap: 6px; align-items: center; padding: 7px 12px; border-radius: 999px; border: 1px solid var(--border); background: var(--bg-card); color: var(--text); font-size: 13.5px; text-decoration: none; }
+    .ht-chip:hover { background: var(--bg-hover); text-decoration: none; }
+    .lbl .t2 tspan.done { fill: #16a34a; font-weight: 700; }
+    .lbl .t2 tspan.next { fill: #d97706; font-weight: 800; }
+    .lbl .t2 tspan.lock { fill: #64748b; }
+    .lbl.fogged rect.bg { fill: #f1f5f9; }
+    .lbl.nextlbl rect.bg { stroke: #f59e0b; stroke-width: 3; }
+    .ht-dlg { border: none; border-radius: 16px; padding: 0; width: min(440px, calc(100vw - 32px)); background: var(--bg-card); color: var(--text); box-shadow: 0 20px 60px rgba(0,0,0,.3); }
+    .ht-dlg::backdrop { background: rgba(15,23,42,.45); }
+    .ht-dlg .in { padding: 20px; }
+    .ht-dlg h3 { font-family: var(--font-heading); font-size: 19px; margin: 0 0 6px; }
+    .ht-dlg .st { font-size: 13px; font-weight: 600; margin-bottom: 10px; }
+    .ht-dlg p { font-size: 14.5px; line-height: 1.6; margin: 0; }
+    .ht-dlg .row { display: flex; gap: 8px; justify-content: flex-end; margin-top: 16px; flex-wrap: wrap; }
+    .ht-btn { border: 1px solid var(--border); background: var(--bg-card); color: var(--text); border-radius: 10px; padding: 9px 14px; font-size: 14px; cursor: pointer; font-family: inherit; text-decoration: none; }
+    .ht-btn.pri { background: var(--color-primary); border-color: var(--color-primary); color: #fff; font-weight: 600; }
+    .ht-empty { color: var(--text-muted); padding: 30px; }
+  </style>
+</head>
+
+<body>
+
+  <div id="app">
+
+    <!-- Sidebar -->
+    <aside id="sidebar">
+      <div id="sidebar-logo">
+        <div class="sidebar-logo-mark" style="background:transparent;"><img src="assets/img/logo.png" alt="Logo" style="width:100%;height:100%;object-fit:contain;"></div>
+        <div class="sidebar-logo-text">AI AGENTS <span>CC</span></div>
+      </div>
+
+      <nav id="sidebar-nav">
+        <div class="nav-section-label">Cộng đồng</div>
+
+        <a href="feed.html" class="nav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
+          </svg>
+          Feed
+        </a>
+
+
+
+        <div class="nav-section-label" style="margin-top:8px;">Học tập</div>
+
+        <a href="challenge.html" class="nav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path
+              d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z" />
+          </svg>
+          Challenge
+        </a>
+
+        <div class="nav-section-label" style="margin-top:8px;">Khác</div>
+
+        <a href="marketplace.html" class="nav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path
+              d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z" />
+          </svg>
+          Marketplace
+        </a>
+      </nav>
+
+      <!-- Sidebar user -->
+      <div id="sidebar-user">
+        <div class="user-avatar-wrap">
+          <div class="avatar-placeholder avatar-md" id="sbAvatar" style="background:#7c3aed;">?</div>
+          <div class="user-status-dot"></div>
+        </div>
+        <div class="user-info">
+          <div class="user-name" id="sbName">—</div>
+          <div class="user-level" id="sbLevel">—</div>
+        </div>
+        <a href="index.html" class="icon-btn" title="Đăng xuất" style="margin-left:auto;" onclick="doLogout()">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4" />
+            <polyline points="16 17 21 12 16 7" />
+            <line x1="21" y1="12" x2="9" y2="12" />
+          </svg>
+        </a>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <div id="main">
+
+      <!-- Mobile topbar -->
+      <div id="mobile-topbar">
+        <button class="mob-menu-btn" onclick="toggleSidebar()" aria-label="Menu">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+          </svg>
+        </button>
+        <span style="flex:1;font-size:var(--fs-md);font-weight:600;color:var(--text)">🗺️ Hành trình của tôi</span>
+        <div class="mob-topbar-right">
+          <button class="icon-btn" id="themeToggleMob" type="button" aria-label="Chuyển chế độ sáng/tối">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"></svg>
+          </button>
+          <button class="icon-btn" id="notifBellMob" aria-label="Thông báo" style="position:relative;">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+            </svg>
+            <span id="notifBadgeMob" style="display:none;position:absolute;top:2px;right:2px;background:#ef4444;color:#fff;font-size:10px;font-weight:700;border-radius:99px;min-width:16px;height:16px;padding:0 4px;line-height:16px;text-align:center;">0</span>
+          </button>
+          <div id="topbarAvatarMob" style="width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;background:#7c3aed;flex-shrink:0;"></div>
+        </div>
+</div>
+
+      <!-- Topbar -->
+      <nav id="subnav-bar" class="subnav-bar" aria-label="Điều hướng nhanh">
+        <a href="feed.html" class="subnav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+          Feed
+        </a>
+        <a href="spaces.html" class="subnav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></svg>
+          Spaces
+        </a>
+        <a href="courses.html" class="subnav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/></svg>
+          Courses
+        </a>
+        <a href="members.html" class="subnav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+          Members
+        </a>
+        <a href="leaderboard.html" class="subnav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/></svg>
+          Leaderboard
+        </a>
+        <a href="calendar.html" class="subnav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          Calendar
+        </a>
+        <a href="about.html" class="subnav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+          About
+        </a>
+        <div class="topbar-right">
+          <button class="icon-btn" id="themeToggle" type="button" aria-label="Chuyển chế độ sáng/tối">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"></svg>
+          </button>
+          <div style="position:relative;">
+            <button class="icon-btn" id="notifBell" aria-label="Thông báo" style="position:relative;">
+              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+              </svg>
+              <span id="notifBadge" style="display:none;position:absolute;top:2px;right:2px;background:#ef4444;color:#fff;font-size:10px;font-weight:700;border-radius:99px;min-width:16px;height:16px;padding:0 4px;line-height:16px;text-align:center;">0</span>
+            </button>
+            <div id="notifDropdown" style="display:none;"></div>
+          </div>
+          <a href="#" class="icon-btn" aria-label="Tin nhắn">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <path
+                d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+            </svg>
+          </a>
+          <div class="topbar-search">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <circle cx="11" cy="11" r="8" />
+              <line x1="21" y1="21" x2="16.65" y2="16.65" />
+            </svg>
+            <input type="text" id="globalSearchInput" placeholder="Tìm kiếm..." autocomplete="off">
+            <div id="globalSearchResults" class="gsr-panel"></div>
+          </div>
+          <div id="topbarAvatar"
+            style="width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;background:#7c3aed;cursor:pointer;flex-shrink:0;">
+          </div>
+        </div>
+      </nav>
+
+      <header id="topbar">
+        <button class="topbar-hamburger" id="hamburger" onclick="toggleSidebar()" aria-label="Mở menu">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path d="M4 6h16M4 12h16M4 18h16" stroke-linecap="round" />
+          </svg>
+        </button>
+
+        <div class="topbar-title">🗺️ Hành trình của tôi</div>
+      </header>
+
+      <div id="content-row">
+        <main id="feed" style="max-width:100%;">
+          <div class="ht-wrap">
+            <div class="ht-hero">
+              <div class="ht-card">
+                <h1>🗺️ Hành trình của tôi</h1>
+                <p>Mỗi ngôi nhà là một phòng trong AI Agents CC. Phòng bạn đã ghé sẽ sáng màu, phòng chưa tới còn phủ sương.</p>
+                <div class="ht-prog"><span id="htProg" style="width:0"></span></div>
+                <div style="font-size:13.5px;" id="htProgText">Đang tải…</div>
+                <div class="ht-badges" id="htBadges"></div>
+              </div>
+              <div class="ht-card ht-next" id="htNext"><div class="lbl-top">👉 Bước tiếp theo</div><h2>Đang tải…</h2></div>
+            </div>
+            <div class="ht-mapbox">
+              <div class="ht-zoom">
+                <button type="button" onclick="htZoom(1.25)" aria-label="Phóng to">＋</button>
+                <button type="button" onclick="htZoom(0.8)" aria-label="Thu nhỏ">－</button>
+                <button type="button" onclick="htFit()" aria-label="Vừa khung" style="font-size:14px;">⤢</button>
+              </div>
+              <div class="ht-map" id="htMap"><div class="ht-empty">Đang tải bản đồ…</div></div>
+            </div>
+            <div class="ht-card" id="htMore" hidden>
+              <b>🌳 Khám phá thêm trong làng</b>
+              <div class="ht-chips" id="htChips"></div>
+            </div>
+          </div>
+          <dialog class="ht-dlg" id="htDlg"><div class="in" id="htDlgIn"></div></dialog>
+        </main>
+      </div>
+
+    </div><!-- /main -->
+
+  </div><!-- /app -->
+
+  <!-- Mobile sidebar overlay -->
+  <div id="mob-overlay" onclick="closeSidebar()"></div>
+  <div id="mob-sidebar">
+    <div style="padding:14px 16px;border-bottom:1px solid var(--border);font-size:var(--fs-md);font-weight:700;color:var(--text);display:flex;align-items:center;gap:8px;">
+      <div style="width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;"><img src="assets/img/logo.png" alt="Logo" style="width:100%;height:100%;object-fit:contain;"></div>
+      <span class="mob-brand-name">AI AGENTS CC</span>
+    </div>
+    <nav style="flex:1;overflow-y:auto;padding:8px;">
+      <div class="nav-section-label">Cộng đồng</div>
+      <a href="feed.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        Feed
+      </a>
+      <div class="nav-section-label">Học tập</div>
+      <a href="challenge.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z"/></svg>
+        Challenge
+      </a>
+      <div class="nav-section-label">Khác</div>
+      <a href="marketplace.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z"/></svg>
+        Marketplace
+      </a>
+    </nav>
+  </div>
+
+  <!-- Mobile bottom nav -->
+  <!-- Mobile main menu (full site navigation) -->
+  <div id="mob-mainmenu-overlay" onclick="closeMainMenu()"></div>
+  <div id="mob-mainmenu">
+    <div style="padding:14px 16px;border-bottom:1px solid var(--border);font-size:var(--fs-md);font-weight:700;color:var(--text);display:flex;align-items:center;gap:8px;">
+      <div style="width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;"><img src="assets/img/logo.png" alt="Logo" style="width:100%;height:100%;object-fit:contain;"></div>
+      Menu chính
+    </div>
+    <nav style="flex:1;overflow-y:auto;padding:8px;">
+      <a href="feed.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        Feed
+      </a>
+      <a href="spaces.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></svg>
+        Spaces
+      </a>
+      <a href="courses.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/></svg>
+        Courses
+      </a>
+      <a href="members.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+        Members
+      </a>
+      <a href="leaderboard.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/></svg>
+        Leaderboard
+      </a>
+      <a href="calendar.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        Calendar
+      </a>
+      <a href="about.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+        About
+      </a>
+    </nav>
+  </div>
+
+  <nav id="mobile-nav">
+    <a href="feed.html" class="mob-nav-btn">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
+      </svg>
+      Feed
+    </a>
+    <a href="spaces.html" class="mob-nav-btn">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></svg>
+      Spaces
+    </a>
+    <a href="courses.html" class="mob-nav-btn">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/></svg>
+      Courses
+    </a>
+    <a href="members.html" class="mob-nav-btn">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>
+      </svg>
+      Members
+    </a>
+    <button class="mob-nav-btn" onclick="toggleMainMenu()">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/>
+      </svg>
+      Menu
+    </button>
+  </nav>
+
+  <script src="assets/js/app.js?v=28"></script>
+  <script src="assets/js/journey-map.js?v=9"></script>
+  <script>
+const API = '/api';
+    const AV_COLORS = ['#0ea5e9', '#8b5cf6', '#10b981', '#f59e0b', '#ec4899', '#3b82f6', '#ef4444', '#14b8a6'];
+
+    function initials(u) { return ((u.first_name || '?')[0] + ((u.last_name || '')[0] || '')).toUpperCase(); }
+    function avColor(id) { return AV_COLORS[(id || 0) % AV_COLORS.length]; }
+    function doLogout() { localStorage.removeItem('currentUser'); window.location.href = 'index.html'; }
+    const LEVELS = [
+      { level: 1, name: 'Khởi động', xpMin: 0, xpMax: 45 }, { level: 2, name: 'Học viên', xpMin: 45, xpMax: 120 },
+      { level: 3, name: 'Thực hành', xpMin: 120, xpMax: 250 }, { level: 4, name: 'Nâng cao', xpMin: 250, xpMax: 450 },
+      { level: 5, name: 'Chuyên gia', xpMin: 450, xpMax: 700 }, { level: 6, name: 'Bậc thầy', xpMin: 700, xpMax: 1000 },
+      { level: 7, name: 'Huyền thoại', xpMin: 1000, xpMax: 1500 }, { level: 8, name: 'Tiên tri', xpMin: 1500, xpMax: 2200 },
+      { level: 9, name: 'Thần thánh', xpMin: 2200, xpMax: 9999 },
+    ];
+    function getLevel(xp) { for (let i = LEVELS.length - 1; i >= 0; i--) if (xp >= LEVELS[i].xpMin) return LEVELS[i]; return LEVELS[0]; }
+
+    let currentUser = null;
+    (function () {
+      const raw = localStorage.getItem('currentUser');
+      if (!raw) { window.location.href = 'index.html'; return; }
+      currentUser = JSON.parse(raw);
+      const ini = initials(currentUser);
+      const col = avColor(currentUser.id);
+      document.getElementById('sbAvatar').textContent = ini;
+      document.getElementById('sbAvatar').style.background = col;
+      document.getElementById('sbName').textContent = currentUser.first_name + ' ' + currentUser.last_name;
+      const lv = getLevel(currentUser.xp || 0);
+      document.getElementById('sbLevel').textContent = lv.name + ' · Lv.' + lv.level;
+      const tbAv = document.getElementById('topbarAvatar');
+      if (tbAv) { tbAv.textContent = ini; tbAv.style.background = col; tbAv.onclick = () => location.href = `profile.html?id=${currentUser.id}`; }
+    })();
+
+    // ── Hành trình của tôi: bản đồ làng, sương mù ở phòng chưa ghé, mũi tên tới bước tiếp theo ──
+    const { P, pts, ZONES, ROOMS, SRC, VIEWBOX } = JM;
+    const htEsc = JM.esc;
+    // Mô tả + trang của từng phòng (dành cho thành viên)
+    const HT_INFO = {
+      noi_quy:        ['Đọc và đồng ý nội quy để cùng giữ ngôi nhà ấm áp, tôn trọng nhau.', 'noi-quy.html'],
+      ho_so:          ['Lộ trình riêng của bạn (khảo sát Thân – Tâm – Mệnh, hồ sơ sức khoẻ), danh sách thành viên và bảng xếp hạng cộng đồng.', 'lo-trinh.html'],
+      w3:             ['3 buổi Workshop miễn phí — nền tảng ăn uống theo Ngũ Hành, bước đầu tiên của hành trình.', 'workshop3.html'],
+      thao_luan:      ['Chia sẻ bữa ăn, hỏi đáp và động viên nhau cùng cộng đồng.', 'spaces.html'],
+      cam_nang:       ['Cổng vào Khu cẩm nang (qua cầu bên cạnh): trợ lý, tài liệu, tra cứu và nhật ký ăn uống. Ở đây có thêm thực đơn 7 ngày và trắc nghiệm Hàn – Nhiệt.', 'thuc-don-7-ngay.html'],
+      tro_ly:         ['Hỏi Trợ lý Ngũ Hành mọi thắc mắc về ăn uống theo mùa và thể trạng.', 'tro-ly.html'],
+      tai_lieu:       ['Thư viện tài liệu PDF của cộng đồng.', 'tai-lieu.html'],
+      tra_cuu:        ['Tra cứu thực phẩm theo Ngũ Hành, quy trình 1 ngày và thư viện công thức món ăn.', 'thuc-pham.html'],
+      nhat_ky:        ['Ghi lại bữa ăn mỗi ngày để tự quan sát cơ thể và nhận gợi ý điều chỉnh.', 'nhat-ky.html'],
+      mot_mot:        ['Đặt lịch nói chuyện 1-1 với Ban tổ chức khi bạn cần hỏi riêng.', 'coach-1-1.html'],
+      gioi_thieu:     ['Câu chuyện của AI Agents CC: chúng tôi là ai, làm gì và đồng hành cùng bạn thế nào.', 'about.html'],
+      ho_tro:         ['Cần giúp đỡ? Xem hướng dẫn sử dụng, liên hệ Ban tổ chức hoặc tìm địa điểm gần bạn.', 'huong-dan.html'],
+      khoa_free:      ['Các khoá học miễn phí dành cho thành viên.', 'courses.html'],
+      cho:            ['Chợ của cộng đồng: thực phẩm, sản phẩm hỗ trợ hành trình.', 'marketplace.html'],
+      ngam:           ['Cổng vào khu vườn riêng tư — tìm hiểu 8 Buổi Chuyên Sâu và 377 Ngày Thực Hành.', 'workshop8.html'],
+      w8:             ['8 buổi chuyên sâu cùng Ban tổ chức: hiểu cơ thể mình và tự điều chỉnh bữa ăn theo Ngũ Hành.', 'workshop8.html'],
+      w8_thao_luan:   ['Nhóm riêng của học viên 8 buổi.', 'w8_space'],
+      khoa_rieng:     ['Các khoá học riêng mở cho học viên.', 'courses.html'],
+      p377:           ['377 ngày thực hành có người đồng hành — biến kiến thức thành thói quen sống mỗi ngày.', 'program377.html'],
+      p377_thao_luan: ['Nhóm riêng của các bạn đang đi hành trình 377 ngày.', 'p377_space'],
+      p377_bao_cao:   ['Báo cáo cơ thể mỗi ngày để được nhận xét và điều chỉnh kịp thời.', 'program377.html#bao-cao'],
+      p377_hoc:       ['Nội dung học mỗi ngày của 377 ngày: ăn uống theo Ngũ Hành, vận động, quan sát cơ thể, biết ơn… và bài tập kèm theo.', 'program377.html'],
+    };
+    const HT_ZONES = [['gate', '🏮 Cổng làng', '#c29f5f'], ['village', '🌳 Làng cộng đồng', '#4aa646'], ['garden', '🌺 Vườn riêng tư', '#d9703f'], ['summit', '⛰️ Đỉnh 377 ngày', '#c9a227']];
+    let J = null, NEXT = null, htZ = 0;
+
+    const htSafe = u => /^(https?:\/\/|[a-z0-9-]+\.html)/i.test(u || '') ? u : '';
+    function htLink(k) {
+      const l = HT_INFO[k][1];
+      if (l === 'w8_space') return htSafe(J.links.w8_space) || 'workshop8.html';
+      if (l === 'p377_space') return htSafe(J.links.p377_space) || 'program377.html';
+      return l;
+    }
+    // Khu chưa mở: vườn (chưa là học viên 8 buổi / 377), đỉnh (chưa là học viên 377)
+    const htLocked = () => [J.w8 === 'approved' ? null : 'garden', J.p377 === 'approved' ? null : 'summit'].filter(Boolean);
+    function htIsLocked(k) { const z = ROOMS[k].zone; return htLocked().includes(z) && k !== 'ngam'; }
+    function htNextStep() {
+      const r = J.rooms;
+      if (J.p377 === 'approved' && !J.reported_today && String(r.p377_hoc || '').slice(0, 10) !== J.today)
+        return { key: 'p377_hoc', title: 'Học nội dung hôm nay', text: 'Mở nội dung ngày hôm nay của hành trình 377 ngày, thực hành theo rồi nộp báo cáo cuối ngày.', cta: 'Học hôm nay', href: 'program377.html' };
+      if (J.p377 === 'approved') return J.reported_today
+        ? { key: 'p377_thao_luan', title: 'Bạn đã nộp báo cáo hôm nay 🎉', text: 'Hẹn bạn ngày mai nhé. Ghé nhóm 377 ngày để động viên các bạn cùng hành trình.', cta: 'Vào nhóm 377 ngày', href: htLink('p377_thao_luan') }
+        : { key: 'p377_bao_cao', title: 'Nộp báo cáo cơ thể hôm nay', text: 'Ghi lại bữa ăn, giấc ngủ, cảm nhận hôm nay để Ban tổ chức nhận xét và điều chỉnh cho bạn.', cta: 'Nộp báo cáo', href: 'program377.html#bao-cao' };
+      if (J.p377 === 'pending') return { key: 'p377', title: 'Đơn 377 ngày đang chờ duyệt', text: 'Ban tổ chức sẽ liên hệ tư vấn cho bạn. Trong lúc chờ, bạn cứ tiếp tục thực hành và chia sẻ trong nhóm.', cta: 'Xem trang 377 ngày', href: 'program377.html' };
+      if (J.w8 === 'approved') return { key: 'p377', title: 'Lên đỉnh: 377 Ngày Thực Hành', text: 'Bạn đã có kiến thức từ 8 buổi. 377 ngày giúp biến kiến thức thành thói quen sống mỗi ngày, có người đồng hành và nhận xét.', cta: 'Tìm hiểu 377 ngày', href: 'program377.html' };
+      if (J.w8 === 'pending') return { key: 'w8', title: 'Đơn 8 buổi đang chờ duyệt', text: 'Ban tổ chức sẽ gọi tư vấn cho bạn trước khi mở cổng vườn. Trong lúc chờ, bạn có thể ghé Phòng cẩm nang.', cta: 'Xem trang 8 buổi', href: 'workshop8.html' };
+      if (!r.noi_quy) return { key: 'noi_quy', title: 'Ghé Phòng Nội quy', text: 'Bước đầu tiên khi vào làng: đọc nội quy để cùng giữ ngôi nhà ấm áp.', cta: 'Đọc nội quy', href: 'noi-quy.html' };
+      if (!r.w3) return { key: 'w3', title: 'Tham gia 3 buổi Workshop miễn phí', text: 'Nền tảng ăn uống theo Ngũ Hành trong 3 buổi Zoom miễn phí — bước quan trọng nhất trong làng cộng đồng.', cta: 'Xem lịch 3 buổi', href: 'workshop3.html' };
+      return { key: 'ngam', title: 'Mở cổng vườn: 8 Buổi Chuyên Sâu', text: 'Bạn đã có nền tảng từ 3 buổi workshop. 8 buổi chuyên sâu giúp bạn hiểu cơ thể mình và tự điều chỉnh bữa ăn theo Ngũ Hành.', cta: 'Tìm hiểu 8 buổi', href: 'workshop8.html' };
+    }
+    // Vị trí hiện tại = phòng xa nhất đã ghé (cùng cách tính với bản đồ admin)
+    function htPos() {
+      let best = null;
+      Object.entries(J.rooms).forEach(([k, at]) => {
+        const R = ROOMS[k]; if (!R) return;
+        if (!best || R.rank > ROOMS[best[0]].rank || (R.rank === ROOMS[best[0]].rank && at > best[1])) best = [k, at];
+      });
+      return best ? best[0] : null;
+    }
+
+    async function htLoad() {
+      try {
+        const r = await fetch('/api/journey/me');
+        const d = await r.json().catch(() => ({}));
+        if (!r.ok) throw new Error(d.error || 'Không tải được hành trình.');
+        J = d; NEXT = htNextStep();
+        htRenderTop(); htDraw(); htActivity();
+      } catch (e) { document.getElementById('htMap').innerHTML = `<div class="ht-empty">${htEsc(e.message)}</div>`; }
+    }
+    // Hoạt động thật của cả làng bay lên từ từng ngôi nhà; lấy lại mỗi 2 phút
+    async function htActivity() {
+      try { JM.startActivity(() => document.getElementById('htSvg'), await fetch('/api/journey/activity').then(r => r.json())); } catch (e) { /* bỏ qua */ }
+      clearTimeout(htActivity.t); htActivity.t = setTimeout(htActivity, 120000);
+    }
+    function htRenderTop() {
+      const keys = Object.keys(ROOMS), seen = keys.filter(k => J.rooms[k]);
+      document.getElementById('htProg').style.width = Math.round(seen.length * 100 / keys.length) + '%';
+      document.getElementById('htProgText').innerHTML = `Bạn đã khám phá <b>${seen.length}/${keys.length}</b> phòng trong AI Agents CC.`;
+      document.getElementById('htBadges').innerHTML = HT_ZONES.map(([z, t, c]) => {
+        const on = keys.some(k => ROOMS[k].zone === z && J.rooms[k] && k !== 'ngam');
+        return `<span class="ht-badge${on ? ' on' : ''}" style="${on ? 'background:' + c : ''}">${on ? '✓ ' : ''}${t}</span>`;
+      }).join('');
+      document.getElementById('htNext').innerHTML = `<div class="lbl-top">👉 Bước tiếp theo</div><h2>${htEsc(NEXT.title)}</h2><p>${htEsc(NEXT.text)}</p>
+        <a class="ht-cta" href="${htEsc(NEXT.href)}">${htEsc(NEXT.cta)} →</a>`;
+      const more = keys.filter(k => ['village', 'camnang', 'nhatky'].includes(ROOMS[k].zone) && !J.rooms[k] && k !== NEXT.key && !(k === 'nhat_ky' && J.p377 === 'approved'));
+      document.getElementById('htMore').hidden = !more.length;
+      document.getElementById('htChips').innerHTML = more.map(k => `<a class="ht-chip" href="${htEsc(htLink(k))}">${ROOMS[k].icon} ${htEsc(ROOMS[k].label)}</a>`).join('');
+    }
+    function htLabel(k) {
+      const r = ROOMS[k], [sx, sy] = JM.roomTop(k), C = J.counts || { here: {}, visited: {} };
+      // Nhật ký ăn uống chỉ dành cho thành viên chưa vào 377 — học viên 377 ghi trong Báo cáo 377
+      const st = k === 'nhat_ky' && J.p377 === 'approved' ? ['lock', '↪ Dùng Báo cáo 377'] : J.rooms[k] ? ['done', '✓ Đã ghé'] : k === NEXT.key ? ['next', '👉 Bước tiếp theo'] : htIsLocked(k) ? ['lock', '🔒 Chưa mở'] : ['lock', '☁️ Chưa khám phá'];
+      const cls = (J.rooms[k] ? '' : k === NEXT.key ? ' nextlbl' : ' fogged');
+      return `<g class="lbl${cls}" data-room="${k}" transform="translate(${sx.toFixed(1)},${sy.toFixed(1)})"><rect class="bg" rx="11"/>
+        <text class="t1" text-anchor="middle" y="-6">${htEsc(r.icon + ' ' + r.label)}</text><text class="t2" text-anchor="middle" y="15"><tspan class="${st[0]}">${st[1]}</tspan></text>
+        <text class="t3" text-anchor="middle" y="33">👥 <tspan class="here">${C.here[k] || 0} đang ở</tspan> · ${C.visited[k] || 0} đã ghé</text></g>`;
+    }
+    function htDraw() {
+      const box = document.getElementById('htMap');
+      const mySrc = J.src && SRC[J.src] ? J.src : 'unknown';
+      const scene = JM.scene({
+        room: k => ({ glow: !!J.rooms[k], ring: k === NEXT.key ? '#f59e0b' : false, fog: !J.rooms[k] && k !== NEXT.key && !(k === 'nhat_ky' && J.p377 === 'approved'), here: (J.counts && J.counts.here[k]) || 0 }),
+        roadW: k => J.rooms[k] ? 8 : 3,
+        trunk: { w3: J.rooms.ngam || J.w8 === 'approved' ? 8 : 3, w8: J.p377 === 'approved' ? 8 : 3 },
+        bridgeW: { summit: J.p377 === 'approved' ? 8 : 3, garden: J.rooms.ngam || J.w8 === 'approved' ? 8 : 3, village: 8 },
+        river: k => ({ w: k === mySrc ? 10 : 3, dim: k !== mySrc }),
+        dock: k => ({ dim: k !== mySrc }),
+        locked: htLocked(),
+      });
+      // Bạn đang ở đây + đường gợi ý tới bước tiếp theo
+      const pos = htPos();
+      const S0 = SRC[mySrc];
+      const at = pos ? JM.roomFoot(pos) : P(S0.x, S0.y, S0.cloud ? 18 : 8);
+      const to = JM.roomFoot(NEXT.key);
+      let guide = '';
+      if (pos !== NEXT.key) guide += `<path d="M${at[0]} ${at[1]} Q ${(at[0] + to[0]) / 2 + 60} ${(at[1] + to[1]) / 2} ${to[0]} ${to[1]}" fill="none" stroke="#f59e0b" stroke-width="5" stroke-dasharray="2 12" stroke-linecap="round" class="ring"/>`;
+      const [ax, ay] = JM.roomTop(NEXT.key);
+      guide += `<g class="pin"><path d="M${ax} ${ay - 34} l-20 -26 h11 v-28 h18 v28 h11 z" fill="#f59e0b" stroke="#fff" stroke-width="3" stroke-linejoin="round"/></g>`;
+      const nm = 'Bạn đang ở đây';
+      const pin = `<g class="pin"><path d="M${at[0]} ${at[1]} l-12 -22 a14 14 0 1 1 24 0 z" fill="#0ea5e9" stroke="#fff" stroke-width="2.5"/><circle cx="${at[0]}" cy="${at[1] - 31}" r="7" fill="#fff"/>` +
+        `<rect x="${at[0] - 64}" y="${at[1] - 74}" width="128" height="24" rx="12" fill="#0f172a"/><text x="${at[0]}" y="${at[1] - 57}" text-anchor="middle" font-size="13" font-weight="700" fill="#fff" font-family="Inter">${nm}</text></g>`;
+      const labels = Object.keys(ROOMS).map(htLabel).join('');
+      const vb = VIEWBOX;
+      box.innerHTML = `<svg id="htSvg" viewBox="${vb.x} ${vb.y} ${vb.w} ${vb.h}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Bản đồ hành trình của bạn">${JM.defs()}${JM.backdrop()}${scene}${labels}${guide}${pin}</svg>`;
+      JM.fitLabels(box);
+      htApplyZoom();
+      // Cuộn tới giữa chỗ bạn đứng và bước tiếp theo
+      setTimeout(() => htScrollTo([(at[0] + to[0]) / 2, (at[1] + to[1]) / 2]), 30);
+    }
+    function htApplyZoom() {
+      const svg = document.getElementById('htSvg'), box = document.getElementById('htMap'); if (!svg) return;
+      if (!htZ) htZ = box.clientWidth < 700 ? 1.8 : 1;
+      const w = (box.clientWidth - 2) * htZ;
+      svg.style.width = w + 'px'; svg.style.height = (w * VIEWBOX.h / VIEWBOX.w) + 'px';
+    }
+    function htScrollTo(p) {
+      const box = document.getElementById('htMap'), svg = document.getElementById('htSvg'); if (!svg) return;
+      const k = svg.clientWidth / VIEWBOX.w;
+      box.scrollTo({ left: (p[0] - VIEWBOX.x) * k - box.clientWidth / 2, top: (p[1] - VIEWBOX.y) * k - box.clientHeight / 2 });
+    }
+    function htZoom(f) {
+      const box = document.getElementById('htMap');
+      const cx = (box.scrollLeft + box.clientWidth / 2) / box.scrollWidth, cy = (box.scrollTop + box.clientHeight / 2) / box.scrollHeight;
+      htZ = Math.max(.5, Math.min(4, (htZ || 1) * f)); htApplyZoom();
+      box.scrollLeft = cx * box.scrollWidth - box.clientWidth / 2; box.scrollTop = cy * box.scrollHeight - box.clientHeight / 2;
+    }
+    function htFit() { htZ = 1; htApplyZoom(); }
+    function htOpen(k) {
+      if (k === 'nhat_ky' && J.p377 === 'approved') {
+        document.getElementById('htDlgIn').innerHTML = `<h3>📒 Nhật ký ăn uống</h3><div class="st" style="color:#64748b">↪ Phòng dành cho thành viên chưa vào 377 ngày</div>
+          <p>Bạn đang trong hành trình 377 ngày nên bữa ăn được ghi trong <b>Báo cáo cơ thể hằng ngày</b> để Ban tổ chức nhận xét.</p>
+          <div class="row"><button class="ht-btn" type="button" onclick="document.getElementById('htDlg').close()">Đóng</button><a class="ht-btn pri" href="program377.html#bao-cao">Mở Báo cáo 377 →</a></div>`;
+        return document.getElementById('htDlg').showModal();
+      }
+      const r = ROOMS[k], seen = !!J.rooms[k], next = k === NEXT.key, locked = htIsLocked(k) && !seen && !next;
+      const st = seen ? `<span style="color:#16a34a">✓ Bạn đã ghé lần gần nhất ${String(J.rooms[k]).slice(0, 10).split('-').reverse().join('/')}</span>`
+        : next ? '<span style="color:#d97706">👉 Đây là bước tiếp theo của bạn</span>' : locked ? '<span style="color:#64748b">🔒 Phòng trong khu riêng tư — mở khi bạn tham gia chương trình</span>' : '<span style="color:#64748b">☁️ Bạn chưa ghé phòng này</span>';
+      const unlock = ROOMS[k].zone === 'summit' ? ['Tìm hiểu 377 ngày', 'program377.html'] : ['Tìm hiểu 8 buổi', 'workshop8.html'];
+      // Phòng gồm nhiều trang: nút phụ + nút chính
+      const MULTI = {
+        ho_tro: ['<a class="ht-btn" href="lien-he.html">📞 Liên hệ BTC</a><a class="ht-btn" href="dia-diem.html">📍 Danh sách địa điểm</a>', '<a class="ht-btn pri" href="huong-dan.html">📘 Hướng dẫn sử dụng</a>'],
+        tai_lieu: ['', '<a class="ht-btn pri" href="tai-lieu.html">📄 Tài liệu PDF</a>'],
+        tra_cuu: ['<a class="ht-btn" href="quy-trinh.html">🕒 Quy trình 1 ngày</a><a class="ht-btn" href="cong-thuc.html">🍲 Thư viện công thức</a>', '<a class="ht-btn pri" href="thuc-pham.html">🔎 Tra cứu thực phẩm</a>'],
+        cam_nang: ['<a class="ht-btn" href="kiem-tra-han-nhiet.html">🌡️ Trắc nghiệm Hàn – Nhiệt</a>', '<a class="ht-btn pri" href="thuc-don-7-ngay.html">🍱 Thực đơn 7 ngày</a>'],
+        ho_so: ['<a class="ht-btn" href="members.html">👥 Thành viên</a><a class="ht-btn" href="leaderboard.html">🏆 Bảng xếp hạng</a>', '<a class="ht-btn pri" href="lo-trinh.html">🧭 Lộ trình của tôi</a>'],
+      };
+      const extra = MULTI[k] ? MULTI[k][0] : '';
+      const btn = locked ? `<a class="ht-btn pri" href="${unlock[1]}">${unlock[0]} →</a>` : `<a class="ht-btn pri" href="${htEsc(next ? NEXT.href : htLink(k))}">${seen ? 'Vào phòng' : 'Ghé phòng này'} →</a>`;
+      const C = J.counts || { here: {}, visited: {} };
+      document.getElementById('htDlgIn').innerHTML = `<h3>${r.icon} ${htEsc(r.label)}</h3><div class="st">${st}</div><p>${htEsc(HT_INFO[k][0])}</p>
+        <p style="margin-top:8px;font-size:13.5px;color:var(--text-muted);">👥 <b style="color:#16a34a">${C.here[k] || 0}</b> thành viên đang ở đây · <b>${C.visited[k] || 0}</b> người đã ghé</p>
+        <div class="row"><button class="ht-btn" type="button" onclick="document.getElementById('htDlg').close()">Đóng</button>${extra}${MULTI[k] ? MULTI[k][1] : btn}</div>`;
+      document.getElementById('htDlg').showModal();
+    }
+    (function () {
+      const box = document.getElementById('htMap');
+      let st = null, moved = false;
+      box.addEventListener('pointerdown', e => { if (e.pointerType === 'touch') return; st = [e.clientX, e.clientY, box.scrollLeft, box.scrollTop]; moved = false; });
+      window.addEventListener('pointermove', e => {
+        if (!st) return;
+        const dx = e.clientX - st[0], dy = e.clientY - st[1];
+        if (Math.abs(dx) + Math.abs(dy) > 5) { moved = true; box.classList.add('drag'); }
+        if (moved) { box.scrollLeft = st[2] - dx; box.scrollTop = st[3] - dy; }
+      });
+      window.addEventListener('pointerup', () => { st = null; box.classList.remove('drag'); });
+      box.addEventListener('click', e => {
+        if (moved) { moved = false; return; }
+        const g = e.target.closest('[data-room]'); const k = g && g.getAttribute('data-room');
+        if (k && ROOMS[k]) htOpen(k);
+      });
+      document.getElementById('htDlg').addEventListener('click', e => { if (e.target.id === 'htDlg') e.target.close(); });
+      window.addEventListener('resize', () => htApplyZoom());
+    })();
+    htLoad();
+  </script>
+</body>
+</html>

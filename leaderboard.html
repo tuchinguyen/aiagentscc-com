@@ -3,23 +3,36 @@
 
 <head>
   <meta charset="UTF-8">
+  <script src="assets/js/auth-fetch.js?v=1"></script>
+  <script>(function(){try{var t=localStorage.getItem('theme');if(t==='dark'||(!t&&window.matchMedia('(prefers-color-scheme: dark)').matches))document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" href="/assets/img/logo.png">
+  <link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
+  <link rel="manifest" href="/manifest.json?v=2">
+  <meta name="apple-mobile-web-app-title" content="AI Agents CC">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="theme-color" content="#0ea5e9">
   <title>Leaderboard — AI AGENTS CC</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
     href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap"
     rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/base.css">
-  <link rel="stylesheet" href="assets/css/components.css">
-  <link rel="stylesheet" href="assets/css/layout.css">
+  <link rel="stylesheet" href="assets/css/base.css?v=2">
+  <link rel="stylesheet" href="assets/css/components.css?v=11">
+  <link rel="stylesheet" href="assets/css/layout.css?v=6">
   <style>
     /* ── My Rank Hero ─────────────────────────────────── */
+    .rank-card {
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      margin-bottom: 28px;
+    }
+
     .my-rank-hero {
       background: linear-gradient(135deg, #0f172a 0%, #1e293b 60%, #0c2040 100%);
-      border-radius: var(--radius-lg);
       padding: 28px 32px;
-      margin-bottom: 24px;
       display: flex;
       align-items: center;
       gap: 28px;
@@ -44,8 +57,8 @@
     }
 
     .my-rank-avatar {
-      width: 72px;
-      height: 72px;
+      width: 104px;
+      height: 104px;
       border-radius: 50%;
       border: 3px solid var(--color-primary);
       object-fit: cover;
@@ -53,8 +66,8 @@
     }
 
     .my-rank-avatar-placeholder {
-      width: 72px;
-      height: 72px;
+      width: 104px;
+      height: 104px;
       border-radius: 50%;
       border: 3px solid var(--color-primary);
       background: linear-gradient(135deg, #0ea5e9, #8b5cf6);
@@ -62,7 +75,7 @@
       align-items: center;
       justify-content: center;
       font-family: var(--font-heading);
-      font-size: 24px;
+      font-size: 34px;
       font-weight: 700;
       color: #fff;
       flex-shrink: 0;
@@ -70,17 +83,17 @@
 
     .my-rank-badge {
       position: absolute;
-      bottom: -4px;
-      right: -4px;
-      width: 24px;
-      height: 24px;
+      bottom: -2px;
+      right: -2px;
+      width: 30px;
+      height: 30px;
       border-radius: 50%;
       background: var(--accent-purple);
-      border: 2px solid #1e293b;
+      border: 3px solid #1e293b;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 10px;
+      font-size: 13px;
       font-weight: 800;
       color: #fff;
       font-family: var(--font-heading);
@@ -190,10 +203,8 @@
     /* ── Level Grid ───────────────────────────────────── */
     .level-grid-card {
       background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
+      border-top: 1px solid var(--border);
       padding: 20px 24px;
-      margin-bottom: 28px;
     }
 
     .level-grid-title {
@@ -214,8 +225,8 @@
 
     .level-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
-      gap: 8px;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 10px;
     }
 
     .level-cell {
@@ -230,7 +241,7 @@
     }
 
     .level-cell.current {
-      background: #f0f9ff;
+      background: var(--bg-active);
       border-color: var(--color-primary);
     }
 
@@ -334,6 +345,15 @@
     @media (max-width: 1000px) {
       .lb-grid {
         grid-template-columns: 1fr;
+      }
+      .level-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    @media (max-width: 560px) {
+      .level-grid {
+        grid-template-columns: repeat(2, 1fr);
       }
     }
 
@@ -963,20 +983,203 @@
       color: var(--text-muted);
     }
 
+    /* ── User Hover Card ─────────────────────────────── */
+    .user-hover-card {
+      position: fixed;
+      z-index: 300;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      box-shadow: 0 16px 40px rgba(0, 0, 0, .18);
+      padding: 16px;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(4px);
+      transition: opacity .12s ease, transform .12s ease;
+      pointer-events: none;
+    }
+
+    .user-hover-card.show {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+
+    .uhc-loading {
+      font-size: var(--fs-xs);
+      color: var(--text-muted);
+      text-align: center;
+      padding: 10px 0;
+    }
+
+    .uhc-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .uhc-avatar-wrap {
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    .uhc-avatar {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-heading);
+      font-size: 18px;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .uhc-lv-badge {
+      position: absolute;
+      bottom: -3px;
+      right: -3px;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--accent-purple);
+      border: 2px solid var(--bg-card);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: 800;
+      color: #fff;
+      font-family: var(--font-heading);
+    }
+
+    .uhc-id {
+      min-width: 0;
+      flex: 1;
+    }
+
+    .uhc-name {
+      font-family: var(--font-heading);
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--text);
+      margin-bottom: 3px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .uhc-meta {
+      font-size: 11px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    .uhc-bio {
+      font-size: var(--fs-xs);
+      color: var(--text);
+      line-height: 1.5;
+      margin-bottom: 12px;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .uhc-stats {
+      display: flex;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 10px 0;
+      margin-bottom: 12px;
+    }
+
+    .uhc-stat {
+      flex: 1;
+      text-align: center;
+    }
+
+    .uhc-stat-val {
+      font-family: var(--font-heading);
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--text);
+      line-height: 1;
+      margin-bottom: 3px;
+    }
+
+    .uhc-stat-lbl {
+      font-size: 10px;
+      color: var(--text-muted);
+    }
+
+    .uhc-profile-btn {
+      width: 100%;
+      padding: 8px;
+      font-size: var(--fs-xs);
+      font-weight: 700;
+      color: #fff;
+      background: var(--color-primary);
+      border: none;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      font-family: var(--font-body);
+      transition: opacity .15s;
+    }
+
+    .uhc-profile-btn:hover {
+      opacity: .88;
+    }
+
     /* ── Responsive ───────────────────────────────────── */
     @media (max-width: 768px) {
       .my-rank-hero {
         flex-wrap: wrap;
         padding: 20px;
-        gap: 16px;
+        gap: 14px 16px;
+      }
+
+      .my-rank-avatar,
+      .my-rank-avatar-placeholder {
+        width: 72px;
+        height: 72px;
+        font-size: 26px;
+      }
+
+      .my-rank-badge {
+        width: 24px;
+        height: 24px;
+        font-size: 11px;
+      }
+
+      /* Keep avatar + name/title on the same row (min-width stops the name
+         from being squeezed down to a one-word-per-line column); the XP
+         block always gets its own full-width row below via flex-basis:100%
+         instead of half-fitting into whatever space is left over. */
+      .my-rank-info {
+        min-width: 180px;
       }
 
       .my-rank-xp-section {
+        flex: 1 1 100%;
+        order: 3;
         text-align: left;
       }
 
       .my-rank-xp-bar {
+        width: 100%;
         margin-left: 0;
+      }
+
+      .my-rank-xp-next {
+        text-align: left;
+      }
+
+      .my-rank-meta {
+        gap: 14px;
       }
 
       .profile-pheader {
@@ -1005,14 +1208,7 @@
     <!-- Sidebar -->
     <aside id="sidebar">
       <div id="sidebar-logo">
-        <div class="sidebar-logo-mark">
-          <svg viewBox="0 0 20 20" fill="none">
-            <circle cx="10" cy="10" r="3" fill="currentColor" />
-            <path d="M10 3v2M10 15v2M3 10h2M15 10h2" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-            <path d="M5.5 5.5l1.5 1.5M13 13l1.5 1.5M14.5 5.5L13 7M7 13l-1.5 1.5" stroke="currentColor"
-              stroke-width="1.5" stroke-linecap="round" />
-          </svg>
-        </div>
+        <div class="sidebar-logo-mark" style="background:transparent;"><img src="assets/img/logo.png" alt="Logo" style="width:100%;height:100%;object-fit:contain;"></div>
         <div class="sidebar-logo-text">AI AGENTS <span>CC</span></div>
       </div>
 
@@ -1023,40 +1219,12 @@
           <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
             <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
           </svg>
-          Bảng tin
+          Feed
         </a>
 
-        <a href="cot.html" class="nav-item">
-          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-            <polygon
-              points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-          </svg>
-          CÔT
-        </a>
 
-        <a href="signal.html" class="nav-item">
-          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
-          </svg>
-          Tín hiệu
-        </a>
-
-        <a href="qa.html" class="nav-item">
-          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-            <path
-              d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
-          Hỏi đáp
-        </a>
 
         <div class="nav-section-label" style="margin-top:8px;">Học tập</div>
-
-        <a href="courses.html" class="nav-item">
-          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-            <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
-          </svg>
-          Khóa học
-        </a>
 
         <a href="challenge.html" class="nav-item">
           <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
@@ -1064,15 +1232,6 @@
               d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z" />
           </svg>
           Challenge
-        </a>
-
-        <a href="leaderboard.html" class="nav-item active">
-          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-            <path
-              d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"
-              stroke-linecap="round" />
-          </svg>
-          Leaderboard
         </a>
 
         <div class="nav-section-label" style="margin-top:8px;">Khác</div>
@@ -1085,26 +1244,25 @@
           Marketplace
         </a>
 
-        <a href="members.html" class="nav-item">
-          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-            <path
-              d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
-          </svg>
-          Thành viên
-        </a>
-
       </nav>
 
       <!-- Sidebar user -->
       <div id="sidebar-user">
-        <div class="sidebar-avatar-wrap">
-          <div class="sidebar-avatar-placeholder" id="sbAvatar">?</div>
-          <span class="sidebar-online"></span>
+        <div class="user-avatar-wrap">
+          <div class="avatar-placeholder avatar-md" id="sbAvatar" style="background:#7c3aed;">?</div>
+          <div class="user-status-dot"></div>
         </div>
-        <div class="sidebar-user-info">
-          <div class="sidebar-user-name" id="sbName">—</div>
-          <div class="sidebar-user-meta" id="sbLevel">—</div>
+        <div class="user-info">
+          <div class="user-name" id="sbName">—</div>
+          <div class="user-level" id="sbLevel">—</div>
         </div>
+        <a href="index.html" class="icon-btn" title="Đăng xuất" style="margin-left:auto;" onclick="doLogout()">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4" />
+            <polyline points="16 17 21 12 16 7" />
+            <line x1="21" y1="12" x2="9" y2="12" />
+          </svg>
+        </a>
       </div>
     </aside>
 
@@ -1112,8 +1270,70 @@
     <div id="main">
 
       <!-- Topbar -->
+      <nav id="subnav-bar" class="subnav-bar" aria-label="Điều hướng nhanh">
+        <a href="feed.html" class="subnav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+          Feed
+        </a>
+        <a href="spaces.html" class="subnav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></svg>
+          Spaces
+        </a>
+        <a href="courses.html" class="subnav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/></svg>
+          Courses
+        </a>
+        <a href="members.html" class="subnav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+          Members
+        </a>
+        <a href="leaderboard.html" class="subnav-item active">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/></svg>
+          Leaderboard
+        </a>
+        <a href="calendar.html" class="subnav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          Calendar
+        </a>
+        <a href="about.html" class="subnav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+          About
+        </a>
+        <div class="topbar-right">
+          <button class="icon-btn" id="themeToggle" type="button" aria-label="Chuyển chế độ sáng/tối">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"></svg>
+          </button>
+          <div style="position:relative;">
+            <button class="icon-btn" id="notifBell" aria-label="Thông báo" style="position:relative;">
+              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+              </svg>
+              <span id="notifBadge" style="display:none;position:absolute;top:2px;right:2px;background:#ef4444;color:#fff;font-size:10px;font-weight:700;border-radius:99px;min-width:16px;height:16px;padding:0 4px;line-height:16px;text-align:center;">0</span>
+            </button>
+            <div id="notifDropdown" style="display:none;"></div>
+          </div>
+          <a href="#" class="icon-btn" aria-label="Tin nhắn">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <path
+                d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+            </svg>
+          </a>
+          <div class="topbar-search">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <circle cx="11" cy="11" r="8" />
+              <line x1="21" y1="21" x2="16.65" y2="16.65" />
+            </svg>
+            <input type="text" id="globalSearchInput" placeholder="Tìm kiếm..." autocomplete="off">
+            <div id="globalSearchResults" class="gsr-panel"></div>
+          </div>
+          <div id="topbarAvatar"
+            style="width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;background:#7c3aed;cursor:pointer;flex-shrink:0;">
+          </div>
+        </div>
+      </nav>
+
       <header id="topbar">
-        <button class="topbar-hamburger" id="hamburger" onclick="openSidebar()" aria-label="Mở menu">
+        <button class="topbar-hamburger" id="hamburger" onclick="toggleSidebar()" aria-label="Mở menu">
           <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
             <path d="M4 6h16M4 12h16M4 18h16" stroke-linecap="round" />
           </svg>
@@ -1128,21 +1348,6 @@
           </svg>
           Leaderboard
         </div>
-
-        <div class="topbar-right">
-          <div style="position:relative;">
-            <button class="topbar-btn" id="notifBell" aria-label="Thông báo" style="position:relative;">
-              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-                <path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-              </svg>
-              <span id="notifBadge" style="display:none;position:absolute;top:2px;right:2px;background:#ef4444;color:#fff;font-size:10px;font-weight:700;border-radius:99px;min-width:16px;height:16px;padding:0 4px;line-height:16px;text-align:center;">0</span>
-            </button>
-            <div id="notifDropdown" style="display:none;"></div>
-          </div>
-          <div class="topbar-avatar-wrap">
-            <div class="topbar-avatar-placeholder">T</div>
-          </div>
-        </div>
       </header>
 
       <!-- Content row -->
@@ -1151,21 +1356,24 @@
         <!-- Feed / main area -->
         <div id="feed" style="padding: 24px;">
 
-          <!-- My rank hero — rendered by JS -->
-          <div class="my-rank-hero" id="rankHero">
-            <div style="text-align:center;color:rgba(255,255,255,0.4);font-size:13px;padding:20px 0">Đang tải...</div>
-          </div>
-
-          <!-- Level progression grid — rendered by JS -->
-          <div class="level-grid-card">
-            <div class="level-grid-title">
-              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-                <path d="M13 10V3L4 14h7v7l9-11h-7z" />
-              </svg>
-              <span id="levelGridTitle">Tiến trình cấp độ</span>
+          <!-- My rank overview — hero + level progress, merged into one card -->
+          <div class="rank-card">
+            <!-- My rank hero — rendered by JS -->
+            <div class="my-rank-hero" id="rankHero">
+              <div style="text-align:center;color:rgba(255,255,255,0.4);font-size:13px;padding:20px 0">Đang tải...</div>
             </div>
-            <div class="level-grid" id="levelGrid">
-              <div style="color:var(--text-muted);font-size:13px;padding:8px">Đang tải...</div>
+
+            <!-- Level progression grid — rendered by JS -->
+            <div class="level-grid-card">
+              <div class="level-grid-title">
+                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                  <path d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+                <span id="levelGridTitle">Tiến trình cấp độ</span>
+              </div>
+              <div class="level-grid" id="levelGrid">
+                <div style="color:var(--text-muted);font-size:13px;padding:8px">Đang tải...</div>
+              </div>
             </div>
           </div>
 
@@ -1241,7 +1449,6 @@
 
       </div><!-- /content-row -->
 
-
     </div><!-- /main -->
 
   </div><!-- /app -->
@@ -1250,81 +1457,90 @@
   <div id="mob-overlay" onclick="closeSidebar()"></div>
   <div id="mob-sidebar">
     <div style="padding:14px 16px;border-bottom:1px solid var(--border);font-size:var(--fs-md);font-weight:700;color:var(--text);display:flex;align-items:center;gap:8px;">
-      <div style="width:28px;height:28px;background:var(--color-primary);border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-        <svg width="16" height="16" fill="none" viewBox="0 0 20 20"><circle cx="10" cy="10" r="3" fill="#fff"/><path d="M10 3v2M10 15v2M3 10h2M15 10h2" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg>
-      </div>
-      AI AGENTS CC
+      <div style="width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;"><img src="assets/img/logo.png" alt="Logo" style="width:100%;height:100%;object-fit:contain;"></div>
+      <span class="mob-brand-name">AI AGENTS CC</span>
     </div>
     <nav style="flex:1;overflow-y:auto;padding:8px;">
       <div class="nav-section-label">Cộng đồng</div>
       <a href="feed.html" class="nav-item">
         <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
-        Bảng tin
-      </a>
-      <a href="cot.html" class="nav-item">
-        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-        CÔT
-      </a>
-      <a href="signal.html" class="nav-item">
-        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-        Tín hiệu
-      </a>
-      <a href="qa.html" class="nav-item">
-        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-        Hỏi đáp
+        Feed
       </a>
       <div class="nav-section-label">Học tập</div>
-      <a href="courses.html" class="nav-item">
-        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/></svg>
-        Khóa học
-      </a>
       <a href="challenge.html" class="nav-item">
         <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z"/></svg>
         Challenge
       </a>
-      <a href="leaderboard.html" class="nav-item active">
-        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/></svg>
-        Leaderboard
-      </a>
       <div class="nav-section-label">Khác</div>
       <a href="marketplace.html" class="nav-item">
         <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z"/></svg>
-        Chợ
-      </a>
-      <a href="members.html" class="nav-item">
-        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-        Thành viên
+        Marketplace
       </a>
     </nav>
   </div>
 
   <!-- Mobile bottom nav -->
+  <!-- Mobile main menu (full site navigation) -->
+  <div id="mob-mainmenu-overlay" onclick="closeMainMenu()"></div>
+  <div id="mob-mainmenu">
+    <div style="padding:14px 16px;border-bottom:1px solid var(--border);font-size:var(--fs-md);font-weight:700;color:var(--text);display:flex;align-items:center;gap:8px;">
+      <div style="width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;"><img src="assets/img/logo.png" alt="Logo" style="width:100%;height:100%;object-fit:contain;"></div>
+      Menu chính
+    </div>
+    <nav style="flex:1;overflow-y:auto;padding:8px;">
+      <a href="feed.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        Feed
+      </a>
+      <a href="spaces.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></svg>
+        Spaces
+      </a>
+      <a href="courses.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/></svg>
+        Courses
+      </a>
+      <a href="members.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+        Members
+      </a>
+      <a href="leaderboard.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/></svg>
+        Leaderboard
+      </a>
+      <a href="calendar.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        Calendar
+      </a>
+      <a href="about.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+        About
+      </a>
+    </nav>
+  </div>
+
   <nav id="mobile-nav">
     <a href="feed.html" class="mob-nav-btn">
       <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
         <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
       </svg>
-      Bảng tin
+      Feed
     </a>
-    <a href="challenge.html" class="mob-nav-btn">
-      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-        <path d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z"/>
-      </svg>
-      Challenge
+    <a href="spaces.html" class="mob-nav-btn">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></svg>
+      Spaces
     </a>
-    <a href="marketplace.html" class="mob-nav-btn">
-      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-        <path d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
-      </svg>
-      Chợ
+    <a href="courses.html" class="mob-nav-btn">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/></svg>
+      Courses
     </a>
     <a href="members.html" class="mob-nav-btn">
       <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
         <path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>
       </svg>
-      Cộng đồng
+      Members
     </a>
-    <button class="mob-nav-btn" onclick="openSidebar()">
+    <button class="mob-nav-btn" onclick="toggleMainMenu()">
       <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
         <line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/>
       </svg>
@@ -1339,9 +1555,10 @@
     </div>
   </div>
 
-  <script src="assets/js/app.js"></script>
+  <script src="assets/js/app.js?v=28"></script>
   <script>
     const API = '/api';
+    function doLogout() { localStorage.removeItem('currentUser'); window.location.href = 'index.html'; }
 
     const LEVELS = [
       { level: 1, name: 'Khởi động', xpMin: 0, xpMax: 45 },
@@ -1405,7 +1622,7 @@
     }
 
     function initUser() {
-      const raw = sessionStorage.getItem('currentUser');
+      const raw = localStorage.getItem('currentUser');
       if (!raw) { location.href = 'index.html'; return null; }
       const u = JSON.parse(raw);
       const lv = getLevel(u.xp || 0);
@@ -1413,11 +1630,11 @@
       document.getElementById('sbAvatar').textContent = initials;
       document.getElementById('sbAvatar').style.background = avatarGrad(u.first_name);
       document.getElementById('sbName').textContent = `${u.first_name} ${u.last_name || ''}`.trim();
-      document.getElementById('sbLevel').textContent = `Level ${lv.level} · ${u.xp || 0} XP`;
-      ['sbAvatar','sbName'].forEach(id => { const el = document.getElementById(id); el.style.cursor='pointer'; el.onclick=()=>location.href=`profile.html?id=${u.id}`; });
+      document.getElementById('sbLevel').textContent = lv.name + ' · Lv.' + lv.level;
+      const tbAv = document.getElementById('topbarAvatar');
+      if (tbAv) { tbAv.textContent = initials; tbAv.style.background = avatarGrad(u.first_name); }
+      ['sbAvatar','sbName','topbarAvatar'].forEach(id => { const el = document.getElementById(id); if (el) { el.style.cursor='pointer'; el.onclick=()=>location.href=`profile.html?id=${u.id}`; } });
 
-      const ta = document.querySelector('.topbar-avatar-placeholder');
-      if (ta) { ta.textContent = initials; ta.style.background = avatarGrad(u.first_name); }
       return u;
     }
 
@@ -1516,7 +1733,7 @@
         const rank = i < 3 ? `<span class="rank-medal">${medals[i]}</span>` : `<span class="lb-rank-num">${i + 1}</span>`;
         const init = initials(e);
         const lv = getLevel(e.xp || 0);
-        return `<div class="lb-entry${isMe ? ' is-me' : ''}" onclick="openProfile(${e.id})" title="Xem hồ sơ">
+        return `<div class="lb-entry${isMe ? ' is-me' : ''}" onclick="openProfile(${e.id})" onmouseenter="scheduleShowHoverCard(${e.id}, this)" onmouseleave="scheduleHideHoverCard()" title="Xem hồ sơ">
       <div class="lb-rank">${rank}</div>
       <div class="lb-avatar-placeholder" style="background:${avColor(e.id)}">${init}</div>
       <div class="lb-info">
@@ -1534,7 +1751,7 @@
         const init = ((user.first_name || '?')[0] + (user.last_name ? user.last_name[0] : '')).toUpperCase();
         const lv = getLevel(user.xp || 0);
         myRow = `<div class="lb-separator"><span>···</span></div>
-    <div class="lb-entry is-me">
+    <div class="lb-entry is-me" onclick="openProfile(${user.id})" onmouseenter="scheduleShowHoverCard(${user.id}, this)" onmouseleave="scheduleHideHoverCard()" title="Xem hồ sơ">
       <div class="lb-rank"><span class="lb-rank-num">—</span></div>
       <div class="lb-avatar-placeholder" style="background:${avatarGrad(user.first_name)}">${init}</div>
       <div class="lb-info">
@@ -1604,7 +1821,7 @@
         const xpNeeded = lv.xpMax - lv.xpMin;
         const pct = Math.min(100, Math.round(xpInLevel / xpNeeded * 100));
 
-        sessionStorage.setItem('currentUser', JSON.stringify(u));
+        localStorage.setItem('currentUser', JSON.stringify({ ...user, ...u }));   // giữ session_token
 
         card.innerHTML = `
       <div style="font-size:var(--fs-sm);font-weight:700;color:var(--text);margin-bottom:12px;display:flex;align-items:center;gap:6px">
@@ -1652,6 +1869,109 @@
       location.href = 'profile.html?id=' + userId;
     }
 
+    // ── User hover card ─────────────────────────────────
+    const uhcCache = {};
+    let uhcShowTimer = null, uhcHideTimer = null, uhcActiveId = null;
+
+    function ensureHoverCardEl() {
+      let el = document.getElementById('userHoverCard');
+      if (!el) {
+        el = document.createElement('div');
+        el.id = 'userHoverCard';
+        el.className = 'user-hover-card';
+        el.addEventListener('mouseenter', () => clearTimeout(uhcHideTimer));
+        el.addEventListener('mouseleave', scheduleHideHoverCard);
+        document.body.appendChild(el);
+      }
+      return el;
+    }
+
+    function scheduleShowHoverCard(userId, anchorEl) {
+      clearTimeout(uhcHideTimer);
+      clearTimeout(uhcShowTimer);
+      uhcShowTimer = setTimeout(() => showHoverCard(userId, anchorEl), 350);
+    }
+
+    function scheduleHideHoverCard() {
+      clearTimeout(uhcShowTimer);
+      clearTimeout(uhcHideTimer);
+      uhcHideTimer = setTimeout(hideHoverCard, 150);
+    }
+
+    function hideHoverCard() {
+      const el = document.getElementById('userHoverCard');
+      if (el) el.classList.remove('show');
+      uhcActiveId = null;
+    }
+
+    function positionHoverCard(el, anchorEl) {
+      const rect = anchorEl.getBoundingClientRect();
+      const cardW = 300;
+      el.style.width = cardW + 'px';
+      let left = rect.left;
+      if (left + cardW > window.innerWidth - 12) left = window.innerWidth - cardW - 12;
+      if (left < 12) left = 12;
+      let top = rect.bottom + 8;
+      const estH = el.offsetHeight || 220;
+      if (top + estH > window.innerHeight - 12) top = rect.top - estH - 8;
+      if (top < 12) top = 12;
+      el.style.left = left + 'px';
+      el.style.top = top + 'px';
+    }
+
+    async function showHoverCard(userId, anchorEl) {
+      const el = ensureHoverCardEl();
+      uhcActiveId = userId;
+
+      let data = uhcCache[userId];
+      if (!data) {
+        el.innerHTML = `<div class="uhc-loading">Đang tải...</div>`;
+        el.classList.add('show');
+        positionHoverCard(el, anchorEl);
+        try {
+          data = await fetch(`${API}/users/${userId}`).then(r => r.json());
+          if (data && !data.error) uhcCache[userId] = data;
+        } catch (e) { /* ignore, show nothing more */ }
+      }
+      if (uhcActiveId !== userId || !data || data.error) return;
+
+      const lv = getLevel(data.xp || 0);
+      const xpToNext = Math.max(0, lv.xpMax - (data.xp || 0));
+      const init = ((data.first_name || '?')[0] + (data.last_name ? data.last_name[0] : '')).toUpperCase();
+
+      el.innerHTML = `
+      <div class="uhc-header">
+        <div class="uhc-avatar-wrap">
+          <div class="uhc-avatar" style="background:${avatarGrad(data.first_name)}">${init}</div>
+          <span class="uhc-lv-badge">${lv.level}</span>
+        </div>
+        <div class="uhc-id">
+          <div class="uhc-name">${escHtml(data.first_name)} ${escHtml(data.last_name || '')}</div>
+          <div class="uhc-meta">Level ${lv.level} · ${escHtml(lv.name)}</div>
+          <div class="uhc-meta">${xpToNext > 0 ? xpToNext + ' XP để lên cấp' : 'Đã đạt cấp cao nhất'}</div>
+        </div>
+      </div>
+      ${data.bio ? `<div class="uhc-bio">${escHtml(data.bio)}</div>` : ''}
+      <div class="uhc-stats">
+        <div class="uhc-stat">
+          <div class="uhc-stat-val">${data.xp || 0}</div>
+          <div class="uhc-stat-lbl">XP</div>
+        </div>
+        <div class="uhc-stat">
+          <div class="uhc-stat-val">🔥 ${data.streak || 0}</div>
+          <div class="uhc-stat-lbl">Streak</div>
+        </div>
+        <div class="uhc-stat">
+          <div class="uhc-stat-val">${data.post_count ?? 0}</div>
+          <div class="uhc-stat-lbl">Bài đăng</div>
+        </div>
+      </div>
+      <button class="uhc-profile-btn" onclick="openProfile(${userId})">Xem hồ sơ</button>`;
+
+      el.classList.add('show');
+      positionHoverCard(el, anchorEl);
+    }
+
     async function init() {
       const user = initUser();
       if (!user) return;
@@ -1660,7 +1980,7 @@
         loadLeaderboards(user),
         loadRpStats(user),
       ]);
-      loadLevelGrid(JSON.parse(sessionStorage.getItem('currentUser') || '{}'));
+      loadLevelGrid(JSON.parse(localStorage.getItem('currentUser') || '{}'));
     }
 
     init();

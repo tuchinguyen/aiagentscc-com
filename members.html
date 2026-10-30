@@ -3,16 +3,24 @@
 
 <head>
   <meta charset="UTF-8">
+  <script src="assets/js/auth-fetch.js?v=1"></script>
+  <script>(function(){try{var t=localStorage.getItem('theme');if(t==='dark'||(!t&&window.matchMedia('(prefers-color-scheme: dark)').matches))document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" href="/assets/img/logo.png">
+  <link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
+  <link rel="manifest" href="/manifest.json?v=2">
+  <meta name="apple-mobile-web-app-title" content="AI Agents CC">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="theme-color" content="#0ea5e9">
   <title>Thành viên — AI AGENTS CC</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
     href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap"
     rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/base.css">
-  <link rel="stylesheet" href="assets/css/components.css">
-  <link rel="stylesheet" href="assets/css/layout.css">
+  <link rel="stylesheet" href="assets/css/base.css?v=2">
+  <link rel="stylesheet" href="assets/css/components.css?v=11">
+  <link rel="stylesheet" href="assets/css/layout.css?v=6">
   <style>
     /* ── Hero ──────────────────────────────────────────── */
     .mem-hero {
@@ -94,6 +102,54 @@
       font-size: 11px;
       color: #64748b;
       margin-top: 2px;
+    }
+
+    /* ── Community Stat Bar ────────────────────────────── */
+    .mem-statbar {
+      background: #17171c;
+      border-radius: var(--radius-lg);
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
+    }
+
+    .mem-stat-pill {
+      background: rgba(255, 255, 255, .08);
+      color: #cbd5e1;
+      font-size: var(--fs-xs);
+      font-weight: 600;
+      padding: 8px 16px;
+      border-radius: 99px;
+      white-space: nowrap;
+    }
+
+    .mem-stat-pill b {
+      color: #fff;
+      font-weight: 800;
+      margin-left: 4px;
+    }
+
+    .mem-invite-btn {
+      margin-left: auto;
+      background: #fbbf24;
+      color: #1c1917;
+      font-weight: 800;
+      font-size: var(--fs-xs);
+      letter-spacing: .03em;
+      padding: 10px 24px;
+      border-radius: var(--radius-md);
+      border: none;
+      cursor: pointer;
+      font-family: var(--font-body);
+      transition: opacity .15s;
+      white-space: nowrap;
+    }
+
+    .mem-invite-btn:hover {
+      opacity: .85;
     }
 
     /* ── Search & Filter Bar ───────────────────────────── */
@@ -260,6 +316,17 @@
       font-size: 11px;
       color: var(--text-muted);
       margin-bottom: 10px;
+    }
+
+    .member-card-bio {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.5;
+      margin: 4px 0 10px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
     }
 
     /* ── Pagination ────────────────────────────────────── */
@@ -778,14 +845,7 @@
   <div id="app">
     <aside id="sidebar">
       <div id="sidebar-logo">
-        <div class="sidebar-logo-mark">
-          <svg viewBox="0 0 20 20" fill="none">
-            <circle cx="10" cy="10" r="3" fill="currentColor" />
-            <path d="M10 3v2M10 15v2M3 10h2M15 10h2" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-            <path d="M5.5 5.5l1.5 1.5M13 13l1.5 1.5M14.5 5.5L13 7M7 13l-1.5 1.5" stroke="currentColor"
-              stroke-width="1.5" stroke-linecap="round" />
-          </svg>
-        </div>
+        <div class="sidebar-logo-mark" style="background:transparent;"><img src="assets/img/logo.png" alt="Logo" style="width:100%;height:100%;object-fit:contain;"></div>
         <div class="sidebar-logo-text">AI AGENTS <span>CC</span></div>
       </div>
       <nav id="sidebar-nav">
@@ -794,49 +854,16 @@
           <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
             <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
           </svg>
-          Bảng tin
+          Feed
         </a>
-        <a href="cot.html" class="nav-item">
-          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-            <polygon
-              points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-          </svg>
-          CÔT
-        </a>
-        <a href="signal.html" class="nav-item">
-          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
-          </svg>
-          Tín hiệu
-        </a>
-        <a href="qa.html" class="nav-item">
-          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-            <path
-              d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
-          Hỏi đáp
-        </a>
+
         <div class="nav-section-label" style="margin-top:8px;">Học tập</div>
-        <a href="courses.html" class="nav-item">
-          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-            <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
-          </svg>
-          Khóa học
-        </a>
         <a href="challenge.html" class="nav-item">
           <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
             <path
               d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z" />
           </svg>
           Challenge
-        </a>
-        <a href="leaderboard.html" class="nav-item">
-          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-            <path
-              d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"
-              stroke-linecap="round" />
-          </svg>
-          Leaderboard
         </a>
         <div class="nav-section-label" style="margin-top:8px;">Khác</div>
         <a href="marketplace.html" class="nav-item">
@@ -845,13 +872,6 @@
               d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z" />
           </svg>
           Marketplace
-        </a>
-        <a href="members.html" class="nav-item active">
-          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-            <path
-              d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
-          </svg>
-          Thành viên
         </a>
       </nav>
       <div id="sidebar-user">
@@ -866,7 +886,7 @@
           <div class="user-level" id="sbLevel">—</div>
         </div>
         <a href="index.html" class="icon-btn" title="Đăng xuất" style="margin-left:auto;"
-          onclick="sessionStorage.clear()">
+          onclick="doLogout(); return false;">
           <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
             <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4" />
             <polyline points="16 17 21 12 16 7" />
@@ -878,7 +898,7 @@
 
     <div id="main">
       <div id="mobile-topbar">
-        <button class="mob-menu-btn" onclick="openSidebar()" aria-label="Menu">
+        <button class="mob-menu-btn" onclick="toggleSidebar()" aria-label="Menu">
           <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
             <line x1="3" y1="6" x2="21" y2="6" />
             <line x1="3" y1="12" x2="21" y2="12" />
@@ -886,17 +906,52 @@
           </svg>
         </button>
         <span style="flex:1;font-size:var(--fs-md);font-weight:600;color:var(--text)">Thành viên</span>
-      </div>
-      <div id="topbar">
-        <div class="topbar-title">
-          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-            style="width:17px;height:17px">
-            <path
-              d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
-          </svg>
-          Thành viên
+        <div class="mob-topbar-right">
+          <button class="icon-btn" id="themeToggleMob" type="button" aria-label="Chuyển chế độ sáng/tối">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"></svg>
+          </button>
+          <button class="icon-btn" id="notifBellMob" aria-label="Thông báo" style="position:relative;">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+            </svg>
+            <span id="notifBadgeMob" style="display:none;position:absolute;top:2px;right:2px;background:#ef4444;color:#fff;font-size:10px;font-weight:700;border-radius:99px;min-width:16px;height:16px;padding:0 4px;line-height:16px;text-align:center;">0</span>
+          </button>
+          <div id="topbarAvatarMob" style="width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;background:#7c3aed;flex-shrink:0;"></div>
         </div>
+</div>
+      <nav id="subnav-bar" class="subnav-bar" aria-label="Điều hướng nhanh">
+        <a href="feed.html" class="subnav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+          Feed
+        </a>
+        <a href="spaces.html" class="subnav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></svg>
+          Spaces
+        </a>
+        <a href="courses.html" class="subnav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/></svg>
+          Courses
+        </a>
+        <a href="members.html" class="subnav-item active">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+          Members
+        </a>
+        <a href="leaderboard.html" class="subnav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/></svg>
+          Leaderboard
+        </a>
+        <a href="calendar.html" class="subnav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          Calendar
+        </a>
+        <a href="about.html" class="subnav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+          About
+        </a>
         <div class="topbar-right">
+          <button class="icon-btn" id="themeToggle" type="button" aria-label="Chuyển chế độ sáng/tối">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"></svg>
+          </button>
           <div style="position:relative;">
             <button class="icon-btn" id="notifBell" aria-label="Thông báo" style="position:relative;">
               <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
@@ -906,6 +961,34 @@
             </button>
             <div id="notifDropdown" style="display:none;"></div>
           </div>
+          <a href="#" class="icon-btn" aria-label="Tin nhắn">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <path
+                d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+            </svg>
+          </a>
+          <div class="topbar-search">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <circle cx="11" cy="11" r="8" />
+              <line x1="21" y1="21" x2="16.65" y2="16.65" />
+            </svg>
+            <input type="text" id="globalSearchInput" placeholder="Tìm kiếm..." autocomplete="off">
+            <div id="globalSearchResults" class="gsr-panel"></div>
+          </div>
+          <div id="topbarAvatar"
+            style="width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;background:#7c3aed;cursor:pointer;flex-shrink:0;">
+          </div>
+        </div>
+      </nav>
+
+      <div id="topbar">
+        <div class="topbar-title">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            style="width:17px;height:17px">
+            <path
+              d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
+          </svg>
+          Thành viên
         </div>
       </div>
 
@@ -920,8 +1003,8 @@
               </svg>
             </div>
             <div class="mem-hero-info">
-              <div class="mem-hero-title">Cộng đồng AI Agent</div>
-              <div class="mem-hero-sub">Những người học & builder AI Agent tại Việt Nam</div>
+              <div class="mem-hero-title">Cộng đồng thành viên</div>
+              <div class="mem-hero-sub">Những người học cùng nhau tại Việt Nam</div>
             </div>
             <div class="mem-hero-stats">
               <div class="mem-hero-stat">
@@ -933,6 +1016,14 @@
                 <div class="mem-hero-stat-label">Tuần này</div>
               </div>
             </div>
+          </div>
+
+          <!-- Community stat bar -->
+          <div class="mem-statbar">
+            <div class="mem-stat-pill">Thành viên<b id="statMembers">—</b></div>
+            <div class="mem-stat-pill">Admin<b id="statAdmins">—</b></div>
+            <div class="mem-stat-pill">Đang online<b id="statOnline">—</b></div>
+            <button class="mem-invite-btn" id="inviteBtn" type="button" onclick="inviteMembers()">MỜI</button>
           </div>
 
           <!-- Controls -->
@@ -991,50 +1082,63 @@
   <div id="mob-overlay" onclick="closeSidebar()"></div>
   <div id="mob-sidebar">
     <div style="padding:14px 16px;border-bottom:1px solid var(--border);font-size:var(--fs-md);font-weight:700;color:var(--text);display:flex;align-items:center;gap:8px;">
-      <div style="width:28px;height:28px;background:var(--color-primary);border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-        <svg width="16" height="16" fill="none" viewBox="0 0 20 20"><circle cx="10" cy="10" r="3" fill="#fff"/><path d="M10 3v2M10 15v2M3 10h2M15 10h2" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg>
-      </div>
-      AI AGENTS CC
+      <div style="width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;"><img src="assets/img/logo.png" alt="Logo" style="width:100%;height:100%;object-fit:contain;"></div>
+      <span class="mob-brand-name">AI AGENTS CC</span>
     </div>
     <nav style="flex:1;overflow-y:auto;padding:8px;">
       <div class="nav-section-label">Cộng đồng</div>
       <a href="feed.html" class="nav-item">
         <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
-        Bảng tin
+        Feed
       </a>
-      <a href="cot.html" class="nav-item">
-        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-        CÔT
-      </a>
-      <a href="signal.html" class="nav-item">
-        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-        Tín hiệu
-      </a>
-      <a href="qa.html" class="nav-item">
-        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-        Hỏi đáp
-      </a>
+
       <div class="nav-section-label">Học tập</div>
-      <a href="courses.html" class="nav-item">
-        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/></svg>
-        Khóa học
-      </a>
       <a href="challenge.html" class="nav-item">
         <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z"/></svg>
         Challenge
+      </a>
+      <div class="nav-section-label">Khác</div>
+      <a href="marketplace.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z"/></svg>
+        Marketplace
+      </a>
+    </nav>
+  </div>
+  <!-- Mobile main menu (full site navigation) -->
+  <div id="mob-mainmenu-overlay" onclick="closeMainMenu()"></div>
+  <div id="mob-mainmenu">
+    <div style="padding:14px 16px;border-bottom:1px solid var(--border);font-size:var(--fs-md);font-weight:700;color:var(--text);display:flex;align-items:center;gap:8px;">
+      <div style="width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;"><img src="assets/img/logo.png" alt="Logo" style="width:100%;height:100%;object-fit:contain;"></div>
+      Menu chính
+    </div>
+    <nav style="flex:1;overflow-y:auto;padding:8px;">
+      <a href="feed.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        Feed
+      </a>
+      <a href="spaces.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></svg>
+        Spaces
+      </a>
+      <a href="courses.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/></svg>
+        Courses
+      </a>
+      <a href="members.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+        Members
       </a>
       <a href="leaderboard.html" class="nav-item">
         <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/></svg>
         Leaderboard
       </a>
-      <div class="nav-section-label">Khác</div>
-      <a href="marketplace.html" class="nav-item">
-        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z"/></svg>
-        Chợ
+      <a href="calendar.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        Calendar
       </a>
-      <a href="members.html" class="nav-item active">
-        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-        Thành viên
+      <a href="about.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+        About
       </a>
     </nav>
   </div>
@@ -1044,27 +1148,23 @@
       <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
         <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
       </svg>
-      Bảng tin
+      Feed
     </a>
-    <a href="challenge.html" class="mob-nav-btn">
-      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-        <path d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z"/>
-      </svg>
-      Challenge
+    <a href="spaces.html" class="mob-nav-btn">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></svg>
+      Spaces
     </a>
-    <a href="marketplace.html" class="mob-nav-btn">
-      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-        <path d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
-      </svg>
-      Chợ
+    <a href="courses.html" class="mob-nav-btn">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/></svg>
+      Courses
     </a>
     <a href="members.html" class="mob-nav-btn active">
       <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
         <path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>
       </svg>
-      Cộng đồng
+      Members
     </a>
-    <button class="mob-nav-btn" onclick="openSidebar()">
+    <button class="mob-nav-btn" onclick="toggleMainMenu()">
       <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
         <line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/>
       </svg>
@@ -1079,7 +1179,7 @@
     </div>
   </div>
 
-  <script src="assets/js/app.js"></script>
+  <script src="assets/js/app.js?v=28"></script>
   <script>
     const API = '/api';
     const AV_COLORS = ['#0ea5e9', '#8b5cf6', '#10b981', '#f59e0b', '#ec4899', '#3b82f6', '#ef4444', '#14b8a6'];
@@ -1128,7 +1228,7 @@
 
     let currentUser = null;
     (function () {
-      const raw = sessionStorage.getItem('currentUser');
+      const raw = localStorage.getItem('currentUser');
       if (!raw) { window.location.href = 'index.html'; return; }
       currentUser = JSON.parse(raw);
       const ini = initials(currentUser);
@@ -1138,7 +1238,9 @@
       document.getElementById('sbName').textContent = currentUser.first_name + ' ' + currentUser.last_name;
       const lv = getLevel(currentUser.xp || 0);
       document.getElementById('sbLevel').textContent = lv.name + ' · Lv.' + lv.level;
-      ['sbAvatar','sbName'].forEach(id => { const el = document.getElementById(id); el.style.cursor='pointer'; el.onclick=()=>location.href=`profile.html?id=${currentUser.id}`; });
+      const tbAv = document.getElementById('topbarAvatar');
+      if (tbAv) { tbAv.textContent = ini; tbAv.style.background = col; }
+      ['sbAvatar','sbName','topbarAvatar'].forEach(id => { const el = document.getElementById(id); if (el) { el.style.cursor='pointer'; el.onclick=()=>location.href=`profile.html?id=${currentUser.id}`; } });
     })();
 
     // ── Pagination state ──────────────────────────────────
@@ -1186,7 +1288,7 @@
         grid.innerHTML = sorted.map(u => renderMemberCard(u)).join('');
         renderPager(total);
       } catch (e) {
-        grid.innerHTML = '<div style="grid-column:1/-1;padding:24px;color:#ef4444">⚠️ Không kết nối được server. Chạy: node server.js</div>';
+        grid.innerHTML = '<div style="grid-column:1/-1;padding:24px;color:#ef4444">⚠️ Không kết nối được máy chủ. Vui lòng kiểm tra kết nối mạng rồi thử lại.</div>';
       }
     }
 
@@ -1201,6 +1303,7 @@
     <span class="member-card-level" style="background:${lvColor}22;color:${lvColor}">
       Lv.${lv.level} ${lv.name}
     </span>
+    ${u.bio ? `<div class="member-card-bio">${escHtml(u.bio)}</div>` : ''}
     <div class="member-card-join">Tham gia ${fmtDate(u.created_at)}</div>
     <div class="member-card-stats">
       <div class="member-stat">
@@ -1288,10 +1391,34 @@
       location.href = 'profile.html?id=' + userId;
     }
 
+    // ── Community stat bar ────────────────────────────────
+    async function loadStatBar() {
+      try {
+        const { members, admins, online } = await fetch(`${API}/community/stats`).then(r => r.json());
+        document.getElementById('statMembers').textContent = members;
+        document.getElementById('statAdmins').textContent = admins;
+        document.getElementById('statOnline').textContent = online;
+      } catch (e) { }
+    }
+
+    async function inviteMembers() {
+      const link = location.origin + '/register.html';
+      const btn = document.getElementById('inviteBtn');
+      try {
+        await navigator.clipboard.writeText(link);
+        const original = btn.textContent;
+        btn.textContent = 'ĐÃ SAO CHÉP';
+        setTimeout(() => { btn.textContent = original; }, 1800);
+      } catch (e) {
+        prompt('Sao chép liên kết mời:', link);
+      }
+    }
+
     // ── Init ──────────────────────────────────────────────
     loadMembers(true);
     loadRpProfile();
     loadRpCommStats();
+    loadStatBar();
   </script>
 </body>
 

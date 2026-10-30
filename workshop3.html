@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8">
+  <script src="assets/js/auth-fetch.js?v=1"></script>
+  <script>(function(){try{var t=localStorage.getItem('theme');if(t==='dark'||(!t&&window.matchMedia('(prefers-color-scheme: dark)').matches))document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" href="/assets/img/logo.png">
+  <link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
+  <link rel="manifest" href="/manifest.json?v=2">
+  <meta name="apple-mobile-web-app-title" content="AI Agents CC">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="theme-color" content="#0ea5e9">
+  <title>3 Buổi Workshop — AI AGENTS CC</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/base.css?v=2">
+  <link rel="stylesheet" href="assets/css/components.css?v=11">
+  <link rel="stylesheet" href="assets/css/layout.css?v=6">
+  <style>
+    .wk3-wrap { max-width: 760px; margin: 0 auto; }
+    .wk3-hero { background: linear-gradient(135deg,#10b981,#0ea5e9); color:#fff; border-radius: var(--radius-lg); padding: 20px 22px; margin-bottom: 16px; }
+    .wk3-hero-badge { display:inline-block; font-size:11px; font-weight:700; background:rgba(255,255,255,.2); padding:3px 10px; border-radius:99px; margin-bottom:8px; }
+    .wk3-hero h2 { font-family: var(--font-heading); font-size: 22px; font-weight: 800; margin-bottom: 6px; }
+    .wk3-hero p { font-size: 13.5px; opacity: .92; }
+    .wk3-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 18px 20px; margin-bottom: 16px; }
+    .wk3-card h3 { font-size: var(--fs-md); margin-bottom: 10px; }
+    .wk3-video-wrap { position: relative; width: 100%; aspect-ratio: 16/9; border-radius: var(--radius-md); overflow: hidden; background: #0f172a; margin-top: 4px; }
+    .wk3-video-wrap iframe, .wk3-video-wrap video { width: 100%; height: 100%; border: 0; display: block; }
+    .wk3-video-empty { display:flex; align-items:center; justify-content:center; height:100%; color:#94a3b8; font-size:13px; text-align:center; padding: 0 20px; }
+    .wk3-session { margin-top: 18px; padding-top: 18px; border-top: 1px solid var(--border); }
+    .wk3-session:first-of-type { margin-top: 8px; padding-top: 0; border-top: none; }
+    .wk3-session-title { font-family: var(--font-heading); font-size: 17px; font-weight: 800; color: var(--text); margin-bottom: 10px; }
+    .wk3-session-info { background: rgba(14,165,233,.08); border-radius: var(--radius-md); padding: 12px 16px; margin-bottom: 12px; }
+    .wk3-session-info-line { font-size: 16px; font-weight: 700; color: var(--text); }
+    .wk3-session-info-line + .wk3-session-info-line { margin-top: 6px; }
+    .wk3-session-info-line strong { color: var(--color-primary); }
+    .wk3-session-zoom-row { margin-bottom: 16px; }
+    .wk3-session-zoom { display: inline-block; font-size: 13.5px; font-weight: 700; color: #fff; background: #0ea5e9; padding: 8px 18px; border-radius: 99px; text-decoration: none; }
+    .wk3-session-zoom:hover { opacity: .9; }
+    .wk3-session-zoom.disabled { background: var(--border); color: var(--text-muted); pointer-events: none; }
+    .wk3-session-body { font-size: 14px; line-height: 1.8; }
+    .wk3-session-body p { margin-bottom: 18px; }
+    .wk3-session-body p:last-child { margin-bottom: 0; }
+    .wk3-session-body ol, .wk3-session-body ul { padding-left: 22px; margin-bottom: 18px; }
+    .wk3-session-body li { margin-bottom: 14px; }
+    .wk3-session-body li:last-child { margin-bottom: 0; }
+    .wk3-cta-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 4px; }
+    .wk3-cta-btn { flex: 1 1 220px; display: flex; align-items: center; justify-content: center; gap: 8px; text-align: center; padding: 14px 16px; border-radius: var(--radius-md); font-size: 14px; font-weight: 700; text-decoration: none; }
+    .wk3-cta-btn.primary { background: var(--color-primary); color: #fff; }
+    .wk3-cta-btn.primary:hover { opacity: .9; }
+    .wk3-cta-btn.secondary { background: var(--bg-hover); color: var(--text); border: 1px solid var(--border); }
+    .wk3-cta-btn.secondary:hover { background: var(--bg-input); }
+  </style>
+</head>
+
+<body>
+
+  <div id="app">
+
+    <!-- Sidebar -->
+    <aside id="sidebar">
+      <div id="sidebar-logo">
+        <div class="sidebar-logo-mark" style="background:transparent;"><img src="assets/img/logo.png" alt="Logo" style="width:100%;height:100%;object-fit:contain;"></div>
+        <div class="sidebar-logo-text">AI AGENTS <span>CC</span></div>
+      </div>
+
+      <nav id="sidebar-nav">
+        <div class="nav-section-label">Cộng đồng</div>
+
+        <a href="feed.html" class="nav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
+          </svg>
+          Feed
+        </a>
+
+
+
+
+
+
+        <div class="nav-section-label" style="margin-top:8px;">Học tập</div>
+
+        <a href="challenge.html" class="nav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path
+              d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z" />
+          </svg>
+          Challenge
+        </a>
+
+        <div class="nav-section-label" style="margin-top:8px;">Khác</div>
+
+        <a href="marketplace.html" class="nav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path
+              d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z" />
+          </svg>
+          Marketplace
+        </a>
+      </nav>
+
+      <!-- Sidebar user -->
+      <div id="sidebar-user">
+        <div class="user-avatar-wrap">
+          <div class="avatar-placeholder avatar-md" id="sbAvatar" style="background:#7c3aed;">?</div>
+          <div class="user-status-dot"></div>
+        </div>
+        <div class="user-info">
+          <div class="user-name" id="sbName">—</div>
+          <div class="user-level" id="sbLevel">—</div>
+        </div>
+        <a href="index.html" class="icon-btn" title="Đăng xuất" style="margin-left:auto;" onclick="doLogout()">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4" />
+            <polyline points="16 17 21 12 16 7" />
+            <line x1="21" y1="12" x2="9" y2="12" />
+          </svg>
+        </a>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <div id="main">
+
+      <!-- Mobile topbar -->
+      <div id="mobile-topbar">
+        <button class="mob-menu-btn" onclick="toggleSidebar()" aria-label="Menu">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+          </svg>
+        </button>
+        <span style="flex:1;font-size:var(--fs-md);font-weight:600;color:var(--text)">🌱 3 Buổi Workshop</span>
+        <div class="mob-topbar-right">
+          <button class="icon-btn" id="themeToggleMob" type="button" aria-label="Chuyển chế độ sáng/tối">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"></svg>
+          </button>
+          <button class="icon-btn" id="notifBellMob" aria-label="Thông báo" style="position:relative;">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+            </svg>
+            <span id="notifBadgeMob" style="display:none;position:absolute;top:2px;right:2px;background:#ef4444;color:#fff;font-size:10px;font-weight:700;border-radius:99px;min-width:16px;height:16px;padding:0 4px;line-height:16px;text-align:center;">0</span>
+          </button>
+          <div id="topbarAvatarMob" style="width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;background:#7c3aed;flex-shrink:0;"></div>
+        </div>
+      </div>
+
+      <!-- Topbar -->
+      <nav id="subnav-bar" class="subnav-bar" aria-label="Điều hướng nhanh">
+        <a href="feed.html" class="subnav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+          Feed
+        </a>
+        <a href="spaces.html" class="subnav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></svg>
+          Spaces
+        </a>
+        <a href="courses.html" class="subnav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/></svg>
+          Courses
+        </a>
+        <a href="members.html" class="subnav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+          Members
+        </a>
+        <a href="leaderboard.html" class="subnav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/></svg>
+          Leaderboard
+        </a>
+        <a href="calendar.html" class="subnav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          Calendar
+        </a>
+        <a href="about.html" class="subnav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+          About
+        </a>
+        <div class="topbar-right">
+          <button class="icon-btn" id="themeToggle" type="button" aria-label="Chuyển chế độ sáng/tối">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"></svg>
+          </button>
+          <div style="position:relative;">
+            <button class="icon-btn" id="notifBell" aria-label="Thông báo" style="position:relative;">
+              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+              </svg>
+              <span id="notifBadge" style="display:none;position:absolute;top:2px;right:2px;background:#ef4444;color:#fff;font-size:10px;font-weight:700;border-radius:99px;min-width:16px;height:16px;padding:0 4px;line-height:16px;text-align:center;">0</span>
+            </button>
+            <div id="notifDropdown" style="display:none;"></div>
+          </div>
+          <a href="#" class="icon-btn" aria-label="Tin nhắn">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <path
+                d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+            </svg>
+          </a>
+          <div class="topbar-search">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <circle cx="11" cy="11" r="8" />
+              <line x1="21" y1="21" x2="16.65" y2="16.65" />
+            </svg>
+            <input type="text" id="globalSearchInput" placeholder="Tìm kiếm..." autocomplete="off">
+            <div id="globalSearchResults" class="gsr-panel"></div>
+          </div>
+          <div id="topbarAvatar"
+            style="width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;background:#7c3aed;cursor:pointer;flex-shrink:0;">
+          </div>
+        </div>
+      </nav>
+
+      <header id="topbar">
+        <button class="topbar-hamburger" id="hamburger" onclick="toggleSidebar()" aria-label="Mở menu">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path d="M4 6h16M4 12h16M4 18h16" stroke-linecap="round" />
+          </svg>
+        </button>
+
+        <div class="topbar-title">🌱 3 Buổi Workshop</div>
+      </header>
+
+      <div id="content-row">
+        <main id="feed" style="max-width:100%;">
+          <div class="wk3-wrap">
+
+            <div class="wk3-hero">
+              <div class="wk3-hero-badge">MIỄN PHÍ · HẰNG THÁNG</div>
+              <h2>3 Buổi Workshop Hồi Sinh Thân Tâm Mệnh</h2>
+              <p>Bước khởi đầu trong lộ trình 3 buổi → 8 buổi → 377 ngày. Xem lại video buổi học mẫu, nắm nội dung
+                từng buổi và tham gia Zoom trực tiếp cùng cộng đồng.</p>
+            </div>
+
+            <!-- Khung nổi bật: buổi Zoom trong 24 giờ (app.js renderTodayEventBanner) -->
+            <div id="dhLiveBanner" style="display:none;"></div>
+
+            <div class="wk3-card">
+              <h3>🎥 Video buổi học mẫu (khoá trước)</h3>
+              <div class="wk3-video-wrap" id="wk3VideoWrap">
+                <div class="wk3-video-empty">Đang tải video...</div>
+              </div>
+            </div>
+
+            <div class="wk3-card">
+              <h3>📋 Nội dung 3 buổi</h3>
+              <div id="wk3Sessions">
+                <div class="wk3-session"><div class="wk3-session-body">Đang tải nội dung...</div></div>
+              </div>
+            </div>
+
+            <div class="wk3-card">
+              <h3>Tiếp tục hành trình</h3>
+              <p style="color:var(--text-muted);font-size:13.5px;margin-top:-4px;margin-bottom:14px;">
+                Vào nhóm thảo luận để trao đổi cùng những học viên khác, hoặc xem lại trọn bộ video tổng hợp của cả
+                3 buổi bất cứ lúc nào.
+              </p>
+              <div class="wk3-cta-row">
+                <a href="space.html?id=6" class="wk3-cta-btn primary" id="wk3SpaceLink">💬 Nhóm thảo luận 3 buổi Workshop</a>
+                <a href="course-view.html?id=10" class="wk3-cta-btn secondary" id="wk3CourseLink">🎬 Xem tổng hợp video 3 buổi</a>
+              </div>
+            </div>
+
+          </div>
+        </main>
+      </div>
+
+    </div><!-- /main -->
+
+  </div><!-- /app -->
+
+  <!-- Mobile sidebar overlay -->
+  <div id="mob-overlay" onclick="closeSidebar()"></div>
+  <div id="mob-sidebar">
+    <div style="padding:14px 16px;border-bottom:1px solid var(--border);font-size:var(--fs-md);font-weight:700;color:var(--text);display:flex;align-items:center;gap:8px;">
+      <div style="width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;"><img src="assets/img/logo.png" alt="Logo" style="width:100%;height:100%;object-fit:contain;"></div>
+      <span class="mob-brand-name">AI AGENTS CC</span>
+    </div>
+    <nav style="flex:1;overflow-y:auto;padding:8px;">
+      <div class="nav-section-label">Cộng đồng</div>
+      <a href="feed.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        Feed
+      </a>
+      <div class="nav-section-label">Học tập</div>
+      <a href="challenge.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z"/></svg>
+        Challenge
+      </a>
+      <div class="nav-section-label">Khác</div>
+      <a href="marketplace.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z"/></svg>
+        Marketplace
+      </a>
+    </nav>
+  </div>
+
+  <!-- Mobile main menu (full site navigation) -->
+  <div id="mob-mainmenu-overlay" onclick="closeMainMenu()"></div>
+  <div id="mob-mainmenu">
+    <div style="padding:14px 16px;border-bottom:1px solid var(--border);font-size:var(--fs-md);font-weight:700;color:var(--text);display:flex;align-items:center;gap:8px;">
+      <div style="width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;"><img src="assets/img/logo.png" alt="Logo" style="width:100%;height:100%;object-fit:contain;"></div>
+      Menu chính
+    </div>
+    <nav style="flex:1;overflow-y:auto;padding:8px;">
+      <a href="feed.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        Feed
+      </a>
+      <a href="spaces.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></svg>
+        Spaces
+      </a>
+      <a href="courses.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/></svg>
+        Courses
+      </a>
+      <a href="members.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+        Members
+      </a>
+      <a href="leaderboard.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/></svg>
+        Leaderboard
+      </a>
+      <a href="calendar.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        Calendar
+      </a>
+      <a href="about.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+        About
+      </a>
+    </nav>
+  </div>
+
+  <nav id="mobile-nav">
+    <a href="feed.html" class="mob-nav-btn">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
+      </svg>
+      Feed
+    </a>
+    <a href="spaces.html" class="mob-nav-btn">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></svg>
+      Spaces
+    </a>
+    <a href="courses.html" class="mob-nav-btn">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/></svg>
+      Courses
+    </a>
+    <a href="members.html" class="mob-nav-btn">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>
+      </svg>
+      Members
+    </a>
+    <button class="mob-nav-btn" onclick="toggleMainMenu()">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/>
+      </svg>
+      Menu
+    </button>
+  </nav>
+
+  <script src="assets/js/app.js?v=28"></script>
+  <script>
+    const API = '/api';
+    const AV_COLORS = ['#0ea5e9', '#8b5cf6', '#10b981', '#f59e0b', '#ec4899', '#3b82f6', '#ef4444', '#14b8a6'];
+    function initials(u) { return ((u.first_name || '?')[0] + ((u.last_name || '')[0] || '')).toUpperCase(); }
+    function avColor(id) { return AV_COLORS[(id || 0) % AV_COLORS.length]; }
+    function doLogout() { localStorage.removeItem('currentUser'); window.location.href = 'index.html'; }
+    const LEVELS = [
+      { level: 1, name: 'Khởi động', xpMin: 0, xpMax: 45 }, { level: 2, name: 'Học viên', xpMin: 45, xpMax: 120 },
+      { level: 3, name: 'Thực hành', xpMin: 120, xpMax: 250 }, { level: 4, name: 'Nâng cao', xpMin: 250, xpMax: 450 },
+      { level: 5, name: 'Chuyên gia', xpMin: 450, xpMax: 700 }, { level: 6, name: 'Bậc thầy', xpMin: 700, xpMax: 1000 },
+      { level: 7, name: 'Huyền thoại', xpMin: 1000, xpMax: 1500 }, { level: 8, name: 'Tiên tri', xpMin: 1500, xpMax: 2200 },
+      { level: 9, name: 'Thần thánh', xpMin: 2200, xpMax: 9999 },
+    ];
+    function getLevel(xp) { for (let i = LEVELS.length - 1; i >= 0; i--) if (xp >= LEVELS[i].xpMin) return LEVELS[i]; return LEVELS[0]; }
+
+    let currentUser = null;
+    (function () {
+      const raw = localStorage.getItem('currentUser');
+      if (!raw) { window.location.href = 'index.html'; return; }
+      currentUser = JSON.parse(raw);
+      const ini = initials(currentUser);
+      const col = avColor(currentUser.id);
+      document.getElementById('sbAvatar').textContent = ini;
+      document.getElementById('sbAvatar').style.background = col;
+      document.getElementById('sbName').textContent = currentUser.first_name + ' ' + currentUser.last_name;
+      const lv = getLevel(currentUser.xp || 0);
+      document.getElementById('sbLevel').textContent = lv.name + ' · Lv.' + lv.level;
+      const tbAv = document.getElementById('topbarAvatar');
+      if (tbAv) { tbAv.textContent = ini; tbAv.style.background = col; tbAv.onclick = () => location.href = `profile.html?id=${currentUser.id}`; }
+    })();
+
+    function fmtSessionDate(d) {
+      if (!d) return '';
+      const m = String(d).match(/^(\d{4})-(\d{2})-(\d{2})(?:[T ](\d{2}):(\d{2}))?/);
+      if (!m) return escHtml(d);
+      const datePart = `${m[3]}/${m[2]}/${m[1]}`;
+      return m[4] ? `${datePart}, ${m[4]}:${m[5]}` : datePart;
+    }
+    function escHtml(s) { return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+    // Chuyển các link video phổ biến (YouTube watch/live/shorts, youtu.be, Vimeo,
+    // Google Drive) sang đúng dạng URL nhúng được — dán thẳng link xem thường vào
+    // iframe sẽ bị trình duyệt chặn ("refused to connect") vì đó không phải link embed.
+    function toEmbedUrl(url) {
+      try {
+        const u = new URL(url);
+        const host = u.hostname.replace(/^www\./, '').replace(/^m\./, '');
+        if (host === 'youtu.be') {
+          return `https://www.youtube.com/embed/${u.pathname.slice(1)}`;
+        }
+        if (host === 'youtube.com') {
+          if (u.pathname === '/watch' && u.searchParams.get('v')) {
+            return `https://www.youtube.com/embed/${u.searchParams.get('v')}`;
+          }
+          const liveMatch = u.pathname.match(/^\/live\/([^/]+)/);
+          if (liveMatch) return `https://www.youtube.com/embed/${liveMatch[1]}`;
+          const shortsMatch = u.pathname.match(/^\/shorts\/([^/]+)/);
+          if (shortsMatch) return `https://www.youtube.com/embed/${shortsMatch[1]}`;
+        }
+        if (host === 'vimeo.com') {
+          const id = u.pathname.split('/').filter(Boolean)[0];
+          if (id) return `https://player.vimeo.com/video/${id}`;
+        }
+        if (host === 'drive.google.com') {
+          const m = u.pathname.match(/\/file\/d\/([^/]+)/);
+          if (m) return `https://drive.google.com/file/d/${m[1]}/preview`;
+        }
+        return url;
+      } catch { return url; }
+    }
+
+    function renderVideoEmbed(url) {
+      const wrap = document.getElementById('wk3VideoWrap');
+      if (!url) {
+        wrap.innerHTML = '<div class="wk3-video-empty">Video buổi học mẫu sẽ được cập nhật sớm.</div>';
+        return;
+      }
+      if (/\.(mp4|webm|ogg)(\?|$)/i.test(url)) {
+        wrap.innerHTML = `<video src="${escHtml(url)}" controls></video>`;
+      } else {
+        wrap.innerHTML = `<iframe src="${escHtml(toEmbedUrl(url))}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
+      }
+    }
+
+    function renderSessions(sessions, timeNote) {
+      const wrap = document.getElementById('wk3Sessions');
+      if (!Array.isArray(sessions) || !sessions.length) {
+        wrap.innerHTML = '<div style="color:var(--text-muted);font-size:13px;">Nội dung đang được cập nhật.</div>';
+        return;
+      }
+      wrap.innerHTML = sessions.map(s => {
+        const dateStr = s.date ? fmtSessionDate(s.date) : '';
+        const timeStr = [dateStr, timeNote].filter(Boolean).join(' · ') || 'Sẽ thông báo sau';
+        return `
+        <div class="wk3-session">
+          <div class="wk3-session-title">${escHtml(s.title || '')}</div>
+          <div class="wk3-session-info">
+            <div class="wk3-session-info-line">🕐 <strong>Thời gian đào tạo:</strong> ${escHtml(timeStr)}</div>
+            <div class="wk3-session-info-line">💻 <strong>Hình thức đào tạo:</strong> Online qua Zoom</div>
+          </div>
+          <div class="wk3-session-zoom-row">
+            ${s.zoom_link
+              ? `<a href="${escHtml(dhZoomHref(s.zoom_link))}" target="_blank" rel="noopener" class="wk3-session-zoom">📹 Tham gia Zoom</a>`
+              : `<span class="wk3-session-zoom disabled">📹 Link Zoom sẽ cập nhật sau</span>`}
+          </div>
+          <div class="wk3-session-body">${s.content_html || ''}</div>
+          ${dhHomeworkHtml(s.hw_note, s.hw_ids)}
+        </div>
+      `;
+      }).join('');
+    }
+
+    async function loadWorkshop3() {
+      try {
+        const s = await fetch(`${API}/settings`).then(r => r.json());
+        renderVideoEmbed(s.workshop3_video_url || '');
+        let sessions = [];
+        try { sessions = JSON.parse(s.workshop3_sessions || '[]'); } catch {}
+        await dhLoadHomeworkLib();
+        renderSessions(sessions, s.workshop3_time_note || '');
+        if (Array.isArray(sessions) && typeof renderTodayEventBanner === 'function') {
+          renderTodayEventBanner(document.getElementById('dhLiveBanner'),
+            sessions.map(x => ({ title: x.title, date: x.date, time: s.workshop3_time_note || '', link: x.zoom_link, content_html: x.content_html || '' })));
+        }
+        // Nhắc làm bài tập buổi trước (phía trên lịch Zoom 24 giờ)
+        if (Array.isArray(sessions) && typeof dhHomeworkReminder === 'function')
+          dhHomeworkReminder('w3', sessions.map((x, i) => ({ key: String(i), title: x.title, date: x.date, hw_note: x.hw_note, hw_ids: x.hw_ids })));
+        if (s.workshop3_space_url) document.getElementById('wk3SpaceLink').setAttribute('href', s.workshop3_space_url);
+        if (s.workshop3_course_url) document.getElementById('wk3CourseLink').setAttribute('href', s.workshop3_course_url);
+      } catch (e) {
+        document.getElementById('wk3Sessions').innerHTML = '<div style="color:var(--text-muted);font-size:13px;">Không tải được nội dung. Vui lòng thử lại.</div>';
+      }
+    }
+    loadWorkshop3();
+  </script>
+
+</body>
+</html>

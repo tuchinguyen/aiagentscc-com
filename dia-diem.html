@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8">
+  <script src="assets/js/auth-fetch.js?v=1"></script>
+  <script>(function(){try{var t=localStorage.getItem('theme');if(t==='dark'||(!t&&window.matchMedia('(prefers-color-scheme: dark)').matches))document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" href="/assets/img/logo.png">
+  <link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
+  <link rel="manifest" href="/manifest.json?v=2">
+  <meta name="apple-mobile-web-app-title" content="AI Agents CC">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="theme-color" content="#0ea5e9">
+  <title>Danh sách địa điểm — AI AGENTS CC</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/base.css?v=2">
+  <link rel="stylesheet" href="assets/css/components.css?v=11">
+  <link rel="stylesheet" href="assets/css/layout.css?v=6">
+  <style>
+    .loc-wrap { max-width: 1120px; margin: 0 auto; display: flex; flex-direction: column; gap: 18px; }
+
+    .loc-hero {
+      background: linear-gradient(135deg, #0f766e 0%, #115e59 60%, #134e4a 100%);
+      color: #fff;
+      border-radius: var(--radius-lg);
+      padding: 26px 24px;
+      text-align: center;
+    }
+    .loc-hero h1 {
+      font-family: var(--font-heading);
+      font-size: 20px;
+      font-weight: 800;
+      line-height: 1.4;
+      letter-spacing: .2px;
+      margin: 0 0 8px;
+      text-transform: uppercase;
+    }
+    .loc-hero p { margin: 0 auto; max-width: 620px; font-size: 14px; line-height: 1.6; opacity: .9; }
+
+    .loc-toolbar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between; }
+    .loc-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+    .loc-chip {
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      color: var(--text);
+      border-radius: 999px;
+      padding: 7px 14px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .loc-chip.active { background: var(--color-primary); border-color: var(--color-primary); color: #fff; }
+    .loc-search {
+      flex: 1 1 220px;
+      max-width: 320px;
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      color: var(--text);
+      border-radius: 10px;
+      padding: 9px 12px;
+      font-size: 14px;
+      font-family: inherit;
+    }
+    .loc-search:focus { outline: none; border-color: var(--border-focus); }
+    @media (max-width: 640px) { .loc-search { max-width: none; } }
+
+    .loc-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+    @media (max-width: 1100px) { .loc-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    @media (max-width: 640px)  { .loc-grid { grid-template-columns: 1fr; } }
+
+    .loc-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: box-shadow .15s, transform .15s;
+    }
+    .loc-card:hover { box-shadow: 0 8px 24px rgba(15, 23, 42, .08); transform: translateY(-2px); }
+    .loc-img { position: relative; aspect-ratio: 16 / 10; background: var(--bg-hover); overflow: hidden; }
+    .loc-img img, .loc-img svg { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .loc-cert {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: rgba(255, 255, 255, .95);
+      color: #0f766e;
+      font-size: 11px;
+      font-weight: 700;
+      border-radius: 999px;
+      padding: 4px 10px;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, .12);
+    }
+    .loc-body { padding: 14px 16px 16px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
+    .loc-name { font-family: var(--font-heading); font-size: 16px; font-weight: 700; color: var(--text); line-height: 1.35; margin: 0; }
+    .loc-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+    .loc-tag { font-size: 11.5px; font-weight: 600; border-radius: 6px; padding: 3px 8px; }
+    .loc-tag.spine  { background: #ccfbf1; color: #115e59; }
+    .loc-tag.supply { background: #fef3c7; color: #92400e; }
+    [data-theme="dark"] .loc-tag.spine  { background: rgba(20, 184, 166, .18); color: #5eead4; }
+    [data-theme="dark"] .loc-tag.supply { background: rgba(245, 158, 11, .18); color: #fcd34d; }
+    .loc-row { display: flex; gap: 8px; align-items: flex-start; font-size: 13.5px; color: var(--text-muted); line-height: 1.5; }
+    .loc-row svg { width: 16px; height: 16px; flex-shrink: 0; margin-top: 2px; color: var(--color-primary); }
+    .loc-row strong { color: var(--text); font-weight: 600; }
+    .loc-desc { font-size: 13px; color: var(--text-muted); line-height: 1.55; margin: 0; }
+    .loc-actions { display: flex; gap: 8px; margin-top: auto; padding-top: 6px; }
+    .loc-btn {
+      flex: 1;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      border-radius: 10px;
+      padding: 9px 10px;
+      font-size: 13px;
+      font-weight: 600;
+      text-decoration: none;
+      border: 1px solid var(--border);
+      color: var(--text);
+      background: var(--bg-card);
+    }
+    .loc-btn svg { width: 15px; height: 15px; }
+    .loc-btn.primary { background: var(--color-primary); border-color: var(--color-primary); color: #fff; }
+
+    .loc-empty, .loc-loading {
+      background: var(--bg-card);
+      border: 1px dashed var(--border);
+      border-radius: var(--radius-lg);
+      padding: 36px 20px;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 14px;
+    }
+
+    .loc-cta {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 24px 20px;
+      text-align: center;
+    }
+    .loc-cta p { margin: 0 0 14px; color: var(--text-muted); font-size: 14px; line-height: 1.6; }
+    .loc-cta-btn {
+      background: linear-gradient(135deg, #0f766e, #0d9488);
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      padding: 14px 22px;
+      font-size: 14.5px;
+      font-weight: 800;
+      letter-spacing: .3px;
+      cursor: pointer;
+      font-family: inherit;
+      box-shadow: 0 6px 18px rgba(15, 118, 110, .3);
+      max-width: 100%;
+    }
+    .loc-cta-btn:hover { filter: brightness(1.05); }
+
+    /* Modal đăng ký */
+    .loc-modal { position: fixed; inset: 0; z-index: 1000; display: none; align-items: flex-start; justify-content: center; padding: 24px 16px; background: rgba(15, 23, 42, .55); overflow-y: auto; }
+    .loc-modal.open { display: flex; }
+    .loc-dialog {
+      background: var(--bg-elevated, var(--bg-card));
+      color: var(--text);
+      border-radius: 16px;
+      width: 100%;
+      max-width: 520px;
+      margin: auto 0;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, .25);
+    }
+    .loc-dialog-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 18px 20px 6px; }
+    .loc-dialog-head h2 { font-family: var(--font-heading); font-size: 17px; font-weight: 800; margin: 0; line-height: 1.35; }
+    .loc-close { background: none; border: none; font-size: 24px; line-height: 1; cursor: pointer; color: var(--text-muted); padding: 4px; }
+    .loc-form { padding: 10px 20px 20px; display: flex; flex-direction: column; gap: 12px; }
+    .loc-field > label { display: block; font-size: 12px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: .3px; margin-bottom: 5px; }
+    .loc-field > label .req, .loc-check .req { color: #ef4444; }
+    .loc-field input {
+      width: 100%;
+      box-sizing: border-box;
+      border: 1px solid var(--border);
+      background: var(--bg-input, var(--bg-card));
+      color: var(--text);
+      border-radius: 10px;
+      padding: 10px 12px;
+      font-size: 14px;
+      font-family: inherit;
+    }
+    .loc-field input:focus { outline: none; border-color: var(--border-focus); }
+    .loc-field input[type="time"] { color-scheme: light dark; }
+    .loc-field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .loc-open { font-size: 11.5px; font-weight: 700; border-radius: 6px; padding: 2px 7px; margin-left: 6px; white-space: nowrap; }
+    .loc-open.on  { background: #dcfce7; color: #166534; }
+    .loc-open.off { background: #fee2e2; color: #991b1b; }
+    [data-theme="dark"] .loc-open.on  { background: rgba(34, 197, 94, .18); color: #86efac; }
+    [data-theme="dark"] .loc-open.off { background: rgba(239, 68, 68, .18); color: #fca5a5; }
+    .loc-checks { display: flex; flex-direction: column; gap: 8px; }
+    .loc-check {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 12px;
+      cursor: pointer;
+      font-size: 14px;
+      line-height: 1.45;
+    }
+    .loc-check input { width: 18px; height: 18px; margin: 1px 0 0; accent-color: #0f766e; flex-shrink: 0; }
+    .loc-check.cert { background: #f0fdfa; border-color: #99f6e4; }
+    [data-theme="dark"] .loc-check.cert { background: rgba(20, 184, 166, .08); border-color: rgba(20, 184, 166, .35); }
+    .loc-err { color: #dc2626; font-size: 13px; min-height: 0; }
+    .loc-submit {
+      background: var(--color-primary);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      padding: 12px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .loc-submit:disabled { opacity: .6; cursor: default; }
+    .loc-done { padding: 12px 20px 26px; text-align: center; }
+    .loc-done .ico { font-size: 44px; line-height: 1; margin-bottom: 10px; }
+    .loc-done p { color: var(--text-muted); font-size: 14px; line-height: 1.6; margin: 0 0 16px; }
+  </style>
+</head>
+
+<body>
+
+  <div id="app">
+
+    <!-- Sidebar -->
+    <aside id="sidebar">
+      <div id="sidebar-logo">
+        <div class="sidebar-logo-mark" style="background:transparent;"><img src="assets/img/logo.png" alt="Logo" style="width:100%;height:100%;object-fit:contain;"></div>
+        <div class="sidebar-logo-text">AI AGENTS <span>CC</span></div>
+      </div>
+
+      <nav id="sidebar-nav">
+        <div class="nav-section-label">Cộng đồng</div>
+
+        <a href="feed.html" class="nav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
+          </svg>
+          Feed
+        </a>
+
+
+
+        <div class="nav-section-label" style="margin-top:8px;">Học tập</div>
+
+        <a href="challenge.html" class="nav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path
+              d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z" />
+          </svg>
+          Challenge
+        </a>
+
+        <div class="nav-section-label" style="margin-top:8px;">Khác</div>
+
+        <a href="marketplace.html" class="nav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path
+              d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z" />
+          </svg>
+          Marketplace
+        </a>
+      </nav>
+
+      <!-- Sidebar user -->
+      <div id="sidebar-user">
+        <div class="user-avatar-wrap">
+          <div class="avatar-placeholder avatar-md" id="sbAvatar" style="background:#7c3aed;">?</div>
+          <div class="user-status-dot"></div>
+        </div>
+        <div class="user-info">
+          <div class="user-name" id="sbName">—</div>
+          <div class="user-level" id="sbLevel">—</div>
+        </div>
+        <a href="index.html" class="icon-btn" title="Đăng xuất" style="margin-left:auto;" onclick="doLogout()">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4" />
+            <polyline points="16 17 21 12 16 7" />
+            <line x1="21" y1="12" x2="9" y2="12" />
+          </svg>
+        </a>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <div id="main">
+
+      <!-- Mobile topbar -->
+      <div id="mobile-topbar">
+        <button class="mob-menu-btn" onclick="toggleSidebar()" aria-label="Menu">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+          </svg>
+        </button>
+        <span style="flex:1;font-size:var(--fs-md);font-weight:600;color:var(--text)">📍 Danh sách địa điểm</span>
+        <div class="mob-topbar-right">
+          <button class="icon-btn" id="themeToggleMob" type="button" aria-label="Chuyển chế độ sáng/tối">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"></svg>
+          </button>
+          <button class="icon-btn" id="notifBellMob" aria-label="Thông báo" style="position:relative;">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+            </svg>
+            <span id="notifBadgeMob" style="display:none;position:absolute;top:2px;right:2px;background:#ef4444;color:#fff;font-size:10px;font-weight:700;border-radius:99px;min-width:16px;height:16px;padding:0 4px;line-height:16px;text-align:center;">0</span>
+          </button>
+          <div id="topbarAvatarMob" style="width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;background:#7c3aed;flex-shrink:0;"></div>
+        </div>
+      </div>
+
+      <!-- Topbar -->
+      <nav id="subnav-bar" class="subnav-bar" aria-label="Điều hướng nhanh">
+        <a href="feed.html" class="subnav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+          Feed
+        </a>
+        <a href="spaces.html" class="subnav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></svg>
+          Spaces
+        </a>
+        <a href="courses.html" class="subnav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/></svg>
+          Courses
+        </a>
+        <a href="members.html" class="subnav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+          Members
+        </a>
+        <a href="leaderboard.html" class="subnav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/></svg>
+          Leaderboard
+        </a>
+        <a href="calendar.html" class="subnav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          Calendar
+        </a>
+        <a href="about.html" class="subnav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+          About
+        </a>
+        <div class="topbar-right">
+          <button class="icon-btn" id="themeToggle" type="button" aria-label="Chuyển chế độ sáng/tối">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"></svg>
+          </button>
+          <div style="position:relative;">
+            <button class="icon-btn" id="notifBell" aria-label="Thông báo" style="position:relative;">
+              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+              </svg>
+              <span id="notifBadge" style="display:none;position:absolute;top:2px;right:2px;background:#ef4444;color:#fff;font-size:10px;font-weight:700;border-radius:99px;min-width:16px;height:16px;padding:0 4px;line-height:16px;text-align:center;">0</span>
+            </button>
+            <div id="notifDropdown" style="display:none;"></div>
+          </div>
+          <a href="#" class="icon-btn" aria-label="Tin nhắn">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <path
+                d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+            </svg>
+          </a>
+          <div class="topbar-search">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <circle cx="11" cy="11" r="8" />
+              <line x1="21" y1="21" x2="16.65" y2="16.65" />
+            </svg>
+            <input type="text" id="globalSearchInput" placeholder="Tìm kiếm..." autocomplete="off">
+            <div id="globalSearchResults" class="gsr-panel"></div>
+          </div>
+          <div id="topbarAvatar"
+            style="width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;background:#7c3aed;cursor:pointer;flex-shrink:0;">
+          </div>
+        </div>
+      </nav>
+
+      <header id="topbar">
+        <button class="topbar-hamburger" id="hamburger" onclick="toggleSidebar()" aria-label="Mở menu">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path d="M4 6h16M4 12h16M4 18h16" stroke-linecap="round" />
+          </svg>
+        </button>
+
+        <div class="topbar-title">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            style="width:18px;height:18px;color:var(--color-primary)">
+            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" /><circle cx="12" cy="10" r="3" />
+          </svg>
+          Danh sách địa điểm
+        </div>
+      </header>
+
+      <!-- Content row -->
+      <div id="content-row">
+        <main id="feed" style="max-width:100%;">
+
+          <!-- Địa điểm — rendered by JS from /api/locations (chỉ địa điểm admin đã duyệt) -->
+          <div class="loc-wrap">
+            <section class="loc-hero">
+              <h1>Danh sách các địa điểm làm tác động cột sống và hỗ trợ mua sản phẩm</h1>
+              <p>Các địa điểm đã được AI Agents CC xác nhận. Liên hệ trực tiếp để đặt lịch tác động cột sống hoặc mua nguyên liệu gần bạn.</p>
+            </section>
+
+            <div class="loc-toolbar">
+              <div class="loc-chips" role="tablist" aria-label="Lọc địa điểm">
+                <button class="loc-chip active" data-filter="all" onclick="setLocFilter('all', this)">Tất cả</button>
+                <button class="loc-chip" data-filter="spine" onclick="setLocFilter('spine', this)">Tác động cột sống</button>
+                <button class="loc-chip" data-filter="supply" onclick="setLocFilter('supply', this)">Nguyên liệu AI Agents CC</button>
+              </div>
+              <input class="loc-search" id="locSearch" type="search" placeholder="Tìm theo tên, địa chỉ..." aria-label="Tìm địa điểm" oninput="renderLocations()">
+            </div>
+
+            <div class="loc-grid" id="locGrid">
+              <div class="loc-loading" style="grid-column:1/-1">Đang tải danh sách địa điểm...</div>
+            </div>
+
+            <section class="loc-cta">
+              <p>Bạn đang làm tác động cột sống hoặc muốn trở thành điểm cung cấp nguyên liệu của AI Agents CC?</p>
+              <button class="loc-cta-btn" onclick="openLocForm()">ĐĂNG KÝ ĐỊA ĐIỂM VỚI AI AGENTS CC</button>
+            </section>
+          </div>
+
+          <div class="loc-modal" id="locModal" role="dialog" aria-modal="true" aria-labelledby="locModalTitle" onclick="if (event.target === this) closeLocForm()">
+            <div class="loc-dialog">
+              <div class="loc-dialog-head">
+                <h2 id="locModalTitle">Đăng ký địa điểm với AI Agents CC</h2>
+                <button class="loc-close" onclick="closeLocForm()" aria-label="Đóng">&times;</button>
+              </div>
+              <form class="loc-form" id="locForm" onsubmit="submitLocForm(event)" novalidate>
+                <div class="loc-field">
+                  <label for="lfName">Họ và tên <span class="req">*</span></label>
+                  <input id="lfName" autocomplete="name" maxlength="120" required>
+                </div>
+                <div class="loc-field">
+                  <label for="lfPhone">Số điện thoại <span class="req">*</span></label>
+                  <input id="lfPhone" type="tel" autocomplete="tel" maxlength="20" required>
+                </div>
+                <div class="loc-field">
+                  <label for="lfEmail">Email</label>
+                  <input id="lfEmail" type="email" autocomplete="email" maxlength="160">
+                </div>
+                <div class="loc-field">
+                  <label for="lfPlace">Tên địa điểm (nếu có)</label>
+                  <input id="lfPlace" maxlength="160" placeholder="VD: Dưỡng sinh An Nhiên">
+                </div>
+                <div class="loc-field">
+                  <label for="lfAddress">Địa chỉ</label>
+                  <input id="lfAddress" maxlength="300" placeholder="Số nhà, đường, phường/xã, tỉnh/thành">
+                </div>
+                <div class="loc-field-row">
+                  <div class="loc-field">
+                    <label for="lfOpen">Giờ mở cửa</label>
+                    <input id="lfOpen" type="time">
+                  </div>
+                  <div class="loc-field">
+                    <label for="lfClose">Giờ đóng cửa</label>
+                    <input id="lfClose" type="time">
+                  </div>
+                </div>
+                <div class="loc-field">
+                  <label>Chọn đăng ký <span class="req">*</span></label>
+                  <div class="loc-checks">
+                    <label class="loc-check"><input type="checkbox" id="lfSpine" onchange="syncCertRequired()"> Làm tác động cột sống</label>
+                    <label class="loc-check"><input type="checkbox" id="lfSupply"> Cung cấp nguyên liệu của AI Agents CC</label>
+                  </div>
+                </div>
+                <label class="loc-check cert">
+                  <input type="checkbox" id="lfCert">
+                  <span>Tôi xác nhận đã có chứng chỉ tác động cột sống do Y học bản địa Việt Nam cấp.<span class="req" id="lfCertReq" style="display:none;color:#ef4444"> *</span></span>
+                </label>
+                <div class="loc-err" id="lfErr" role="alert"></div>
+                <button class="loc-submit" id="lfSubmit" type="submit">Gửi đăng ký</button>
+              </form>
+              <div class="loc-done" id="locDone" style="display:none">
+                <div class="ico">✅</div>
+                <p>Đã gửi đăng ký thành công!<br>Ban tổ chức sẽ liên hệ xác nhận. Địa điểm sẽ hiển thị trong danh sách sau khi được duyệt.</p>
+                <button class="loc-submit" style="padding:10px 22px" onclick="closeLocForm()">Đóng</button>
+              </div>
+            </div>
+          </div>
+        </main>
+      </div>
+
+    </div><!-- /main -->
+
+  </div><!-- /app -->
+
+  <!-- Mobile sidebar overlay -->
+  <div id="mob-overlay" onclick="closeSidebar()"></div>
+  <div id="mob-sidebar">
+    <div style="padding:14px 16px;border-bottom:1px solid var(--border);font-size:var(--fs-md);font-weight:700;color:var(--text);display:flex;align-items:center;gap:8px;">
+      <div style="width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;"><img src="assets/img/logo.png" alt="Logo" style="width:100%;height:100%;object-fit:contain;"></div>
+      <span class="mob-brand-name">AI AGENTS CC</span>
+    </div>
+    <nav style="flex:1;overflow-y:auto;padding:8px;">
+      <div class="nav-section-label">Cộng đồng</div>
+      <a href="feed.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        Feed
+      </a>
+      <div class="nav-section-label">Học tập</div>
+      <a href="challenge.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z"/></svg>
+        Challenge
+      </a>
+      <div class="nav-section-label">Khác</div>
+      <a href="marketplace.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z"/></svg>
+        Marketplace
+      </a>
+    </nav>
+  </div>
+
+  <!-- Mobile bottom nav -->
+  <!-- Mobile main menu (full site navigation) -->
+  <div id="mob-mainmenu-overlay" onclick="closeMainMenu()"></div>
+  <div id="mob-mainmenu">
+    <div style="padding:14px 16px;border-bottom:1px solid var(--border);font-size:var(--fs-md);font-weight:700;color:var(--text);display:flex;align-items:center;gap:8px;">
+      <div style="width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;"><img src="assets/img/logo.png" alt="Logo" style="width:100%;height:100%;object-fit:contain;"></div>
+      Menu chính
+    </div>
+    <nav style="flex:1;overflow-y:auto;padding:8px;">
+      <a href="feed.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        Feed
+      </a>
+      <a href="spaces.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></svg>
+        Spaces
+      </a>
+      <a href="courses.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/></svg>
+        Courses
+      </a>
+      <a href="members.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+        Members
+      </a>
+      <a href="leaderboard.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/></svg>
+        Leaderboard
+      </a>
+      <a href="calendar.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        Calendar
+      </a>
+      <a href="about.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+        About
+      </a>
+    </nav>
+  </div>
+
+  <nav id="mobile-nav">
+    <a href="feed.html" class="mob-nav-btn">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
+      </svg>
+      Feed
+    </a>
+    <a href="spaces.html" class="mob-nav-btn">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></svg>
+      Spaces
+    </a>
+    <a href="courses.html" class="mob-nav-btn">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/></svg>
+      Courses
+    </a>
+    <a href="members.html" class="mob-nav-btn">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>
+      </svg>
+      Members
+    </a>
+    <button class="mob-nav-btn" onclick="toggleMainMenu()">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/>
+      </svg>
+      Menu
+    </button>
+  </nav>
+
+  <script src="assets/js/app.js?v=28"></script>
+  <script>
+    const API = '/api';
+    const AV_COLORS = ['#0ea5e9', '#8b5cf6', '#10b981', '#f59e0b', '#ec4899', '#3b82f6', '#ef4444', '#14b8a6'];
+
+    function initials(u) { return ((u.first_name || '?')[0] + ((u.last_name || '')[0] || '')).toUpperCase(); }
+    function avColor(id) { return AV_COLORS[(id || 0) % AV_COLORS.length]; }
+    function doLogout() { localStorage.removeItem('currentUser'); window.location.href = 'index.html'; }
+    const LEVELS = [
+      { level: 1, name: 'Khởi động', xpMin: 0, xpMax: 45 }, { level: 2, name: 'Học viên', xpMin: 45, xpMax: 120 },
+      { level: 3, name: 'Thực hành', xpMin: 120, xpMax: 250 }, { level: 4, name: 'Nâng cao', xpMin: 250, xpMax: 450 },
+      { level: 5, name: 'Chuyên gia', xpMin: 450, xpMax: 700 }, { level: 6, name: 'Bậc thầy', xpMin: 700, xpMax: 1000 },
+      { level: 7, name: 'Huyền thoại', xpMin: 1000, xpMax: 1500 }, { level: 8, name: 'Tiên tri', xpMin: 1500, xpMax: 2200 },
+      { level: 9, name: 'Thần thánh', xpMin: 2200, xpMax: 9999 },
+    ];
+    function getLevel(xp) { for (let i = LEVELS.length - 1; i >= 0; i--) if (xp >= LEVELS[i].xpMin) return LEVELS[i]; return LEVELS[0]; }
+
+    let currentUser = null;
+    (function () {
+      const raw = localStorage.getItem('currentUser');
+      if (!raw) { window.location.href = 'index.html'; return; }
+      currentUser = JSON.parse(raw);
+      const ini = initials(currentUser);
+      const col = avColor(currentUser.id);
+      document.getElementById('sbAvatar').textContent = ini;
+      document.getElementById('sbAvatar').style.background = col;
+      document.getElementById('sbName').textContent = currentUser.first_name + ' ' + currentUser.last_name;
+      const lv = getLevel(currentUser.xp || 0);
+      document.getElementById('sbLevel').textContent = lv.name + ' · Lv.' + lv.level;
+      const tbAv = document.getElementById('topbarAvatar');
+      if (tbAv) { tbAv.textContent = ini; tbAv.style.background = col; tbAv.onclick = () => location.href = `profile.html?id=${currentUser.id}`; }
+    })();
+
+    function esc(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+    const ICONS = {
+      pin: '<svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>',
+      user: '<svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>',
+      phone: '<svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.8 19.8 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.8 19.8 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.13.96.36 1.9.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0122 16.92z"/></svg>',
+      clock: '<svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>',
+      map: '<svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/><line x1="9" y1="3" x2="9" y2="18"/><line x1="15" y1="6" x2="15" y2="21"/></svg>',
+    };
+
+    // Ảnh cửa hàng minh hoạ (SVG) — dùng khi admin chưa tải ảnh thật lên cho địa điểm
+    const STORE_THEMES = [
+      { sky: '#ccfbf1', wall: '#fefce8', awning: '#0f766e', trim: '#115e59', door: '#92400e' },
+      { sky: '#e0f2fe', wall: '#fff7ed', awning: '#ea580c', trim: '#9a3412', door: '#78350f' },
+      { sky: '#fef3c7', wall: '#f0fdf4', awning: '#15803d', trim: '#166534', door: '#7c2d12' },
+      { sky: '#fce7f3', wall: '#fffbeb', awning: '#b45309', trim: '#78350f', door: '#1e3a8a' },
+      { sky: '#ede9fe', wall: '#f8fafc', awning: '#be123c', trim: '#881337', door: '#365314' },
+    ];
+    function storeSvg(seed, label) {
+      const t = STORE_THEMES[Math.abs(seed || 0) % STORE_THEMES.length];
+      const sign = esc(String(label || 'AI Agents CC').slice(0, 26));
+      let stripes = '';
+      for (let i = 0; i < 8; i++) {
+        stripes += `<path d="M${40 + i * 40} 96 h40 v26 a20 20 0 0 1 -40 0z" fill="${i % 2 ? '#ffffff' : t.awning}"/>`;
+      }
+      return `<svg viewBox="0 0 400 250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Ảnh minh hoạ cửa hàng">
+        <rect width="400" height="250" fill="${t.sky}"/>
+        <circle cx="340" cy="44" r="22" fill="#fde68a" opacity=".9"/>
+        <rect x="30" y="38" width="340" height="190" rx="6" fill="${t.wall}" stroke="${t.trim}" stroke-width="3"/>
+        <rect x="52" y="50" width="296" height="38" rx="6" fill="${t.trim}"/>
+        <text x="200" y="75" text-anchor="middle" font-family="Plus Jakarta Sans, Inter, sans-serif" font-size="16" font-weight="800" fill="#fff">${sign}</text>
+        ${stripes}
+        <rect x="40" y="92" width="320" height="6" fill="${t.trim}"/>
+        <rect x="60" y="140" width="120" height="70" rx="4" fill="#bae6fd" stroke="${t.trim}" stroke-width="3"/>
+        <line x1="120" y1="140" x2="120" y2="210" stroke="${t.trim}" stroke-width="3"/>
+        <rect x="72" y="168" width="18" height="24" rx="3" fill="#86efac"/><rect x="96" y="176" width="14" height="16" rx="3" fill="#fca5a5"/>
+        <rect x="132" y="172" width="16" height="20" rx="3" fill="#fde68a"/><rect x="152" y="166" width="16" height="26" rx="3" fill="#a5b4fc"/>
+        <rect x="222" y="134" width="84" height="94" rx="4" fill="${t.door}"/>
+        <rect x="232" y="144" width="64" height="44" rx="3" fill="#bae6fd" opacity=".85"/>
+        <circle cx="294" cy="190" r="4" fill="#fde68a"/>
+        <path d="M318 228 h34 l-5 -26 h-24z" fill="#b45309"/><circle cx="335" cy="190" r="16" fill="#22c55e"/><circle cx="325" cy="180" r="10" fill="#16a34a"/>
+        <rect x="0" y="228" width="400" height="22" fill="#d6d3d1"/>
+      </svg>`;
+    }
+
+    let allLocations = [];
+    let locFilter = 'all';
+
+    function setLocFilter(f, btn) {
+      locFilter = f;
+      document.querySelectorAll('.loc-chip').forEach(c => c.classList.toggle('active', c === btn));
+      renderLocations();
+    }
+
+    // Giờ hiện tại theo giờ Việt Nam (phút trong ngày), để báo "Đang mở cửa / Đã đóng cửa"
+    function vnMinutesNow() {
+      try {
+        const [h, m] = new Intl.DateTimeFormat('en-GB', { timeZone: 'Asia/Ho_Chi_Minh', hour: '2-digit', minute: '2-digit', hour12: false })
+          .format(new Date()).split(':').map(Number);
+        return (h % 24) * 60 + m;
+      } catch (e) { const d = new Date(); return d.getHours() * 60 + d.getMinutes(); }
+    }
+    const toMin = t => { const [h, m] = String(t).split(':').map(Number); return h * 60 + m; };
+
+    function hoursRow(l) {
+      if (!l.open_time && !l.close_time) return '';
+      const text = l.open_time && l.close_time ? `${l.open_time} – ${l.close_time}`
+        : l.open_time ? `Mở cửa từ ${l.open_time}` : `Đóng cửa lúc ${l.close_time}`;
+      let badge = '';
+      if (l.open_time && l.close_time && l.open_time !== l.close_time) {
+        const now = vnMinutesNow(), o = toMin(l.open_time), c = toMin(l.close_time);
+        const open = o < c ? (now >= o && now < c) : (now >= o || now < c); // hỗ trợ mở qua đêm
+        badge = `<span class="loc-open ${open ? 'on' : 'off'}">${open ? 'Đang mở cửa' : 'Đã đóng cửa'}</span>`;
+      }
+      return `<div class="loc-row">${ICONS.clock}<span>${esc(text)}${badge}</span></div>`;
+    }
+
+    function locCard(l) {
+      const title = l.place_name || `Địa điểm của ${l.full_name}`;
+      const img = l.image_url
+        ? `<img src="${esc(l.image_url)}" alt="${esc(title)}" loading="lazy">`
+        : storeSvg(l.id, l.place_name || 'AI Agents CC');
+      const tel = String(l.phone || '').replace(/[^0-9+]/g, '');
+      const mapHref = l.map_url || (l.address ? 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(l.address) : '');
+      return `<article class="loc-card">
+        <div class="loc-img">${img}${l.do_spine && l.certified ? '<span class="loc-cert">✓ Có chứng chỉ</span>' : ''}</div>
+        <div class="loc-body">
+          <h3 class="loc-name">${esc(title)}</h3>
+          <div class="loc-tags">
+            ${l.do_spine ? '<span class="loc-tag spine">Tác động cột sống</span>' : ''}
+            ${l.do_supply ? '<span class="loc-tag supply">Nguyên liệu AI Agents CC</span>' : ''}
+          </div>
+          ${l.address ? `<div class="loc-row">${ICONS.pin}<span>${esc(l.address)}</span></div>` : ''}
+          ${hoursRow(l)}
+          <div class="loc-row">${ICONS.user}<span><strong>${esc(l.full_name)}</strong></span></div>
+          <div class="loc-row">${ICONS.phone}<span>${esc(l.phone)}</span></div>
+          ${l.description ? `<p class="loc-desc">${esc(l.description)}</p>` : ''}
+          <div class="loc-actions">
+            ${tel ? `<a class="loc-btn primary" href="tel:${esc(tel)}">${ICONS.phone}Gọi</a>` : ''}
+            ${mapHref ? `<a class="loc-btn" href="${esc(mapHref)}" target="_blank" rel="noopener">${ICONS.map}Chỉ đường</a>` : ''}
+          </div>
+        </div>
+      </article>`;
+    }
+
+    function renderLocations() {
+      const grid = document.getElementById('locGrid');
+      const q = document.getElementById('locSearch').value.trim().toLowerCase();
+      const list = allLocations.filter(l => {
+        if (locFilter === 'spine' && !l.do_spine) return false;
+        if (locFilter === 'supply' && !l.do_supply) return false;
+        if (!q) return true;
+        return [l.place_name, l.full_name, l.address, l.phone].some(v => String(v || '').toLowerCase().includes(q));
+      });
+      if (!allLocations.length) {
+        grid.innerHTML = '<div class="loc-empty" style="grid-column:1/-1">Chưa có địa điểm nào được công bố. Hãy là người đầu tiên đăng ký với AI Agents CC!</div>';
+        return;
+      }
+      if (!list.length) {
+        grid.innerHTML = '<div class="loc-empty" style="grid-column:1/-1">Không tìm thấy địa điểm phù hợp.</div>';
+        return;
+      }
+      grid.innerHTML = list.map(locCard).join('');
+    }
+
+    async function loadLocations() {
+      try {
+        const data = await fetch(`${API}/locations`).then(r => r.json());
+        allLocations = data.locations || [];
+        renderLocations();
+      } catch (e) {
+        document.getElementById('locGrid').innerHTML = '<div class="loc-empty" style="grid-column:1/-1">Không tải được danh sách địa điểm. Vui lòng thử lại sau.</div>';
+      }
+    }
+
+    function syncCertRequired() {
+      document.getElementById('lfCertReq').style.display = document.getElementById('lfSpine').checked ? '' : 'none';
+    }
+
+    function openLocForm() {
+      const u = currentUser || {};
+      const fill = (id, v) => { const el = document.getElementById(id); if (!el.value && v) el.value = v; };
+      fill('lfName', [u.first_name, u.last_name].filter(Boolean).join(' ').trim());
+      fill('lfPhone', u.phone);
+      fill('lfEmail', u.email);
+      // currentUser trong localStorage không có SĐT (và có thể thiếu email) → lấy từ hồ sơ
+      if (u.id && (!u.phone || !u.email)) {
+        fetch(`${API}/users/${u.id}?requester_id=${u.id}`).then(r => r.ok ? r.json() : null).then(p => {
+          const prof = p?.user || p || {};
+          fill('lfPhone', prof.phone);
+          fill('lfEmail', prof.email);
+        }).catch(() => {});
+      }
+      document.getElementById('lfErr').textContent = '';
+      document.getElementById('locForm').style.display = '';
+      document.getElementById('locDone').style.display = 'none';
+      document.getElementById('locModal').classList.add('open');
+      document.body.style.overflow = 'hidden';
+      setTimeout(() => document.getElementById(document.getElementById('lfName').value ? 'lfPhone' : 'lfName').focus(), 50);
+    }
+
+    function closeLocForm() {
+      document.getElementById('locModal').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLocForm(); });
+
+    async function submitLocForm(e) {
+      e.preventDefault();
+      const val = id => document.getElementById(id).value.trim();
+      const checked = id => document.getElementById(id).checked;
+      const err = document.getElementById('lfErr');
+      const body = {
+        user_id: currentUser?.id || null,
+        full_name: val('lfName'),
+        phone: val('lfPhone'),
+        email: val('lfEmail'),
+        place_name: val('lfPlace'),
+        address: val('lfAddress'),
+        open_time: val('lfOpen'),
+        close_time: val('lfClose'),
+        do_spine: checked('lfSpine'),
+        do_supply: checked('lfSupply'),
+        certified: checked('lfCert'),
+      };
+      if (!body.full_name) { err.textContent = 'Vui lòng nhập họ và tên.'; return; }
+      if (!body.phone) { err.textContent = 'Vui lòng nhập số điện thoại.'; return; }
+      if (!body.do_spine && !body.do_supply) { err.textContent = 'Vui lòng chọn ít nhất 1 hạng mục đăng ký.'; return; }
+      if (body.do_spine && !body.certified) { err.textContent = 'Đăng ký làm tác động cột sống cần xác nhận đã có chứng chỉ do Y học bản địa Việt Nam cấp.'; return; }
+      err.textContent = '';
+      const btn = document.getElementById('lfSubmit');
+      btn.disabled = true; btn.textContent = 'Đang gửi...';
+      try {
+        const res = await fetch(`${API}/locations/register`, {
+          method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body),
+        });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) throw new Error(data.error || 'Gửi không thành công, vui lòng thử lại.');
+        document.getElementById('locForm').reset();
+        syncCertRequired();
+        document.getElementById('locForm').style.display = 'none';
+        document.getElementById('locDone').style.display = '';
+      } catch (ex) {
+        err.textContent = ex.message;
+      } finally {
+        btn.disabled = false; btn.textContent = 'Gửi đăng ký';
+      }
+    }
+
+    loadLocations();
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8">
+  <script src="assets/js/auth-fetch.js?v=1"></script>
+  <script>(function(){try{var t=localStorage.getItem('theme');if(t==='dark'||(!t&&window.matchMedia('(prefers-color-scheme: dark)').matches))document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" href="/assets/img/logo.png">
+  <link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
+  <link rel="manifest" href="/manifest.json?v=2">
+  <meta name="apple-mobile-web-app-title" content="AI Agents CC">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="theme-color" content="#0ea5e9">
+  <title>Lịch — AI AGENTS CC</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/base.css?v=2">
+  <link rel="stylesheet" href="assets/css/components.css?v=11">
+  <link rel="stylesheet" href="assets/css/layout.css?v=6">
+  <style>
+    /* Lịch luôn nền trắng (giống Google Calendar), kể cả khi trang ở chế độ tối */
+    .cal-card, dialog.cal-dlg {
+      --bg-card: #ffffff; --bg-hover: #f1f5f9; --bg-active: #e0f2fe; --text: #0f172a; --text-muted: #64748b; --border: #e2e8f0;
+      color-scheme: light; color: var(--text);
+    }
+    .cal-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 14px; }
+    .cal-bar { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+    .cal-btn { border: 1px solid var(--border); background: var(--bg-card); color: var(--text); border-radius: 999px; padding: 7px 14px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: inherit; }
+    .cal-btn:hover { background: var(--bg-hover); }
+    .cal-btn.icon { border-radius: 50%; width: 34px; height: 34px; padding: 0; display: inline-flex; align-items: center; justify-content: center; font-size: 16px; }
+    .cal-btn.primary { background: var(--color-primary); border-color: var(--color-primary); color: #fff; }
+    .cal-btn.on { background: var(--bg-active, var(--bg-hover)); border-color: var(--color-primary); color: var(--color-primary); }
+    .cal-title { font-family: var(--font-heading); font-size: 20px; font-weight: 700; margin: 0 6px; }
+    .cal-spacer { flex: 1; }
+    .cal-seg { display: inline-flex; border: 1px solid var(--border); border-radius: 999px; overflow: hidden; }
+    .cal-seg button { border: 0; background: transparent; color: var(--text); padding: 7px 13px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: inherit; }
+    .cal-seg button.on { background: var(--color-primary); color: #fff; }
+
+    .cal-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); border-top: 1px solid var(--border); border-left: 1px solid var(--border); }
+    .cal-dow { font-size: 11px; font-weight: 700; color: var(--text-muted); text-align: center; padding: 8px 4px; border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); text-transform: uppercase; }
+    .cal-day { min-height: 112px; border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 4px; display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+    .cal-day.out { background: color-mix(in srgb, var(--bg-hover) 55%, transparent); }
+    .cal-day.out .cal-num { color: var(--text-muted); }
+    .cal-day.can-add { cursor: pointer; }
+    .cal-day.can-add:hover { background: var(--bg-hover); }
+    .cal-num { align-self: center; font-size: 12px; font-weight: 600; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; border-radius: 50%; margin-bottom: 2px; }
+    .cal-day.today .cal-num { background: var(--color-primary); color: #fff; }
+    .cal-ev { display: flex; align-items: center; gap: 5px; font-size: 12px; padding: 2px 5px; border-radius: 5px; cursor: pointer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--text); background: none; border: 0; text-align: left; font-family: inherit; width: 100%; }
+    .cal-ev:hover { background: var(--bg-hover); }
+    .cal-ev .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; background: var(--c); }
+    .cal-ev .tm { color: var(--text-muted); flex-shrink: 0; }
+    .cal-ev .tt { overflow: hidden; text-overflow: ellipsis; }
+    .cal-ev.allday { background: var(--c); color: #fff; }
+    .cal-ev.allday .dot { display: none; }
+    .cal-more { font-size: 11.5px; color: var(--text-muted); padding: 0 5px; cursor: pointer; background: none; border: 0; text-align: left; font-family: inherit; }
+
+    .cal-list { display: flex; flex-direction: column; }
+    .cal-lday { display: grid; grid-template-columns: 92px 1fr; gap: 12px; padding: 12px 4px; border-bottom: 1px solid var(--border); }
+    .cal-lday .d { font-size: 12px; color: var(--text-muted); }
+    .cal-lday .d b { display: block; font-size: 22px; color: var(--text); font-family: var(--font-heading); line-height: 1.1; }
+    .cal-lday.today .d b { color: var(--color-primary); }
+    .cal-litem { display: flex; gap: 10px; align-items: flex-start; padding: 6px 8px; border-radius: 8px; cursor: pointer; border: 0; background: none; color: var(--text); text-align: left; width: 100%; font-family: inherit; }
+    .cal-litem:hover { background: var(--bg-hover); }
+    .cal-litem .bar { width: 4px; align-self: stretch; border-radius: 4px; background: var(--c); flex-shrink: 0; }
+    .cal-litem .tm { font-size: 12.5px; color: var(--text-muted); width: 92px; flex-shrink: 0; }
+    .cal-litem .tt { font-size: 14px; font-weight: 600; }
+    .cal-litem .lc { font-size: 12px; color: var(--text-muted); }
+    .cal-empty { text-align: center; padding: 48px 16px; color: var(--text-muted); }
+    .cal-foot { font-size: 12px; color: var(--text-muted); margin-top: 10px; }
+
+    dialog.cal-dlg { margin: auto; border: 1px solid var(--border); border-radius: 16px; padding: 0; width: min(520px, calc(100vw - 24px)); background: var(--bg-card); color: var(--text); max-height: calc(100vh - 32px); }
+    dialog.cal-dlg::backdrop { background: rgba(15, 23, 42, .5); }
+    .cal-dlg .bd { padding: 20px; overflow-y: auto; }
+    .cal-dlg h3 { margin: 0 0 4px; font-size: 19px; font-family: var(--font-heading); }
+    .cal-dlg .sw { height: 6px; background: var(--c); }
+    .cal-dlg .meta { font-size: 13.5px; color: var(--text-muted); margin: 6px 0; display: flex; gap: 8px; align-items: flex-start; line-height: 1.5; }
+    .cal-dlg .desc { white-space: pre-wrap; font-size: 14px; line-height: 1.6; margin-top: 12px; border-top: 1px solid var(--border); padding-top: 12px; word-break: break-word; }
+    .cal-dlg .acts { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 16px; }
+    .cal-dlg label { display: block; font-size: 12.5px; font-weight: 600; margin: 12px 0 4px; }
+    .cal-dlg input[type=text], .cal-dlg input[type=url], .cal-dlg input[type=date], .cal-dlg input[type=time], .cal-dlg select, .cal-dlg textarea {
+      width: 100%; border: 1px solid var(--border); border-radius: 8px; padding: 8px 10px; font: inherit; font-size: 14px; background: var(--bg-card); color: var(--text); }
+    .cal-dlg .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .cal-dlg .chk { display: flex; gap: 6px; align-items: center; font-weight: 500; margin-top: 10px; }
+    .cal-colors { display: flex; gap: 8px; flex-wrap: wrap; }
+    .cal-colors button { width: 26px; height: 26px; border-radius: 50%; border: 2px solid transparent; cursor: pointer; background: var(--c); }
+    .cal-colors button.on { border-color: var(--text); box-shadow: 0 0 0 2px var(--bg-card) inset; }
+    .cal-legend { display: flex; gap: 14px; flex-wrap: wrap; align-items: center; }
+    .cal-legend span { display: inline-flex; align-items: center; gap: 5px; }
+    .cal-legend i { width: 9px; height: 9px; border-radius: 50%; background: var(--c); display: inline-block; }
+    .cal-badge { display: inline-block; font-size: 11.5px; font-weight: 700; color: #fff; background: var(--c); border-radius: 999px; padding: 2px 9px; margin-bottom: 6px; }
+    .cal-err { color: #dc2626; font-size: 13px; margin-top: 10px; min-height: 1em; }
+
+    @media (max-width: 760px) {
+      .cal-title { font-size: 17px; }
+      .cal-day { min-height: 64px; padding: 2px; }
+      .cal-ev .tm, .cal-ev .tt { display: none; }
+      .cal-ev { padding: 2px; justify-content: center; }
+      .cal-ev.allday { height: 6px; padding: 0; }
+      .cal-lday { grid-template-columns: 64px 1fr; }
+      .cal-litem .tm { width: 70px; }
+      .cal-dlg .row2 { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="app">
+
+    <!-- Sidebar -->
+    <aside id="sidebar">
+      <div id="sidebar-logo">
+        <div class="sidebar-logo-mark" style="background:transparent;"><img src="assets/img/logo.png" alt="Logo" style="width:100%;height:100%;object-fit:contain;"></div>
+        <div class="sidebar-logo-text">AI AGENTS <span>CC</span></div>
+      </div>
+
+      <nav id="sidebar-nav">
+        <div class="nav-section-label">Cộng đồng</div>
+
+        <a href="feed.html" class="nav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
+          </svg>
+          Feed
+        </a>
+
+
+
+        <div class="nav-section-label" style="margin-top:8px;">Học tập</div>
+
+        <a href="challenge.html" class="nav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path
+              d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z" />
+          </svg>
+          Challenge
+        </a>
+
+        <div class="nav-section-label" style="margin-top:8px;">Khác</div>
+
+        <a href="marketplace.html" class="nav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path
+              d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z" />
+          </svg>
+          Marketplace
+        </a>
+      </nav>
+
+      <!-- Sidebar user -->
+      <div id="sidebar-user">
+        <div class="user-avatar-wrap">
+          <div class="avatar-placeholder avatar-md" id="sbAvatar" style="background:#7c3aed;">?</div>
+          <div class="user-status-dot"></div>
+        </div>
+        <div class="user-info">
+          <div class="user-name" id="sbName">—</div>
+          <div class="user-level" id="sbLevel">—</div>
+        </div>
+        <a href="index.html" class="icon-btn" title="Đăng xuất" style="margin-left:auto;" onclick="doLogout()">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4" />
+            <polyline points="16 17 21 12 16 7" />
+            <line x1="21" y1="12" x2="9" y2="12" />
+          </svg>
+        </a>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <div id="main">
+
+      <!-- Topbar -->
+      <nav id="subnav-bar" class="subnav-bar" aria-label="Điều hướng nhanh">
+        <a href="feed.html" class="subnav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+          Feed
+        </a>
+        <a href="spaces.html" class="subnav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></svg>
+          Spaces
+        </a>
+        <a href="courses.html" class="subnav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/></svg>
+          Courses
+        </a>
+        <a href="members.html" class="subnav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+          Members
+        </a>
+        <a href="leaderboard.html" class="subnav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/></svg>
+          Leaderboard
+        </a>
+        <a href="calendar.html" class="subnav-item active">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          Calendar
+        </a>
+        <a href="about.html" class="subnav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+          About
+        </a>
+        <div class="topbar-right">
+          <button class="icon-btn" id="themeToggle" type="button" aria-label="Chuyển chế độ sáng/tối">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"></svg>
+          </button>
+          <div style="position:relative;">
+            <button class="icon-btn" id="notifBell" aria-label="Thông báo" style="position:relative;">
+              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+              </svg>
+              <span id="notifBadge" style="display:none;position:absolute;top:2px;right:2px;background:#ef4444;color:#fff;font-size:10px;font-weight:700;border-radius:99px;min-width:16px;height:16px;padding:0 4px;line-height:16px;text-align:center;">0</span>
+            </button>
+            <div id="notifDropdown" style="display:none;"></div>
+          </div>
+          <a href="#" class="icon-btn" aria-label="Tin nhắn">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <path
+                d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+            </svg>
+          </a>
+          <div class="topbar-search">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <circle cx="11" cy="11" r="8" />
+              <line x1="21" y1="21" x2="16.65" y2="16.65" />
+            </svg>
+            <input type="text" id="globalSearchInput" placeholder="Tìm kiếm..." autocomplete="off">
+            <div id="globalSearchResults" class="gsr-panel"></div>
+          </div>
+          <div id="topbarAvatar"
+            style="width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;background:#7c3aed;cursor:pointer;flex-shrink:0;">
+          </div>
+        </div>
+      </nav>
+
+      <header id="topbar">
+        <button class="topbar-hamburger" id="hamburger" onclick="toggleSidebar()" aria-label="Mở menu">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path d="M4 6h16M4 12h16M4 18h16" stroke-linecap="round" />
+          </svg>
+        </button>
+
+        <div class="topbar-title">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            style="width:18px;height:18px;color:var(--accent-purple)">
+            <rect x="3" y="4" width="18" height="18" rx="2" /><line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" />
+          </svg>
+          Lịch cộng đồng
+        </div>
+      </header>
+
+      <!-- Content row -->
+      <div id="content-row">
+        <main id="feed" style="max-width:100%;">
+
+          <!-- Lịch cộng đồng — dữ liệu từ /api/calendar/events -->
+          <section class="cal-card" aria-label="Lịch cộng đồng">
+            <div class="cal-bar">
+              <button class="cal-btn" type="button" onclick="calGo('today')">Hôm nay</button>
+              <button class="cal-btn icon" type="button" onclick="calGo(-1)" aria-label="Tháng trước">‹</button>
+              <button class="cal-btn icon" type="button" onclick="calGo(1)" aria-label="Tháng sau">›</button>
+              <h2 class="cal-title" id="calTitle">—</h2>
+              <span class="cal-spacer"></span>
+              <div class="cal-seg" role="tablist" aria-label="Kiểu xem">
+                <button type="button" id="calVMonth" onclick="calView('month')">Tháng</button>
+                <button type="button" id="calVList" onclick="calView('list')">Danh sách</button>
+              </div>
+              <button class="cal-btn primary" type="button" id="calAddBtn" hidden onclick="calOpenEdit(null)">➕ Thêm sự kiện</button>
+              <button class="cal-btn" type="button" id="calImportBtn" hidden onclick="calImport()" title="Nhập các sự kiện từ lịch Google đang nhúng trước đây">⬇️ Nhập từ Google</button>
+            </div>
+            <div id="calBody"><div class="cal-empty">Đang tải lịch…</div></div>
+            <div class="cal-foot" id="calFoot">Giờ Việt Nam (GMT+7).</div>
+          </section>
+
+          <dialog class="cal-dlg" id="calDetail"></dialog>
+          <dialog class="cal-dlg" id="calProgRemind">
+            <div class="bd">
+              <h3>🔔 Nhắc lịch Zoom chương trình</h3>
+              <div class="meta" style="display:block;">Áp dụng cho các buổi lấy tự động từ Admin. 3 Buổi Workshop nhắc cả cộng đồng; 8 Buổi / 377 ngày nhắc học viên đã duyệt + ban tổ chức. Buổi chưa ghi giờ trong Admin thì không nhắc được.</div>
+              <div id="cprRows"></div>
+              <div class="cal-err" id="cprErr"></div>
+              <div class="acts">
+                <button class="cal-btn primary" type="button" onclick="calSaveProgRemind()">💾 Lưu</button>
+                <button class="cal-btn" type="button" onclick="document.getElementById('calProgRemind').close()">Huỷ</button>
+              </div>
+            </div>
+          </dialog>
+          <dialog class="cal-dlg" id="calEdit">
+            <div class="bd">
+              <h3 id="calEditTitle">Thêm sự kiện</h3>
+              <label for="ceTitle">Tiêu đề *</label>
+              <input type="text" id="ceTitle" maxlength="150" placeholder="vd: Zoom định kỳ 377 ngày">
+              <div class="row2">
+                <div><label for="ceDate">Ngày *</label><input type="date" id="ceDate"></div>
+                <div><label for="ceRepeat">Lặp lại</label>
+                  <select id="ceRepeat" onchange="calRepeatUi()">
+                    <option value="none">Không lặp</option><option value="daily">Mỗi ngày</option>
+                    <option value="weekly">Mỗi tuần (cùng thứ)</option><option value="monthly">Mỗi tháng (cùng ngày)</option>
+                  </select></div>
+              </div>
+              <label class="chk"><input type="checkbox" id="ceAllDay" onchange="calRepeatUi()"> Cả ngày (không có giờ)</label>
+              <div class="row2" id="ceTimes">
+                <div><label for="ceStart">Bắt đầu</label><input type="time" id="ceStart"></div>
+                <div><label for="ceEnd">Kết thúc</label><input type="time" id="ceEnd"></div>
+              </div>
+              <div id="ceUntilWrap"><label for="ceUntil">Lặp đến ngày (bỏ trống = không giới hạn)</label><input type="date" id="ceUntil"></div>
+              <div class="row2">
+                <div><label for="ceLocation">Địa điểm</label><input type="text" id="ceLocation" maxlength="150" placeholder="vd: Zoom"></div>
+                <div><label for="ceLink">Link tham gia</label><input type="url" id="ceLink" maxlength="500" placeholder="https://zoom.us/j/…"></div>
+              </div>
+              <label>Màu</label>
+              <div class="cal-colors" id="ceColors"></div>
+              <label for="ceDesc">Nội dung / ghi chú</label>
+              <textarea id="ceDesc" rows="4" maxlength="3000" placeholder="Nội dung buổi, mật khẩu Zoom, chuẩn bị gì…"></textarea>
+              <div class="row2">
+                <div><label for="ceRemind">Nhắc lịch</label>
+                  <select id="ceRemind">
+                    <option value="0">Không nhắc</option><option value="15">Trước 15 phút</option><option value="30">Trước 30 phút</option>
+                    <option value="60">Trước 1 giờ</option><option value="120">Trước 2 giờ</option><option value="1440">Trước 1 ngày</option>
+                  </select></div>
+                <div><label for="ceTarget">Nhắc cho</label>
+                  <select id="ceTarget"><option value="all">Cả cộng đồng</option><option value="admins">Chỉ ban tổ chức (admin)</option></select></div>
+              </div>
+              <div class="cal-err" id="ceErr"></div>
+              <div class="acts">
+                <button class="cal-btn primary" type="button" id="ceSave" onclick="calSave()">💾 Lưu</button>
+                <button class="cal-btn" type="button" onclick="document.getElementById('calEdit').close()">Huỷ</button>
+              </div>
+            </div>
+          </dialog>
+
+        </main>
+      </div>
+
+    </div><!-- /main -->
+
+  </div><!-- /app -->
+
+  <!-- Mobile sidebar overlay -->
+  <div id="mob-overlay" onclick="closeSidebar()"></div>
+  <div id="mob-sidebar">
+    <div style="padding:14px 16px;border-bottom:1px solid var(--border);font-size:var(--fs-md);font-weight:700;color:var(--text);display:flex;align-items:center;gap:8px;">
+      <div style="width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;"><img src="assets/img/logo.png" alt="Logo" style="width:100%;height:100%;object-fit:contain;"></div>
+      <span class="mob-brand-name">AI AGENTS CC</span>
+    </div>
+    <nav style="flex:1;overflow-y:auto;padding:8px;">
+      <div class="nav-section-label">Cộng đồng</div>
+      <a href="feed.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        Feed
+      </a>
+      <div class="nav-section-label">Học tập</div>
+      <a href="challenge.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z"/></svg>
+        Challenge
+      </a>
+      <div class="nav-section-label">Khác</div>
+      <a href="marketplace.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z"/></svg>
+        Marketplace
+      </a>
+    </nav>
+  </div>
+
+  <!-- Mobile bottom nav -->
+  <!-- Mobile main menu (full site navigation) -->
+  <div id="mob-mainmenu-overlay" onclick="closeMainMenu()"></div>
+  <div id="mob-mainmenu">
+    <div style="padding:14px 16px;border-bottom:1px solid var(--border);font-size:var(--fs-md);font-weight:700;color:var(--text);display:flex;align-items:center;gap:8px;">
+      <div style="width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;"><img src="assets/img/logo.png" alt="Logo" style="width:100%;height:100%;object-fit:contain;"></div>
+      Menu chính
+    </div>
+    <nav style="flex:1;overflow-y:auto;padding:8px;">
+      <a href="feed.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        Feed
+      </a>
+      <a href="spaces.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></svg>
+        Spaces
+      </a>
+      <a href="courses.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/></svg>
+        Courses
+      </a>
+      <a href="members.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+        Members
+      </a>
+      <a href="leaderboard.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/></svg>
+        Leaderboard
+      </a>
+      <a href="calendar.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        Calendar
+      </a>
+      <a href="about.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+        About
+      </a>
+    </nav>
+  </div>
+
+  <nav id="mobile-nav">
+    <a href="feed.html" class="mob-nav-btn">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
+      </svg>
+      Feed
+    </a>
+    <a href="spaces.html" class="mob-nav-btn">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></svg>
+      Spaces
+    </a>
+    <a href="courses.html" class="mob-nav-btn">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/></svg>
+      Courses
+    </a>
+    <a href="members.html" class="mob-nav-btn">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>
+      </svg>
+      Members
+    </a>
+    <button class="mob-nav-btn" onclick="toggleMainMenu()">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/>
+      </svg>
+      Menu
+    </button>
+  </nav>
+
+  <script src="assets/js/app.js?v=28"></script>
+  <script>
+    const API = '/api';
+    const AV_COLORS = ['#0ea5e9', '#8b5cf6', '#10b981', '#f59e0b', '#ec4899', '#3b82f6', '#ef4444', '#14b8a6'];
+
+    function initials(u) { return ((u.first_name || '?')[0] + ((u.last_name || '')[0] || '')).toUpperCase(); }
+    function avColor(id) { return AV_COLORS[(id || 0) % AV_COLORS.length]; }
+    function doLogout() { localStorage.removeItem('currentUser'); window.location.href = 'index.html'; }
+    const LEVELS = [
+      { level: 1, name: 'Khởi động', xpMin: 0, xpMax: 45 }, { level: 2, name: 'Học viên', xpMin: 45, xpMax: 120 },
+      { level: 3, name: 'Thực hành', xpMin: 120, xpMax: 250 }, { level: 4, name: 'Nâng cao', xpMin: 250, xpMax: 450 },
+      { level: 5, name: 'Chuyên gia', xpMin: 450, xpMax: 700 }, { level: 6, name: 'Bậc thầy', xpMin: 700, xpMax: 1000 },
+      { level: 7, name: 'Huyền thoại', xpMin: 1000, xpMax: 1500 }, { level: 8, name: 'Tiên tri', xpMin: 1500, xpMax: 2200 },
+      { level: 9, name: 'Thần thánh', xpMin: 2200, xpMax: 9999 },
+    ];
+    function getLevel(xp) { for (let i = LEVELS.length - 1; i >= 0; i--) if (xp >= LEVELS[i].xpMin) return LEVELS[i]; return LEVELS[0]; }
+
+    let currentUser = null;
+    (function () {
+      const raw = localStorage.getItem('currentUser');
+      if (!raw) { window.location.href = 'index.html'; return; }
+      currentUser = JSON.parse(raw);
+      const ini = initials(currentUser);
+      const col = avColor(currentUser.id);
+      document.getElementById('sbAvatar').textContent = ini;
+      document.getElementById('sbAvatar').style.background = col;
+      document.getElementById('sbName').textContent = currentUser.first_name + ' ' + currentUser.last_name;
+      const lv = getLevel(currentUser.xp || 0);
+      document.getElementById('sbLevel').textContent = lv.name + ' · Lv.' + lv.level;
+      const tbAv = document.getElementById('topbarAvatar');
+      if (tbAv) { tbAv.textContent = ini; tbAv.style.background = col; tbAv.onclick = () => location.href = `profile.html?id=${currentUser.id}`; }
+    })();
+
+    // ── Lịch cộng đồng ──
+    const CAL_COLORS = ['#0ea5e9', '#6366f1', '#8b5cf6', '#ec4899', '#ef4444', '#f59e0b', '#10b981', '#0f766e', '#64748b'];
+    const DOW = ['CN', 'Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7'];
+    const REPEAT_TXT = { daily: 'Lặp lại mỗi ngày', weekly: 'Lặp lại mỗi tuần', monthly: 'Lặp lại mỗi tháng' };
+    const vnToday = () => new Date(Date.now() + 7 * 3600e3).toISOString().slice(0, 10);
+    const addDays = (d, n) => { const x = new Date(d + 'T00:00:00Z'); x.setUTCDate(x.getUTCDate() + n); return x.toISOString().slice(0, 10); };
+    const dowOf = d => new Date(d + 'T00:00:00Z').getUTCDay();
+    const fmtD = d => d.slice(8, 10) + '/' + d.slice(5, 7) + '/' + d.slice(0, 4);
+    const escC = v => String(v == null ? '' : v).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    const linkify = t => escC(t).replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank" rel="noopener">$1</a>');
+    let cal = { month: vnToday().slice(0, 7), view: window.innerWidth < 700 ? 'list' : 'month', events: [], canEdit: false, today: vnToday(), editing: null };
+    try { const v = localStorage.getItem('calView'); if (v === 'month' || v === 'list') cal.view = v; } catch (e) {}
+
+    function calRange() {
+      const first = cal.month + '-01';
+      const start = addDays(first, -((dowOf(first) + 6) % 7)); // lưới bắt đầu từ Thứ 2
+      return { first, start, end: addDays(start, 41) };
+    }
+    async function loadCalendar() {
+      const r = calRange();
+      // Danh sách: cả tháng đang xem (và 2 tuần đầu tháng sau cho đỡ trống)
+      const from = cal.view === 'list' ? r.first : r.start;
+      const to = cal.view === 'list' ? addDays(r.first, 45) : r.end;
+      try {
+        const d = await fetch(`/api/calendar/events?from=${from}&to=${to}`, { headers: { 'x-user-token': dhSessionToken() } }).then(x => x.json());
+        cal.events = d.events || []; cal.canEdit = !!d.can_edit; cal.today = d.today || vnToday();
+        cal.programs = d.programs || {}; cal.progRemind = d.program_remind || {};
+      } catch (e) { cal.events = []; document.getElementById('calBody').innerHTML = '<div class="cal-empty">⚠️ Không tải được lịch. Vui lòng tải lại trang.</div>'; return; }
+      document.getElementById('calAddBtn').hidden = !cal.canEdit;
+      document.getElementById('calImportBtn').hidden = !cal.canEdit;
+      renderLegend();
+      renderCal();
+    }
+    function calGo(n) {
+      if (n === 'today') cal.month = vnToday().slice(0, 7);
+      else { const [y, m] = cal.month.split('-').map(Number); const d = new Date(Date.UTC(y, m - 1 + n, 1)); cal.month = d.toISOString().slice(0, 7); }
+      loadCalendar();
+    }
+    function calView(v) { cal.view = v; try { localStorage.setItem('calView', v); } catch (e) {} loadCalendar(); }
+    const timeTxt = e => e.start_time ? e.start_time + (e.end_time ? '–' + e.end_time : '') : 'Cả ngày';
+    // Người xem ở múi giờ khác VN: "20:00 giờ VN" → giờ của thiết bị
+    const VIEW_TZ = dhDeviceTimezone();
+    const AWAY = (() => { try { return dhTzOffsetLabel(VIEW_TZ) !== dhTzOffsetLabel('Asia/Ho_Chi_Minh'); } catch (e) { return false; } })();
+    function localTxt(e) {
+      if (!AWAY || !e.start_time) return '';
+      const [y, m, d] = e.date.split('-').map(Number), [h, mi] = e.start_time.split(':').map(Number);
+      const t = new Date(Date.UTC(y, m - 1, d, h - 7, mi));
+      const p = {}; new Intl.DateTimeFormat('en-CA', { timeZone: VIEW_TZ, year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }).formatToParts(t).forEach(x => { p[x.type] = x.value; });
+      const ld = `${p.year}-${p.month}-${p.day}`;
+      return `${String(+p.hour % 24).padStart(2, '0')}:${p.minute}${ld !== e.date ? ' (' + p.day + '/' + p.month + ')' : ''} giờ của bạn`;
+    }
+
+    function renderCal() {
+      const [y, m] = cal.month.split('-');
+      document.getElementById('calTitle').textContent = `Tháng ${+m}, ${y}`;
+      document.getElementById('calVMonth').classList.toggle('on', cal.view === 'month');
+      document.getElementById('calVList').classList.toggle('on', cal.view === 'list');
+      const byDate = {};
+      cal.events.forEach((e, i) => { (byDate[e.date] = byDate[e.date] || []).push(i); });
+      const body = document.getElementById('calBody');
+      if (cal.view === 'list') {
+        const days = Object.keys(byDate).sort();
+        body.innerHTML = !days.length ? '<div class="cal-empty">📅 Chưa có sự kiện nào trong thời gian này.' + (cal.canEdit ? '<br><br><button class="cal-btn primary" onclick="calOpenEdit(null)">➕ Thêm sự kiện</button>' : '') + '</div>'
+          : '<div class="cal-list">' + days.map(d => `<div class="cal-lday${d === cal.today ? ' today' : ''}"><div class="d"><b>${d.slice(8, 10)}</b>${DOW[dowOf(d)]}, thg ${+d.slice(5, 7)}${d === cal.today ? '<br>Hôm nay' : ''}</div><div>` +
+            byDate[d].map(i => { const e = cal.events[i]; return `<button type="button" class="cal-litem" style="--c:${escC(e.color)}" onclick="calShow(${i})"><span class="bar"></span><span class="tm">${timeTxt(e)}${localTxt(e) ? '<br><b>' + localTxt(e).replace(' giờ của bạn', '') + '</b> (bạn)' : ''}</span><span><span class="tt">${escC(e.title)}</span>${e.location ? `<br><span class="lc">📍 ${escC(e.location)}</span>` : ''}</span></button>`; }).join('') +
+            '</div></div>').join('') + '</div>';
+        return;
+      }
+      const r = calRange();
+      let html = '<div class="cal-grid">' + ['Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7', 'CN'].map(x => `<div class="cal-dow">${x}</div>`).join('');
+      for (let k = 0; k < 42; k++) {
+        const d = addDays(r.start, k), list = byDate[d] || [];
+        const cls = ['cal-day', d.slice(0, 7) !== cal.month ? 'out' : '', d === cal.today ? 'today' : '', cal.canEdit ? 'can-add' : ''].join(' ');
+        const shown = list.slice(0, 3);
+        html += `<div class="${cls}" data-d="${d}"${cal.canEdit ? ` onclick="calDayClick(event,'${d}')" title="Bấm để thêm sự kiện ngày ${fmtD(d)}"` : ''}><span class="cal-num">${+d.slice(8, 10) === 1 ? '1/' + (+d.slice(5, 7)) : +d.slice(8, 10)}</span>` +
+          shown.map(i => { const e = cal.events[i]; return `<button type="button" class="cal-ev${e.start_time ? '' : ' allday'}" style="--c:${escC(e.color)}" onclick="event.stopPropagation();calShow(${i})" title="${escC(timeTxt(e) + ' · ' + e.title)}"><span class="dot"></span>${e.start_time ? `<span class="tm">${e.start_time}</span>` : ''}<span class="tt">${escC(e.title)}</span></button>`; }).join('') +
+          (list.length > 3 ? `<button type="button" class="cal-more" onclick="event.stopPropagation();calDayList('${d}')">+${list.length - 3} sự kiện</button>` : '') + '</div>';
+      }
+      body.innerHTML = html + '</div>';
+    }
+    const REMIND_TXT = { 0: 'không nhắc', 15: '15 phút', 30: '30 phút', 60: '1 giờ', 120: '2 giờ', 1440: '1 ngày' };
+    function renderLegend() {
+      const P = cal.programs || {};
+      document.getElementById('calFoot').innerHTML = '<div class="cal-legend">' +
+        Object.keys(P).map(k => `<span style="--c:${escC(P[k].color)}"><i></i>${escC(P[k].label)}</span>`).join('') +
+        '<span style="--c:#0ea5e9"><i></i>Sự kiện khác</span><span>· Giờ Việt Nam (GMT+7)' + (AWAY ? ` — bạn đang ở ${escC(VIEW_TZ.replace(/_/g, ' '))} (${dhTzOffsetLabel(VIEW_TZ)}), bấm vào sự kiện để xem giờ của bạn` : '') + '</span>' +
+        (cal.canEdit ? `<span>· 🔔 Nhắc Zoom chương trình: ${Object.keys(P).map(k => ({ workshop3: '3 buổi', workshop8: '8 buổi', program377: '377 ngày' }[k] || escC(P[k].label)) + ' ' + (REMIND_TXT[cal.progRemind[k]] || cal.progRemind[k] + ' phút')).join(', ')} <button class="cal-btn" style="padding:3px 10px;font-size:12px;" onclick="calOpenProgRemind()">Chỉnh</button></span>` : '') +
+        '</div>';
+    }
+    function calOpenProgRemind() {
+      const P = cal.programs || {};
+      document.getElementById('cprRows').innerHTML = Object.keys(P).map(k => `<label for="cpr_${k}">${escC(P[k].label)}</label><select id="cpr_${k}">` +
+        [0, 15, 30, 60, 120, 1440].map(m => `<option value="${m}"${+cal.progRemind[k] === m ? ' selected' : ''}>${m ? 'Trước ' + REMIND_TXT[m] : 'Không nhắc'}</option>`).join('') + '</select>').join('');
+      document.getElementById('cprErr').textContent = '';
+      document.getElementById('calProgRemind').showModal();
+    }
+    async function calSaveProgRemind() {
+      const body = {}; Object.keys(cal.programs || {}).forEach(k => { body[k] = +document.getElementById('cpr_' + k).value; });
+      try { await dhSecureFetch('/api/calendar/program-remind', { method: 'PUT', body: JSON.stringify(body) }); document.getElementById('calProgRemind').close(); loadCalendar(); }
+      catch (e) { if (e.needLogin && confirm(e.message + '\n\nĐăng nhập lại ngay?')) return dhRelogin(); document.getElementById('cprErr').textContent = e.message; }
+    }
+
+    function calDayClick(ev, d) { if (ev.target.closest('.cal-ev,.cal-more')) return; calOpenEdit(null, d); }
+    function calDayList(d) { cal.month = d.slice(0, 7); calView('list'); }
+
+    // Chi tiết sự kiện
+    function gcalLink(e) {
+      const ds = e.date.replace(/-/g, '');
+      const t = v => v.replace(':', '') + '00';
+      let dates;
+      if (e.start_time) dates = ds + 'T' + t(e.start_time) + '/' + ds + 'T' + t(e.end_time || (String(Math.min(23, +e.start_time.slice(0, 2) + 1)).padStart(2, '0') + e.start_time.slice(2)));
+      else dates = ds + '/' + addDays(e.date, 1).replace(/-/g, '');
+      return 'https://calendar.google.com/calendar/render?action=TEMPLATE&ctz=Asia/Ho_Chi_Minh&text=' + encodeURIComponent(e.title) + '&dates=' + dates +
+        '&details=' + encodeURIComponent((e.description || '') + (e.link ? '\n' + e.link : '')) + '&location=' + encodeURIComponent(e.location || e.link || '');
+    }
+    function calShow(i) {
+      const e = cal.events[i], dlg = document.getElementById('calDetail');
+      const rem = { 15: '15 phút', 30: '30 phút', 60: '1 giờ', 120: '2 giờ', 1440: '1 ngày' }[e.remind_minutes];
+      dlg.innerHTML = `<div class="sw" style="--c:${escC(e.color)}"></div><div class="bd">
+        ${e.readonly ? `<span class="cal-badge" style="--c:${escC(e.color)}">${escC(e.program_label)}</span>` : ''}
+        <h3>${escC(e.title)}</h3>
+        <div class="meta">🗓️ <span>${DOW[dowOf(e.date)]}, ${fmtD(e.date)} · ${timeTxt(e)}${localTxt(e) ? ' giờ VN<br>🌏 <b>' + localTxt(e) + '</b>' : ''}${e.repeat !== 'none' ? '<br>🔁 ' + REPEAT_TXT[e.repeat] + (e.repeat_until ? ' đến ' + fmtD(e.repeat_until) : '') : ''}</span></div>
+        ${e.readonly && e.time_note ? `<div class="meta">🕗 <span>${escC(e.time_note)}</span></div>` : ''}
+        ${e.location ? `<div class="meta">📍 <span>${escC(e.location)}</span></div>` : ''}
+        ${rem ? `<div class="meta">🔔 <span>Nhắc trước ${rem}${e.remind_target === 'admins' ? ' (ban tổ chức)' : e.remind_target === 'enrolled' ? ' (học viên + ban tổ chức)' : ''}</span></div>` : ''}
+        ${e.description ? `<div class="desc">${linkify(e.description)}</div>` : ''}
+        <div class="acts">
+          ${e.link ? `<a class="cal-btn primary" href="${escC(dhZoomHref(e.link))}" target="_blank" rel="noopener" style="text-decoration:none;">🎥 Tham gia</a>` : ''}
+          ${e.readonly ? `<a class="cal-btn primary" href="${escC(e.page)}" style="text-decoration:none;">🎥 Mở trang & vào Zoom</a>` : ''}
+          <a class="cal-btn" href="${escC(gcalLink(e))}" target="_blank" rel="noopener" style="text-decoration:none;">➕ Lưu vào lịch của tôi</a>
+          ${cal.canEdit && !e.readonly ? `<button class="cal-btn" type="button" onclick="calOpenEdit(${i})">✏️ Sửa</button><button class="cal-btn" type="button" style="color:#dc2626;" onclick="calDelete(${i})">🗑️ Xoá</button>` : ''}
+          ${cal.canEdit && e.readonly ? `<a class="cal-btn" href="admin.html" target="_blank" rel="noopener" style="text-decoration:none;" title="Buổi này lấy tự động từ thiết lập chương trình trong Admin">⚙️ Sửa trong Admin</a>` : ''}
+          <button class="cal-btn" type="button" onclick="document.getElementById('calDetail').close()">Đóng</button>
+        </div></div>`;
+      dlg.showModal();
+    }
+
+    // Thêm / sửa (admin)
+    function calRepeatUi() {
+      document.getElementById('ceTimes').style.display = document.getElementById('ceAllDay').checked ? 'none' : '';
+      document.getElementById('ceUntilWrap').style.display = document.getElementById('ceRepeat').value === 'none' ? 'none' : '';
+    }
+    function calPickColor(c) {
+      document.getElementById('ceColors').dataset.v = c;
+      document.querySelectorAll('#ceColors button').forEach(b => b.classList.toggle('on', b.dataset.c === c));
+    }
+    function calOpenEdit(i, date) {
+      const e = i == null ? null : cal.events[i];
+      cal.editing = e ? e.id : null;
+      document.getElementById('calDetail').close();
+      document.getElementById('calEditTitle').textContent = e ? 'Sửa sự kiện' + (e.repeat !== 'none' ? ' (áp dụng cho cả chuỗi lặp lại)' : '') : 'Thêm sự kiện';
+      const v = (id, x) => { document.getElementById(id).value = x == null ? '' : x; };
+      v('ceTitle', e?.title); v('ceDate', e ? e.start_date : (date || cal.today)); v('ceRepeat', e?.repeat || 'none'); v('ceUntil', e?.repeat_until);
+      v('ceStart', e ? e.start_time : '20:00'); v('ceEnd', e ? e.end_time : '21:30');
+      v('ceLocation', e ? e.location : 'Zoom'); v('ceLink', e?.link); v('ceDesc', e?.description);
+      v('ceRemind', e ? String(e.remind_minutes || 0) : '60'); v('ceTarget', e?.remind_target || 'all');
+      document.getElementById('ceAllDay').checked = !!e && !e.start_time;
+      const colors = e?.color && !CAL_COLORS.includes(e.color) ? CAL_COLORS.concat(e.color) : CAL_COLORS;
+      document.getElementById('ceColors').innerHTML = colors.map(c => `<button type="button" data-c="${escC(c)}" style="--c:${escC(c)}" aria-label="Chọn màu" onclick="calPickColor('${escC(c)}')"></button>`).join('');
+      calPickColor(e?.color || CAL_COLORS[0]);
+      document.getElementById('ceErr').textContent = '';
+      calRepeatUi();
+      document.getElementById('calEdit').showModal();
+      document.getElementById('ceTitle').focus();
+    }
+    async function calSave() {
+      const g = id => document.getElementById(id).value;
+      const allDay = document.getElementById('ceAllDay').checked;
+      const body = { title: g('ceTitle'), start_date: g('ceDate'), repeat: g('ceRepeat'), repeat_until: g('ceUntil'),
+        start_time: allDay ? '' : g('ceStart'), end_time: allDay ? '' : g('ceEnd'), location: g('ceLocation'), link: g('ceLink'),
+        description: g('ceDesc'), color: document.getElementById('ceColors').dataset.v, remind_minutes: +g('ceRemind'), remind_target: g('ceTarget') };
+      if (!body.title.trim()) return document.getElementById('ceErr').textContent = 'Nhập tiêu đề sự kiện.';
+      if (!allDay && !body.start_time) return document.getElementById('ceErr').textContent = 'Chọn giờ bắt đầu (hoặc tick "Cả ngày").';
+      if (body.link && !/^https?:\/\//i.test(body.link)) return document.getElementById('ceErr').textContent = 'Link phải bắt đầu bằng https://';
+      const btn = document.getElementById('ceSave'); btn.disabled = true;
+      try {
+        await dhSecureFetch(cal.editing ? `/api/calendar/events/${cal.editing}` : '/api/calendar/events', { method: cal.editing ? 'PUT' : 'POST', body: JSON.stringify(body) });
+        document.getElementById('calEdit').close();
+        cal.month = body.start_date.slice(0, 7) === cal.month || cal.editing ? cal.month : body.start_date.slice(0, 7);
+        loadCalendar();
+      } catch (e) {
+        if (e.needLogin && confirm(e.message + '\n\nĐăng nhập lại ngay?')) return dhRelogin();
+        document.getElementById('ceErr').textContent = e.message;
+      }
+      btn.disabled = false;
+    }
+    async function calDelete(i) {
+      const e = cal.events[i];
+      let url = `/api/calendar/events/${e.id}`;
+      if (e.repeat !== 'none') {
+        const only = confirm(`"${e.title}" là sự kiện lặp lại.\n\nOK = chỉ xoá buổi ngày ${fmtD(e.date)}\nCancel = chọn xoá cả chuỗi`);
+        if (only) url += `?date=${e.date}`;
+        else if (!confirm(`Xoá TOÀN BỘ chuỗi "${e.title}" (mọi ngày)?`)) return;
+      } else if (!confirm(`Xoá sự kiện "${e.title}"?`)) return;
+      try { await dhSecureFetch(url, { method: 'DELETE' }); document.getElementById('calDetail').close(); loadCalendar(); }
+      catch (err) { if (err.needLogin && confirm(err.message + '\n\nĐăng nhập lại ngay?')) return dhRelogin(); alert(err.message); }
+    }
+    async function calImport() {
+      if (!confirm('Nhập các sự kiện từ lịch Google đang nhúng trước đây vào lịch mới?\n(Sự kiện đã nhập rồi sẽ được bỏ qua.)')) return;
+      try {
+        const d = await dhSecureFetch('/api/calendar/import-google', { method: 'POST' });
+        alert(`Đã nhập ${d.added} sự kiện` + (d.skipped ? `, bỏ qua ${d.skipped} sự kiện đã có` : '') + '.' + (d.notes && d.notes.length ? '\n\n' + d.notes.join('\n') : '') +
+          (d.added ? '\n\nLưu ý: sự kiện nhập vào chưa bật nhắc lịch — bấm vào từng sự kiện → Sửa để chọn nhắc.' : ''));
+        loadCalendar();
+      } catch (e) { if (e.needLogin && confirm(e.message + '\n\nĐăng nhập lại ngay?')) return dhRelogin(); alert(e.message); }
+    }
+
+    loadCalendar();
+  </script>
+</body>
+
+</html>

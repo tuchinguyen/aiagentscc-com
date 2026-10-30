@@ -8,11 +8,11 @@
 //      - Execute as: Me
 //      - Who has access: Anyone
 //   5. Copy URL → dán vào SePay Dashboard (Webhook URL)
-//   6. Trong SePay Dashboard, điền Apikey: ae3066fa595768259e92553aa371405a8fa814c6
+//   6. Trong SePay Dashboard, điền Apikey: <API key webhook SePay>
 // ============================================================
 
-const SHEET_ID  = '1TNzXmIR9Qcu_oqeNxYGFdnFxt2YN9xik4OPJOtac4nI';
-const SEPAY_KEY = 'ae3066fa595768259e92553aa371405a8fa814c6';
+const SHEET_ID  = 'YOUR_GOOGLE_SHEET_ID';
+const SEPAY_KEY = '<API key webhook SePay>';
 
 // Header row — chỉ tạo 1 lần nếu sheet trống
 function ensureHeader(sheet) {

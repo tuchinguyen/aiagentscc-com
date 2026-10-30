@@ -1,15 +1,22 @@
 ﻿<!DOCTYPE html>
-<html lang="vi">
+<html lang="vi" class="auth-html">
 <head>
 <meta charset="UTF-8">
+  <script src="assets/js/auth-fetch.js?v=1"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" href="/assets/img/logo.png">
+<link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
+<link rel="manifest" href="/manifest.json?v=2">
+<meta name="apple-mobile-web-app-title" content="AI Agents CC">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0ea5e9">
 <title>Đăng nhập — AI AGENTS CC</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/base.css">
-<link rel="stylesheet" href="assets/css/components.css">
-<link rel="stylesheet" href="assets/css/layout.css">
+<link rel="stylesheet" href="assets/css/base.css?v=2">
+<link rel="stylesheet" href="assets/css/components.css?v=11">
+<link rel="stylesheet" href="assets/css/layout.css?v=6">
 <style>
 /* Auth page extras */
 .auth-tagline {
@@ -174,34 +181,34 @@
   <!-- Left panel -->
   <div class="auth-left">
     <div class="auth-left-content">
-      <div class="auth-tagline">Cộng đồng AI Agent</div>
+      <div class="auth-tagline" id="homeTagline">AI AGENTS CC</div>
 
       <h1 class="auth-heading">
-        Làm chủ<br>
-        <span class="hl">AI Agent</span><br>
-        từ hôm nay.
+        <span id="homeHeadingLine1">Làm chủ</span><br>
+        <span class="hl" id="homeHeadingHighlight">AI Agent</span><br>
+        <span id="homeHeadingLine2">từ hôm nay.</span>
       </h1>
 
-      <p class="auth-desc">
+      <p class="auth-desc" id="homeDesc">
         Nơi học viên thực chiến cùng nhau — từ prompt engineering đến deploy agent thực tế trong 21 ngày.
       </p>
 
       <div class="auth-stats">
         <div>
-          <div class="auth-stat-num">2<em>K+</em></div>
-          <div class="auth-stat-label">Học viên</div>
+          <div class="auth-stat-num" id="homeStat1Value">2<em>K+</em></div>
+          <div class="auth-stat-label" id="homeStat1Label">Học viên</div>
         </div>
         <div>
-          <div class="auth-stat-num">120<em>+</em></div>
-          <div class="auth-stat-label">Bài học</div>
+          <div class="auth-stat-num" id="homeStat2Value">120<em>+</em></div>
+          <div class="auth-stat-label" id="homeStat2Label">Bài học</div>
         </div>
         <div>
-          <div class="auth-stat-num">21</div>
-          <div class="auth-stat-label">Day Challenge</div>
+          <div class="auth-stat-num" id="homeStat3Value">21</div>
+          <div class="auth-stat-label" id="homeStat3Label">Day Challenge</div>
         </div>
       </div>
 
-      <div class="auth-tags">
+      <div class="auth-tags" id="homeTagsWrap">
         <span class="auth-tag">AI Agent</span>
         <span class="auth-tag">Prompt Engineering</span>
         <span class="auth-tag">n8n / Make</span>
@@ -215,19 +222,16 @@
   <div class="auth-right">
 
     <div class="form-logo">
-      <div class="form-logo-mark">
-        <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="10" cy="10" r="3" fill="currentColor"/>
-          <path d="M10 3v2M10 15v2M3 10h2M15 10h2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-          <path d="M5.5 5.5l1.5 1.5M13 13l1.5 1.5M14.5 5.5L13 7M7 13l-1.5 1.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-        </svg>
-      </div>
-      <div class="form-logo-name">AI AGENTS <span>CC</span></div>
+      <div class="form-logo-mark" style="background:transparent;"><img src="assets/img/logo.png" alt="Logo" style="width:100%;height:100%;object-fit:contain;"></div>
+      <div class="form-logo-name">AI AGENTS CC</div>
     </div>
 
     <div class="form-header">
       <h2>Chào mừng trở lại</h2>
       <p>Đăng nhập để tiếp tục hành trình của bạn</p>
+    </div>
+    <div style="font-size:13px;line-height:1.55;background:#ecfdf5;color:#065f46;border:1px solid #a7f3d0;border-radius:10px;padding:9px 12px;margin:-6px 0 14px;">
+      🌱 <b>Lần đầu tham gia?</b> Bấm <b>Tiếp tục với Google</b> hoặc <b>mã qua email</b> bên dưới — chưa có tài khoản thì hệ thống tự tạo mới cho bạn.
     </div>
 
     <!-- Google -->
@@ -242,7 +246,51 @@
       <span id="googleBtnText">Tiếp tục với Google</span>
     </button>
 
-    <div class="or-divider"><span>hoặc đăng nhập bằng email</span></div>
+    <!-- Đăng nhập bằng mã 6 số gửi qua email — dùng được cả trong app ở màn hình chính -->
+    <button class="btn-google" id="codeLoginBtn" type="button" onclick="showCodeLogin(true)" style="margin-top:10px;">
+      <span style="font-size:17px;line-height:1;">✉️</span>
+      <span>Đăng nhập / Đăng ký bằng mã qua email</span>
+    </button>
+
+    <div id="codeLoginBox" style="display:none;">
+      <div class="alert alert-error" id="codeError" role="alert" style="display:none;">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01" stroke-linecap="round"/></svg>
+        <span data-msg></span>
+      </div>
+      <div class="field" style="margin-top:14px;">
+        <label for="codeEmail">Email của bạn</label>
+        <div class="input-wrap">
+          <svg class="input-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+            <rect x="2" y="4" width="20" height="16" rx="2" stroke="currentColor"/>
+            <path d="M2 8l10 6 10-6" stroke="currentColor" stroke-linecap="round"/>
+          </svg>
+          <input class="input" type="email" id="codeEmail" placeholder="ban@gmail.com" autocomplete="email" inputmode="email">
+        </div>
+      </div>
+      <button type="button" class="btn btn-primary btn-lg btn-full" id="codeSendBtn" onclick="sendLoginCode()">Gửi mã qua email</button>
+
+      <div id="codeStep2" style="display:none;margin-top:16px;">
+        <div style="font-size:13px;color:var(--text-muted);line-height:1.5;margin-bottom:10px;" id="codeSentNote"></div>
+        <div class="field">
+          <label for="loginCode">Mã 6 số</label>
+          <input class="input" type="text" id="loginCode" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="••••••"
+            style="font-size:24px;letter-spacing:10px;text-align:center;font-weight:700;padding-left:12px;"
+            oninput="this.value=this.value.replace(/\D/g,'').slice(0,6); if(this.value.length===6) verifyLoginCode();">
+        </div>
+        <button type="button" class="btn btn-primary btn-lg btn-full" id="codeVerifyBtn" onclick="verifyLoginCode()">Đăng nhập</button>
+        <div id="codeStep3" style="display:none;margin-top:4px;">
+          <div style="font-size:13.5px;line-height:1.55;background:#ecfdf5;color:#065f46;border-radius:10px;padding:10px 12px;margin-bottom:12px;">✅ Email đã được xác nhận. Đây là <b>tài khoản mới</b> — điền họ tên để hoàn tất đăng ký.</div>
+          <div class="field"><label for="codeLast">Họ</label><input class="input" type="text" id="codeLast" maxlength="50" autocomplete="family-name" placeholder="VD: Nguyễn" style="padding-left:12px;"></div>
+          <div class="field"><label for="codeFirst">Tên</label><input class="input" type="text" id="codeFirst" maxlength="50" autocomplete="given-name" placeholder="VD: Lan" style="padding-left:12px;" onkeydown="if(event.key==='Enter')registerByCode()"></div>
+          <button type="button" class="btn btn-primary btn-lg btn-full" id="codeRegBtn" onclick="registerByCode()">Tạo tài khoản</button>
+        </div>
+        <button type="button" id="codeResendBtn" onclick="sendLoginCode(true)" style="margin-top:10px;width:100%;background:none;border:none;color:var(--color-primary);font-weight:600;font-size:13px;cursor:pointer;font-family:inherit;">Gửi lại mã</button>
+      </div>
+
+      <button type="button" onclick="showCodeLogin(false)" style="margin-top:14px;width:100%;background:none;border:none;color:var(--text-muted);font-size:13px;cursor:pointer;font-family:inherit;">← Đăng nhập bằng mật khẩu</button>
+    </div>
+
+    <div class="or-divider" id="pwDivider"><span>hoặc đăng nhập bằng email</span></div>
 
     <!-- Error banner -->
     <div class="alert alert-error" id="errorBanner" role="alert">
@@ -313,9 +361,60 @@
 </div>
 
 <script src="https://accounts.google.com/gsi/client" async defer></script>
-<script src="assets/js/app.js"></script>
+<script src="assets/js/app.js?v=28"></script>
 <script>
-const GOOGLE_CLIENT_ID = '879415234564-unts08kj8pfh8pkspvhh404gqg0g3ce1.apps.googleusercontent.com';
+// Already logged in (localStorage persists across tabs/restarts) — skip the login form.
+if (localStorage.getItem('currentUser')) {
+  redirectAfterLogin();
+}
+
+// Phiên cũ không còn hợp lệ (tài khoản bị xoá / khoá) — app.js chuyển về đây kèm ?session=expired
+if (new URLSearchParams(location.search).get('session') === 'expired') {
+  const msgEl = document.querySelector('#errorBanner [data-msg]');
+  if (msgEl) msgEl.textContent = 'Tài khoản của bạn không còn tồn tại hoặc đã bị khoá. Vui lòng đăng nhập lại hoặc đăng ký tài khoản mới.';
+  showAlert('errorBanner');
+}
+
+// ── Homepage hero content (admin-configurable) ──────────────
+(function applyHomeSettings() {
+  function splitStatValue(value) {
+    const m = String(value || '').match(/^(\d+)(.*)$/);
+    if (!m) return { num: value, suffix: '' };
+    return { num: m[1], suffix: m[2] };
+  }
+
+  function renderStat(elId, value) {
+    const el = document.getElementById(elId);
+    if (!el || value == null || value === '') return;
+    const { num, suffix } = splitStatValue(value);
+    el.innerHTML = suffix ? `${num}<em>${suffix}</em>` : num;
+  }
+
+  fetch('/api/settings').then(r => r.json()).then(s => {
+    if (s.home_tagline) document.getElementById('homeTagline').textContent = s.home_tagline;
+    if (s.home_heading_line1) document.getElementById('homeHeadingLine1').textContent = s.home_heading_line1;
+    if (s.home_heading_highlight) document.getElementById('homeHeadingHighlight').textContent = s.home_heading_highlight;
+    if (s.home_heading_line2) document.getElementById('homeHeadingLine2').textContent = s.home_heading_line2;
+    if (s.home_desc) document.getElementById('homeDesc').textContent = s.home_desc;
+
+    renderStat('homeStat1Value', s.home_stat1_value);
+    if (s.home_stat1_label) document.getElementById('homeStat1Label').textContent = s.home_stat1_label;
+    renderStat('homeStat2Value', s.home_stat2_value);
+    if (s.home_stat2_label) document.getElementById('homeStat2Label').textContent = s.home_stat2_label;
+    renderStat('homeStat3Value', s.home_stat3_value);
+    if (s.home_stat3_label) document.getElementById('homeStat3Label').textContent = s.home_stat3_label;
+
+    if (s.home_tags) {
+      const tags = s.home_tags.split(',').map(t => t.trim()).filter(Boolean);
+      if (tags.length) {
+        document.getElementById('homeTagsWrap').innerHTML =
+          tags.map(t => `<span class="auth-tag">${t.replace(/</g, '&lt;')}</span>`).join('');
+      }
+    }
+  }).catch(() => {});
+})();
+
+const GOOGLE_CLIENT_ID = '879415234564-unts08kj8pfh8pkspvhh404gqg0g3ce1.apps.googleusercontent.com.apps.googleusercontent.com';
 let gTokenClient;
 
 function initGoogleClient() {
@@ -367,7 +466,7 @@ async function handleGoogleToken(access_token) {
       setGoogleBtnState('Tiếp tục với Google', false);
       return;
     }
-    sessionStorage.setItem('currentUser', JSON.stringify(data.user));
+    localStorage.setItem('currentUser', JSON.stringify(data.user));
     await savePendingIntakeProfile(data.user.id);
     redirectAfterLogin();
   } catch {
@@ -381,6 +480,138 @@ async function handleGoogleToken(access_token) {
 window.addEventListener('load', initGoogleClient);
 
 // Email/password form
+// ── Đăng nhập bằng mã 6 số qua email ───────────────────────────
+let codeResendTimer = null;
+function showCodeLogin(on) {
+  document.getElementById('codeLoginBox').style.display = on ? '' : 'none';
+  ['loginForm', 'pwDivider', 'codeLoginBtn', 'googleBtn'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.style.display = on ? 'none' : '';
+  });
+  hideAlert('errorBanner');
+  if (on) {
+    const pwEmail = document.getElementById('email').value.trim();
+    const ce = document.getElementById('codeEmail');
+    if (!ce.value && pwEmail) ce.value = pwEmail;
+    setTimeout(() => ce.focus(), 50);
+  }
+}
+function codeErr(msg) {
+  const el = document.getElementById('codeError');
+  if (!msg) { el.style.display = 'none'; return; }
+  el.querySelector('[data-msg]').textContent = msg;
+  el.style.display = 'flex';
+}
+function startResendCountdown(sec) {
+  const btn = document.getElementById('codeResendBtn');
+  clearInterval(codeResendTimer);
+  let left = sec;
+  btn.disabled = true;
+  btn.textContent = `Gửi lại mã (${left}s)`;
+  codeResendTimer = setInterval(() => {
+    left--;
+    if (left <= 0) { clearInterval(codeResendTimer); btn.disabled = false; btn.textContent = 'Gửi lại mã'; return; }
+    btn.textContent = `Gửi lại mã (${left}s)`;
+  }, 1000);
+}
+async function sendLoginCode(isResend) {
+  const email = document.getElementById('codeEmail').value.trim();
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { codeErr('Vui lòng nhập email hợp lệ.'); return; }
+  codeErr('');
+  const btn = document.getElementById('codeSendBtn');
+  btn.disabled = true; btn.textContent = 'Đang gửi...';
+  try {
+    const r = await fetch('/api/auth/email-code/request', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email }) });
+    const d = await r.json().catch(() => ({}));
+    if (!r.ok) throw new Error(d.error || 'Không gửi được mã. Vui lòng thử lại.');
+    document.getElementById('codeStep2').style.display = '';
+    const em = email.replace(/[<>&"]/g, '');
+    document.getElementById('codeSentNote').innerHTML = d.is_new
+      ? `🌱 <b>${em}</b> chưa có tài khoản — mã xác nhận <b>tạo tài khoản mới</b> vừa được gửi tới hộp thư (hiệu lực ${d.ttl_minutes || 10} phút). Nhập mã, rồi điền họ tên là xong. Kiểm tra cả mục <b>Thư rác / Quảng cáo</b> nếu chưa thấy.<br><span style="font-size:12px;">Gõ nhầm email? Sửa ô email ở trên rồi bấm "Gửi lại mã".</span>`
+      : `Mã đăng nhập 6 số vừa được gửi tới <b>${em}</b> (hiệu lực ${d.ttl_minutes || 10} phút). Kiểm tra cả mục <b>Thư rác / Quảng cáo</b> nếu chưa thấy.`;
+    btn.style.display = 'none';
+    document.getElementById('loginCode').value = '';
+    document.getElementById('loginCode').focus();
+    startResendCountdown(60);
+  } catch (e) {
+    codeErr(e.message);
+  } finally {
+    btn.disabled = false; btn.textContent = 'Gửi mã qua email';
+  }
+}
+let codeVerifying = false;
+async function verifyLoginCode() {
+  if (codeVerifying) return;
+  const email = document.getElementById('codeEmail').value.trim();
+  const code = document.getElementById('loginCode').value.trim();
+  if (code.length !== 6) { codeErr('Vui lòng nhập đủ 6 số của mã.'); return; }
+  codeErr('');
+  codeVerifying = true;
+  const btn = document.getElementById('codeVerifyBtn');
+  btn.disabled = true; btn.textContent = 'Đang kiểm tra...';
+  try {
+    const r = await fetch('/api/auth/email-code/verify', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email, code }) });
+    const d = await r.json().catch(() => ({}));
+    if (!r.ok) throw new Error(d.error || 'Không đăng nhập được.');
+    if (d.need_signup) {
+      codeSignupToken = d.signup_token;
+      document.getElementById('codeStep3').style.display = '';
+      ['codeVerifyBtn', 'codeResendBtn'].forEach(id => { document.getElementById(id).style.display = 'none'; });
+      document.getElementById('loginCode').closest('.field').style.display = 'none';
+      document.getElementById('codeSentNote').style.display = 'none';
+      document.getElementById('codeEmail').readOnly = true;
+      setTimeout(() => document.getElementById('codeLast').focus(), 50);
+      return;
+    }
+    localStorage.setItem('currentUser', JSON.stringify(d.user));
+    await savePendingIntakeProfile(d.user.id);
+    redirectAfterLogin();
+  } catch (e) {
+    codeErr(e.message);
+    document.getElementById('loginCode').select();
+  } finally {
+    codeVerifying = false;
+    btn.disabled = false; btn.textContent = 'Đăng nhập';
+  }
+}
+let codeSignupToken = null;
+async function registerByCode() {
+  const last_name = document.getElementById('codeLast').value.trim(), first_name = document.getElementById('codeFirst').value.trim();
+  if (!last_name || !first_name) { codeErr('Vui lòng nhập đủ Họ và Tên.'); return; }
+  codeErr('');
+  const btn = document.getElementById('codeRegBtn');
+  btn.disabled = true; btn.textContent = 'Đang tạo tài khoản...';
+  try {
+    const r = await fetch('/api/auth/email-code/register', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ signup_token: codeSignupToken, first_name, last_name }) });
+    const d = await r.json().catch(() => ({}));
+    if (!r.ok) throw new Error(d.error || 'Không tạo được tài khoản.');
+    localStorage.setItem('currentUser', JSON.stringify(d.user));
+    await savePendingIntakeProfile(d.user.id);
+    redirectAfterLogin();
+  } catch (e) {
+    codeErr(e.message);
+    btn.disabled = false; btn.textContent = 'Tạo tài khoản';
+  }
+}
+// Từ trang đăng ký (email đã có tài khoản): điền sẵn email; tài khoản Google → nhắc bấm Google; chưa có mật khẩu → mở đăng nhập bằng mã
+(function () {
+  const q = new URLSearchParams(location.search), em = q.get('email');
+  if (!em) return;
+  document.getElementById('email').value = em;
+  document.getElementById('codeEmail').value = em;
+  const msgEl = document.querySelector('#errorBanner [data-msg]');
+  if (q.get('via') === 'google') {
+    if (msgEl) msgEl.textContent = 'Email ' + em + ' đã có tài khoản tạo bằng Google — bấm "Tiếp tục với Google" bên dưới để vào.';
+    showAlert('errorBanner');
+    const g = document.getElementById('googleBtn'); if (g) g.style.boxShadow = '0 0 0 3px #0ea5e9';
+  } else if (q.get('via') === 'code') showCodeLogin(true);
+})();
+// Mở từ icon ngoài màn hình chính (app riêng) → cửa sổ Google không thấy tài khoản đã đăng nhập
+// trong trình duyệt → mở sẵn cách đăng nhập bằng mã qua email.
+if ((window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) || navigator.standalone === true) {
+  if (!localStorage.getItem('currentUser')) showCodeLogin(true);
+}
+
 const loginForm = document.getElementById('loginForm');
 const submitBtn = document.getElementById('submitBtn');
 const spinner   = document.getElementById('spinner');
@@ -420,13 +651,13 @@ loginForm.addEventListener('submit', async (e) => {
       return;
     }
 
-    sessionStorage.setItem('currentUser', JSON.stringify(data.user));
+    localStorage.setItem('currentUser', JSON.stringify(data.user));
     await savePendingIntakeProfile(data.user.id);
     redirectAfterLogin();
   } catch (err) {
     setLoading(false);
     const msgEl = document.querySelector('#errorBanner [data-msg]');
-    if (msgEl) msgEl.textContent = 'Không kết nối được server. Hãy chạy: node server.js';
+    if (msgEl) msgEl.textContent = 'Chưa gửi được do mạng chập chờn. Vui lòng kiểm tra kết nối mạng rồi bấm lại.';
     showAlert('errorBanner');
   }
 });
@@ -444,10 +675,29 @@ async function savePendingIntakeProfile(userId) {
   } catch {}
 }
 
-function redirectAfterLogin() {
+async function redirectAfterLogin() {
+  // Bắt buộc hoàn thành khảo sát Thân-Tâm-Mệnh trước khi vào các tính năng
+  // khác của cộng đồng — ưu tiên hơn mọi giá trị ?redirect= khác. Chỉ áp dụng
+  // khi admin đã chọn thời điểm "signup" (mặc định) trong Cài đặt → Khảo sát;
+  // nếu chọn thời điểm khác (khi đăng ký 8 buổi / 377 ngày / không bắt buộc)
+  // thì không chặn ở đây — trang 8 buổi / 377 ngày yêu cầu khảo sát sau khi được duyệt.
+  let user = null;
+  try { user = JSON.parse(localStorage.getItem('currentUser') || 'null'); } catch (e) {}
+  if (user && !user.ttm_intake_done_at) {
+    let trigger = 'none';
+    try {
+      const settings = await fetch('/api/settings').then(r => r.json());
+      trigger = settings.ttm_intake_trigger || 'none';
+    } catch (e) { /* nếu không tải được cài đặt, giữ hành vi mặc định an toàn */ }
+    if (trigger === 'signup') return window.location.href = 'intake-than-tam-menh.html';
+  }
+
   const params = new URLSearchParams(window.location.search);
   const redirect = params.get('redirect');
-  window.location.href = redirect === 'intake' ? 'intake.html' : 'feed.html';
+  if (redirect === 'intake') return window.location.href = 'intake.html';
+    // Quay lại đúng trang nội bộ đang mở (vd. đăng nhập lại để mở Hồ sơ y khoa) — chỉ nhận "ten-trang.html?…"
+  if (redirect && /^[a-z0-9-]+\.html(\?[\w=&%.-]*)?$/i.test(redirect)) return window.location.href = redirect;
+  window.location.href = 'feed.html';
 }
 </script>
 </body>

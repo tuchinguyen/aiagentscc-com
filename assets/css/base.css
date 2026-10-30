@@ -2,20 +2,33 @@
    BASE — CSS variables, reset, typography
    ============================================================ */
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap');
+/* Google Fonts is loaded via a <link rel="stylesheet"> in each page's <head>
+   (with preconnect) — do NOT also @import it here. @import is render-blocking
+   and forces an extra serial network round-trip (download base.css, parse it,
+   THEN fetch the font CSS) on every single page navigation, which was adding
+   a visible stutter/flash to every menu click in this multi-page app. */
 
 :root {
-  /* Primary */
-  --color-primary:       #0ea5e9;
-  --color-primary-dark:  #0284c7;
-  --color-primary-light: #bae6fd;
+  /* Primary — xanh ngọc (teal), the brand accent color. Deepened to teal-700
+     (~5.6:1 against white) rather than a brighter teal because it's used as
+     a solid background under white text (.btn-primary etc.), not just as an
+     accent — a lighter teal would fail WCAG AA contrast for that. Distinct
+     enough from Mộc/green (--accent-green, used for "online"/XP progress)
+     to not be confused with it. */
+  --color-primary:       #0f766e;
+  --color-primary-dark:  #115e59;
+  --color-primary-light: #ccfbf1;
 
   /* Backgrounds */
   --bg-app:     #f8fafc;
   --bg-card:    #ffffff;
   --bg-hover:   #f1f5f9;
-  --bg-active:  #e0f2fe;
+  --bg-active:  #ccfbf1;
   --bg-input:   #f8fafc;
+  /* Detail popups only — same as --bg-card here (white already contrasts
+     fine against the light backdrop), but lighter than --bg-card in dark
+     mode so the shadow below actually reads against a near-black page. */
+  --bg-elevated: #ffffff;
 
   /* Text */
   --text:       #0f172a;
@@ -24,7 +37,7 @@
 
   /* Borders */
   --border:       #e2e8f0;
-  --border-focus: #0ea5e9;
+  --border-focus: #0f766e;
 
   /* Accents */
   --accent-green:  #10b981;
@@ -32,21 +45,27 @@
   --accent-amber:  #f59e0b;
   --accent-red:    #ef4444;
 
-  /* Pillar colors */
-  --pillar-offer:       #f59e0b;
-  --pillar-traffic:     #3b82f6;
-  --pillar-conversion:  #8b5cf6;
-  --pillar-delivery:    #10b981;
-  --pillar-continuity:  #ec4899;
+  /* Ngũ Hành colors (Kim=Trắng, Mộc=Xanh, Thủy=Đen, Hỏa=Đỏ, Thổ=Vàng) */
+  --pillar-kim:   #94a3b8;
+  --pillar-moc:   #10b981;
+  --pillar-thuy:  #1f2937;
+  --pillar-hoa:   #ef4444;
+  --pillar-tho:   #f59e0b;
+  /* legacy aliases (safety for any un-migrated reference) */
+  --pillar-offer:      var(--pillar-tho);
+  --pillar-traffic:    var(--pillar-moc);
+  --pillar-conversion: var(--pillar-hoa);
+  --pillar-delivery:   var(--pillar-kim);
+  --pillar-continuity: var(--pillar-thuy);
 
   /* Typography */
   --font-body:    'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif;
   --font-heading: 'Plus Jakarta Sans', 'Inter', sans-serif;
 
-  --fs-xs:   11px;
-  --fs-sm:   13px;
-  --fs-base: 15px;
-  --fs-md:   16px;
+  --fs-xs:   12px;
+  --fs-sm:   14px;
+  --fs-base: 16px;
+  --fs-md:   17px;
   --fs-lg:   18px;
   --fs-xl:   22px;
   --fs-2xl:  28px;
@@ -61,12 +80,58 @@
   --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
   --shadow-md: 0 4px 12px rgba(0,0,0,0.08), 0 2px 4px rgba(0,0,0,0.04);
   --shadow-lg: 0 10px 30px rgba(0,0,0,0.10), 0 4px 8px rgba(0,0,0,0.04);
+  /* Detail popups (post/recipe/product) — deliberately heavier than
+     --shadow-lg so the card visibly "lifts" off the dark overlay behind it
+     instead of blending in, like a raised 3D card. */
+  --shadow-modal: 0 25px 50px -12px rgba(15,23,42,0.35), 0 10px 25px -5px rgba(15,23,42,0.15);
 
   --radius-sm: 6px;
   --radius-md: 10px;
   --radius-lg: 14px;
   --radius-xl: 20px;
 }
+
+/* Smooth cross-document navigation: every menu click is a full page load
+   (this is a multi-page app, not an SPA), which by default hard-cuts to a
+   blank white page and back — the main source of the "giật" feel when
+   clicking around. This opts every same-origin navigation into the
+   browser's native View Transition, which crossfades instead of flashing.
+   Chromium-based browsers only; unsupported browsers just ignore it and
+   keep the normal (unchanged) navigation. */
+@view-transition {
+  navigation: auto;
+}
+
+/* Dark mode overrides */
+html[data-theme="dark"] {
+  --bg-app:     #0b1220;
+  --bg-card:    #111827;
+  --bg-hover:   #1e293b;
+  --bg-active:  #0f3d3a;
+  --bg-input:   #0f172a;
+  --bg-elevated: #1b263d;
+
+  --text:       #f1f5f9;
+  --text-muted: #94a3b8;
+  --text-light: #64748b;
+
+  --border:       #334155;
+  --border-focus: #0f766e;
+
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.4), 0 1px 2px rgba(0,0,0,0.3);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.5), 0 2px 4px rgba(0,0,0,0.3);
+  --shadow-lg: 0 10px 30px rgba(0,0,0,0.6), 0 4px 8px rgba(0,0,0,0.3);
+  /* A subtle light rim (like a tabletop reflection) plus a much heavier drop
+     shadow — a plain black shadow alone barely shows up against the already
+     near-black page, so the rim is what actually reads as "lifted". */
+  --shadow-modal: 0 0 0 1px rgba(255,255,255,0.07), 0 30px 60px -12px rgba(0,0,0,0.85), 0 18px 36px -18px rgba(0,0,0,0.7);
+
+  /* Hành Kim (trắng) & Hành Thủy (đen) cần sáng hơn để nhìn rõ trên nền tối */
+  --pillar-kim:   #cbd5e1;
+  --pillar-thuy:  #64748b;
+}
+
+html, body { transition: background-color 0.15s, color 0.15s; }
 
 /* Reset */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }

@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8">
+  <script src="assets/js/auth-fetch.js?v=1"></script>
+  <script>(function(){try{var t=localStorage.getItem('theme');if(t==='dark'||(!t&&window.matchMedia('(prefers-color-scheme: dark)').matches))document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex">
+  <title>Bản đồ hành trình — AI Agents CC</title>
+  <link rel="icon" type="image/png" href="/assets/img/logo.png">
+  <link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/base.css?v=2">
+  <link rel="stylesheet" href="assets/css/van-hanh.css?v=3">
+  <style>
+    .jm-wrap { width: 100%; box-sizing: border-box; max-width: 1600px; margin: 0 auto; padding: 20px 16px 40px; display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+    .jm-head h1 { font-family: var(--font-heading); font-size: 24px; font-weight: 800; margin: 0; }
+    .jm-head p { margin: 4px 0 0; color: var(--text-muted); font-size: 13.5px; }
+    .jm-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 12px 14px; }
+    .jm-tools { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+    .jm-tools input, .jm-tools select { border: 1px solid var(--border); background: var(--bg-card); color: var(--text); border-radius: 8px; padding: 7px 10px; font-size: 13px; font-family: inherit; }
+    .jm-btn { border: 1px solid var(--border); background: var(--bg-card); color: var(--text); border-radius: 8px; padding: 7px 11px; font-size: 13px; cursor: pointer; font-family: inherit; white-space: nowrap; }
+    .jm-btn:hover { background: var(--bg-hover); }
+    .jm-btn.on { background: var(--color-primary); border-color: var(--color-primary); color: #fff; }
+    .jm-btn.sm { padding: 4px 8px; font-size: 12px; }
+    .jm-search { position: relative; flex: 1; min-width: 220px; }
+    .jm-search input { width: 100%; box-sizing: border-box; }
+    .jm-sugg { position: absolute; top: calc(100% + 4px); left: 0; right: 0; z-index: 20; background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,.15); max-height: 320px; overflow: auto; }
+    .jm-sugg button { display: block; width: 100%; text-align: left; border: 0; background: none; padding: 8px 12px; font: inherit; font-size: 13px; color: var(--text); cursor: pointer; }
+    .jm-sugg button:hover { background: var(--bg-hover); }
+    .jm-sugg small { color: var(--text-muted); }
+
+    .jm-layout { display: grid; grid-template-columns: minmax(0, 1fr) 370px; gap: 12px; align-items: start; }
+    @media (max-width: 1100px) { .jm-layout { grid-template-columns: minmax(0, 1fr); } }
+
+    .jm-mapbox { position: relative; border-radius: 16px; overflow: hidden; border: 1px solid var(--border);
+      background: linear-gradient(180deg, #bfe3ff 0%, #e6f4ff 45%, #f3fbff 100%); }
+    [data-theme="dark"] .jm-mapbox { background: linear-gradient(180deg, #0b1630 0%, #13254a 50%, #1b3058 100%); }
+    .jm-map { height: min(78vh, 900px); min-height: 460px; overflow: auto; cursor: grab; touch-action: pan-x pan-y; }
+    .jm-map.drag { cursor: grabbing; }
+    .jm-map svg { display: block; margin: 0 auto; user-select: none; -webkit-user-select: none; }
+    .jm-zoom { position: absolute; right: 10px; top: 10px; display: flex; flex-direction: column; gap: 6px; z-index: 5; }
+    .jm-zoom button { width: 36px; height: 36px; border-radius: 10px; border: 1px solid var(--border); background: var(--bg-card); color: var(--text); font-size: 18px; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,.12); }
+    .jm-legend { position: absolute; left: 10px; top: 10px; z-index: 5; background: color-mix(in srgb, var(--bg-card) 88%, transparent); border: 1px solid var(--border); border-radius: 10px; padding: 7px 10px; font-size: 11.5px; line-height: 1.6; max-width: 260px; }
+    .jm-legend i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 5px; vertical-align: -1px; }
+
+    .jm-side { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+    .jm-side h2 { font-family: var(--font-heading); font-size: 16px; margin: 0 0 8px; }
+    .jm-funnel { display: flex; flex-direction: column; gap: 6px; }
+    .jm-frow { display: grid; grid-template-columns: 1fr auto; gap: 2px 8px; font-size: 13px; }
+    .jm-frow .bar { grid-column: 1 / -1; height: 8px; border-radius: 6px; background: var(--bg-hover); overflow: hidden; }
+    .jm-frow .bar span { display: block; height: 100%; border-radius: 6px; }
+    .jm-frow small { color: var(--text-muted); }
+    .jm-tabs { display: flex; gap: 6px; margin: 8px 0; flex-wrap: wrap; }
+    .jm-list { display: flex; flex-direction: column; gap: 6px; max-height: 560px; overflow: auto; }
+    .jm-p { border: 1px solid var(--border); border-radius: 10px; padding: 8px 10px; font-size: 13px; display: flex; gap: 8px; align-items: flex-start; }
+    .jm-p .who { flex: 1; min-width: 0; }
+    .jm-p .who b { display: block; overflow-wrap: anywhere; }
+    .jm-p .who small { color: var(--text-muted); display: block; overflow-wrap: anywhere; }
+    .jm-p .act { display: flex; gap: 4px; flex-wrap: wrap; justify-content: flex-end; }
+    .jm-hint { font-size: 12.5px; color: var(--text-muted); line-height: 1.55; background: var(--bg-hover); border-radius: 8px; padding: 8px 10px; }
+    .jm-tl { list-style: none; margin: 8px 0 0; padding: 0; font-size: 13px; }
+    .jm-tl li { display: flex; gap: 8px; padding: 5px 0; border-bottom: 1px dashed var(--border); }
+    .jm-tl li span:first-child { color: var(--text-muted); min-width: 78px; }
+    .jm-tag { display: inline-block; font-size: 11px; padding: 1px 6px; border-radius: 6px; background: var(--bg-hover); margin: 2px 4px 0 0; }
+    .jm-empty { color: var(--text-muted); font-size: 13px; padding: 10px 0; }
+  </style>
+</head>
+
+<body>
+  <div class="vh-shell">
+    <aside class="vh-side" id="vhSide" aria-label="Điều hướng vận hành"></aside>
+    <main class="jm-wrap vh-main">
+      <div class="jm-head">
+        <h1>🗺️ Bản đồ hành trình khách hàng</h1>
+        <p>Khách đi từ các kênh vào cổng làng, qua làng cộng đồng, tới vườn riêng tư và lên đỉnh 377 ngày. Đường càng to là càng nhiều người đi qua. Bấm vào một ngôi nhà để xem ai đang ở đó.</p>
+      </div>
+      <div id="jmNote"></div>
+
+      <div class="jm-card jm-tools">
+        <div class="jm-search">
+          <input id="jmSearch" placeholder="🔎 Tìm khách theo tên, SĐT, email… để xem khách đang ở đâu" autocomplete="off" oninput="jmSuggest()" onfocus="jmSuggest()">
+          <div class="jm-sugg" id="jmSugg" hidden></div>
+        </div>
+        <select id="jmCohort" onchange="jmRefresh()" aria-label="Thời gian tham gia">
+          <option value="0">Mọi thành viên</option><option value="7">Tham gia 7 ngày qua</option><option value="30">Tham gia 30 ngày qua</option><option value="90">Tham gia 90 ngày qua</option>
+        </select>
+        <select id="jmSource" onchange="jmRefresh()" aria-label="Nguồn kênh"><option value="">Mọi nguồn</option></select>
+        <button class="jm-btn" type="button" onclick="jmLoad()">↻ Làm mới</button>
+      </div>
+
+      <div class="jm-layout">
+        <div class="jm-mapbox">
+          <div class="jm-zoom">
+            <button type="button" onclick="jmZoom(1.25)" aria-label="Phóng to">＋</button>
+            <button type="button" onclick="jmZoom(0.8)" aria-label="Thu nhỏ">－</button>
+            <button type="button" onclick="jmFit()" aria-label="Vừa khung" style="font-size:14px;">⤢</button>
+          </div>
+          <div class="jm-map" id="jmMap"><div class="jm-empty" style="padding:30px;">Đang tải bản đồ…</div></div>
+          <div class="jm-legend">
+            <div><i style="background:#38bdf8"></i>Thủy · Kênh vào</div>
+            <div><i style="background:#d6b77a"></i>Thổ · Cổng làng</div>
+            <div><i style="background:#5fbf5a"></i>Mộc · Làng cộng đồng</div>
+            <div><i style="background:#f08a5d"></i>Hỏa · Vườn riêng tư</div>
+            <div><i style="background:#e8c547"></i>Kim · Đỉnh 377 ngày</div>
+          </div>
+        </div>
+        <div class="jm-side">
+          <div class="jm-card" id="jmPanel"></div>
+          <div class="jm-card" id="jmSummary"></div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="assets/js/van-hanh.js?v=7"></script>
+  <script src="assets/js/journey-map.js?v=9"></script>
+  <script>
+    VH.nav('ban-do');
+    const esc = VH.esc;
+
+    const { P, pts, ZONES, ROOMS, SOURCES, SRC, EXIT, flowW, flowLabel } = JM;
+    const PLACE_LABEL = k => ROOMS[k] ? `${ROOMS[k].icon} ${ROOMS[k].label}` : k === 'exit' ? '🚪 Cổng sau (rời đi)' : k.startsWith('src:') ? '🌊 ' + (SRC[k.slice(4)]?.label || 'Kênh') : k;
+
+    let D = null, V = null, sel = { kind: 'overview' }, focus = null, zoom = 0, tab = 'here';
+
+    // ── Dữ liệu ──
+    async function jmLoad() {
+      try {
+        D = await VH.api('/api/admin/journey-map');
+        document.getElementById('jmNote').innerHTML = '';
+        const s = document.getElementById('jmSource');
+        const keep = s.value;
+        s.innerHTML = '<option value="">Mọi nguồn</option>' + SOURCES.map(x => `<option value="${x.key}">${esc(x.label)}</option>`).join('');
+        s.value = keep;
+        jmRefresh();
+        jmActivity();
+        const qs = new URLSearchParams(location.search);
+        if (qs.get('focus')) jmFocus(Number(qs.get('focus')));
+        else if (ROOMS[qs.get('room')]) { sel = { kind: 'room', key: qs.get('room') }; tab = 'auto'; jmDraw(); jmPanel(); setTimeout(() => jmScrollTo(sel.key), 50); }
+      } catch (e) {
+        document.getElementById('jmNote').innerHTML = `<div class="vh-note warn">⚠️ ${esc(e.message)}${VH.token() ? '' : ' <button class="vh-note-btn" onclick="VH.relogin()">🔑 Đăng nhập</button>'}</div>`;
+        document.getElementById('jmMap').innerHTML = '<div class="jm-empty" style="padding:30px;">Không tải được dữ liệu.</div>';
+      }
+    }
+    // Hoạt động thật (họ tên + tiêu đề bài) bay lên từ từng ngôi nhà; lấy lại mỗi 2 phút
+    async function jmActivity() {
+      try { JM.startActivity(() => document.getElementById('jmSvg'), await VH.api('/api/journey/activity?full=1')); } catch (e) { /* bỏ qua */ }
+      clearTimeout(jmActivity.t); jmActivity.t = setTimeout(jmActivity, 120000);
+    }
+    const day = s => String(s || '').slice(0, 10);
+    const fmtD = s => { const d = day(s); return d ? d.split('-').reverse().join('/') : '—'; };
+    function addDays(d, n) { const t = new Date(d + 'T00:00:00Z'); t.setUTCDate(t.getUTCDate() + n); return t.toISOString().slice(0, 10); }
+    function placeOf(p, cutoff) {
+      let best = null;
+      Object.entries(p.r).forEach(([k, at]) => {
+        const R = ROOMS[k]; if (!R) return;
+        if (!best || R.rank > ROOMS[best[0]].rank || (R.rank === ROOMS[best[0]].rank && at > best[1])) best = [k, at];
+      });
+      const from = best ? best[0] : 'src:' + (p.src || 'unknown');
+      return { from, pos: day(p.l) < cutoff ? 'exit' : from, rank: best ? ROOMS[best[0]].rank : 0 };
+    }
+    // Tính số người ở / đã ghé mỗi phòng theo bộ lọc
+    function jmCompute() {
+      const cohort = Number(document.getElementById('jmCohort').value) || 0;
+      const srcF = document.getElementById('jmSource').value;
+      const cutoff = addDays(D.today, -D.exit_days);
+      const since = cohort ? addDays(D.today, -cohort) : '';
+      const people = D.people.filter(p => (!since || day(p.c) >= since) && (!srcF || (p.src || 'unknown') === srcF));
+      const here = {}, visited = {}, src = {}, reach = [0, 0, 0, 0, 0, 0];
+      people.forEach(p => {
+        Object.assign(p, placeOf(p, cutoff));
+        here[p.pos] = (here[p.pos] || 0) + 1;
+        Object.keys(p.r).forEach(k => { if (ROOMS[k]) visited[k] = (visited[k] || 0) + 1; });
+        const sk = p.src || 'unknown'; src[sk] = (src[sk] || 0) + 1;
+        for (let i = 0; i <= p.rank; i++) reach[i]++;
+      });
+      return { people, here, visited, src, reach, cutoff };
+    }
+    function jmRefresh() {
+      if (!D) return;
+      V = jmCompute();
+      if (focus && !V.people.includes(focus)) focus = D.people.find(p => p.id === focus.id) || null;
+      jmDraw(); jmSummary(); jmPanel();
+    }
+
+    // ── Vẽ ──
+    function label(key, sx, sy, title, here, visited, extraCls = '') {
+      const selCls = (sel.kind === 'room' && sel.key === key) || (sel.kind === 'src' && 'src:' + sel.key === key) || (sel.kind === 'exit' && key === 'exit') ? ' sel' : '';
+      const dim = focus && ROOMS[key] && !focus.r[key] ? ' dim' : '';
+      return `<g class="lbl${selCls}${dim}${extraCls}" data-room="${key}" transform="translate(${sx.toFixed(1)},${sy.toFixed(1)})">
+        <rect class="bg" rx="11"/><text class="t1" text-anchor="middle" y="-6">${esc(title)}</text>
+        <text class="t2" text-anchor="middle" y="15"><tspan class="here">${here} đang ở</tspan>${visited != null ? ` · ${visited} đã ghé` : ''}</text></g>`;
+    }
+    function jmDraw() {
+      const box = document.getElementById('jmMap');
+      const keepScroll = box.querySelector('svg') ? [box.scrollLeft, box.scrollTop] : null;
+      const vis = V.visited, here = V.here, maxSrc = Math.max(1, ...Object.values(V.src)), total = V.people.length || 1;
+      const max = Math.max(1, ...Object.values(vis));
+      const scene = JM.scene({
+        room: k => ({ here: here[k] || 0, ring: sel.kind === 'room' && sel.key === k, glow: !!(focus && focus.r[k]), dim: !!(focus && !focus.r[k]) }),
+        roadW: k => flowW(vis[k] || 0, max),
+        trunk: { w3: flowW(V.reach[3], total), w8: flowW(V.reach[5], total) },
+        bridgeW: { summit: flowW(V.reach[5], total), garden: flowW(V.reach[3], total), village: flowW(V.reach[2], total) },
+        exit: { w: flowW(here.exit || 0, total), here: here.exit || 0 },
+        river: k => ({ w: flowW(V.src[k] || 0, maxSrc), dim: !!(focus && (focus.src || 'unknown') !== k) }),
+        dock: k => ({ here: here['src:' + k] || 0 }),
+      });
+
+      // Nhãn phòng
+      let labels = '';
+      Object.entries(ROOMS).forEach(([k, r]) => {
+        const [sx, sy] = JM.roomTop(k);
+        labels += label(k, sx, sy, `${r.icon} ${r.label}`, here[k] || 0, vis[k] || 0);
+      });
+      SOURCES.forEach(S => { const [sx, sy] = P(S.x, S.y, S.cloud ? 30 : 8); labels += label('src:' + S.key, sx, sy + (S.cloud ? 50 : 46), (S.cloud ? '❓ ' : '') + S.label, here['src:' + S.key] || 0, null); });
+      { const [sx, sy] = P(EXIT.x, EXIT.y, ZONES.exit.h); labels += label('exit', sx, sy + 34, `🚪 Rời đi (≥ ${D.exit_days} ngày)`, here.exit || 0, null); }
+      // Lưu lượng qua các cầu
+      const pct = (a, b) => b ? Math.round(a * 100 / b) + '%' : '0%';
+      const fl = (A, za, B, zb, n, of, c) => { const a = P(A[0], A[1], za), b = P(B[0], B[1], zb); const t = `${n} người · ${pct(n, of)}`; return flowLabel((a[0] + b[0]) / 2 + 190, (a[1] + b[1]) / 2, t, c); };
+      labels += fl([25, 25], ZONES.village.h, [26, 26], ZONES.gate.h, V.reach[2], V.reach[1], '#15803d');
+      labels += fl([15, 15], ZONES.garden.h, [16, 16], ZONES.village.h, V.reach[3], V.reach[2], '#c2410c');
+      labels += fl([7, 7], ZONES.summit.h, [8, 8], ZONES.garden.h, V.reach[5], V.reach[4] || V.reach[3], '#a16207');
+      { const p = P(31.5, 31.5, ZONES.gate.h); labels += flowLabel(p[0] + 20, p[1] + 6, `${V.reach[1]}/${V.people.length} vào cổng · ${pct(V.reach[1], V.people.length)}`, '#92400e'); }
+
+      // Dấu chân khách đang xem
+      let foot = '';
+      if (focus) {
+        const steps = Object.entries(focus.r).filter(([k]) => ROOMS[k]).sort((a, b) => ROOMS[a[0]].rank - ROOMS[b[0]].rank || a[1].localeCompare(b[1]));
+        const S0 = SRC[focus.src || 'unknown'];
+        const ptsF = [P(S0.x, S0.y, S0.cloud ? 18 : 8)].concat(steps.map(([k]) => { const r = ROOMS[k]; return P(r.x + (r.s || .6) + .3, r.y + (r.s || .6) + .3, ZONES[r.zone].h); }));
+        if (focus.pos === 'exit') ptsF.push(P(EXIT.x, EXIT.y + .6, ZONES.exit.h));
+        foot += `<polyline points="${pts(ptsF)}" fill="none" stroke="#ef4444" stroke-width="3.5" stroke-dasharray="2 9" stroke-linecap="round" stroke-linejoin="round"/>`;
+        ptsF.forEach((p, i) => { if (i) foot += `<circle cx="${p[0]}" cy="${p[1]}" r="9" fill="#ef4444" stroke="#fff" stroke-width="2"/><text x="${p[0]}" y="${p[1] + 3.5}" text-anchor="middle" font-size="10" font-weight="800" fill="#fff" font-family="Inter">${i}</text>`; });
+        const at = focus.pos === 'exit' ? P(EXIT.x, EXIT.y, ZONES.exit.h) : ROOMS[focus.pos] ? (r => P(r.x, r.y + (r.s || .6) + .6, ZONES[r.zone].h))(ROOMS[focus.pos]) : ptsF[0];
+        const nm = focus.n.length > 22 ? focus.n.slice(0, 21) + '…' : focus.n;
+        foot += `<g class="pin"><path d="M${at[0]} ${at[1]} l-12 -22 a14 14 0 1 1 24 0 z" fill="#ef4444" stroke="#fff" stroke-width="2.5"/><circle cx="${at[0]}" cy="${at[1] - 31}" r="7" fill="#fff"/>` +
+          `<rect x="${at[0] - nm.length * 3.6 - 10}" y="${at[1] - 74}" width="${nm.length * 7.2 + 20}" height="24" rx="12" fill="#0f172a"/><text x="${at[0]}" y="${at[1] - 57}" text-anchor="middle" font-size="12.5" font-weight="700" fill="#fff" font-family="Inter">${esc(nm)}</text></g>`;
+      }
+
+      box.innerHTML = `<svg id="jmSvg" viewBox="${JM.VIEWBOX.x} ${JM.VIEWBOX.y} ${JM.VIEWBOX.w} ${JM.VIEWBOX.h}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Bản đồ hành trình khách hàng">${JM.defs()}${JM.backdrop()}${scene}${foot}${labels}</svg>`;
+      JM.fitLabels(box);
+      jmApplyZoom();
+      if (keepScroll) { box.scrollLeft = keepScroll[0]; box.scrollTop = keepScroll[1]; }
+      else box.scrollLeft = (box.scrollWidth - box.clientWidth) / 2;
+    }
+
+    // ── Phóng to / kéo bản đồ ──
+    function jmBaseWidth() { return document.getElementById('jmMap').clientWidth - 2; }
+    function jmApplyZoom() {
+      const svg = document.getElementById('jmSvg'); if (!svg) return;
+      if (!zoom) zoom = jmBaseWidth() < 700 ? 1.8 : 1;
+      const w = jmBaseWidth() * zoom;
+      svg.style.width = w + 'px'; svg.style.height = (w * JM.VIEWBOX.h / JM.VIEWBOX.w) + 'px';
+    }
+    function jmZoom(f) {
+      const box = document.getElementById('jmMap');
+      const cx = (box.scrollLeft + box.clientWidth / 2) / box.scrollWidth, cy = (box.scrollTop + box.clientHeight / 2) / box.scrollHeight;
+      zoom = Math.max(.5, Math.min(4, (zoom || 1) * f)); jmApplyZoom();
+      box.scrollLeft = cx * box.scrollWidth - box.clientWidth / 2; box.scrollTop = cy * box.scrollHeight - box.clientHeight / 2;
+    }
+    function jmFit() { zoom = 1; jmApplyZoom(); }
+    function jmScrollTo(key) {
+      const box = document.getElementById('jmMap'), svg = document.getElementById('jmSvg'); if (!svg) return;
+      let p;
+      if (ROOMS[key]) { const r = ROOMS[key]; p = P(r.x, r.y, ZONES[r.zone].h); }
+      else if (key === 'exit') p = P(EXIT.x, EXIT.y, ZONES.exit.h);
+      else if (key.startsWith('src:')) { const S = SRC[key.slice(4)]; p = P(S.x, S.y, 8); }
+      if (!p) return;
+      const k = svg.clientWidth / JM.VIEWBOX.w;
+      box.scrollTo({ left: (p[0] - JM.VIEWBOX.x) * k - box.clientWidth / 2, top: (p[1] + 240) * k - box.clientHeight / 2, behavior: 'smooth' });
+    }
+    (function () {
+      const box = document.getElementById('jmMap');
+      let st = null, moved = false;
+      box.addEventListener('pointerdown', e => { if (e.pointerType === 'touch') return; st = [e.clientX, e.clientY, box.scrollLeft, box.scrollTop]; moved = false; });
+      window.addEventListener('pointermove', e => {
+        if (!st) return;
+        const dx = e.clientX - st[0], dy = e.clientY - st[1];
+        if (Math.abs(dx) + Math.abs(dy) > 5) { moved = true; box.classList.add('drag'); }
+        if (moved) { box.scrollLeft = st[2] - dx; box.scrollTop = st[3] - dy; }
+      });
+      window.addEventListener('pointerup', () => { st = null; box.classList.remove('drag'); });
+      box.addEventListener('click', e => {
+        if (moved) { moved = false; return; }
+        const g = e.target.closest('[data-room]'); if (!g) return;
+        const k = g.getAttribute('data-room');
+        if (k === 'exit') sel = { kind: 'exit' };
+        else if (k.startsWith('src:')) sel = { kind: 'src', key: k.slice(4) };
+        else sel = { kind: 'room', key: k };
+        tab = 'auto'; jmDraw(); jmPanel();
+        if (innerWidth <= 1100) document.getElementById('jmPanel').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+      window.addEventListener('resize', () => jmApplyZoom());
+    })();
+
+    // ── Tìm khách ──
+    function jmMatch(q) {
+      q = q.trim().toLowerCase(); if (!q || !D) return [];
+      const qd = q.replace(/\D/g, '');
+      return D.people.filter(p => p.n.toLowerCase().includes(q) || p.em.toLowerCase().includes(q) || (qd.length >= 3 && p.ph.replace(/\D/g, '').includes(qd))).slice(0, 12);
+    }
+    function jmSuggest() {
+      const box = document.getElementById('jmSugg'), list = jmMatch(document.getElementById('jmSearch').value);
+      if (!list.length) { box.hidden = true; return; }
+      box.innerHTML = list.map(p => `<button type="button" onclick="jmFocus(${p.id})">${esc(p.n)} <small>· ${esc(p.ph || p.em)}</small></button>`).join('');
+      box.hidden = false;
+    }
+    document.addEventListener('click', e => { if (!e.target.closest('.jm-search')) document.getElementById('jmSugg').hidden = true; });
+    function jmFocus(id) {
+      const p = D.people.find(x => x.id === id); if (!p) return;
+      if (!p.pos) Object.assign(p, placeOf(p, addDays(D.today, -D.exit_days)));
+      focus = p; sel = { kind: 'person' };
+      document.getElementById('jmSugg').hidden = true;
+      document.getElementById('jmSearch').value = p.n;
+      jmDraw(); jmPanel(); setTimeout(() => jmScrollTo(p.pos), 50);
+    }
+    function jmClearFocus() { focus = null; sel = { kind: 'overview' }; document.getElementById('jmSearch').value = ''; jmDraw(); jmPanel(); }
+
+    // ── Bảng bên phải ──
+    function jmSummary() {
+      const r = V.reach, n = V.people.length || 1;
+      const steps = [['🌊 Vào cộng đồng (có tài khoản)', V.people.length, '#38bdf8'], ['🏮 Qua cổng làng', r[1], '#d6b77a'], ['🌳 Vào làng cộng đồng', r[2], '#5fbf5a'],
+        ['👀 Đứng ngắm cổng vườn', r[3], '#fb923c'], ['🌺 Vào vườn riêng tư', r[4], '#f08a5d'], ['⛰️ Lên đỉnh 377 ngày', r[5], '#e8c547']];
+      const srcRows = SOURCES.map(s => [s.label, V.src[s.key] || 0, s.color]).filter(x => x[1]).sort((a, b) => b[1] - a[1]);
+      document.getElementById('jmSummary').innerHTML = `<h2>📈 Phễu theo bản đồ</h2><div class="jm-funnel">` +
+        steps.map(([t, v, c], i) => `<div class="jm-frow"><span>${t}</span><b>${v} <small>${i ? '· ' + Math.round(v * 100 / Math.max(1, steps[i - 1][1])) + '%' : ''}</small></b><div class="bar"><span style="width:${Math.round(v * 100 / n)}%;background:${c}"></span></div></div>`).join('') +
+        `</div><div class="jm-hint" style="margin-top:10px;">🚪 <b>${V.here.exit || 0}</b> người đã rời đi (không hoạt động ≥ ${D.exit_days} ngày). % = so với bước ngay trước.</div>` +
+        `<h2 style="margin-top:14px;">🌊 Theo kênh</h2>` + (srcRows.length ? srcRows.map(([t, v, c]) => `<div class="jm-frow"><span>${esc(t)}</span><b>${v}</b><div class="bar"><span style="width:${Math.round(v * 100 / n)}%;background:${c}"></span></div></div>`).join('') : '<div class="jm-empty">Chưa có.</div>') +
+        `<details style="margin-top:12px;font-size:13px;"><summary style="cursor:pointer;font-weight:600;">🔗 Link theo kênh &amp; cài đặt</summary>
+          <div class="jm-hint" style="margin-top:8px;">Dán link có đuôi <code>?src=</code> lên từng kênh để biết khách mới đến từ đâu:<br>
+          ${['facebook', 'fanpage', 'zalo', 'tiktok', 'youtube'].map(k => `<code style="user-select:all">${location.origin}/?src=${k}</code>`).join('<br>')}<br>
+          Không có đuôi thì app tự đoán khi khách mở từ app Facebook / Zalo / TikTok / YouTube. Chỉ ghi cho tài khoản tạo trong 14 ngày gần đây; thành viên cũ nằm ở "Chưa rõ nguồn".
+          Lượt mở trang (Cẩm nang, Chợ, trang 8 buổi…) được ghi từ khi bật bản đồ.</div>
+          <label style="display:flex;gap:8px;align-items:center;margin-top:8px;">Tính là "rời đi" khi không hoạt động
+            <input id="jmExitDays" type="number" min="7" max="365" value="${D.exit_days}" style="width:70px;border:1px solid var(--border);border-radius:8px;padding:5px 8px;background:var(--bg-card);color:var(--text);"> ngày
+            <button class="jm-btn sm" type="button" onclick="jmSaveExit()">Lưu</button></label></details>`;
+    }
+    async function jmSaveExit() {
+      try { await VH.api('/api/admin/journey-map/settings', { method: 'PUT', body: { exit_days: document.getElementById('jmExitDays').value } }); await jmLoad(); }
+      catch (e) { alert(e.message); }
+    }
+    function personRow(p, ctxRoom) {
+      const tags = [];
+      if (p.w8) tags.push(p.w8 === 'pending' ? '⏳ chờ duyệt 8 buổi' : '✖ 8 buổi bị từ chối');
+      if (p.p377) tags.push(p.p377 === 'pending' ? '⏳ chờ duyệt 377' : '✖ 377 bị từ chối');
+      if (p.care && D.statuses[p.care]) tags.push('🤝 ' + D.statuses[p.care]);
+      else if (p.lead) tags.push('🤝 có trong Kanban');
+      const when = ctxRoom && p.r[ctxRoom] ? 'ghé ' + fmtD(p.r[ctxRoom]) : 'hoạt động ' + fmtD(p.l);
+      return `<div class="jm-p"><div class="who"><b>${esc(p.n)}</b><small>${esc(p.ph || p.em)} · ${when}${ctxRoom === 'exit' ? ' · rời từ ' + esc(PLACE_LABEL(p.from)) : ''}</small>${tags.map(t => `<span class="jm-tag">${esc(t)}</span>`).join('')}</div>
+        <div class="act"><button class="jm-btn sm" type="button" title="Xem trên bản đồ" onclick="jmFocus(${p.id})">📍</button>
+        ${p.ph && !p.lead && !p.care ? `<button class="jm-btn sm" type="button" title="Đưa vào Kanban khách hàng" onclick="jmLead(${p.id}, this)">➕ Kanban</button>` : ''}
+        <a class="jm-btn sm" href="profile.html?id=${p.id}" target="_blank" rel="noopener" title="Hồ sơ">👤</a></div></div>`;
+    }
+    function listHtml(arr, ctx) {
+      if (!arr.length) return '<div class="jm-empty">Chưa có ai.</div>';
+      const shown = arr.slice(0, 200).map(p => personRow(p, ctx)).join('');
+      return `<div class="jm-list">${shown}</div>${arr.length > 200 ? `<div class="jm-empty">… và ${arr.length - 200} người nữa (lọc thêm bằng ô thời gian / nguồn).</div>` : ''}`;
+    }
+    function jmPanel() {
+      const el = document.getElementById('jmPanel');
+      if (sel.kind === 'person' && focus) {
+        const p = focus;
+        const steps = Object.entries(p.r).filter(([k]) => ROOMS[k]).sort((a, b) => ROOMS[a[0]].rank - ROOMS[b[0]].rank || a[1].localeCompare(b[1]));
+        const next = !p.r.w3 ? 'w3' : p.rank < 3 ? 'ngam' : p.rank < 4 ? 'w8' : p.rank < 5 ? 'p377' : null;
+        el.innerHTML = `<div style="display:flex;justify-content:space-between;gap:8px;align-items:flex-start;"><h2>📍 ${esc(p.n)}</h2><button class="jm-btn sm" type="button" onclick="jmClearFocus()">✕ Bỏ chọn</button></div>
+          <div style="font-size:13px;line-height:1.7;">📞 ${esc(p.ph || '—')} · ✉️ ${esc(p.em)}<br>🌊 Nguồn: <b>${esc(SRC[p.src || 'unknown']?.label || p.src)}</b> · tham gia ${fmtD(p.c)}<br>
+          Đang ở: <b>${esc(PLACE_LABEL(p.pos))}</b>${p.pos === 'exit' ? ` (rời từ ${esc(PLACE_LABEL(p.from))})` : ''} · hoạt động gần nhất ${fmtD(p.l)}</div>
+          ${next ? `<div class="jm-hint" style="margin-top:8px;">👉 Bước nên mời tiếp: <b>${esc(PLACE_LABEL(next))}</b></div>` : ''}
+          <ul class="jm-tl">${steps.map(([k, at], i) => `<li><span>${i + 1}. ${fmtD(at)}</span><span>${esc(PLACE_LABEL(k))}</span></li>`).join('') || '<li><span></span><span>Chưa ghé phòng nào.</span></li>'}</ul>
+          <div style="display:flex;gap:6px;margin-top:10px;flex-wrap:wrap;">${p.ph && !p.lead && !p.care ? `<button class="jm-btn sm" type="button" onclick="jmLead(${p.id}, this)">➕ Đưa vào Kanban khách hàng</button>` : ''}
+          <a class="jm-btn sm" href="profile.html?id=${p.id}" target="_blank" rel="noopener">👤 Hồ sơ</a><a class="jm-btn sm" href="kanban-khach-hang.html" target="_blank" rel="noopener">🤝 Kanban khách hàng</a></div>`;
+        return;
+      }
+      if (sel.kind === 'room' || sel.kind === 'src' || sel.kind === 'exit') {
+        const key = sel.kind === 'room' ? sel.key : sel.kind === 'exit' ? 'exit' : 'src:' + sel.key;
+        const title = PLACE_LABEL(key);
+        const hereList = V.people.filter(p => p.pos === key).sort((a, b) => (b.r[key] || b.l).localeCompare(a.r[key] || a.l));
+        const visList = sel.kind === 'room' ? V.people.filter(p => p.r[key]).sort((a, b) => b.r[key].localeCompare(a.r[key])) : sel.kind === 'src' ? V.people.filter(p => (p.src || 'unknown') === sel.key) : [];
+        const hint = sel.kind === 'room' ? ROOMS[key].hint : sel.kind === 'exit' ? `Không có hoạt động nào trong ${D.exit_days} ngày gần đây (đổi số ngày ở ô Cài đặt bên dưới). Đây là danh sách nên gọi lại.` :
+          sel.key === 'unknown' ? 'Thành viên chưa ghi được kênh (tài khoản cũ hoặc vào thẳng link không có ?src=). "Đang ở" = đã có tài khoản nhưng chưa ghé phòng nào.' : '"Đang ở" = đã có tài khoản nhưng chưa ghé phòng nào.';
+        if (tab === 'auto') tab = !hereList.length && visList.length ? 'visited' : 'here';
+        const list = tab === 'visited' && visList.length ? visList : hereList;
+        el.innerHTML = `<div style="display:flex;justify-content:space-between;gap:8px;align-items:flex-start;"><h2>${esc(title)}</h2><button class="jm-btn sm" type="button" onclick="sel={kind:'overview'};jmDraw();jmPanel()">✕</button></div>
+          <div class="jm-hint">ℹ️ ${esc(hint)}</div>
+          <div class="jm-tabs"><button class="jm-btn sm${tab !== 'visited' || !visList.length ? ' on' : ''}" type="button" onclick="tab='here';jmPanel()">Đang ở đây (${hereList.length})</button>
+          ${visList.length ? `<button class="jm-btn sm${tab === 'visited' ? ' on' : ''}" type="button" onclick="tab='visited';jmPanel()">${sel.kind === 'src' ? 'Tất cả từ kênh này' : 'Đã ghé'} (${visList.length})</button>` : ''}</div>
+          ${listHtml(list, sel.kind === 'room' ? key : sel.kind === 'exit' ? 'exit' : null)}`;
+        return;
+      }
+      el.innerHTML = `<h2>🧭 Cách đọc bản đồ</h2><div style="font-size:13px;line-height:1.65;">
+        • Mỗi người đứng ở <b>phòng xa nhất</b> họ đã tới (Cổng → Làng → Cổng vườn → Vườn → Đỉnh). Nhà có <b>khói bếp</b> là đang có người ở.<br>
+        • <b>Đường / cầu càng to</b> = càng nhiều người đi qua; số trên cầu là người qua được và % so với khu trước.<br>
+        • Bấm <b>một ngôi nhà</b> (hoặc biển kênh, đảo Rời đi) để xem danh sách, bấm 📍 để xem dấu chân từng khách.<br>
+        • Gõ tên / SĐT ở ô tìm kiếm để thấy khách <b>đang ở đâu</b> và nên mời bước nào tiếp.</div>
+        <div class="jm-hint" style="margin-top:10px;">Đang tính <b>${V.people.length}</b> thành viên (không tính admin).</div>`;
+    }
+    async function jmLead(id, btn) {
+      btn.disabled = true;
+      try {
+        await VH.api('/api/admin/journey-map/lead', { method: 'POST', body: { user_id: id } });
+        const p = D.people.find(x => x.id === id); if (p) p.lead = 1;
+        btn.outerHTML = '<span class="jm-tag">✅ Đã đưa vào Kanban</span>';
+      } catch (e) { alert(e.message); btn.disabled = false; }
+    }
+
+    jmLoad();
+  </script>
+</body>
+
+</html>

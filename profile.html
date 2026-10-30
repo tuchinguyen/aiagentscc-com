@@ -3,20 +3,28 @@
 
 <head>
   <meta charset="UTF-8">
+  <script src="assets/js/auth-fetch.js?v=1"></script>
+  <script>(function(){try{var t=localStorage.getItem('theme');if(t==='dark'||(!t&&window.matchMedia('(prefers-color-scheme: dark)').matches))document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" href="/assets/img/logo.png">
+  <link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
+  <link rel="manifest" href="/manifest.json?v=2">
+  <meta name="apple-mobile-web-app-title" content="AI Agents CC">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="theme-color" content="#0ea5e9">
   <title>Hồ sơ thành viên — AI AGENTS CC</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
     href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap"
     rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/base.css">
-  <link rel="stylesheet" href="assets/css/components.css">
-  <link rel="stylesheet" href="assets/css/layout.css">
+  <link rel="stylesheet" href="assets/css/base.css?v=2">
+  <link rel="stylesheet" href="assets/css/components.css?v=11">
+  <link rel="stylesheet" href="assets/css/layout.css?v=6">
   <style>
     /* ── Profile Hero ──────────────────────────────────── */
     .profile-hero {
-      background: #fff;
+      background: var(--bg-card);
       border: 1px solid var(--border);
       border-radius: var(--radius-lg);
       padding: 28px;
@@ -80,8 +88,8 @@
     .badge-me {
       font-size: 10px;
       font-weight: 700;
-      background: #e0f2fe;
-      color: #0369a1;
+      background: var(--bg-active);
+      color: var(--color-primary);
       padding: 2px 7px;
       border-radius: 99px;
     }
@@ -105,7 +113,7 @@
       font-weight: 600;
       border: 1px solid var(--border);
       border-radius: var(--radius-md);
-      background: #fff;
+      background: var(--bg-card);
       color: var(--text-muted);
       cursor: pointer;
       font-family: var(--font-body);
@@ -123,6 +131,50 @@
     .profile-join {
       font-size: var(--fs-xs);
       color: var(--text-muted);
+    }
+
+    .profile-bio {
+      font-size: var(--fs-sm);
+      color: var(--text);
+      line-height: 1.6;
+      margin-bottom: 10px;
+      white-space: pre-wrap;
+      max-width: 560px;
+    }
+
+    .profile-location {
+      font-size: var(--fs-xs);
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      margin-bottom: 10px;
+    }
+
+    .profile-social-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .profile-social-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 5px 11px;
+      border: 1px solid var(--border);
+      border-radius: 99px;
+      font-size: var(--fs-xs);
+      font-weight: 600;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: border-color .15s, color .15s;
+    }
+
+    .profile-social-link:hover {
+      border-color: var(--color-primary);
+      color: var(--color-primary);
     }
 
     /* XP section */
@@ -148,7 +200,7 @@
 
     .profile-xp-track {
       height: 8px;
-      background: #e2e8f0;
+      background: var(--border);
       border-radius: 99px;
       overflow: hidden;
     }
@@ -192,7 +244,7 @@
 
     /* ── Section Cards ─────────────────────────────────── */
     .profile-section-card {
-      background: #fff;
+      background: var(--bg-card);
       border: 1px solid var(--border);
       border-radius: var(--radius-lg);
       margin-bottom: 16px;
@@ -243,13 +295,13 @@
       align-items: center;
       justify-content: center;
       font-size: 22px;
-      background: #f8fafc;
+      background: var(--bg-input);
       transition: border-color .2s, background .2s;
     }
 
     .power-sym.active .power-sym-icon {
       border-color: var(--sym-color, var(--color-primary));
-      background: var(--sym-bg, #e0f2fe);
+      background: var(--sym-bg, var(--color-primary-light));
     }
 
     .power-sym-name {
@@ -258,6 +310,18 @@
       font-weight: 600;
       text-align: center;
       line-height: 1.3;
+    }
+
+    .power-sym-name-main {
+      display: block;
+    }
+
+    .power-sym-name-sub {
+      display: block;
+      font-size: 9px;
+      font-weight: 500;
+      color: var(--text-light);
+      margin-top: 1px;
     }
 
     .power-sym-count {
@@ -436,7 +500,7 @@
 
     /* ── Right Panel ───────────────────────────────────── */
     .profile-rp-card {
-      background: #fff;
+      background: var(--bg-card);
       border: 1px solid var(--border);
       border-radius: var(--radius-lg);
       padding: 16px;
@@ -445,7 +509,7 @@
 
     /* Intake profile section */
     .intake-card {
-      background: #fff;
+      background: var(--bg-card);
       border: 1px solid #bae6fd;
       border-radius: var(--radius-lg);
       overflow: hidden;
@@ -509,8 +573,8 @@
       font-weight: 700;
     }
     .intake-no-profile {
-      background: #f8fafc;
-      border: 1.5px dashed #cbd5e1;
+      background: var(--bg-input);
+      border: 1.5px dashed var(--border);
       border-radius: var(--radius-lg);
       padding: 24px 20px;
       text-align: center;
@@ -533,6 +597,27 @@
       transition: background .18s;
     }
     .intake-redo:hover { background: #bae6fd; }
+
+    /* Roadmap diagram: 3 buổi -> 8 buổi -> 377 ngày */
+    .rmap-card { background: var(--bg-card); border: 1px solid #bae6fd; border-radius: var(--radius-lg); padding: 16px 18px; margin-bottom: 16px; }
+    .rmap-title { font-weight: 700; font-size: var(--fs-sm); color: #0369a1; margin-bottom: 14px; text-align: center; }
+    .rmap-flow { display: flex; align-items: stretch; gap: 8px; flex-wrap: wrap; justify-content: center; }
+    .rmap-bookend { flex: 0 0 110px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; font-size: 11px; font-weight: 600; color: var(--text-muted); background: var(--bg-input); border: 1.5px dashed var(--border); border-radius: 10px; padding: 10px 8px; }
+    .rmap-bookend strong { display: block; font-size: 12px; color: var(--text); margin-bottom: 2px; }
+    .rmap-arrow { display: flex; align-items: center; color: #94a3b8; font-size: 18px; font-weight: 700; flex: 0 0 auto; }
+    .rmap-group { flex: 1 1 320px; border: 1.5px solid #bae6fd; border-radius: 12px; padding: 12px; background: #f0f9ff; }
+    .rmap-group-label { text-align: center; font-size: 11px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: #0284c7; margin-bottom: 10px; }
+    .rmap-steps { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; justify-content: center; }
+    .rmap-step { flex: 1 1 90px; display: block; text-align: center; background: #fff; border: 1.5px solid #0ea5e9; border-radius: 10px; padding: 10px 6px; font-size: 12px; font-weight: 700; color: #0369a1; text-decoration: none; transition: background .15s, transform .15s; }
+    .rmap-step:hover { background: #e0f2fe; transform: translateY(-1px); }
+    .rmap-step span { display: block; font-size: 10px; font-weight: 600; color: #64748b; margin-top: 2px; text-transform: none; letter-spacing: 0; }
+    @media (max-width: 640px) {
+      .rmap-flow { flex-direction: column; }
+      .rmap-arrow { transform: rotate(90deg); }
+      .rmap-bookend { flex-basis: auto; width: 100%; }
+      .rmap-steps { flex-direction: column; }
+      .rmap-step { width: 100%; }
+    }
 
     .rp-card-title {
       font-size: var(--fs-xs);
@@ -647,7 +732,8 @@
     }
 
     .post-modal {
-      background: #fff;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
       border-radius: 16px;
       width: 100%;
       max-width: 680px;
@@ -698,7 +784,7 @@
     }
 
     .pm-close:hover {
-      background: #e2e8f0;
+      background: var(--border);
     }
 
     .pm-body {
@@ -771,7 +857,7 @@
       padding: 7px 16px;
       border-radius: var(--radius-md);
       border: 1.5px solid var(--border);
-      background: #fff;
+      background: var(--bg-card);
       cursor: pointer;
       font-size: var(--fs-sm);
       font-weight: 600;
@@ -912,7 +998,7 @@
 
     .pm-reply-input:focus {
       border-color: var(--color-primary);
-      background: #fff;
+      background: var(--bg-card);
     }
 
     .pm-reply-submit {
@@ -989,7 +1075,7 @@
 
     .pm-comment-input:focus {
       border-color: var(--color-primary);
-      background: #fff;
+      background: var(--bg-card);
     }
 
     .pm-comment-submit {
@@ -1032,14 +1118,7 @@
     <!-- Sidebar -->
     <aside id="sidebar">
       <div id="sidebar-logo">
-        <div class="sidebar-logo-mark">
-          <svg viewBox="0 0 20 20" fill="none">
-            <circle cx="10" cy="10" r="3" fill="currentColor" />
-            <path d="M10 3v2M10 15v2M3 10h2M15 10h2" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-            <path d="M5.5 5.5l1.5 1.5M13 13l1.5 1.5M14.5 5.5L13 7M7 13l-1.5 1.5" stroke="currentColor"
-              stroke-width="1.5" stroke-linecap="round" />
-          </svg>
-        </div>
+        <div class="sidebar-logo-mark" style="background:transparent;"><img src="assets/img/logo.png" alt="Logo" style="width:100%;height:100%;object-fit:contain;"></div>
         <div class="sidebar-logo-text">AI AGENTS <span>CC</span></div>
       </div>
       <nav id="sidebar-nav">
@@ -1048,49 +1127,15 @@
           <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
             <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
           </svg>
-          Bảng tin
-        </a>
-        <a href="cot.html" class="nav-item">
-          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-            <path
-              d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-          </svg>
-          CÔT
-        </a>
-        <a href="signal.html" class="nav-item">
-          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-            <path d="M13 10V3L4 14h7v7l9-11h-7z" />
-          </svg>
-          Tín hiệu
-        </a>
-        <a href="qa.html" class="nav-item">
-          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-            <path
-              d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
-          Hỏi đáp
+          Feed
         </a>
         <div class="nav-section-label" style="margin-top:8px;">Học tập</div>
-        <a href="courses.html" class="nav-item">
-          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-            <path
-              d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-          </svg>
-          Khóa học
-        </a>
         <a href="challenge.html" class="nav-item">
           <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
             <path
               d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z" />
           </svg>
           Challenge
-        </a>
-        <a href="leaderboard.html" class="nav-item">
-          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-            <path
-              d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
-          </svg>
-          Leaderboard
         </a>
         <div class="nav-section-label" style="margin-top:8px;">Khác</div>
         <a href="marketplace.html" class="nav-item">
@@ -1099,13 +1144,6 @@
               d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
           </svg>
           Marketplace
-        </a>
-        <a href="members.html" class="nav-item active">
-          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-            <path
-              d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
-          </svg>
-          Thành viên
         </a>
       </nav>
       <div id="sidebar-user">
@@ -1120,7 +1158,7 @@
           <div class="user-level" id="sbLevel">—</div>
         </div>
         <a href="index.html" class="icon-btn" title="Đăng xuất" style="margin-left:auto;"
-          onclick="sessionStorage.clear()">
+          onclick="doLogout(); return false;">
           <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
             <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4" />
             <polyline points="16 17 21 12 16 7" />
@@ -1131,7 +1169,92 @@
     </aside>
 
     <div id="main">
+
+      <!-- Mobile topbar -->
+      <div id="mobile-topbar">
+        <button class="mob-menu-btn" onclick="toggleSidebar()" aria-label="Menu">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+          </svg>
+        </button>
+        <span style="flex:1;font-size:var(--fs-md);font-weight:600;color:var(--text)">Hồ sơ thành viên</span>
+        <div class="mob-topbar-right">
+          <button class="icon-btn" id="themeToggleMob" type="button" aria-label="Chuyển chế độ sáng/tối">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"></svg>
+          </button>
+          <button class="icon-btn" id="notifBellMob" aria-label="Thông báo" style="position:relative;">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+            </svg>
+            <span id="notifBadgeMob" style="display:none;position:absolute;top:2px;right:2px;background:#ef4444;color:#fff;font-size:10px;font-weight:700;border-radius:99px;min-width:16px;height:16px;padding:0 4px;line-height:16px;text-align:center;">0</span>
+          </button>
+          <div id="topbarAvatarMob" style="width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;background:#7c3aed;flex-shrink:0;"></div>
+        </div>
+      </div>
+
       <!-- Topbar -->
+      <nav id="subnav-bar" class="subnav-bar" aria-label="Điều hướng nhanh">
+        <a href="feed.html" class="subnav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+          Feed
+        </a>
+        <a href="spaces.html" class="subnav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></svg>
+          Spaces
+        </a>
+        <a href="courses.html" class="subnav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/></svg>
+          Courses
+        </a>
+        <a href="members.html" class="subnav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+          Members
+        </a>
+        <a href="leaderboard.html" class="subnav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/></svg>
+          Leaderboard
+        </a>
+        <a href="calendar.html" class="subnav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          Calendar
+        </a>
+        <a href="about.html" class="subnav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+          About
+        </a>
+        <div class="topbar-right">
+          <button class="icon-btn" id="themeToggle" type="button" aria-label="Chuyển chế độ sáng/tối">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"></svg>
+          </button>
+          <div style="position:relative;">
+            <button class="icon-btn" id="notifBell" aria-label="Thông báo" style="position:relative;">
+              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+              </svg>
+              <span id="notifBadge" style="display:none;position:absolute;top:2px;right:2px;background:#ef4444;color:#fff;font-size:10px;font-weight:700;border-radius:99px;min-width:16px;height:16px;padding:0 4px;line-height:16px;text-align:center;">0</span>
+            </button>
+            <div id="notifDropdown" style="display:none;"></div>
+          </div>
+          <a href="#" class="icon-btn" aria-label="Tin nhắn">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <path
+                d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+            </svg>
+          </a>
+          <div class="topbar-search">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <circle cx="11" cy="11" r="8" />
+              <line x1="21" y1="21" x2="16.65" y2="16.65" />
+            </svg>
+            <input type="text" id="globalSearchInput" placeholder="Tìm kiếm..." autocomplete="off">
+            <div id="globalSearchResults" class="gsr-panel"></div>
+          </div>
+          <div class="topbar-avatar-placeholder" id="topbarAvatar"
+            style="width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;background:#7c3aed;cursor:pointer;">
+          </div>
+        </div>
+      </nav>
+
       <div id="topbar">
         <div class="topbar-title" id="topbarTitle">
           <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -1140,20 +1263,6 @@
               d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
           </svg>
           Hồ sơ thành viên
-        </div>
-        <div class="topbar-right">
-          <div style="position:relative;">
-            <button class="topbar-btn" id="notifBell" aria-label="Thông báo" style="position:relative;">
-              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-                <path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-              </svg>
-              <span id="notifBadge" style="display:none;position:absolute;top:2px;right:2px;background:#ef4444;color:#fff;font-size:10px;font-weight:700;border-radius:99px;min-width:16px;height:16px;padding:0 4px;line-height:16px;text-align:center;">0</span>
-            </button>
-            <div id="notifDropdown" style="display:none;"></div>
-          </div>
-          <div class="topbar-avatar-placeholder" id="topbarAvatar"
-            style="width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;background:#7c3aed;cursor:pointer;">
-          </div>
         </div>
       </div>
 
@@ -1185,8 +1294,11 @@
                   <div class="profile-hero-name" id="profileNameEl"></div>
                   <div style="display:flex;gap:6px;align-items:center;margin-bottom:5px;" id="profileBadgesEl"></div>
                   <div class="profile-hero-subtitle" id="profileSubtitleEl"></div>
+                  <div class="profile-bio" id="profileBioEl" style="display:none;"></div>
+                  <div class="profile-location" id="profileLocationEl" style="display:none;"></div>
+                  <div class="profile-social-row" id="profileSocialEl" style="display:none;"></div>
                   <div class="profile-hero-actions">
-                    <button class="btn-msg">💬 Nhắn tin</button>
+                    <button class="btn-msg" id="profileActionBtn">💬 Nhắn tin</button>
                     <span class="profile-join" id="profileJoinEl"></span>
                   </div>
                 </div>
@@ -1226,7 +1338,7 @@
                 <div class="heatmap-wrap" id="heatmapEl"></div>
                 <div style="display:flex;align-items:center;gap:3px;justify-content:flex-end;margin-top:10px;">
                   <span style="font-size:10px;color:#94a3b8;">Ít</span>
-                  <div style="width:11px;height:11px;border-radius:2px;background:#e2e8f0;"></div>
+                  <div style="width:11px;height:11px;border-radius:2px;background:var(--border);"></div>
                   <div style="width:11px;height:11px;border-radius:2px;background:#bbf7d0;"></div>
                   <div style="width:11px;height:11px;border-radius:2px;background:#4ade80;"></div>
                   <div style="width:11px;height:11px;border-radius:2px;background:#22c55e;"></div>
@@ -1236,8 +1348,14 @@
               </div>
             </div>
 
+            <!-- Sơ đồ lộ trình 3 chương trình (chỉ hiện với chủ trang) -->
+            <div id="roadmapDiagramWrap"></div>
+
             <!-- Intake profile (chỉ hiện với chủ trang) -->
             <div id="intakeSectionWrap"></div>
+
+            <!-- Telegram linking (chỉ hiện với chủ trang) -->
+            <div id="telegramSectionWrap"></div>
 
             <!-- Tabs + content -->
             <div class="profile-section-card">
@@ -1257,8 +1375,9 @@
 
           </div><!-- /profileContent -->
 
-          <div id="profileError" style="display:none;text-align:center;padding:60px;color:#ef4444">
-            Không tìm thấy thành viên này.
+          <div id="profileError" style="display:none;text-align:center;padding:60px;color:var(--text-muted)">
+            <div style="font-size:32px;margin-bottom:10px;opacity:.4">⚠️</div>
+            <div id="profileErrorMsg">Không tải được hồ sơ. Vui lòng kiểm tra kết nối mạng rồi tải lại trang.</div>
           </div>
 
         </div><!-- /feed -->
@@ -1286,7 +1405,7 @@
               <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
                 <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
               </svg>
-              Bảng tin
+              Feed
             </a>
           </div>
 
@@ -1305,88 +1424,96 @@
         </aside>
       </div><!-- /content-row -->
 
-
     </div><!-- /main -->
   </div><!-- /app -->
 
   <div id="mob-overlay" onclick="closeSidebar()"></div>
   <div id="mob-sidebar">
     <div style="padding:14px 16px;border-bottom:1px solid var(--border);font-size:var(--fs-md);font-weight:700;color:var(--text);display:flex;align-items:center;gap:8px;">
-      <div style="width:28px;height:28px;background:var(--color-primary);border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-        <svg width="16" height="16" fill="none" viewBox="0 0 20 20"><circle cx="10" cy="10" r="3" fill="#fff"/><path d="M10 3v2M10 15v2M3 10h2M15 10h2" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg>
-      </div>
-      AI AGENTS CC
+      <div style="width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;"><img src="assets/img/logo.png" alt="Logo" style="width:100%;height:100%;object-fit:contain;"></div>
+      <span class="mob-brand-name">AI AGENTS CC</span>
     </div>
     <nav style="flex:1;overflow-y:auto;padding:8px;">
       <div class="nav-section-label">Cộng đồng</div>
       <a href="feed.html" class="nav-item">
         <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
-        Bảng tin
-      </a>
-      <a href="cot.html" class="nav-item">
-        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-        CÔT
-      </a>
-      <a href="signal.html" class="nav-item">
-        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-        Tín hiệu
-      </a>
-      <a href="qa.html" class="nav-item">
-        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-        Hỏi đáp
+        Feed
       </a>
       <div class="nav-section-label">Học tập</div>
-      <a href="courses.html" class="nav-item">
-        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/></svg>
-        Khóa học
-      </a>
       <a href="challenge.html" class="nav-item">
         <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z"/></svg>
         Challenge
       </a>
-      <a href="leaderboard.html" class="nav-item">
-        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/></svg>
-        Leaderboard
-      </a>
       <div class="nav-section-label">Khác</div>
       <a href="marketplace.html" class="nav-item">
         <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z"/></svg>
-        Chợ
-      </a>
-      <a href="members.html" class="nav-item active">
-        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-        Thành viên
+        Marketplace
       </a>
     </nav>
   </div>
 
   <!-- Mobile bottom nav -->
+  <!-- Mobile main menu (full site navigation) -->
+  <div id="mob-mainmenu-overlay" onclick="closeMainMenu()"></div>
+  <div id="mob-mainmenu">
+    <div style="padding:14px 16px;border-bottom:1px solid var(--border);font-size:var(--fs-md);font-weight:700;color:var(--text);display:flex;align-items:center;gap:8px;">
+      <div style="width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;"><img src="assets/img/logo.png" alt="Logo" style="width:100%;height:100%;object-fit:contain;"></div>
+      Menu chính
+    </div>
+    <nav style="flex:1;overflow-y:auto;padding:8px;">
+      <a href="feed.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        Feed
+      </a>
+      <a href="spaces.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></svg>
+        Spaces
+      </a>
+      <a href="courses.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/></svg>
+        Courses
+      </a>
+      <a href="members.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+        Members
+      </a>
+      <a href="leaderboard.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/></svg>
+        Leaderboard
+      </a>
+      <a href="calendar.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        Calendar
+      </a>
+      <a href="about.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+        About
+      </a>
+    </nav>
+  </div>
+
   <nav id="mobile-nav">
     <a href="feed.html" class="mob-nav-btn">
       <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
         <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
       </svg>
-      Bảng tin
+      Feed
     </a>
-    <a href="challenge.html" class="mob-nav-btn">
-      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-        <path d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z"/>
-      </svg>
-      Challenge
+    <a href="spaces.html" class="mob-nav-btn">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></svg>
+      Spaces
     </a>
-    <a href="marketplace.html" class="mob-nav-btn">
-      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-        <path d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
-      </svg>
-      Chợ
+    <a href="courses.html" class="mob-nav-btn">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/></svg>
+      Courses
     </a>
-    <a href="members.html" class="mob-nav-btn active">
+    <a href="members.html" class="mob-nav-btn">
       <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
         <path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>
       </svg>
-      Cộng đồng
+      Members
     </a>
-    <button class="mob-nav-btn" onclick="openSidebar()">
+    <button class="mob-nav-btn" onclick="toggleMainMenu()">
       <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
         <line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/>
       </svg>
@@ -1394,7 +1521,7 @@
     </button>
   </nav>
 
-  <script src="assets/js/app.js"></script>
+  <script src="assets/js/app.js?v=28"></script>
   <script>
     const API = '/api';
 
@@ -1446,7 +1573,7 @@
     // ── Auth check ────────────────────────────────────────
     let currentUser = null;
     (function () {
-      const raw = sessionStorage.getItem('currentUser');
+      const raw = localStorage.getItem('currentUser');
       if (!raw) { location.href = 'index.html'; return; }
       currentUser = JSON.parse(raw);
       const ini = initials(currentUser);
@@ -1457,8 +1584,17 @@
       document.getElementById('sbName').textContent = currentUser.first_name + ' ' + (currentUser.last_name || '');
       document.getElementById('sbLevel').textContent = lv.name + ' · Lv.' + lv.level;
       const ta = document.getElementById('topbarAvatar');
-      if (ta) { ta.textContent = ini; ta.style.background = col; }
+      if (ta) { ta.textContent = ini; ta.style.background = col; ta.style.cursor = 'pointer'; ta.onclick = () => location.href = `profile.html?id=${currentUser.id}`; }
     })();
+
+    const SOCIAL_META = [
+      { key: 'website',   icon: '🌐', label: 'Website' },
+      { key: 'facebook',  icon: '📘', label: 'Facebook' },
+      { key: 'instagram', icon: '📷', label: 'Instagram' },
+      { key: 'x',         icon: '✖️', label: 'X' },
+      { key: 'youtube',   icon: '▶️', label: 'YouTube' },
+      { key: 'linkedin',  icon: '💼', label: 'LinkedIn' },
+    ];
 
     // ── Load profile data ─────────────────────────────────
     let _posts = [], _comments = [], _profileUser = null;
@@ -1471,92 +1607,165 @@
       const isOwnProfile = currentUser && String(currentUser.id) === String(userId);
 
       try {
+        const requesterQs = currentUser ? `?requester_id=${currentUser.id}` : '';
+        // Abort after 12s so a stopped/hung server shows an error instead of spinning forever
+        const ctrl = new AbortController();
+        const killer = setTimeout(() => ctrl.abort(), 12000);
+        const j = url => fetch(url, { signal: ctrl.signal }).then(r => r.json());
         const fetches = [
-          fetch(`${API}/users/${userId}`).then(r => r.json()),
-          fetch(`${API}/users/${userId}/posts`).then(r => r.json()),
-          fetch(`${API}/users/${userId}/activity`).then(r => r.json()),
-          fetch(`${API}/users/${userId}/comments`).then(r => r.json()),
+          j(`${API}/users/${userId}${requesterQs}`),
+          j(`${API}/users/${userId}/posts`),
+          j(`${API}/users/${userId}/activity`),
+          j(`${API}/users/${userId}/comments`),
+          j(`/api/pillars`),
         ];
-        if (isOwnProfile) fetches.push(fetch(`/api/intake/profile/${userId}`).then(r => r.json()));
+        if (isOwnProfile) fetches.push(j(`/api/ttm/intake-status/${userId}`), j(`/api/ttm/roadmap/${userId}`));
 
-        const [uData, pData, aData, cData, intakeData] = await Promise.all(fetches);
+        const [uData, pData, aData, cData, plData, ttmStatus, ttmRoadmap] = await Promise.all(fetches);
+        const intakeData = isOwnProfile ? { status: ttmStatus, roadmap: ttmRoadmap?.roadmap || null } : null;
+        clearTimeout(killer);
 
-        if (uData.error) { showError(); return; }
+        if (uData.error) { showError('Không tìm thấy thành viên này.'); return; }
 
         _profileUser = uData;
         _posts = pData.posts || [];
         _comments = cData.posts || [];
         const activityMap = aData.activity || {};
+        const pillars = plData.pillars || [];
 
-        renderProfile(_profileUser, activityMap, intakeData || null);
+        renderProfile(_profileUser, activityMap, intakeData || null, pillars);
       } catch (e) {
         showError();
       }
     }
 
-    function showError() {
+    function showError(msg) {
       document.getElementById('profileLoading').style.display = 'none';
+      if (msg) document.getElementById('profileErrorMsg').textContent = msg;
       document.getElementById('profileError').style.display = 'block';
+    }
+
+    function renderRoadmapDiagram(isMe) {
+      const wrap = document.getElementById('roadmapDiagramWrap');
+      if (!wrap || !isMe) return;
+      wrap.innerHTML = `
+        <div class="rmap-card">
+          <div class="rmap-title">🗺️ Lộ trình để có cuộc đời như mong muốn</div>
+          <div class="rmap-flow">
+            <div class="rmap-bookend"><strong>Cuộc sống hiện tại</strong>của bạn — điểm bắt đầu</div>
+            <div class="rmap-arrow">→</div>
+            <div class="rmap-group">
+              <div class="rmap-group-label">Hồi Sinh Thân Tâm Mệnh</div>
+              <div class="rmap-steps">
+                <a href="workshop3.html" class="rmap-step">3 Buổi<span>Workshop</span></a>
+                <div class="rmap-arrow">→</div>
+                <a href="workshop8.html" class="rmap-step">8 Buổi<span>Chuyên sâu</span></a>
+                <div class="rmap-arrow">→</div>
+                <a href="program377.html" class="rmap-step">377 Ngày<span>Thực hành</span></a>
+              </div>
+            </div>
+            <div class="rmap-arrow">→</div>
+            <div class="rmap-bookend"><strong>Cuộc đời</strong>mong muốn</div>
+          </div>
+        </div>`;
     }
 
     function renderIntakeSection(intakeData, isMe) {
       const wrap = document.getElementById('intakeSectionWrap');
       if (!wrap || !isMe) return;
 
-      if (intakeData && intakeData.profile) {
-        const date = intakeData.doneAt
-          ? new Date(intakeData.doneAt).toLocaleDateString('vi-VN', { day:'2-digit', month:'2-digit', year:'numeric' })
+      const status = intakeData?.status;
+      const roadmap = intakeData?.roadmap;
+
+      if (roadmap) {
+        const date = roadmap.reviewedAt
+          ? new Date(roadmap.reviewedAt.replace(' ', 'T')).toLocaleDateString('vi-VN', { day:'2-digit', month:'2-digit', year:'numeric' })
           : '';
+        const preview = roadmap.content.replace(/[#*_>`-]/g, '').trim().slice(0, 160);
         wrap.innerHTML = `
           <div class="intake-card">
             <div class="intake-card-head">
               <div class="intake-card-title">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
-                Lộ trình cá nhân hóa
+                Lộ trình Thân-Tâm-Mệnh
               </div>
-              <div style="display:flex;align-items:center;gap:8px;">
-                ${date ? `<span class="intake-card-date">Cập nhật ${date}</span>` : ''}
-                <a href="intake.html" class="intake-redo">
-                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-4.95"/></svg>
-                  Làm lại
-                </a>
-              </div>
+              ${date ? `<span class="intake-card-date">Duyệt ${date}</span>` : ''}
             </div>
             <div class="intake-card-body">
-              <div class="intake-md">${renderIntakeMd(intakeData.profile)}</div>
+              <div class="intake-md"><p>${preview}${roadmap.content.length > 160 ? '…' : ''}</p></div>
+              <a href="lo-trinh.html" class="intake-redo" style="margin-top:10px;">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                Xem đầy đủ
+              </a>
             </div>
+          </div>`;
+      } else if (status?.done) {
+        wrap.innerHTML = `
+          <div class="intake-no-profile">
+            <p>Bạn đã hoàn thành khảo sát Thân-Tâm-Mệnh — lộ trình đang được đội ngũ xem xét và soạn riêng cho bạn, thường trong 24–48 giờ.</p>
+            <a href="lo-trinh.html" class="intake-redo">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              Xem trạng thái
+            </a>
           </div>`;
       } else {
         wrap.innerHTML = `
           <div class="intake-no-profile">
-            <p>Bạn chưa cá nhân hóa lộ trình — hoàn thành intake để nhận đề bài phù hợp với sản phẩm và mục tiêu của bạn.</p>
-            <a href="intake.html" class="intake-redo">
+            <p>Bạn chưa hoàn thành khảo sát Thân-Tâm-Mệnh — trả lời 29 câu hỏi để nhận lộ trình ăn uống thuận tự nhiên cá nhân hóa.</p>
+            <a href="intake-than-tam-menh.html" class="intake-redo">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
-              Bắt đầu cá nhân hóa lộ trình
+              Bắt đầu khảo sát
             </a>
           </div>`;
       }
     }
 
-    function renderIntakeMd(md) {
-      const lines = md.split('\n');
-      let html = '', inList = false;
-      const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-      const fmt = s => esc(s).replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>');
-      for (const raw of lines) {
-        const line = raw.trim();
-        if (!line) { if (inList) { html += '</ul>'; inList = false; } continue; }
-        if (line.startsWith('# '))       { if (inList) { html += '</ul>'; inList=false; } html += `<h1>${esc(line.slice(2))}</h1>`; }
-        else if (line.startsWith('## ')) { if (inList) { html += '</ul>'; inList=false; } html += `<h2>${esc(line.slice(3))}</h2>`; }
-        else if (line.startsWith('- '))  { if (!inList) { html += '<ul>'; inList=true; } html += `<li>${fmt(line.slice(2))}</li>`; }
-        else if (line.startsWith('*') && line.endsWith('*') && !line.startsWith('**')) { continue; }
-        else { if (inList) { html += '</ul>'; inList=false; } html += `<p>${fmt(line)}</p>`; }
+    async function renderTelegramSection(u, isMe) {
+      const wrap = document.getElementById('telegramSectionWrap');
+      if (!wrap || !isMe) return;
+
+      if (u.telegram_chat_id) {
+        let botLink = null;
+        try {
+          const r = await fetch(`/api/telegram/link-code/${u.id}`);
+          const data = await r.json();
+          botLink = data.botLink;
+        } catch {}
+        wrap.innerHTML = `
+          <div class="intake-no-profile">
+            <p>✅ Kết nối Telegram thành công — bạn sẽ nhận nhắc nhở ăn uống và nhận xét từ trợ lý đồng hành sau mỗi lần ghi nhật ký.</p>
+            ${botLink ? `<a href="${botLink}" target="_blank" class="intake-redo">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4 20-7z"/></svg>
+              Mở chat với An Nhiên trên Telegram
+            </a>` : ''}
+          </div>`;
+        return;
       }
-      if (inList) html += '</ul>';
-      return html;
+
+      wrap.innerHTML = `
+        <div class="intake-no-profile">
+          <p>Kết nối Telegram để nhận nhắc nhở ăn uống đúng giờ và nhận xét ngay sau khi bạn ghi nhật ký ăn uống.</p>
+          <a href="#" class="intake-redo" id="telegramLinkBtn">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4 20-7z"/></svg>
+            Kết nối Telegram
+          </a>
+        </div>`;
+
+      document.getElementById('telegramLinkBtn').addEventListener('click', async (e) => {
+        e.preventDefault();
+        try {
+          const r = await fetch(`/api/telegram/link-code/${u.id}`);
+          const data = await r.json();
+          if (data.error) { alert(data.error); return; }
+          if (data.alreadyLinked) { renderTelegramSection({ ...u, telegram_chat_id: '1' }, true); return; }
+          window.open(data.deepLink, '_blank');
+        } catch (err) {
+          alert('Không tạo được link liên kết. Thử lại sau nhé.');
+        }
+      });
     }
 
-    function renderProfile(u, activityMap, intakeData = null) {
+    function renderProfile(u, activityMap, intakeData = null, pillars = []) {
       const lv = getLevel(u.xp || 0);
       const pct = Math.min(100, Math.round(((u.xp || 0) - lv.xpMin) / (lv.xpMax - lv.xpMin) * 100));
       const col = avColor(u.id);
@@ -1575,12 +1784,44 @@
       document.getElementById('profileNameEl').innerHTML =
         escHtml(u.first_name) + ' ' + escHtml(u.last_name || '') +
         (isMe ? ' <span class="badge-me">Bạn</span>' : '');
+      const roleBadge = u.is_admin
+        ? `<span class="badge-role" style="background:#ede9fe;color:#6d28d9">🛡️ Quản trị viên</span>`
+        : `<span class="badge-role" style="background:#f1f5f9;color:#475569">👤 Thành viên</span>`;
       document.getElementById('profileBadgesEl').innerHTML =
+        roleBadge +
         `<span class="badge-role" style="background:${lvColor}22;color:${lvColor}">${lv.name}</span>` +
         `<span class="badge-lv" style="border-color:var(--accent-green);color:var(--accent-green)">Lv.${lv.level}</span>`;
       document.getElementById('profileSubtitleEl').textContent = getTitleByLevel(lv.level);
       document.getElementById('profileJoinEl').textContent = 'Tham gia ' + fmtDate(u.created_at);
       document.title = u.first_name + ' ' + (u.last_name || '') + ' — AI AGENTS CC';
+
+      // Bio / location / social links
+      const bioEl = document.getElementById('profileBioEl');
+      if (u.bio) { bioEl.textContent = u.bio; bioEl.style.display = ''; }
+      else bioEl.style.display = 'none';
+
+      const locEl = document.getElementById('profileLocationEl');
+      if (u.location) { locEl.innerHTML = `📍 ${escHtml(u.location)}`; locEl.style.display = 'flex'; }
+      else locEl.style.display = 'none';
+
+      const socialEl = document.getElementById('profileSocialEl');
+      const links = u.social_links || {};
+      const socialHtml = SOCIAL_META
+        .filter(s => links[s.key])
+        .map(s => `<a class="profile-social-link" href="${escHtml(links[s.key])}" target="_blank" rel="noopener">${s.icon} ${s.label}</a>`)
+        .join('');
+      socialEl.innerHTML = socialHtml;
+      socialEl.style.display = socialHtml ? 'flex' : 'none';
+
+      // Action button: edit own profile, or message someone else
+      const actionBtn = document.getElementById('profileActionBtn');
+      if (isMe) {
+        actionBtn.textContent = '✏️ Sửa hồ sơ';
+        actionBtn.onclick = openEditProfileModal;
+      } else {
+        actionBtn.textContent = '💬 Nhắn tin';
+        actionBtn.onclick = null;
+      }
 
       // XP bar
       document.getElementById('profileXpCur').textContent = (u.xp || 0) + ' EXP';
@@ -1612,13 +1853,16 @@
     </div>`;
 
       // Power symbols
-      renderPowerSymbols(u.pillar_counts || {});
+      renderPowerSymbols(u.pillar_counts || {}, pillars);
 
       // Heatmap
       renderHeatmap(activityMap);
 
+      // Sơ đồ lộ trình 3 chương trình (chỉ hiện với chủ trang)
+      // AI AGENTS CC: ẩn lộ trình / khảo sát Thân-Tâm-Mệnh / Telegram nhắc ăn uống
+
       // Intake section (chỉ hiện với chủ trang)
-      renderIntakeSection(intakeData, isMe);
+
 
       // Tabs count
       const cotPosts = _posts.filter(p => p.post_type === 'cot');
@@ -1638,21 +1882,30 @@
     }
 
     // ── Power Symbols ─────────────────────────────────────
-    function renderPowerSymbols(pillarCounts) {
-      const SYMS = [
-        { key: 'offer', icon: '🔥', label: 'Offer', color: '#f59e0b', bg: '#fef3c7' },
-        { key: 'traffic', icon: '⚡', label: 'Thu hút', color: '#3b82f6', bg: '#dbeafe' },
-        { key: 'conversion', icon: '🎯', label: 'Chuyển đổi', color: '#8b5cf6', bg: '#ede9fe' },
-        { key: 'delivery', icon: '⚙️', label: 'Cung ứng', color: '#10b981', bg: '#d1fae5' },
-        { key: 'continuity', icon: '🔗', label: 'Continuity', color: '#ec4899', bg: '#fce7f3' },
-      ];
-      document.getElementById('powerSymbolsEl').innerHTML = SYMS.map(s => {
-        const n = pillarCounts[s.key] || 0;
+    // Renders whatever Trụ cột (pillars) are currently defined in Admin
+    // (GET /api/pillars) — not a fixed list — so creating/renaming/deleting
+    // a pillar in Admin shows up here immediately.
+    function renderPowerSymbols(pillarCounts, pillars) {
+      const el = document.getElementById('powerSymbolsEl');
+      if (!pillars || !pillars.length) { el.innerHTML = ''; return; }
+      el.innerHTML = pillars.map(p => {
+        const n = pillarCounts[p.key] || 0;
         const active = n > 0;
-        const styleAttr = active ? `style="--sym-color:${s.color};--sym-bg:${s.bg}"` : '';
+        const color = p.color || 'var(--color-primary)';
+        const bg = /^#/.test(color) ? color + '22' : color; // light tint of the pillar color
+        const styleAttr = active ? `style="--sym-color:${color};--sym-bg:${bg}"` : '';
+        // Labels are typically "Hành Kim — Phổi/Đại tràng · vị Cay · màu Trắng" —
+        // break after the em dash so the short name always wraps onto its own
+        // line instead of an arbitrary mid-word wrap.
+        const dashIdx = p.label ? p.label.indexOf('—') : -1;
+        const nameMain = dashIdx === -1 ? (p.label || '') : p.label.slice(0, dashIdx).trim();
+        const nameSub  = dashIdx === -1 ? '' : p.label.slice(dashIdx + 1).trim();
         return `<div class="power-sym ${active ? 'active' : 'locked'}" ${styleAttr}>
-      <div class="power-sym-icon">${s.icon}</div>
-      <div class="power-sym-name">${s.label}</div>
+      <div class="power-sym-icon">${p.icon || '🔥'}</div>
+      <div class="power-sym-name">
+        <span class="power-sym-name-main">${escHtml(nameMain)}</span>
+        ${nameSub ? `<span class="power-sym-name-sub">${escHtml(nameSub)}</span>` : ''}
+      </div>
       <div class="power-sym-count">${active ? n + ' bài' : '—'}</div>
     </div>`;
       }).join('');
@@ -1692,7 +1945,7 @@
       document.getElementById('heatmapStat').textContent = `${totalDays} ngày · ${totalXp} EXP năm qua`;
 
       function cc(xp) {
-        if (!xp) return '#e2e8f0';
+        if (!xp) return 'var(--border)';
         if (xp < 3) return '#bbf7d0';
         if (xp < 6) return '#4ade80';
         if (xp < 10) return '#22c55e';
@@ -1801,7 +2054,7 @@
     <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text-muted);margin-bottom:4px;">
       <span>${u.xp || 0} EXP</span><span>${lv.xpMax} EXP</span>
     </div>
-    <div style="height:6px;background:#e2e8f0;border-radius:99px;overflow:hidden;margin-bottom:6px;">
+    <div style="height:6px;background:var(--border);border-radius:99px;overflow:hidden;margin-bottom:6px;">
       <div style="height:100%;width:${pct}%;background:${lvColor};border-radius:99px;"></div>
     </div>
     <div style="font-size:11px;color:var(--text-muted);text-align:right;">
@@ -1829,6 +2082,7 @@
           fetch(`${API}/posts/${postId}`).then(r => r.json()),
           fetch(`${API}/posts/${postId}/comments`).then(r => r.json()),
         ]);
+        if (post && post.error) { document.getElementById('pmBody').innerHTML = '<div style="padding:40px;text-align:center;color:var(--text-muted)">🔒 ' + post.error + '</div>'; return; }
         renderPmPost(post);
         renderPmComments(cmts.comments || []);
       } catch (e) {
@@ -1843,6 +2097,7 @@
       document.getElementById('pmHeaderBadges').innerHTML =
         (pl ? `<span style="font-size:11px;font-weight:700;padding:3px 10px;border-radius:99px;background:${pl.color}20;color:${pl.color}">${pl.label}</span>` : '') +
         (p.post_type === 'cot' ? '<span style="font-size:11px;font-weight:700;padding:3px 10px;border-radius:99px;background:#fef3c7;color:#b45309">★ CÔT</span>' : '');
+      pmPostExtras(p); // nút ✏️ Sửa bài (tác giả) + nhãn bài bị ẩn — app.js
       document.getElementById('pmLikeCount').textContent = p.likes_count || 0;
       document.getElementById('pmCmtCount').textContent = p.comments_count || 0;
       document.getElementById('pmBody').innerHTML = `
@@ -1942,12 +2197,7 @@
     }
 
     async function pmLike() {
-      if (_pmLiked) return;
-      _pmLiked = true;
-      document.getElementById('pmLikeBtn').classList.add('liked');
-      await fetch(`${API}/posts/${_pmPostId}/like`, { method: 'POST' });
-      const el = document.getElementById('pmLikeCount');
-      el.textContent = Number(el.textContent) + 1;
+      await dhToggleLike(_pmPostId);   // app.js — thích / bỏ thích, trái tim đỏ
     }
 
     async function pmSubmitComment() {
@@ -2014,6 +2264,150 @@
       </div>
     </div>
   </div>
+
+  <!-- Edit Profile Modal -->
+  <div id="editProfileOverlay" class="post-modal-overlay" onclick="if(event.target===this)closeEditProfileModal()">
+    <div class="post-modal" style="max-width:520px;">
+      <div class="pm-header">
+        <div style="font-size:var(--fs-md);font-weight:700;color:var(--text);">✏️ Sửa hồ sơ</div>
+        <button class="pm-close" onclick="closeEditProfileModal()">×</button>
+      </div>
+      <div style="padding:18px 20px;display:flex;flex-direction:column;gap:14px;overflow-y:auto;">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+          <div>
+            <label class="ep-label">Họ</label>
+            <input class="ep-input" id="epFirstName" placeholder="Từ">
+          </div>
+          <div>
+            <label class="ep-label">Tên</label>
+            <input class="ep-input" id="epLastName" placeholder="Văn An">
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+          <div>
+            <label class="ep-label">Email</label>
+            <input class="ep-input" id="epEmail" disabled style="opacity:.65;cursor:not-allowed;">
+            <div style="font-size:11px;color:var(--text-muted);margin-top:3px;">Email không thể thay đổi.</div>
+          </div>
+          <div>
+            <label class="ep-label">Số điện thoại</label>
+            <input class="ep-input" id="epPhone" placeholder="09xxxxxxxx" maxlength="20">
+          </div>
+        </div>
+        <div>
+          <label class="ep-label">Giới thiệu ngắn (bio)</label>
+          <textarea class="ep-input" id="epBio" rows="3" maxlength="300" placeholder="Vài dòng giới thiệu về bạn..." oninput="document.getElementById('epBioCount').textContent = this.value.length"></textarea>
+          <div style="text-align:right;font-size:11px;color:var(--text-muted);margin-top:3px;"><span id="epBioCount">0</span>/300</div>
+        </div>
+        <div>
+          <label class="ep-label">Vị trí</label>
+          <input class="ep-input" id="epLocation" placeholder="TP. Hồ Chí Minh">
+        </div>
+        <div>
+          <label class="ep-label">Múi giờ (để nhắc báo cáo, lịch Zoom đúng giờ của bạn)</label>
+          <select class="ep-input" id="epTimezone"></select>
+          <div style="font-size:11px;color:var(--text-muted);margin-top:3px;">Ở nước ngoài? Chọn nơi bạn đang sống — lời nhắc báo cáo sẽ gửi lúc 20:00 giờ của bạn, lịch Zoom hiện thêm giờ của bạn.</div>
+        </div>
+        <div>
+          <label class="ep-label" style="margin-bottom:8px;">Liên kết mạng xã hội</label>
+          <div style="display:flex;flex-direction:column;gap:8px;" id="epSocialInputs"></div>
+        </div>
+      </div>
+      <div style="display:flex;justify-content:flex-end;gap:10px;padding:14px 20px;border-top:1px solid var(--border);">
+        <button class="btn-msg" onclick="closeEditProfileModal()">Hủy</button>
+        <button class="btn-msg" id="epSaveBtn" style="background:var(--color-primary);color:#fff;border-color:var(--color-primary);" onclick="saveEditProfile()">Lưu thay đổi</button>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    .ep-label { display:block; font-size:11px; font-weight:600; color:var(--text-muted); text-transform:uppercase; letter-spacing:.03em; margin-bottom:5px; }
+    .ep-input {
+      width:100%; padding:8px 12px; border:1px solid var(--border); border-radius:var(--radius-md);
+      font-family:var(--font-body); font-size:var(--fs-sm); color:var(--text); background:var(--bg-input);
+      outline:none; resize:vertical; box-sizing:border-box;
+    }
+    .ep-input:focus { border-color:var(--color-primary); }
+    .ep-social-row { display:flex; align-items:center; gap:8px; }
+    .ep-social-icon { width:22px; text-align:center; flex-shrink:0; }
+  </style>
+
+  <script>
+    function openEditProfileModal() {
+      if (!_profileUser) return;
+      document.getElementById('epFirstName').value = _profileUser.first_name || '';
+      document.getElementById('epLastName').value = _profileUser.last_name || '';
+      document.getElementById('epEmail').value = _profileUser.email || '';
+      document.getElementById('epPhone').value = _profileUser.phone || '';
+      document.getElementById('epBio').value = _profileUser.bio || '';
+      document.getElementById('epBioCount').textContent = (_profileUser.bio || '').length;
+      document.getElementById('epLocation').value = _profileUser.location || '';
+      document.getElementById('epTimezone').innerHTML = dhTimezoneOptions(_profileUser.timezone || 'Asia/Ho_Chi_Minh');
+
+      const links = _profileUser.social_links || {};
+      document.getElementById('epSocialInputs').innerHTML = SOCIAL_META.map(s => `
+        <div class="ep-social-row">
+          <span class="ep-social-icon">${s.icon}</span>
+          <input class="ep-input" id="epSocial_${s.key}" placeholder="${s.label} URL" value="${escHtml(links[s.key] || '')}">
+        </div>`).join('');
+
+      document.getElementById('editProfileOverlay').classList.add('open');
+    }
+
+    function closeEditProfileModal() {
+      document.getElementById('editProfileOverlay').classList.remove('open');
+    }
+
+    async function saveEditProfile() {
+      const btn = document.getElementById('epSaveBtn');
+      const firstName = document.getElementById('epFirstName').value.trim();
+      if (!firstName) { alert('Vui lòng nhập họ.'); return; }
+
+      const social_links = {};
+      SOCIAL_META.forEach(s => {
+        const v = document.getElementById(`epSocial_${s.key}`).value.trim();
+        if (v) social_links[s.key] = v;
+      });
+
+      const body = {
+        user_id: currentUser.id,
+        first_name: firstName,
+        last_name: document.getElementById('epLastName').value.trim(),
+        bio: document.getElementById('epBio').value.trim(),
+        location: document.getElementById('epLocation').value.trim(),
+        phone: document.getElementById('epPhone').value.trim(),
+        timezone: document.getElementById('epTimezone').value,
+        social_links,
+      };
+      if (typeof dhValidPhone === 'function' && !dhValidPhone(body.phone)) {
+        alert('Số điện thoại chưa đúng hoặc thiếu số.\nSố Việt Nam phải đủ 10 số, VD: 0912345678.\nỞ nước ngoài ghi +mã nước, VD: +61412345678.');
+        document.getElementById('epPhone').focus();
+        return;
+      }
+
+      btn.disabled = true; btn.textContent = 'Đang lưu...';
+      try {
+        const res = await fetch(`${API}/users/${currentUser.id}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body),
+        }).then(r => r.json());
+        if (res.error) { alert(res.error); btn.disabled = false; btn.textContent = 'Lưu thay đổi'; return; }
+
+        // Keep the session + sidebar in sync with the new name right away
+        currentUser.first_name = body.first_name;
+        currentUser.last_name = body.last_name;
+        currentUser.phone = body.phone;
+        localStorage.setItem('currentUser', JSON.stringify(currentUser));
+
+        closeEditProfileModal();
+        loadProfile();
+      } catch (e) {
+        alert('Có lỗi xảy ra. Vui lòng thử lại.');
+      }
+      btn.disabled = false; btn.textContent = 'Lưu thay đổi';
+    }
+  </script>
 </body>
 
 </html>

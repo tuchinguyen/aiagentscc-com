@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8">
+  <script src="assets/js/auth-fetch.js?v=1"></script>
+  <script>(function(){try{var t=localStorage.getItem('theme');if(t==='dark'||(!t&&window.matchMedia('(prefers-color-scheme: dark)').matches))document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" href="/assets/img/logo.png">
+  <link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
+  <meta name="theme-color" content="#0ea5e9">
+  <title>Vào Zoom — AI AGENTS CC</title>
+  <meta name="description" content="Điền thông tin để vào phòng Zoom của AI AGENTS CC.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/base.css?v=2">
+  <style>
+    body { background: var(--bg-app); }
+    .vz-wrap { max-width: 460px; margin: 0 auto; padding: 32px 16px 60px; }
+    .vz-brand { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 18px; font-family: var(--font-heading); font-weight: 800; font-size: 15px; color: var(--text); }
+    .vz-brand img { width: 34px; height: 34px; }
+    .vz-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 26px 22px; box-shadow: 0 4px 20px rgba(0,0,0,.05); }
+    .vz-card h1 { font-size: 21px; text-align: center; margin: 0 0 6px; }
+    .vz-session { text-align: center; font-size: 14px; color: var(--text-muted); margin-bottom: 20px; line-height: 1.5; }
+    .vz-session b { color: var(--text); }
+    .vz-field { margin-bottom: 14px; }
+    .vz-field label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; color: var(--text); }
+    .vz-field input { width: 100%; box-sizing: border-box; padding: 12px 14px; font-size: 16px; font-family: inherit; border: 1px solid var(--border); border-radius: 10px; background: var(--bg-card); color: var(--text); }
+    .vz-field input:focus { outline: none; border-color: #0ea5e9; box-shadow: 0 0 0 3px rgba(14,165,233,.15); }
+    .vz-hint { font-size: 12px; color: var(--text-muted); margin-top: 5px; }
+    .vz-btn { width: 100%; padding: 14px; font-size: 16px; font-weight: 700; font-family: inherit; color: #fff; background: #0e7490; border: none; border-radius: 12px; cursor: pointer; margin-top: 6px; }
+    .vz-btn:disabled { opacity: .6; cursor: wait; }
+    .vz-err { display: none; margin-top: 12px; padding: 10px 12px; border-radius: 10px; background: #fee2e2; color: #991b1b; font-size: 13.5px; }
+    .vz-note { font-size: 12px; color: var(--text-muted); text-align: center; margin-top: 16px; line-height: 1.6; }
+    .vz-closed { margin: 0 0 18px; padding: 14px 16px; border-radius: 12px; background: #fef3c7; color: #78350f; font-size: 14px; line-height: 1.6; text-align: center; }
+    .vz-closed b.t { display: block; font-size: 16px; margin-bottom: 4px; }
+    [data-theme="dark"] .vz-closed { background: #3a2c12; color: #fde68a; }
+    .vz-done { display: none; text-align: center; }
+    .vz-done p { font-size: 14px; color: var(--text-muted); line-height: 1.6; }
+    .vz-done a { display: inline-block; margin-top: 10px; padding: 12px 22px; border-radius: 12px; background: #0e7490; color: #fff; font-weight: 700; text-decoration: none; }
+  </style>
+</head>
+
+<body>
+  <main class="vz-wrap">
+    <div class="vz-brand"><img src="/assets/img/logo.png" alt=""> AI AGENTS CC</div>
+    <div class="vz-card">
+      <form id="vzForm" novalidate>
+        <h1>📹 Vào phòng Zoom</h1>
+        <div class="vz-session" id="vzSession">Đang tải thông tin buổi học…</div>
+        <div class="vz-closed" id="vzClosed" hidden role="status"></div>
+        <div class="vz-field">
+          <label for="vzName">Họ và tên *</label>
+          <input id="vzName" autocomplete="name" placeholder="VD: Nguyễn Thị Lan" required>
+          <div class="vz-hint">Khi Zoom hỏi tên, bạn ghi đúng tên này để Ban tổ chức dễ nhận ra.</div>
+        </div>
+        <div class="vz-field">
+          <label for="vzPhone">Số điện thoại (Zalo) *</label>
+          <input id="vzPhone" type="tel" inputmode="tel" autocomplete="tel" placeholder="VD: 0912 345 678" required>
+        </div>
+        <div class="vz-field">
+          <label for="vzEmail">Email *</label>
+          <input id="vzEmail" type="email" inputmode="email" autocomplete="email" placeholder="VD: lan@gmail.com" required>
+        </div>
+        <button class="vz-btn" id="vzBtn" type="submit">Vào Zoom ngay →</button>
+        <div class="vz-err" id="vzErr" role="alert"></div>
+        <div class="vz-note">Thông tin chỉ dùng để Ban tổ chức điểm danh và gửi tài liệu, chăm sóc sau buổi học.<br>Máy này sẽ nhớ thông tin cho lần sau.</div>
+      </form>
+      <div class="vz-done" id="vzDone">
+        <h1>✅ Đang mở Zoom…</h1>
+        <p>Nếu Zoom chưa tự mở, bấm nút bên dưới.</p>
+        <a id="vzLink" href="#">Mở Zoom</a>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    const $ = id => document.getElementById(id);
+    const src = (new URLSearchParams(location.search).get('src') || '').slice(0, 30);
+
+    // Điền sẵn: thông tin đã nhập lần trước trên máy này, hoặc tài khoản đang đăng nhập
+    (function prefill() {
+      let saved = {}, user = {};
+      try { saved = JSON.parse(localStorage.getItem('dhZoomCheckin') || '{}') || {}; } catch (e) {}
+      try { user = JSON.parse(localStorage.getItem('currentUser') || '{}') || {}; } catch (e) {}
+      $('vzName').value = saved.name || [user.first_name, user.last_name].filter(Boolean).join(' ');
+      $('vzPhone').value = saved.phone || user.phone || '';
+      $('vzEmail').value = saved.email || user.email || '';
+    })();
+
+    // Phòng Zoom chỉ mở từ 90 phút trước giờ học: chưa tới giờ thì báo + khoá nút, tự kiểm tra lại mỗi 30 giây
+    const BTN_TEXT = 'Vào Zoom ngay →';
+    let isClosed = false, pollTimer = null;
+    const dmy = d => String(d || '').split('-').reverse().join('/');
+    function showClosed(d) {
+      isClosed = true;
+      const n = d.next, box = $('vzClosed');
+      box.innerHTML = '';
+      const t = document.createElement('b'); t.className = 't';
+      t.textContent = d.reason === 'ended' ? '⏰ Buổi Zoom hôm nay đã kết thúc' : '⏰ Phòng Zoom chưa mở';
+      box.appendChild(t);
+      if (n) {
+        const today = String(d.now || '').slice(0, 10);
+        const p1 = document.createElement('div');
+        p1.textContent = `Buổi tiếp theo: ${n.title} — ${n.start}${n.date === today ? ' hôm nay' : ' ngày ' + dmy(n.date)}.`;
+        const p2 = document.createElement('div');
+        p2.textContent = `Phòng mở cửa lúc ${n.opens_at}${n.date === today ? '' : ' ngày ' + dmy(n.date)}.`;
+        p2.style.fontWeight = '700';
+        box.append(p1, p2);
+        if (n.date === today) { const p3 = document.createElement('div'); p3.style.fontSize = '12.5px'; p3.style.marginTop = '4px'; p3.textContent = 'Bạn cứ để nguyên trang này — đến giờ nút "Vào Zoom" sẽ tự mở.'; box.appendChild(p3); }
+      }
+      box.hidden = false;
+      $('vzBtn').disabled = true;
+      $('vzBtn').textContent = n ? `Mở lúc ${n.opens_at}${n.date === String(d.now || '').slice(0, 10) ? '' : ' · ' + dmy(n.date)}` : 'Phòng Zoom chưa mở';
+      if (!pollTimer) pollTimer = setInterval(loadSession, 30000);
+    }
+    function showOpen() {
+      if (isClosed) { $('vzBtn').disabled = false; $('vzBtn').textContent = BTN_TEXT; }
+      isClosed = false;
+      $('vzClosed').hidden = true;
+      if (pollTimer) { clearInterval(pollTimer); pollTimer = null; }
+    }
+    function loadSession() {
+      return fetch('/api/zoom/session').then(r => r.json()).then(d => {
+        const s = d.session || {};
+        $('vzSession').innerHTML = '';
+        const b = document.createElement('b');
+        if (d.open === false) {
+          b.textContent = d.next ? d.next.title : 'Buổi Zoom';
+          $('vzSession').append(b);
+          showClosed(d);
+        } else {
+          b.textContent = s.title || 'Buổi Zoom hôm nay';
+          $('vzSession').append(b, document.createElement('br'), (s.time ? s.time + ' · ' : '') + dmy(s.date));
+          showOpen();
+        }
+      }).catch(() => { if (!$('vzSession').textContent.trim() || /Đang tải/.test($('vzSession').textContent)) $('vzSession').textContent = 'Buổi Zoom hôm nay'; });
+    }
+    loadSession();
+
+    $('vzForm').addEventListener('submit', async e => {
+      e.preventDefault();
+      const body = { name: $('vzName').value.trim(), phone: $('vzPhone').value.trim(), email: $('vzEmail').value.trim(), src, to: new URLSearchParams(location.search).get('to') || '' };
+      const err = $('vzErr');
+      err.style.display = 'none';
+      if (isClosed) return;
+      if (!body.name || !body.phone || !body.email) { err.textContent = 'Vui lòng điền đủ Họ tên, Số điện thoại và Email.'; err.style.display = 'block'; return; }
+      $('vzBtn').disabled = true; $('vzBtn').textContent = 'Đang vào…';
+      try {
+        const r = await fetch('/api/zoom/checkin', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+        const d = await r.json().catch(() => ({}));
+        if (r.status === 409 && d.closed) {   // vừa hết giờ / chưa tới giờ trong lúc đang điền
+          try { localStorage.setItem('dhZoomCheckin', JSON.stringify({ name: body.name, phone: body.phone, email: body.email })); } catch (e2) {}
+          await loadSession();
+          return;
+        }
+        if (!r.ok) throw new Error(d.error || 'Có lỗi, vui lòng thử lại.');
+        try { localStorage.setItem('dhZoomCheckin', JSON.stringify({ name: body.name, phone: body.phone, email: body.email })); } catch (e2) {}
+        $('vzForm').style.display = 'none';
+        $('vzDone').style.display = 'block';
+        $('vzLink').href = d.url;
+        location.href = d.url;
+      } catch (ex) {
+        err.textContent = ex.message; err.style.display = 'block';
+        $('vzBtn').disabled = false; $('vzBtn').textContent = 'Vào Zoom ngay →';
+      }
+    });
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8">
+  <script src="assets/js/auth-fetch.js?v=1"></script>
+  <script>(function(){try{var t=localStorage.getItem('theme');if(t==='dark'||(!t&&window.matchMedia('(prefers-color-scheme: dark)').matches))document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex">
+  <link rel="icon" type="image/png" href="/assets/img/logo.png">
+  <link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
+  <meta name="theme-color" content="#0f766e">
+  <title>Kanban &amp; KPI — AI AGENTS CC</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/base.css?v=2">
+  <link rel="stylesheet" href="assets/css/van-hanh.css?v=3">
+  <style>
+    .kb-wrap { max-width: 1280px; margin: 0 auto; padding: 24px 16px 60px; display: flex; flex-direction: column; gap: 18px; }
+    .kb-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 14px; flex-wrap: wrap; }
+    .kb-head h1 { font-family: var(--font-heading); font-size: 24px; font-weight: 800; margin: 0; }
+    .kb-head p { margin: 4px 0 0; color: var(--text-muted); font-size: 13.5px; }
+    .kb-date { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+    .kb-btn { border: 1px solid var(--border); background: var(--bg-card); color: var(--text); border-radius: 8px; padding: 7px 11px; font-size: 13px; cursor: pointer; font-family: inherit; }
+    .kb-btn:hover:not(:disabled) { background: var(--bg-hover); }
+    .kb-btn:disabled { opacity: .45; cursor: not-allowed; }
+    .kb-btn.on { background: var(--color-primary); border-color: var(--color-primary); color: #fff; }
+    .kb-date input { border: 1px solid var(--border); background: var(--bg-card); color: var(--text); border-radius: 8px; padding: 6px 8px; font-size: 13px; font-family: inherit; }
+
+    .kb-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 18px; }
+    .kb-card h2 { font-family: var(--font-heading); font-size: 16px; font-weight: 700; margin: 0 0 4px; }
+    .kb-card .sub { color: var(--text-muted); font-size: 12.5px; margin: 0 0 12px; }
+    .kb-login { font-size: 13px; background: color-mix(in srgb, var(--color-primary) 9%, transparent); border: 1px solid var(--border); border-radius: 10px; padding: 10px 12px; }
+
+    /* Ai đã làm / chưa làm */
+    .who-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 10px; }
+    .who { border: 1px solid var(--border); border-radius: 12px; padding: 12px; cursor: pointer; text-align: left; background: var(--bg-card); color: var(--text); font-family: inherit; }
+    .who:hover { background: var(--bg-hover); }
+    .who.sel { outline: 2px solid var(--color-primary); outline-offset: -1px; }
+    .who b { font-size: 14px; }
+    .who .num { float: right; font-weight: 700; font-size: 13px; }
+    .who .bar { height: 6px; background: var(--bg-hover); border-radius: 999px; overflow: hidden; margin: 8px 0 6px; }
+    .who .bar i { display: block; height: 100%; background: var(--color-primary); }
+    .who .left { font-size: 12px; color: var(--text-muted); }
+    .who .left.bad { color: #dc2626; font-weight: 600; }
+    .who .left.good { color: #059669; font-weight: 600; }
+
+    /* Bảng Kanban */
+    .kb-filter { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; margin-bottom: 12px; font-size: 13px; }
+    .kb-board { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+    .kb-col { background: var(--bg-hover); border-radius: 12px; padding: 10px; min-height: 160px; transition: outline .1s; }
+    .kb-col.drop { outline: 2px dashed var(--color-primary); outline-offset: -2px; }
+    .kb-col h3 { font-size: 13.5px; margin: 2px 4px 10px; display: flex; justify-content: space-between; }
+    .kb-col h3 span { color: var(--text-muted); font-weight: 600; }
+    .kb-item { background: var(--bg-card); border: 1px solid var(--border); border-left: 4px solid var(--c, #64748b); border-radius: 10px; padding: 10px; margin-bottom: 8px; font-size: 13px; line-height: 1.45; }
+    .kb-item[draggable="true"] { cursor: grab; }
+    .kb-item.dragging { opacity: .4; }
+    .kb-item .meta { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; margin-top: 6px; font-size: 11.5px; color: var(--text-muted); }
+    .chip { display: inline-block; border-radius: 999px; padding: 1px 8px; font-size: 11px; font-weight: 700; background: var(--bg-hover); color: var(--text); white-space: nowrap; }
+    .chip.mem { background: color-mix(in srgb, var(--color-primary) 14%, transparent); color: var(--color-primary-dark); }
+    [data-theme="dark"] .chip.mem { color: var(--color-primary-light); }
+    .kb-item .acts { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
+    .kb-item .acts button { border: 1px solid var(--border); background: var(--bg-card); color: var(--text); border-radius: 7px; padding: 3px 9px; font-size: 12px; cursor: pointer; font-family: inherit; }
+    .kb-item .acts button:hover { background: var(--bg-hover); }
+    .kb-item.done .txt { color: var(--text-muted); text-decoration: line-through; }
+    .kb-empty { color: var(--text-muted); font-size: 12.5px; text-align: center; padding: 18px 6px; }
+    .kb-help { margin-top: 6px; font-size: 12px; font-weight: 600; color: #d97706; }
+    .kb-help.ok { color: #059669; }
+    .kb-item .acts button.hl { border-color: color-mix(in srgb, #8b5cf6 50%, transparent); }
+    .kb-item .acts button.yes { background: #059669; border-color: #059669; color: #fff; }
+    .inbox-item { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; border: 1px solid var(--border); border-radius: 10px; padding: 10px 12px; margin-top: 8px; font-size: 13px; }
+    .inbox-item .t { flex: 1; min-width: 220px; line-height: 1.5; }
+    .inbox-item .t small { display: block; color: var(--text-muted); }
+    dialog.kb-dlg { margin: auto; border: 1px solid var(--border); border-radius: 14px; padding: 18px; width: min(440px, calc(100vw - 32px)); background: var(--bg-card); color: var(--text); }
+    dialog.kb-dlg::backdrop { background: rgba(15, 23, 42, .5); }
+    .kb-dlg h3 { margin: 0 0 6px; font-size: 16px; }
+    .kb-dlg .task-txt { font-size: 13px; color: var(--text-muted); margin-bottom: 12px; }
+    .kb-dlg label { display: block; font-size: 12.5px; font-weight: 600; margin: 10px 0 4px; }
+    .kb-dlg select, .kb-dlg textarea { width: 100%; border: 1px solid var(--border); border-radius: 8px; padding: 8px; font: inherit; font-size: 13.5px; background: var(--bg-card); color: var(--text); }
+    .kb-dlg .row { display: flex; gap: 8px; justify-content: flex-end; margin-top: 14px; }
+
+    /* KPI */
+    .kpi-tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; align-items: center; }
+    .kpi-range { font-size: 12.5px; color: var(--text-muted); margin-left: 6px; }
+    .kpi-team { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; }
+    .kpi-stat { flex: 1; min-width: 150px; border: 1px solid var(--border); border-radius: 12px; padding: 12px 14px; }
+    .kpi-stat .v { font-family: var(--font-heading); font-size: 26px; font-weight: 800; }
+    .kpi-stat .l { font-size: 12px; color: var(--text-muted); }
+    table.kpi { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+    .kpi th, .kpi td { padding: 10px 8px; border-bottom: 1px solid var(--border); text-align: left; vertical-align: middle; }
+    .kpi th { font-size: 12px; color: var(--text-muted); font-weight: 600; }
+    .kpi .pbar { height: 8px; background: var(--bg-hover); border-radius: 999px; overflow: hidden; min-width: 90px; }
+    .kpi .pbar i { display: block; height: 100%; }
+    .kpi .pct { font-weight: 700; white-space: nowrap; }
+    .kpi tr.mrow { cursor: pointer; }
+    .kpi tr.mrow:hover td { background: var(--bg-hover); }
+    .kpi tr.detail td { background: var(--bg-app); font-size: 12.5px; }
+    .kpi tr.detail ul { margin: 0; padding-left: 18px; }
+    .kpi tr.detail li { margin: 3px 0; }
+    .kpi-note { font-size: 12px; color: var(--text-muted); margin-top: 10px; line-height: 1.6; }
+
+    @media (max-width: 860px) {
+      .kb-board { grid-template-columns: 1fr; }
+      .kb-head h1 { font-size: 21px; }
+      .kpi .hide-sm { display: none; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="vh-shell">
+    <aside class="vh-side" id="vhSide" aria-label="Điều hướng vận hành"></aside>
+    <main class="kb-wrap vh-main">
+      <div class="kb-head">
+        <div>
+          <h1>🗂️ Kanban công việc</h1>
+          <p>Ai đã làm gì, ai chưa làm gì — kéo thẻ hoặc bấm nút để cập nhật việc của bạn.</p>
+        </div>
+        <div class="kb-date">
+          <button class="kb-btn" type="button" onclick="kbShift(-1)" aria-label="Ngày trước">←</button>
+          <input type="date" id="kbDate" onchange="kbSetDate(this.value)" aria-label="Chọn ngày">
+          <button class="kb-btn" type="button" id="kbNext" onclick="kbShift(1)" aria-label="Ngày sau">→</button>
+          <button class="kb-btn" type="button" onclick="kbSetDate(VH.today())">Hôm nay</button>
+        </div>
+      </div>
+
+      <section class="kb-card">
+        <h2 id="kbWhoTitle">👥 Tiến độ từng người</h2>
+        <p class="sub">Bấm vào một người để lọc bảng Kanban bên dưới. Việc tuần/tháng tính theo tuần/tháng chứa ngày đang xem.</p>
+        <div class="who-grid" id="kbWho"></div>
+      </section>
+
+      <section class="kb-card" id="kbInboxCard" hidden>
+        <h2 id="kbInboxTitle">📨 Nhờ hỗ trợ gửi đến bạn</h2>
+        <p class="sub">Bấm <b>Nhận việc</b> thì lần việc đó chuyển sang bạn (bạn cập nhật thẻ, KPI tính cho bạn).</p>
+        <div id="kbInbox"></div>
+      </section>
+
+      <section class="kb-card">
+        <div id="kbAccess"></div>
+        <div class="kb-filter" id="kbFilter"></div>
+        <div style="text-align:right;margin:-6px 0 10px;" id="kbDigestWrap" hidden><button class="kb-btn" type="button" onclick="kbDigestTest(this)" title="Gửi danh sách việc hôm nay của bạn qua Telegram (An Tâm / An Nhiên)">📨 Gửi bản tin việc hôm nay qua Telegram cho tôi</button></div>
+        <div class="kb-board" id="kbBoard"></div>
+      </section>
+
+      <section class="kb-card" id="kpi">
+        <h2>📊 KPI hoàn thành</h2>
+        <p class="sub">Tỉ lệ việc đã xong so với số việc cần làm trong kỳ (tính đến hôm nay). Việc "khi phát sinh" không tính %, chỉ đếm số lượt đã xử lý.</p>
+        <div class="kpi-tabs" id="kpiTabs">
+          <button class="kb-btn on" data-p="day" type="button">Ngày</button>
+          <button class="kb-btn" data-p="week" type="button">Tuần</button>
+          <button class="kb-btn" data-p="month" type="button">Tháng</button>
+          <button class="kb-btn" data-p="quarter" type="button">Quý</button>
+          <span class="kpi-range" id="kpiRange"></span>
+        </div>
+        <div class="kpi-team" id="kpiTeam"></div>
+        <div style="overflow-x:auto;">
+          <table class="kpi">
+            <thead><tr><th>Thành viên</th><th>Đã xong / cần làm</th><th style="width:38%;">Hoàn thành</th><th class="hide-sm">Lượt phát sinh</th></tr></thead>
+            <tbody id="kpiBody"><tr><td colspan="4" class="kb-empty">Đang tải…</td></tr></tbody>
+          </table>
+        </div>
+        <div class="kpi-note" id="kpiNote"></div>
+      </section>
+    </main>
+  </div>
+
+  <dialog class="kb-dlg" id="kbHelpDlg">
+    <h3>🤝 Nhờ hỗ trợ</h3>
+    <div class="task-txt" id="kbHelpTask"></div>
+    <label for="kbHelpTo">Nhờ ai?</label>
+    <select id="kbHelpTo"></select>
+    <label for="kbHelpNote">Lời nhắn (không bắt buộc)</label>
+    <textarea id="kbHelpNote" rows="2" maxlength="300" placeholder="vd: Hôm nay mình bận đi khám, nhờ bạn đăng giúp nhé"></textarea>
+    <div class="row">
+      <button type="button" class="kb-btn" onclick="document.getElementById('kbHelpDlg').close()">Huỷ</button>
+      <button type="button" class="kb-btn on" id="kbHelpSend" onclick="kbHelpSend()">📨 Gửi lời nhờ</button>
+    </div>
+  </dialog>
+
+  <script src="assets/js/van-hanh.js?v=6"></script>
+  <script>
+    VH.nav('kanban');
+    var E = VH.esc;
+    var kb = { date: VH.today(), data: null, filter: 'all', kpiPeriod: 'day' };
+    var COLS = [['todo', '⏳ Chưa làm'], ['doing', '🔄 Đang làm'], ['done', '✅ Đã xong']];
+    var days = ['CN', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7'];
+
+    function kbSetDate(d) {
+      if (!d) return;
+      if (d > VH.today()) d = VH.today();
+      kb.date = d; load(); loadKpi();
+    }
+    function kbShift(n) { var x = new Date(kb.date + 'T00:00:00Z'); x.setUTCDate(x.getUTCDate() + n); kbSetDate(x.toISOString().slice(0, 10)); }
+
+    function items() {
+      var d = kb.data, out = [];
+      var colMap = {}; (d.board.columns || []).forEach(function (c) { colMap[c.id] = c; });
+      d.board.members.forEach(function (m) {
+        m.tasks.forEach(function (t) {
+          var st = d.statuses[m.id + '|' + t.id];
+          var h = VH.helpOf(d, m.id, t.id);
+          var eff = h && h.status === 'accepted' ? (d.board.members.filter(function (x) { return x.id === h.to_member_id; })[0] || m) : m;
+          out.push({ m: m, eff: eff, help: h, t: t, col: colMap[t.col] || { name: '', color: '#64748b' }, status: st ? st.status : 'todo', st: st });
+        });
+      });
+      return out;
+    }
+
+    function renderWho() {
+      var all = items(), isToday = kb.date === kb.data.today;
+      var dd = new Date(kb.date + 'T00:00:00Z');
+      document.getElementById('kbWhoTitle').textContent = '👥 Tiến độ từng người — ' + days[dd.getUTCDay()] + ' ' + VH.fmtDate(kb.date) + (isToday ? ' (hôm nay)' : '');
+      document.getElementById('kbWho').innerHTML = kb.data.board.members.map(function (m) {
+        var mine = all.filter(function (x) { return x.eff.id === m.id; });
+        var reg = mine.filter(function (x) { return x.t.freq !== 'adhoc'; });
+        var done = reg.filter(function (x) { return x.status === 'done'; }).length;
+        var doing = mine.filter(function (x) { return x.status === 'doing'; }).length;
+        var left = reg.length - done;
+        var pct = reg.length ? Math.round(done * 100 / reg.length) : 0;
+        var msg = !reg.length ? 'Chỉ có việc khi phát sinh' : left === 0 ? '🎉 Đã xong hết' : ('Còn ' + left + ' việc chưa xong' + (doing ? ' · ' + doing + ' đang làm' : ''));
+        var asked = all.filter(function (x) { return x.help && x.help.status === 'pending' && x.help.to_member_id === m.id; }).length;
+        return '<button type="button" class="who' + (kb.filter === m.id ? ' sel' : '') + '" onclick="kbFilter(\'' + E(m.id) + '\')">' +
+          '<span class="num">' + done + '/' + reg.length + '</span><b>' + E(m.name) + '</b>' +
+          '<div class="bar"><i style="width:' + pct + '%"></i></div>' +
+          '<div class="left ' + (!reg.length ? '' : left === 0 ? 'good' : 'bad') + '">' + msg + '</div>' +
+          (asked ? '<div class="left" style="color:#7c3aed;font-weight:700;margin-top:3px;">📨 ' + asked + ' lời nhờ hỗ trợ đang chờ</div>' : '') + '</button>';
+      }).join('') || '<div class="kb-empty">Chưa có thành viên trong bảng phân công.</div>';
+    }
+
+    function kbFilter(f) { kb.filter = kb.filter === f && f !== 'all' ? 'all' : f; render(); }
+
+    function renderFilter() {
+      var me = kb.data.me, mine = me && me.member_ids.length;
+      var btn = function (f, label) { return '<button type="button" class="kb-btn' + (kb.filter === f ? ' on' : '') + '" onclick="kbFilter(\'' + E(f) + '\')">' + label + '</button>'; };
+      document.getElementById('kbFilter').innerHTML = '<span style="color:var(--text-muted);">Lọc:</span>' + btn('all', 'Tất cả') + (mine ? btn('me', '🙋 Việc của tôi') : '') +
+        kb.data.board.members.map(function (m) { return btn(m.id, E(m.name)); }).join('');
+    }
+
+    function renderBoard() {
+      var me = kb.data.me;
+      var list = items().filter(function (x) {
+        if (kb.filter === 'all') return true;
+        var askedTo = x.help && x.help.status === 'pending' ? x.help.to_member_id : null;
+        if (kb.filter === 'me') return me && (me.member_ids.indexOf(x.eff.id) >= 0 || me.member_ids.indexOf(askedTo) >= 0);
+        return x.eff.id === kb.filter || askedTo === kb.filter;
+      });
+      document.getElementById('kbBoard').innerHTML = COLS.map(function (c) {
+        var its = list.filter(function (x) { return x.status === c[0]; });
+        return '<div class="kb-col" data-status="' + c[0] + '"><h3>' + c[1] + ' <span>' + its.length + '</span></h3>' +
+          (its.map(card).join('') || '<div class="kb-empty">' + (c[0] === 'todo' ? 'Không còn việc nào 🎉' : 'Trống') + '</div>') + '</div>';
+      }).join('');
+      bindDrag();
+    }
+
+    function card(x) {
+      var me = kb.data.me, can = VH.canEditItem(kb.data, x.m.id, x.t.id);
+      var k = E(x.m.id) + '|' + E(x.t.id);
+      var acts = '', help = '';
+      if (x.help && x.help.status === 'pending') {
+        help = '<div class="kb-help">⏳ Đang nhờ ' + E(x.help.to_name) + ' hỗ trợ' + (x.help.note ? ' — “' + E(x.help.note) + '”' : '') + '</div>';
+        if (VH.canEdit(me, x.help.to_member_id)) acts += '<button class="yes" onclick="kbHelpRespond(' + x.help.id + ',\'accept\')">✅ Nhận việc</button><button onclick="kbHelpRespond(' + x.help.id + ',\'decline\')">✖ Từ chối</button>';
+        if (VH.canEdit(me, x.m.id)) acts += '<button onclick="kbHelpRespond(' + x.help.id + ',\'cancel\')">Huỷ nhờ</button>';
+      } else if (x.help && x.help.status === 'accepted') {
+        help = '<div class="kb-help ok">🤝 ' + E(x.help.to_name) + ' nhận hỗ trợ (việc của ' + E(x.m.name) + ')</div>';
+      }
+      if (can) {
+        if (x.status === 'todo') acts += '<button onclick="kbMove(\'' + k + '\',\'doing\')">▶ Bắt đầu</button><button onclick="kbMove(\'' + k + '\',\'done\')">✓ Xong</button>';
+        if (x.status === 'doing') acts += '<button onclick="kbMove(\'' + k + '\',\'done\')">✓ Xong</button><button onclick="kbMove(\'' + k + '\',\'todo\')">↺ Chưa làm</button>';
+        if (x.status === 'done') acts += '<button onclick="kbMove(\'' + k + '\',\'todo\')">↺ Mở lại</button>';
+      }
+      if (!x.help && x.status !== 'done' && VH.canEdit(me, x.m.id) && kb.data.board.members.length > 1)
+        acts += '<button class="hl" onclick="kbHelpOpen(\'' + k + '\')">🤝 Nhờ hỗ trợ</button>';
+      var by = x.st ? ' · ' + E(x.st.by || '') + (x.st.at ? ' ' + E(x.st.at.slice(11, 16)) : '') : '';
+      return '<div class="kb-item' + (x.status === 'done' ? ' done' : '') + '" style="--c:' + E(x.col.color) + '" data-k="' + k + '"' + (can ? ' draggable="true"' : '') + '>' +
+        '<div class="txt">' + VH.fmt(x.t.text) + (x.t.link ? ' <a href="' + E(x.t.link) + '" target="_blank" rel="noopener">↗</a>' : '') + '</div>' +
+        '<div class="meta"><span class="chip mem">' + E(x.eff.name) + '</span><span>' + E(x.col.name) + '</span><span class="chip">' + E(VH.FREQ[x.t.freq] || '') + '</span>' + by + '</div>' +
+        help + (acts ? '<div class="acts">' + acts + '</div>' : '') + '</div>';
+    }
+
+    function bindDrag() {
+      var dragging = null;
+      document.querySelectorAll('.kb-item[draggable="true"]').forEach(function (el) {
+        el.addEventListener('dragstart', function (e) { dragging = el.dataset.k; el.classList.add('dragging'); e.dataTransfer.setData('text/plain', dragging); });
+        el.addEventListener('dragend', function () { el.classList.remove('dragging'); });
+      });
+      document.querySelectorAll('.kb-col').forEach(function (col) {
+        col.addEventListener('dragover', function (e) { if (dragging) { e.preventDefault(); col.classList.add('drop'); } });
+        col.addEventListener('dragleave', function () { col.classList.remove('drop'); });
+        col.addEventListener('drop', function (e) {
+          e.preventDefault(); col.classList.remove('drop');
+          if (dragging) kbMove(dragging, col.dataset.status);
+          dragging = null;
+        });
+      });
+    }
+
+    function kbMove(k, status) {
+      var p = k.split('|');
+      var cur = kb.data.statuses[k];
+      if ((cur ? cur.status : 'todo') === status) return;
+      VH.api('/api/task-board/state', { method: 'POST', body: { member_id: p[0], task_id: p[1], date: kb.date, status: status } })
+        .then(function () { load(); loadKpi(); if (status === 'done' && p[1].indexOf('care:') === 0) kbCareAsk(p[1].slice(5)); })
+        .catch(function (e) { alert(e.message); });
+    }
+
+    // Việc chăm sóc khách xong → hỏi khách đã tiến tới bước nào, cập nhật luôn Kanban khách hàng
+    // (việc ngày mai đổi theo bước mới; Đã mua / Chưa mua thì việc chăm sóc kết thúc)
+    var CARE_STEPS = [['messaged', '💬 Đã nhắn'], ['called', '📞 Đã gọi'], ['booked', '📅 Đặt lịch 1-1'], ['bought', '🎉 Đã mua'], ['not_bought', '🙅 Chưa mua']];
+    function kbCareAsk(phone) {
+      var ov = document.getElementById('kbCareOv');
+      if (!ov) {
+        ov = document.createElement('div'); ov.id = 'kbCareOv';
+        ov.style.cssText = 'position:fixed;inset:0;background:rgba(15,23,42,.55);z-index:1000;display:flex;align-items:center;justify-content:center;padding:16px;';
+        document.body.appendChild(ov);
+      }
+      ov.innerHTML = '<div style="background:var(--bg-card);color:var(--text);border:1px solid var(--border);border-radius:14px;padding:18px;width:min(420px,100%);">' +
+        '<div style="font-weight:700;font-size:16px;margin-bottom:4px;">✅ Đã chăm sóc khách hôm nay</div>' +
+        '<div style="font-size:13.5px;color:var(--text-muted);margin-bottom:12px;">Khách ' + E(phone) + ' đã tiến tới bước nào? Chọn để cập nhật Kanban khách hàng — việc ngày mai sẽ đổi theo, Đã mua / Chưa mua thì kết thúc.</div>' +
+        '<div style="display:flex;flex-wrap:wrap;gap:8px;">' + CARE_STEPS.map(function (s) {
+          return '<button type="button" class="kb-btn" onclick="kbCareSet(\'' + E(phone) + '\',\'' + s[0] + '\')">' + s[1] + '</button>';
+        }).join('') + '</div>' +
+        '<button type="button" class="kb-btn" style="margin-top:12px;width:100%;" onclick="document.getElementById(\'kbCareOv\').remove()">Giữ nguyên — mai chăm sóc tiếp</button></div>';
+      ov.onclick = function (e) { if (e.target === ov) ov.remove(); };
+    }
+    function kbCareSet(phone, status) {
+      var body = { phone: phone, status: status };
+      if (status === 'not_bought') {
+        var reason = prompt('Lý do khách chưa mua (để cả đội rút kinh nghiệm):', '');
+        if (reason === null) return;
+        if (!reason.trim()) { alert('Ghi lý do chưa mua để cả đội rút kinh nghiệm.'); return; }
+        body.reason = reason.trim();
+      }
+      VH.api('/api/care-board/person', { method: 'PUT', body: body })
+        .then(function () { var ov = document.getElementById('kbCareOv'); if (ov) ov.remove(); load(); })
+        .catch(function (e) { alert(e.message); });
+    }
+
+    function renderInbox() {
+      var list = kb.data.inbox || [], me = kb.data.me;
+      document.getElementById('kbInboxTitle').textContent = me && me.is_admin && !me.member_ids.length ? '📨 Lời nhờ hỗ trợ đang chờ (admin nhận / từ chối giúp được)' : '📨 Nhờ hỗ trợ gửi đến bạn';
+      document.getElementById('kbInboxCard').hidden = !list.length;
+      document.getElementById('kbInbox').innerHTML = list.map(function (h) {
+        return '<div class="inbox-item"><div class="t"><b>' + E(h.owner_name) + '</b> nhờ <b>' + E(h.to_name) + '</b>: ' + VH.fmt(h.task_text) +
+          '<small>' + E(VH.FREQ[h.freq] || '') + ' · ngày ' + VH.fmtDate(h.work_date) + (h.from_name ? ' · gửi bởi ' + E(h.from_name) : '') + (h.note ? ' · “' + E(h.note) + '”' : '') + '</small></div>' +
+          '<button class="kb-btn on" type="button" onclick="kbHelpRespond(' + h.id + ',\'accept\')">✅ Nhận việc</button>' +
+          '<button class="kb-btn" type="button" onclick="kbHelpRespond(' + h.id + ',\'decline\')">✖ Từ chối</button></div>';
+      }).join('');
+    }
+
+    // ── Nhờ hỗ trợ ──
+    var helpKey = null;
+    function kbHelpOpen(k) {
+      helpKey = k;
+      var p = k.split('|'), x = items().filter(function (i) { return i.m.id === p[0] && i.t.id === p[1]; })[0];
+      if (!x) return;
+      document.getElementById('kbHelpTask').innerHTML = VH.fmt(x.t.text) + ' <span style="white-space:nowrap;">· ' + E(x.m.name) + ' · ' + VH.fmtDate(kb.date) + '</span>';
+      document.getElementById('kbHelpTo').innerHTML = '<option value="">— Chọn thành viên —</option>' + kb.data.board.members
+        .filter(function (m) { return m.id !== x.m.id; })
+        .map(function (m) { return '<option value="' + E(m.id) + '"' + (m.linked ? '' : ' disabled') + '>' + E(m.name) + (m.role ? ' — ' + E(m.role) : '') + (m.linked ? '' : ' (chưa gắn tài khoản)') + '</option>'; }).join('');
+      document.getElementById('kbHelpNote').value = '';
+      document.getElementById('kbHelpDlg').showModal();
+    }
+    function kbHelpSend() {
+      var to = document.getElementById('kbHelpTo').value;
+      if (!to) return alert('Chọn người bạn muốn nhờ.');
+      var p = helpKey.split('|'), btn = document.getElementById('kbHelpSend');
+      btn.disabled = true;
+      VH.api('/api/task-board/help', { method: 'POST', body: { member_id: p[0], task_id: p[1], date: kb.date, to_member_id: to, note: document.getElementById('kbHelpNote').value } })
+        .then(function () { document.getElementById('kbHelpDlg').close(); load(); })
+        .catch(function (e) { alert(e.message); })
+        .then(function () { btn.disabled = false; });
+    }
+    function kbHelpRespond(id, action) {
+      if (action === 'cancel' && !confirm('Huỷ lời nhờ hỗ trợ này?')) return;
+      if (action === 'decline' && !confirm('Từ chối lời nhờ này?')) return;
+      VH.api('/api/task-board/help/' + id + '/respond', { method: 'POST', body: { action: action } })
+        .then(function () { load(); loadKpi(); })
+        .catch(function (e) { alert(e.message); load(); });
+    }
+
+    function kbDigestTest(btn) {
+      btn.disabled = true;
+      VH.api('/api/task-board/digest-test', { method: 'POST', body: {} })
+        .then(function (d) { alert(d.sent ? 'Đã gửi bản tin qua Telegram — kiểm tra tin nhắn An Tâm / An Nhiên.' : 'Chưa gửi được: tài khoản chưa kết nối Telegram (An Tâm hoặc An Nhiên), hoặc hôm nay không còn việc nào.'); })
+        .catch(function (e) { alert(e.message); })
+        .then(function () { btn.disabled = false; });
+    }
+    function render() { document.getElementById('kbDigestWrap').hidden = !(kb.data.me && kb.data.me.member_ids.length); renderInbox(); renderWho(); renderFilter(); renderBoard(); }
+
+    function load() {
+      document.getElementById('kbDate').value = kb.date;
+      document.getElementById('kbDate').max = VH.today();
+      document.getElementById('kbNext').disabled = kb.date >= VH.today();
+      return VH.api('/api/task-board/state?date=' + kb.date).then(function (d) {
+        kb.data = d;
+        document.getElementById('kbAccess').innerHTML = VH.accessNote(d);
+        if (d.me && kb.filter === 'all' && !kb.filterSet && d.me.member_ids.length && !d.me.is_admin) kb.filter = 'me';
+        kb.filterSet = true;
+        render();
+      }).catch(function (e) {
+        document.getElementById('kbBoard').innerHTML = '<div class="kb-empty">Không tải được: ' + E(e.message) + '</div>';
+      });
+    }
+
+    // ── KPI ──
+    document.getElementById('kpiTabs').addEventListener('click', function (e) {
+      var b = e.target.closest('button[data-p]'); if (!b) return;
+      kb.kpiPeriod = b.dataset.p;
+      document.querySelectorAll('#kpiTabs button').forEach(function (x) { x.classList.toggle('on', x === b); });
+      loadKpi();
+    });
+    function pctColor(p) { return p == null ? 'var(--border)' : p >= 80 ? '#10b981' : p >= 50 ? '#f59e0b' : '#ef4444'; }
+    function loadKpi() {
+      VH.api('/api/task-board/kpi?period=' + kb.kpiPeriod + '&date=' + kb.date).then(function (k) {
+        var names = { day: 'Ngày', week: 'Tuần', month: 'Tháng', quarter: 'Quý' };
+        document.getElementById('kpiRange').textContent = k.from === k.to ? VH.fmtDate(k.from) : VH.fmtDate(k.from) + ' → ' + VH.fmtDate(k.to);
+        var t = k.team;
+        document.getElementById('kpiTeam').innerHTML =
+          '<div class="kpi-stat"><div class="v" style="color:' + pctColor(t.pct) + '">' + (t.pct == null ? '—' : t.pct + '%') + '</div><div class="l">Cả nhóm hoàn thành (' + names[k.period].toLowerCase() + ')</div></div>' +
+          '<div class="kpi-stat"><div class="v">' + t.done + '<span style="font-size:15px;color:var(--text-muted);">/' + t.expected + '</span></div><div class="l">Việc đã xong / cần làm</div></div>' +
+          '<div class="kpi-stat"><div class="v">' + t.adhoc + '</div><div class="l">Lượt xử lý việc phát sinh</div></div>';
+        document.getElementById('kpiBody').innerHTML = k.members.map(function (m, i) {
+          var detail = '<ul>' + m.tasks.map(function (x) {
+            return '<li>' + VH.fmt(x.text) + ' — <b>' + (x.freq === 'adhoc' ? x.done + ' lượt' : x.done + '/' + x.expected) + '</b> <span style="color:var(--text-muted);">(' + E(VH.FREQ[x.freq]) + ')</span></li>';
+          }).join('') + '</ul>';
+          return '<tr class="mrow" onclick="var d=document.getElementById(\'kd' + i + '\');d.hidden=!d.hidden"><td><b>' + E(m.name) + '</b> <span style="color:var(--text-muted);font-size:11px;">▾</span></td>' +
+            '<td>' + m.done + ' / ' + m.expected + '</td>' +
+            '<td><div style="display:flex;align-items:center;gap:8px;"><div class="pbar" style="flex:1;"><i style="width:' + (m.pct || 0) + '%;background:' + pctColor(m.pct) + '"></i></div><span class="pct" style="color:' + pctColor(m.pct) + '">' + (m.pct == null ? '—' : m.pct + '%') + '</span></div></td>' +
+            '<td class="hide-sm">' + m.adhoc + '</td></tr>' +
+            '<tr class="detail" id="kd' + i + '" hidden><td colspan="4">' + detail + '</td></tr>';
+        }).join('') || '<tr><td colspan="4" class="kb-empty">Chưa có thành viên.</td></tr>';
+        var note = '🟢 ≥ 80% · 🟡 50–79% · 🔴 dưới 50%. Bấm vào tên để xem chi tiết từng việc.';
+        if (k.counted_from > k.from) note += ' Số liệu tính từ ngày bắt đầu theo dõi ' + VH.fmtDate(k.kpi_start) + '.';
+        if (k.counted_to < k.to) note += ' Kỳ chưa kết thúc — tính đến hôm nay.';
+        document.getElementById('kpiNote').textContent = note;
+      }).catch(function (e) {
+        document.getElementById('kpiBody').innerHTML = '<tr><td colspan="4" class="kb-empty">Không tải được KPI: ' + E(e.message) + '</td></tr>';
+      });
+    }
+
+    if (location.hash === '#kpi') setTimeout(function () { document.getElementById('kpi').scrollIntoView(); }, 600);
+    load(); loadKpi();
+  </script>
+</body>
+
+</html>

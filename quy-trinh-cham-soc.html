@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8">
+  <script>(function(){try{var t=localStorage.getItem('theme');if(t==='dark'||(!t&&window.matchMedia('(prefers-color-scheme: dark)').matches))document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" type="image/png" href="/assets/img/logo.png">
+  <meta name="theme-color" content="#0f766e">
+  <title>Quy trình chăm sóc khách hàng — AI AGENTS CC</title>
+  <meta name="description" content="Hướng dẫn quản trị viên: lập danh sách khách hàng, điểm danh Zoom và chăm sóc sau Zoom.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/base.css?v=2">
+  <style>
+    body { background: var(--bg-app); color: var(--text); }
+    .qt-top { position: sticky; top: 0; z-index: 10; background: var(--bg-card); border-bottom: 1px solid var(--border); }
+    .qt-top-in { max-width: 1120px; margin: 0 auto; padding: 12px 16px; display: flex; align-items: center; gap: 12px; }
+    .qt-top img { width: 30px; height: 30px; }
+    .qt-top b { font-family: var(--font-heading); font-size: 15px; flex: 1; }
+    .qt-top a { font-size: 13px; font-weight: 600; color: var(--color-primary); text-decoration: none; white-space: nowrap; }
+    .qt-wrap { max-width: 1120px; margin: 0 auto; padding: 24px 16px 80px; display: grid; grid-template-columns: 240px minmax(0, 1fr); gap: 28px; align-items: start; }
+    .qt-toc { position: sticky; top: 72px; font-size: 13px; display: flex; flex-direction: column; gap: 2px; max-height: calc(100vh - 90px); overflow: auto; }
+    .qt-toc a { color: var(--text-muted); text-decoration: none; padding: 6px 10px; border-radius: 8px; line-height: 1.35; }
+    .qt-toc a:hover { background: var(--bg-hover); color: var(--text); }
+    .qt-toc .qt-toc-h { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--text-light); padding: 4px 10px 6px; }
+    main { min-width: 0; display: flex; flex-direction: column; gap: 18px; }
+    .qt-hero { background: linear-gradient(135deg, #0f766e, #0e7490); color: #fff; border-radius: 16px; padding: 26px 26px 22px; }
+    .qt-hero h1 { font-size: 26px; margin: 0 0 8px; color: #fff; }
+    .qt-hero p { margin: 0; opacity: .92; line-height: 1.6; font-size: 14.5px; }
+    .qt-sec { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; scroll-margin-top: 72px; }
+    .qt-sec h2 { font-size: 19px; margin: 0 0 4px; display: flex; gap: 10px; align-items: center; }
+    .qt-num { flex-shrink: 0; width: 28px; height: 28px; border-radius: 50%; background: var(--color-primary); color: #fff; font-size: 13px; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; }
+    .qt-sub { color: var(--text-muted); font-size: 13.5px; margin: 0 0 14px; }
+    .qt-sec h3 { font-size: 15px; margin: 18px 0 8px; }
+    .qt-sec p, .qt-sec li { font-size: 14px; line-height: 1.7; }
+    .qt-sec ul, .qt-sec ol { padding-left: 20px; margin: 6px 0; }
+    .qt-sec li + li { margin-top: 4px; }
+    .qt-path { display: inline-block; background: var(--bg-hover); border: 1px solid var(--border); border-radius: 6px; padding: 0 7px; font-size: 13px; font-weight: 600; white-space: nowrap; }
+    code, .qt-code { font-family: ui-monospace, Consolas, monospace; font-size: 12.5px; background: var(--bg-hover); border: 1px solid var(--border); border-radius: 6px; padding: 1px 6px; word-break: break-all; }
+    .qt-table { width: 100%; border-collapse: collapse; font-size: 13.5px; margin: 8px 0; }
+    .qt-table th, .qt-table td { border: 1px solid var(--border); padding: 8px 10px; text-align: left; vertical-align: top; line-height: 1.55; }
+    .qt-table th { background: var(--bg-hover); font-weight: 700; font-size: 12.5px; }
+    .qt-scroll { overflow-x: auto; }
+    .qt-note { border-radius: 10px; padding: 11px 14px; font-size: 13.5px; line-height: 1.6; margin: 10px 0; border: 1px solid; }
+    .qt-note.tip { background: color-mix(in srgb, #10b981 9%, transparent); border-color: color-mix(in srgb, #10b981 35%, transparent); }
+    .qt-note.warn { background: color-mix(in srgb, #f59e0b 11%, transparent); border-color: color-mix(in srgb, #f59e0b 40%, transparent); }
+    .qt-note.info { background: color-mix(in srgb, #0ea5e9 9%, transparent); border-color: color-mix(in srgb, #0ea5e9 35%, transparent); }
+    .qt-flow { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin: 6px 0 4px; }
+    .qt-flow span { background: var(--bg-hover); border: 1px solid var(--border); border-radius: 99px; padding: 5px 12px; font-size: 13px; font-weight: 600; }
+    .qt-flow i { color: var(--text-light); font-style: normal; }
+    .qt-check { list-style: none; padding-left: 0 !important; }
+    .qt-check li { position: relative; padding-left: 28px; }
+    .qt-check li::before { content: '☐'; position: absolute; left: 4px; top: 0; color: var(--color-primary); font-size: 16px; }
+    .qt-foot { text-align: center; color: var(--text-muted); font-size: 12.5px; }
+    @media (max-width: 860px) {
+      .qt-wrap { grid-template-columns: 1fr; }
+      .qt-toc { position: static; max-height: none; flex-direction: row; flex-wrap: wrap; background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 8px; }
+      .qt-toc .qt-toc-h { width: 100%; }
+      .qt-sec { padding: 18px 16px; }
+      .qt-hero { padding: 22px 18px; }
+    }
+    @media print {
+      .qt-top, .qt-toc { display: none; }
+      .qt-wrap { display: block; padding: 0; }
+      .qt-sec { break-inside: avoid; border: none; padding: 10px 0; }
+      .qt-hero { color: #000; background: none; border: 1px solid #ccc; }
+      .qt-hero h1 { color: #000; }
+    }
+  </style>
+</head>
+
+<body>
+  <header class="qt-top">
+    <div class="qt-top-in">
+      <img src="/assets/img/logo.png" alt="">
+      <b>Quy trình chăm sóc khách hàng</b>
+      <a href="/admin.html">Mở Admin →</a>
+    </div>
+  </header>
+
+  <div class="qt-wrap">
+    <nav class="qt-toc" aria-label="Mục lục">
+      <div class="qt-toc-h">Mục lục</div>
+      <a href="#tong-quan">0. Bức tranh toàn cảnh</a>
+      <a href="#danh-sach">1. Danh sách & hồ sơ thành viên</a>
+      <a href="#khao-sat">2. Hồ sơ AI Agent (khảo sát)</a>
+      <a href="#thanh-toan">3. Đơn hàng & thanh toán</a>
+      <a href="#thu-thach">4. Vận hành thử thách 21 ngày</a>
+      <a href="#zoom">5. Buổi Zoom & điểm danh</a>
+      <a href="#kanban-kh">6. Kanban khách hàng & giao việc</a>
+      <a href="#gui-tin">7. Thông báo & gửi tin</a>
+      <a href="#lich-lam-viec">8. Lịch làm việc mẫu</a>
+      <a href="#nguyen-tac">9. Nguyên tắc & bảo mật</a>
+      <a href="#su-co">10. Xử lý tình huống</a>
+    </nav>
+
+    <main>
+      <div class="qt-hero">
+        <h1>Quy trình chăm sóc khách hàng</h1>
+        <p>Dành cho <b>quản trị viên AI AGENTS CC</b>: theo dõi khách từ lúc tạo tài khoản, làm khảo sát "Khám phá lộ trình", mua thử thách,
+          học 21 ngày cho tới khi có thành quả và đi tiếp các khoá học / sản phẩm nâng cao.</p>
+      </div>
+
+      <!-- 0 -->
+      <section class="qt-sec" id="tong-quan">
+        <h2><span class="qt-num">0</span>Bức tranh toàn cảnh</h2>
+        <p class="qt-sub">Khách đi qua các bước sau. Mỗi bước đều có chỗ trong Admin để biết ai đang ở đâu.</p>
+        <div class="qt-flow">
+          <span>📣 Thu hút</span><i>→</i><span>👤 Tạo tài khoản</span><i>→</i><span>🤖 Khảo sát AI Agent</span><i>→</i><span>🛒 Mua thử thách</span><i>→</i><span>🎯 21 ngày thực chiến</span><i>→</i><span>🚀 Khoá học / sản phẩm nâng cao</span>
+        </div>
+        <h3>Nguyên tắc chăm sóc</h3>
+        <ul>
+          <li>Đọc <b>Hồ sơ AI Agent</b> của khách trước khi tư vấn — biết mục tiêu, thời gian, kỹ năng để gợi ý đúng thử thách.</li>
+          <li>Bài nộp và đăng ký xử lý <b>trong ngày</b> — học viên chờ lâu sẽ đứt nhịp.</li>
+          <li>Ghi nhận thành quả thật (website, chatbot, agent đã chạy) và xin phép chia sẻ lên Bảng tin.</li>
+        </ul>
+        <h3>Các trang quản trị viên dùng nhiều nhất</h3>
+        <div class="qt-scroll"><table class="qt-table">
+          <tr><th>Việc</th><th>Ở đâu</th></tr>
+          <tr><td>Những việc đang chờ xử lý (bài nộp, đăng ký, đơn hàng, tin nhắn)</td><td><span class="qt-path">Admin → Việc cần xử lý</span></td></tr>
+          <tr><td>Xem hồ sơ một thành viên: khảo sát, thử thách, khoá học, đơn hàng, bài viết</td><td><span class="qt-path">Admin → Danh sách &amp; hồ sơ → Hồ sơ</span></td></tr>
+          <tr><td>Xuất danh sách theo thử thách / khoá học / sản phẩm / buổi Zoom</td><td><span class="qt-path">Admin → Danh sách tổng hợp</span></td></tr>
+          <tr><td>Duyệt đăng ký và chấm bài thử thách</td><td><span class="qt-path">Admin → Thử thách</span></td></tr>
+          <tr><td>Duyệt yêu cầu vào khoá học</td><td><span class="qt-path">Admin → Duyệt đăng ký</span></td></tr>
+          <tr><td>Đơn hàng Marketplace</td><td><span class="qt-path">Admin → Cửa hàng &amp; Đơn hàng</span></td></tr>
+          <tr><td>Gửi / thu hồi thông báo</td><td><span class="qt-path">Admin → Gửi thông báo</span></td></tr>
+        </table></div>
+      </section>
+
+      <!-- 1 -->
+      <section class="qt-sec" id="danh-sach">
+        <h2><span class="qt-num">1</span>Danh sách &amp; hồ sơ thành viên</h2>
+        <p class="qt-sub"><span class="qt-path">Admin → Thành viên → Danh sách &amp; hồ sơ</span></p>
+        <ul>
+          <li>Mỗi dòng có nhãn <b>🤖 Đã / Chưa có hồ sơ AI Agent</b> và <b>🎯 số thử thách đang tham gia</b> — nhìn nhanh ai cần chăm sóc.</li>
+          <li>Bấm <b>Hồ sơ</b> để mở 5 tab: <b>Hồ sơ AI Agent</b> · <b>Thử thách</b> (tiến độ từng ngày, bài nộp, nộp trễ) · <b>Học tập</b> · <b>Đơn hàng</b> · <b>Cộng đồng</b>.</li>
+        </ul>
+        <h3>Danh sách tổng hợp</h3>
+        <p><span class="qt-path">Admin → Thành viên → Danh sách tổng hợp</span> — mọi danh sách ở một chỗ, lọc và xuất ra Excel:</p>
+        <div class="qt-scroll"><table class="qt-table">
+          <tr><th>Danh sách</th><th>Cho biết</th></tr>
+          <tr><td>👥 Thành viên cộng đồng</td><td>Ngày tham gia, hoạt động gần nhất, thử thách đang học, đã có hồ sơ AI Agent chưa</td></tr>
+          <tr><td>🎯 Từng thử thách</td><td>Trạng thái đăng ký, số ngày đã đạt / tổng ngày, bài chờ chấm, số bài nộp trễ</td></tr>
+          <tr><td>📚 Từng khoá học</td><td>Ai đã vào / đang xin vào, số bài tập đã nộp</td></tr>
+          <tr><td>🛍️ Từng sản phẩm</td><td>Ai đã mua, trạng thái đơn</td></tr>
+          <tr><td>📹 Điểm danh Zoom</td><td>Ai đã vào từng buổi Zoom</td></tr>
+        </table></div>
+      </section>
+
+      <!-- 2 -->
+      <section class="qt-sec" id="khao-sat">
+        <h2><span class="qt-num">2</span>Hồ sơ AI Agent (khảo sát "Khám phá lộ trình")</h2>
+        <p class="qt-sub">Trang <code>intake.html</code> — AI trò chuyện vài phút để hiểu khách rồi tổng hợp thành hồ sơ.</p>
+        <ul>
+          <li>Hồ sơ gồm: mục tiêu, thời gian mỗi ngày, kỹ năng hiện có, loại sản phẩm muốn làm, những điều cần chú ý và câu hỏi còn mở.</li>
+          <li>Gửi link <code>/intake.html</code> cho khách mới (hoặc mở bằng <code>index.html?redirect=intake</code> để khách đăng nhập xong vào thẳng khảo sát).</li>
+          <li>Xem hồ sơ ở <span class="qt-path">Hồ sơ thành viên → 🤖 Hồ sơ AI Agent</span>. Dùng nó khi tư vấn chọn thử thách / khoá học.</li>
+        </ul>
+        <div class="qt-note info">AI dùng nhà cung cấp cấu hình ở <span class="qt-path">Cài đặt → Kỹ thuật → 🤖 AI</span>. Chưa cấu hình thì khảo sát báo lỗi.</div>
+      </section>
+
+      <!-- 3 -->
+      <section class="qt-sec" id="thanh-toan">
+        <h2><span class="qt-num">3</span>Đơn hàng &amp; thanh toán</h2>
+        <p class="qt-sub">Khách mua thử thách / sản phẩm trên <b>Marketplace</b> và chuyển khoản theo mã QR.</p>
+        <ol>
+          <li>Nội dung chuyển khoản dạng <code>AIAGENT &lt;mã sản phẩm&gt; &lt;mã người mua&gt;</code> — SePay nhận tiền là đơn tự chuyển <b>Hoàn tất</b> và khách nhận email.</li>
+          <li>Đơn <b>"Báo đã chuyển"</b> mà chưa tự xác nhận (khách ghi sai nội dung, chuyển thiếu): đối chiếu sao kê rồi xác nhận tay ở <span class="qt-path">Cửa hàng &amp; Đơn hàng</span>.</li>
+          <li>Yêu cầu hoàn tiền xử lý theo <a href="/refund-policy.html" target="_blank" rel="noopener">Chính sách hoàn tiền</a>.</li>
+        </ol>
+        <div class="qt-note warn">Không xác nhận đơn khi chưa thấy tiền về tài khoản BIDV của cộng đồng.</div>
+      </section>
+
+      <!-- 4 -->
+      <section class="qt-sec" id="thu-thach">
+        <h2><span class="qt-num">4</span>Vận hành thử thách 21 ngày</h2>
+        <p class="qt-sub"><span class="qt-path">Admin → Thử thách</span> — gồm các tab Thử thách, Đăng ký, Bài nộp, Tiến độ.</p>
+        <h3>Mỗi ngày</h3>
+        <ul>
+          <li><b>Duyệt đăng ký</b> mới (thử thách có phí: kiểm tra đơn đã hoàn tất).</li>
+          <li><b>Chấm bài nộp</b>: mở link bài nộp, so với tiêu chí "✅ Được duyệt khi" của ngày đó. Không đạt thì ghi rõ lý do để học viên sửa và nộp lại.</li>
+          <li>Xem danh sách thử thách trong <span class="qt-path">Danh sách tổng hợp</span>: ai nhiều ngày chưa nộp, ai nộp trễ → nhắn hỏi thăm.</li>
+        </ul>
+        <h3>Email nhắc nộp muộn</h3>
+        <p>Mặc định <b>tắt</b>. Bật ở <span class="qt-path">Email CRM</span> (chuỗi "Nhắc nhở hoàn thành ngày") khi lớp đông và cần nhắc tự động.</p>
+        <div class="qt-note tip">Bài nộp đẹp, có kết quả thật → xin phép học viên rồi ghim lên Bảng tin làm minh chứng cho lớp sau.</div>
+      </section>
+
+      <!-- 5 -->
+      <section class="qt-sec" id="zoom">
+        <h2><span class="qt-num">5</span>Buổi Zoom &amp; điểm danh</h2>
+        <ul>
+          <li>Thêm buổi vào <b>Lịch cộng đồng</b> (<span class="qt-path">Cài đặt → 📅 Lịch</span>) với đúng ngày giờ — buổi có trong lịch thì mới có danh sách điểm danh.</li>
+          <li>Gửi khách link <code>/vao-zoom.html</code> của cộng đồng thay vì link Zoom gốc: khách nhập số điện thoại → được ghi điểm danh → chuyển vào phòng.</li>
+          <li>Kịch bản từng buổi soạn ở trang <a href="/kich-ban-zoom.html" target="_blank" rel="noopener">Kịch bản Zoom</a>.</li>
+          <li>Sau buổi: xem <span class="qt-path">Danh sách tổng hợp → Điểm danh Zoom</span> để biết ai vắng và nhắn link xem lại.</li>
+        </ul>
+      </section>
+
+      <!-- 6 -->
+      <section class="qt-sec" id="kanban-kh">
+        <h2><span class="qt-num">6</span>Kanban khách hàng &amp; giao việc</h2>
+        <ul>
+          <li><a href="/kanban-khach-hang.html" target="_blank" rel="noopener">Kanban khách hàng</a>: kéo thẻ khách qua các cột (mới → đang tư vấn → đã mua → đang học…), chọn người phụ trách.</li>
+          <li><a href="/phan-cong-nhiem-vu.html" target="_blank" rel="noopener">Phân công nhiệm vụ</a>: ai làm việc gì mỗi ngày; sửa ở <span class="qt-path">Admin → Phân công nhiệm vụ</span>.</li>
+          <li><a href="/kanban-nhiem-vu.html" target="_blank" rel="noopener">Kanban &amp; KPI</a>: nhân viên đăng nhập, tick việc đã làm — cả nhóm thấy tiến độ.</li>
+        </ul>
+        <div class="qt-note info">Mỗi nhân viên phải được gắn <b>email tài khoản</b> trong Phân công nhiệm vụ thì mới tick được việc của mình.</div>
+      </section>
+
+      <!-- 7 -->
+      <section class="qt-sec" id="gui-tin">
+        <h2><span class="qt-num">7</span>Thông báo &amp; gửi tin</h2>
+        <ul>
+          <li><span class="qt-path">Admin → Gửi thông báo</span>: gửi chuông trong ứng dụng (và email nếu chọn) tới cả cộng đồng, một thử thách, một khoá học hoặc một nhóm người.</li>
+          <li>Gửi nhầm → <span class="qt-path">Lịch sử đã gửi → ↩️ Thu hồi</span>.</li>
+          <li><span class="qt-path">Email CRM</span>: các chuỗi email tự động (chào mừng, đơn hàng chưa thanh toán, nhắc nộp bài) — bật / tắt và sửa nội dung.</li>
+          <li>Bài <b>📌 ghim</b> trên Bảng tin dùng cho thông báo quan trọng của Ban tổ chức.</li>
+        </ul>
+      </section>
+
+      <!-- 8 -->
+      <section class="qt-sec" id="lich-lam-viec">
+        <h2><span class="qt-num">8</span>Lịch làm việc mẫu cho mỗi đợt thử thách</h2>
+        <div class="qt-scroll"><table class="qt-table">
+          <tr><th>Thời điểm</th><th>Việc</th></tr>
+          <tr><td>Trước khai giảng 7 ngày</td><td>Mở bán trên Marketplace, đăng bài giới thiệu, nhắc khách làm khảo sát AI Agent</td></tr>
+          <tr><td>Trước khai giảng 1 ngày</td><td>Duyệt hết đăng ký, thêm buổi Kick-off vào Lịch, gửi thông báo + link Zoom</td></tr>
+          <tr><td>Mỗi ngày trong 21 ngày</td><td>Chấm bài trong ngày, trả lời câu hỏi trên Bảng tin, nhắn học viên chậm tiến độ</td></tr>
+          <tr><td>Hằng tuần</td><td>Buổi Zoom hỏi đáp, xem danh sách tiến độ, ghim bài thành quả nổi bật</td></tr>
+          <tr><td>Kết thúc</td><td>Tổng kết, trao chứng nhận / ghi nhận Top XP, giới thiệu khoá học / sản phẩm nâng cao</td></tr>
+        </table></div>
+      </section>
+
+      <!-- 9 -->
+      <section class="qt-sec" id="nguyen-tac">
+        <h2><span class="qt-num">9</span>Nguyên tắc &amp; bảo mật</h2>
+        <ul>
+          <li>Không chia sẻ danh sách khách, số điện thoại, email ra ngoài nhóm quản trị.</li>
+          <li>Nhắc học viên <b>không đăng API key, mật khẩu, token</b> trong bài nộp / ảnh chụp màn hình; thấy thì ẩn bài và báo học viên đổi key.</li>
+          <li>Mã Admin (<code>ADMIN_KEY</code>) chỉ người điều hành giữ; nhân viên dùng tài khoản quản trị riêng.</li>
+          <li>Xử lý dữ liệu cá nhân theo <a href="/privacy-policy.html" target="_blank" rel="noopener">Chính sách bảo mật</a>.</li>
+        </ul>
+      </section>
+
+      <!-- 10 -->
+      <section class="qt-sec" id="su-co">
+        <h2><span class="qt-num">10</span>Xử lý tình huống thường gặp</h2>
+        <div class="qt-scroll"><table class="qt-table">
+          <tr><th>Tình huống</th><th>Cách xử lý</th></tr>
+          <tr><td>Khách đã chuyển tiền nhưng đơn vẫn chờ</td><td>Kiểm tra nội dung chuyển khoản có đúng <code>AIAGENT …</code> không; đối chiếu sao kê rồi xác nhận tay.</td></tr>
+          <tr><td>Học viên không thấy nội dung ngày tiếp theo</td><td>Kiểm tra đăng ký đã được duyệt và bài ngày trước đã chấm.</td></tr>
+          <tr><td>Khảo sát AI Agent báo lỗi</td><td>Kiểm tra <span class="qt-path">Cài đặt → Kỹ thuật → 🤖 AI</span> đã có nhà cung cấp và key còn hạn.</td></tr>
+          <tr><td>Nhân viên báo "chưa có trong bảng phân công"</td><td>Admin → Phân công nhiệm vụ → nhập email tài khoản cộng đồng của người đó → Lưu.</td></tr>
+          <tr><td>Gửi nhầm thông báo</td><td><span class="qt-path">Gửi thông báo → Lịch sử đã gửi → ↩️ Thu hồi</span>.</td></tr>
+          <tr><td>Khách không nhận được email</td><td>Nhắc xem thư mục Thư rác / Quảng cáo; kiểm tra cấu hình ở <span class="qt-path">Cài đặt → Kỹ thuật → ⚙️ Email</span> (nút gửi thử).</td></tr>
+        </table></div>
+      </section>
+
+      <p class="qt-foot">AI AGENTS CC · Tài liệu nội bộ cho quản trị viên · Cập nhật 30/10/2026<br>In ra giấy / lưu PDF: nhấn Ctrl + P.</p>
+    </main>
+  </div>
+</body>
+
+</html>

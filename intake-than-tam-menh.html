@@ -1,0 +1,1391 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8">
+  <script src="assets/js/auth-fetch.js?v=1"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" href="/assets/img/logo.png">
+  <link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
+  <link rel="manifest" href="/manifest.json?v=2">
+  <meta name="apple-mobile-web-app-title" content="AI Agents CC">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="theme-color" content="#0ea5e9">
+  <title>Phiếu khảo sát Thân – Tâm – Mệnh | AI Agents CC</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,600&family=Be+Vietnam+Pro:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --ink: #16241C;
+      --ink-2: #1E2F24;
+      --paper: #FAF7F0;
+      --paper-2: #F1ECDD;
+      --gold: #6F8F5E;
+      --gold-soft: #96B588;
+      --gold-deep: #4B6B44;
+      --text-dark: #26302A;
+      --text-mute: #75806F;
+      --text-light: #EAF0E4;
+      --text-light-mute: #AFC0A8;
+      --rust: #9C5B45;
+      --rust-soft: #F3E1D3;
+      --rule: #E3DFCB;
+      --shadow: 0 18px 40px -22px rgba(21, 18, 14, 0.35);
+      --shadow-lg: 0 30px 70px -30px rgba(21, 18, 14, 0.45);
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Be Vietnam Pro', sans-serif;
+      color: var(--text-dark);
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+      background:
+        radial-gradient(1100px 600px at 15% -10%, rgba(111, 143, 94, 0.10), transparent 60%),
+        radial-gradient(900px 500px at 100% 10%, rgba(156, 91, 69, 0.08), transparent 55%),
+        var(--paper);
+    }
+
+    /* ===== SHELL ===== */
+    .quiz-shell {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .quiz-top {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: rgba(250, 247, 240, 0.86);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--rule);
+      padding: 16px 24px;
+    }
+
+    .quiz-top-inner {
+      max-width: 640px;
+      margin: 0 auto;
+    }
+
+    .quiz-brand {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .quiz-brand-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 700;
+      font-size: 18px;
+      color: var(--ink);
+      letter-spacing: 0.01em;
+    }
+
+    .quiz-section-pill {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10.5px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--gold-deep);
+      background: rgba(111, 143, 94, 0.14);
+      padding: 4px 10px;
+      border-radius: 20px;
+    }
+
+    .reset-link {
+      background: none;
+      border: none;
+      font-family: 'Be Vietnam Pro', sans-serif;
+      font-size: 11.5px;
+      color: var(--text-mute);
+      text-decoration: underline;
+      text-underline-offset: 2px;
+      cursor: pointer;
+      padding: 4px 2px;
+    }
+
+    .reset-link:hover { color: var(--rust); }
+
+    .quiz-progress-track {
+      height: 5px;
+      border-radius: 6px;
+      background: var(--paper-2);
+      overflow: hidden;
+    }
+
+    .quiz-progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--gold-deep), var(--gold-soft));
+      transition: width .45s cubic-bezier(.4,0,.2,1);
+    }
+
+    .quiz-progress-label {
+      margin-top: 6px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--text-mute);
+    }
+
+    /* ===== STAGE ===== */
+    .quiz-stage {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 22px 60px;
+    }
+
+    .quiz-card {
+      width: 100%;
+      max-width: 640px;
+      animation: rise .42s cubic-bezier(.16,1,.3,1);
+    }
+
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(14px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ---- Intro screens ---- */
+    .intro-icon {
+      font-size: 40px;
+      line-height: 1;
+      margin-bottom: 18px;
+    }
+
+    .intro-eyebrow {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--gold-deep);
+      margin: 0 0 12px;
+    }
+
+    .intro-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 700;
+      font-size: 38px;
+      line-height: 1.12;
+      color: var(--ink);
+      margin: 0 0 18px;
+    }
+
+    .intro-body {
+      font-size: 16px;
+      line-height: 1.8;
+      color: var(--text-mute);
+      max-width: 520px;
+      margin: 0 0 30px;
+    }
+
+    .intro-meta {
+      display: flex;
+      gap: 18px;
+      margin-bottom: 34px;
+      flex-wrap: wrap;
+    }
+
+    .intro-meta-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--text-mute);
+      background: #fff;
+      border: 1px solid var(--rule);
+      border-radius: 20px;
+      padding: 8px 14px;
+    }
+
+    /* ---- Question ---- */
+    .q-group {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-mute);
+      margin: 0 0 10px;
+    }
+
+    .q-number {
+      color: var(--gold-deep);
+      font-weight: 600;
+    }
+
+    .q-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 700;
+      font-size: 28px;
+      line-height: 1.28;
+      color: var(--ink);
+      margin: 0 0 8px;
+    }
+
+    .q-multi-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: var(--rust);
+      background: var(--rust-soft);
+      border-radius: 20px;
+      padding: 4px 12px;
+      margin-bottom: 22px;
+    }
+
+    .q-spacer { margin-bottom: 22px; }
+
+    /* extra supplementary inputs */
+    .q-extra {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .q-extra-field label {
+      display: block;
+      font-size: 12.5px;
+      color: var(--text-mute);
+      margin-bottom: 6px;
+    }
+
+    .q-extra-field input {
+      width: 100%;
+      font-family: 'Be Vietnam Pro', sans-serif;
+      font-size: 15px;
+      padding: 12px 14px;
+      border-radius: 10px;
+      border: 1px solid var(--rule);
+      background: #fff;
+      color: var(--text-dark);
+      transition: border-color .18s ease, box-shadow .18s ease;
+    }
+
+    .q-extra-field input:focus {
+      outline: none;
+      border-color: var(--gold);
+      box-shadow: 0 0 0 3px rgba(111, 143, 94, 0.16);
+    }
+
+    .q-subtitle {
+      font-size: 13.5px;
+      font-weight: 600;
+      color: var(--text-dark);
+      margin: 0 0 12px;
+    }
+
+    /* ---- Options ---- */
+    .options {
+      display: grid;
+      gap: 10px;
+    }
+
+    .opt {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      text-align: left;
+      width: 100%;
+      background: #fff;
+      border: 1.5px solid var(--rule);
+      border-radius: 14px;
+      padding: 16px 18px;
+      cursor: pointer;
+      font-family: 'Be Vietnam Pro', sans-serif;
+      transition: border-color .16s ease, background .16s ease, transform .12s ease;
+    }
+
+    .opt:hover {
+      border-color: var(--gold-soft);
+      background: #FFFDF8;
+    }
+
+    .opt:active { transform: scale(0.995); }
+
+    .opt.selected {
+      border-color: var(--gold);
+      background: rgba(111, 143, 94, 0.08);
+      box-shadow: inset 0 0 0 1px var(--gold);
+    }
+
+    .opt-badge {
+      flex: none;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--gold-deep);
+      background: var(--paper-2);
+      border: 1px solid var(--rule);
+      transition: all .16s ease;
+    }
+
+    .opt.selected .opt-badge {
+      background: var(--gold-deep);
+      border-color: var(--gold-deep);
+      color: var(--text-light);
+    }
+
+    .opt-label {
+      font-size: 15px;
+      line-height: 1.55;
+      color: var(--text-dark);
+      padding-top: 3px;
+    }
+
+    .opt-check {
+      flex: none;
+      width: 22px;
+      height: 22px;
+      border-radius: 6px;
+      border: 1.5px solid var(--rule);
+      margin-top: 2px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: transparent;
+      font-size: 13px;
+      transition: all .16s ease;
+    }
+
+    .opt.selected .opt-check {
+      background: var(--gold-deep);
+      border-color: var(--gold-deep);
+      color: #fff;
+    }
+
+    .opt-other-input {
+      margin-top: 4px;
+      width: 100%;
+      font-family: 'Be Vietnam Pro', sans-serif;
+      font-size: 14.5px;
+      padding: 11px 13px;
+      border-radius: 9px;
+      border: 1px solid var(--rule);
+      background: var(--paper);
+      color: var(--text-dark);
+    }
+
+    .opt-other-input:focus {
+      outline: none;
+      border-color: var(--gold);
+    }
+
+    /* ---- Nav / footer of stage ---- */
+    .q-foot {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 28px;
+    }
+
+    .btn-back {
+      background: none;
+      border: none;
+      color: var(--text-mute);
+      font-size: 13.5px;
+      cursor: pointer;
+      padding: 8px 4px;
+      font-family: 'Be Vietnam Pro', sans-serif;
+    }
+
+    .btn-back:hover { color: var(--ink); }
+    .btn-back:disabled { opacity: 0; pointer-events: none; }
+
+    .btn-primary {
+      background: var(--gold-deep);
+      color: var(--text-light);
+      border: none;
+      border-radius: 999px;
+      padding: 13px 30px;
+      font-size: 14.5px;
+      font-weight: 600;
+      font-family: 'Be Vietnam Pro', sans-serif;
+      cursor: pointer;
+      box-shadow: var(--shadow);
+      transition: transform .12s ease, background .16s ease;
+    }
+
+    .btn-primary:hover { background: var(--gold); }
+    .btn-primary:active { transform: scale(0.98); }
+    .btn-primary:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+
+    .btn-primary-lg {
+      width: 100%;
+      padding: 16px 24px;
+      font-size: 15.5px;
+    }
+
+    .hint-enter {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--text-mute);
+    }
+
+    .autosave-note {
+      text-align: center;
+      font-size: 12px;
+      color: var(--text-mute);
+      margin-top: 18px;
+    }
+
+    /* ---- Summary screen ---- */
+    .sum-section { margin-bottom: 26px; }
+
+    .sum-section-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--gold-deep);
+      margin: 0 0 10px;
+    }
+
+    .sum-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      width: 100%;
+      text-align: left;
+      background: #fff;
+      border: 1px solid var(--rule);
+      border-radius: 12px;
+      padding: 13px 16px;
+      margin-bottom: 8px;
+      cursor: pointer;
+      font-family: 'Be Vietnam Pro', sans-serif;
+      transition: border-color .16s ease, background .16s ease;
+    }
+
+    .sum-row:hover { border-color: var(--gold-soft); background: #FFFDF8; }
+
+    .sum-row-main {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      min-width: 0;
+    }
+
+    .sum-row-num {
+      flex: none;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11.5px;
+      color: var(--gold-deep);
+      background: var(--paper-2);
+      border: 1px solid var(--rule);
+      border-radius: 50%;
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 1px;
+    }
+
+    .sum-row-text { min-width: 0; }
+
+    .sum-row-q {
+      font-size: 13.8px;
+      color: var(--text-dark);
+      line-height: 1.4;
+      margin-bottom: 3px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp: 1;
+      -webkit-box-orient: vertical;
+    }
+
+    .sum-row-a {
+      font-size: 13px;
+      color: var(--text-mute);
+      line-height: 1.4;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+    }
+
+    .sum-row-edit {
+      flex: none;
+      font-size: 12.5px;
+      color: var(--gold-deep);
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    /* ---- Contact screen ---- */
+    .field { margin-bottom: 18px; }
+
+    .field label {
+      display: block;
+      font-size: 13.5px;
+      font-weight: 600;
+      color: var(--text-dark);
+      margin-bottom: 7px;
+    }
+
+    .field .optional-tag {
+      font-weight: 400;
+      color: var(--text-mute);
+      font-size: 12px;
+    }
+
+    .field input {
+      width: 100%;
+      font-family: 'Be Vietnam Pro', sans-serif;
+      font-size: 15.5px;
+      padding: 13px 15px;
+      border-radius: 11px;
+      border: 1.5px solid var(--rule);
+      background: #fff;
+      color: var(--text-dark);
+    }
+
+    .field input:focus {
+      outline: none;
+      border-color: var(--gold);
+      box-shadow: 0 0 0 3px rgba(111, 143, 94, 0.16);
+    }
+
+    .privacy-note {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      background: var(--paper-2);
+      border: 1px solid var(--rule);
+      border-radius: 12px;
+      padding: 14px 16px;
+      font-size: 12.8px;
+      line-height: 1.6;
+      color: var(--text-mute);
+      margin: 22px 0 26px;
+    }
+
+    /* ---- Done screen ---- */
+    .done-wrap { text-align: center; }
+    .done-icon {
+      font-size: 52px;
+      margin-bottom: 18px;
+    }
+
+    @media (max-width: 560px) {
+      .q-title { font-size: 23px; }
+      .intro-title { font-size: 30px; }
+      .q-extra { grid-template-columns: 1fr; }
+      .quiz-stage { padding: 28px 16px 48px; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="quiz-shell">
+    <header class="quiz-top">
+      <div class="quiz-top-inner">
+        <div class="quiz-brand">
+          <span class="quiz-brand-name">🌿 AI Agents CC</span>
+          <span style="display:flex;align-items:center;gap:10px;">
+            <span class="quiz-section-pill" id="sectionPill">Giới thiệu</span>
+            <button type="button" id="resetLink" class="reset-link" title="Xóa tiến trình đã lưu và làm lại từ câu 1">Làm lại từ đầu</button>
+          </span>
+        </div>
+        <div class="quiz-progress-track"><div class="quiz-progress-fill" id="progressFill"></div></div>
+        <div class="quiz-progress-label" id="progressLabel"></div>
+      </div>
+    </header>
+
+    <main class="quiz-stage">
+      <div class="quiz-card" id="stage"></div>
+    </main>
+  </div>
+
+  <script>
+    /* ================= AUTH GATE ================= */
+    // Trang này là 1 phần của AI AGENTS CC — cần đăng nhập.
+    let CURRENT_USER = null;
+    try { CURRENT_USER = JSON.parse(localStorage.getItem('currentUser') || 'null'); } catch (e) {}
+    if (!CURRENT_USER || !CURRENT_USER.id) {
+      location.href = 'index.html?redirect=ttm';
+    }
+
+    // Nếu đến đây từ luồng đăng ký 8 buổi/377 ngày (bị chặn vì chưa khảo sát),
+    // sau khi hoàn thành đưa thành viên quay lại đúng trang đó để đăng ký tiếp.
+    function getPostIntakeRedirectUrl() {
+      const redirectParam = new URLSearchParams(location.search).get('redirect');
+      if (redirectParam === 'workshop8') return 'workshop8.html';
+      if (redirectParam === '377') return 'program377.html';
+      return 'feed.html';
+    }
+
+    /* ================= DATA ================= */
+    const QUESTIONS = [
+      // ---------- PHẦN THÂN ----------
+      { id: 'than-1', section: 'than', group: 'Hệ thần kinh & cơ xương khớp', type: 'single',
+        text: 'Bạn có thường xuyên bị đau đầu hoặc đau mỏi vùng Cổ - Vai - Gáy không?',
+        options: [
+          { key: 'A', label: 'Không bao giờ hoặc rất hiếm khi.' },
+          { key: 'B', label: 'Có đau mỏi cổ vai gáy nhưng ít khi bị đau đầu.' },
+          { key: 'C', label: 'Thường xuyên bị cả đau mỏi cổ vai gáy lẫn đau đầu (đau nửa đầu, nặng đầu).' },
+          { key: 'D', label: 'Khác', other: true },
+        ] },
+      { id: 'than-2', section: 'than', group: 'Hệ thần kinh & cơ xương khớp', type: 'single',
+        text: 'Bạn có bị đau mỏi vùng Thắt lưng (eo, hông, cột sống dưới) không?',
+        options: [
+          { key: 'A', label: 'Không bị, lưng hông dẻo vai khỏe mạnh.' },
+          { key: 'B', label: 'Thỉnh thoảng mỏi nhẹ khi ngồi hoặc đứng quá lâu.' },
+          { key: 'C', label: 'Đau mỏi thường xuyên, gây khó khăn khi cúi, ngửa hoặc xoay người.' },
+          { key: 'D', label: 'Khác', other: true },
+        ] },
+      { id: 'than-3', section: 'than', group: 'Hệ thần kinh & cơ xương khớp', type: 'multi',
+        text: 'Tần suất xuất hiện các cơn đau mỏi (Cổ vai gáy / Thắt lưng / Đau đầu) của bạn?',
+        options: [
+          { key: 'A', label: 'Chỉ thỉnh thoảng mới bị (khoảng 1 - 2 lần/tháng).' },
+          { key: 'B', label: 'Bị khá đều đặn (khoảng 1 - 3 lần/tuần).' },
+          { key: 'C', label: 'Bị hầu như hàng ngày, kéo dài liên tục.' },
+          { key: 'D', label: 'Bị chuột rút' },
+          { key: 'E', label: 'Khác', other: true },
+        ] },
+      { id: 'than-4', section: 'than', group: 'Giác quan & vùng đầu mặt', type: 'multi',
+        text: 'Tình trạng vùng Mũi và Họng của bạn:',
+        options: [
+          { key: 'A', label: 'Hoàn toàn bình thường.' },
+          { key: 'B', label: 'Thường xuyên bị viêm xoang, viêm mũi dị ứng (ngạt mũi, chảy nước mũi khi thay đổi thời tiết).' },
+          { key: 'C', label: 'Hay bị khô họng, vướng đờm ở cổ họng.' },
+          { key: 'D', label: 'Rỉ mũi (khô hay ướt)' },
+          { key: 'E', label: 'Khác', other: true },
+        ] },
+      { id: 'than-5', section: 'than', group: 'Giác quan & vùng đầu mặt', type: 'multi',
+        text: 'Tình trạng Tai của bạn có biểu hiện nào sau đây?',
+        options: [
+          { key: 'A', label: 'Bình thường, nghe rõ ràng.' },
+          { key: 'B', label: 'Thỉnh thoảng hoặc thường xuyên bị ù tai, có tiếng ve kêu hoặc tiếng gió rít trong tai.' },
+          { key: 'C', label: 'Tai hay bị ngứa hoặc có cảm giác căng tức bên trong.' },
+          { key: 'D', label: 'Rỉ tai (khô hay ướt)' },
+          { key: 'E', label: 'Khác', other: true },
+        ] },
+      { id: 'than-6', section: 'than', group: 'Giác quan & vùng đầu mặt', type: 'multi',
+        text: 'Hãy quan sát đôi Mắt của bạn gần đây:',
+        options: [
+          { key: 'A', label: 'Mắt sáng, khỏe mạnh, không có cảm giác khó chịu.' },
+          { key: 'B', label: 'Mắt hay bị khô, mỏi, nhìn mờ khi làm việc.' },
+          { key: 'C', label: 'Mắt dễ bị ngứa, đỏ lên hoặc thường xuyên có nhiều ghèn (rỉ mắt) sau khi ngủ dậy.' },
+          { key: 'D', label: 'Ghèn mắt ướt hay khô' },
+          { key: 'E', label: 'Khác', other: true },
+        ] },
+      { id: 'than-7', section: 'than', group: 'Giác quan & vùng đầu mặt', type: 'multi',
+        text: 'Bạn có hay bị nhiệt miệng không và thường xuất hiện ở đâu?',
+        options: [
+          { key: 'A', label: 'Không bao giờ hoặc rất hiếm khi bị nhiệt miệng.' },
+          { key: 'B', label: 'Có, thường bị nổi mụn nước, vết loét đau rát ở vùng môi (mép môi, phía trong môi).' },
+          { key: 'C', label: 'Có, thường bị nhiệt, loét trực tiếp trên bề mặt hoặc dưới lưỡi.' },
+          { key: 'D', label: 'Hay bị khô miệng.' },
+          { key: 'E', label: 'Khác', other: true },
+        ] },
+      { id: 'than-8', section: 'than', group: 'Giác quan & vùng đầu mặt', type: 'single',
+        text: 'Hãy soi gương và quan sát mặt trên của Lưỡi (Rêu lưỡi):',
+        options: [
+          { key: 'A', label: 'Lưỡi sạch, có lớp rêu mỏng màu trắng nhẹ, nền lưỡi hồng hào khỏe mạnh.' },
+          { key: 'B', label: 'Lưỡi có lớp rêu dày màu trắng xóa, ẩm ướt.' },
+          { key: 'C', label: 'Lưỡi có rêu màu vàng nhạt hoặc vàng đậm, khô ráp.' },
+          { key: 'D', label: 'Lưỡi đỏ, hầu như không có rêu lưỡi (lưỡi bản đồ, lưỡi nứt).' },
+          { key: 'E', label: 'Khác', other: true },
+        ] },
+      { id: 'than-9', section: 'than', group: 'Hệ tiêu hóa & bài tiết', type: 'multi',
+        text: 'Cảm giác nóng hoặc đau ở bao tử của bạn xuất hiện khi nào?',
+        options: [
+          { key: 'A', label: 'Tôi không bị đau nóng bao tử.' },
+          { key: 'B', label: 'Chỉ đau/nóng khi bụng đói (chưa ăn gì).' },
+          { key: 'C', label: 'Ăn vào là thấy đau, nóng rát hoặc đầy chướng bụng ngay lập tức.' },
+          { key: 'D', label: 'Đau âm ỉ bất kể lúc đói hay lúc no, kèm theo đầy hơi, ợ chua.' },
+          { key: 'E', label: 'Khác', other: true },
+        ] },
+      { id: 'than-10', section: 'than', group: 'Hệ tiêu hóa & bài tiết', type: 'single',
+        text: 'Tình trạng đi đại tiện (đi nặng) hàng ngày của bạn như thế nào?',
+        options: [
+          { key: 'A', label: 'Đi đều hàng ngày, phân thành khuôn đẹp, màu vàng đồng xu.' },
+          { key: 'B', label: 'Bị táo bón (phân khô, cứng, khó đi, vài ngày mới đi một lần).' },
+          { key: 'C', label: 'Phân lỏng, nát, không thành khuôn hoặc phân sống (ăn gì ra nấy, dễ bị tiêu chảy).' },
+          { key: 'D', label: 'Thất thường (lúc táo bón, lúc lỏng nát).' },
+          { key: 'E', label: 'Khác', other: true },
+        ] },
+      { id: 'than-11', section: 'than', group: 'Hệ tiêu hóa & bài tiết', type: 'single',
+        text: 'Màu sắc nước tiểu chủ đạo trong ngày (từ lúc ngủ dậy đến khi đi ngủ) là gì?',
+        options: [
+          { key: 'A', label: 'Màu trong suốt hoặc vàng rất nhạt.' },
+          { key: 'B', label: 'Màu vàng rơm, vàng trung bình.' },
+          { key: 'C', label: 'Màu vàng đậm, vàng sậm (hoặc có cảm giác nóng, rát nhẹ khi đi tiểu).' },
+          { key: 'D', label: 'Khác', other: true },
+        ] },
+      { id: 'than-12', section: 'than', group: 'Hệ tiêu hóa & bài tiết', type: 'single',
+        text: 'Tần suất và lượng nước tiểu trong ngày của bạn như thế nào?',
+        options: [
+          { key: 'A', label: 'Đi rất nhiều lần, lượng nước tiểu mỗi lần nhiều.' },
+          { key: 'B', label: 'Đi trung bình (khoảng 4 - 6 lần/ngày), lượng vừa phải.' },
+          { key: 'C', label: 'Đi ít lần, lượng nước tiểu mỗi lần rất ít và sẫm màu.' },
+          { key: 'D', label: 'Khác', other: true },
+        ] },
+      { id: 'than-13', section: 'than', group: 'Hệ tiêu hóa & bài tiết', type: 'single',
+        text: 'Bạn có đi tiểu đêm không?',
+        options: [
+          { key: 'A', label: 'Không bao giờ, tôi ngủ một mạch đến sáng.' },
+          { key: 'B', label: 'Thỉnh thoảng (khoảng 1 lần/đêm).' },
+          { key: 'C', label: 'Thường xuyên (từ 2 lần trở lên mỗi đêm).' },
+          { key: 'D', label: 'Khác', other: true },
+        ] },
+      { id: 'than-14', section: 'than', group: 'Thân nhiệt & mồ hôi', type: 'single',
+        text: 'Cảm giác nhiệt độ ở lòng bàn tay và lòng bàn chân của bạn?',
+        options: [
+          { key: 'A', label: 'Tay chân luôn ấm áp dễ chịu.' },
+          { key: 'B', label: 'Tay chân thường xuyên bị lạnh (ngay cả khi trời ấm).' },
+          { key: 'C', label: 'Lòng bàn tay, bàn chân nóng ran, hay có xu hướng muốn áp vào chỗ mát.' },
+          { key: 'D', label: 'Tay chân lúc nóng, lúc lạnh thất thường.' },
+          { key: 'E', label: 'Khác', other: true },
+        ] },
+      { id: 'than-15', section: 'than', group: 'Thân nhiệt & mồ hôi', type: 'single',
+        text: 'Bạn có bị ra mồ hôi nhiều ở lòng bàn tay, bàn chân không?',
+        options: [
+          { key: 'A', label: 'Không bị, tay chân luôn khô ráo.' },
+          { key: 'B', label: 'Có, tay chân thường xuyên ẩm ướt, đổ mồ hôi lạnh (ngay cả khi không nóng).' },
+          { key: 'C', label: 'Chỉ đổ mồ hôi tay chân khi căng thẳng, lo lắng.' },
+          { key: 'D', label: 'Khác', other: true },
+        ] },
+      { id: 'than-16', section: 'than', group: 'Thân nhiệt & mồ hôi', type: 'single',
+        text: 'Khả năng tự đổ mồ hôi của cơ thể bạn khi vận động hoặc ở phòng xông hơi (sauna):',
+        options: [
+          { key: 'A', label: 'Rất dễ đổ mồ hôi, chỉ cần vận động nhẹ hoặc vào sauna một chút là mồ hôi đã chảy thành giọt.' },
+          { key: 'B', label: 'Khó ra mồ hôi, cơ thể lì mồ hôi (người kế bên đã đầm đìa, mình mới chỉ hơi rịn ẩm nhẹ).' },
+          { key: 'C', label: 'Bình thường, ra mồ hôi tương xứng với mức độ vận động.' },
+          { key: 'D', label: 'Khác', other: true },
+        ] },
+      { id: 'than-17', section: 'than', group: 'Thân nhiệt & mồ hôi', type: 'single',
+        text: 'Cảm giác sợ lạnh hoặc sợ nóng của cơ thể bạn hiện tại?',
+        options: [
+          { key: 'A', label: 'Người lúc nào cũng thấy nóng, thích ngồi quạt trực tiếp, thích máy lạnh.' },
+          { key: 'B', label: 'Người nóng trong nhưng lại sợ gió, sợ quạt thổi thẳng vào người.' },
+          { key: 'C', label: 'Người thường xuyên thấy ớn lạnh, sợ lạnh, thích mặc ấm hơn người khác.' },
+          { key: 'D', label: 'Bình thường, thích nghi tốt với thời tiết.' },
+          { key: 'E', label: 'Khác', other: true },
+        ] },
+      { id: 'than-18', section: 'than', group: 'Sinh hoạt, vận động & thói quen', type: 'multi',
+        text: 'Thời gian và chất lượng giấc ngủ hàng ngày của bạn?',
+        subtitle: 'Chất lượng giấc ngủ',
+        extraFields: [
+          { key: 'sleep_night', label: 'Giấc ngủ tối (tiếng/đêm)', type: 'number', placeholder: 'VD: 7' },
+          { key: 'sleep_nap', label: 'Giấc ngủ trưa (phút/ngày)', type: 'number', placeholder: 'VD: 30' },
+        ],
+        options: [
+          { key: 'A', label: 'Ngủ ngon, sâu giấc, một mạch đến sáng, dậy tỉnh táo.' },
+          { key: 'B', label: 'Khó vào giấc, ngủ chập chờn, dễ giật mình tỉnh giấc giữa đêm.' },
+          { key: 'C', label: 'Ngủ nhiều nhưng dậy vẫn thấy mệt mỏi, uể oải.' },
+          { key: 'D', label: 'Hay mơ ngủ, mộng mị.' },
+          { key: 'E', label: 'Khác', other: true },
+        ] },
+      { id: 'than-19', section: 'than', group: 'Sinh hoạt, vận động & thói quen', type: 'single',
+        text: 'Thói quen uống nước hàng ngày của bạn?',
+        options: [
+          { key: 'A', label: 'Dưới 1 lít nước/ngày (ít uống nước, chỉ uống khi thấy rất khát).' },
+          { key: 'B', label: 'Khoảng 1 đến 1.5 lít/ngày.' },
+          { key: 'C', label: 'Khoảng 1.5 đến 2.5 lít/ngày.' },
+          { key: 'D', label: 'Trên 2.5 lít/ngày (uống liên tục nhưng vẫn có cảm giác khát, khô cổ).' },
+        ] },
+      { id: 'than-20', section: 'than', group: 'Sinh hoạt, vận động & thói quen', type: 'single',
+        text: 'Thói quen tắm rửa hàng ngày của bạn thường vào khung giờ nào?',
+        options: [
+          { key: 'A', label: 'Buổi sáng sớm (trước 8h sáng).' },
+          { key: 'B', label: 'Buổi chiều (từ 14h đến 18h).' },
+          { key: 'C', label: 'Buổi tối muộn (sau 20h tối).' },
+          { key: 'D', label: 'Khác', other: true },
+        ] },
+      { id: 'than-21', section: 'than', group: 'Sinh hoạt, vận động & thói quen', type: 'single',
+        text: 'Thói quen tập luyện thể thao của bạn?',
+        subtitle: 'Thời lượng tập mỗi lần',
+        extraFields: [
+          { key: 'sport_type', label: 'Môn thể thao/vận động chính', type: 'text', placeholder: 'VD: đi bộ, yoga, gym...' },
+          { key: 'sport_time', label: 'Khung giờ tập luyện chính', type: 'text', placeholder: 'VD: 6h sáng' },
+        ],
+        options: [
+          { key: 'A', label: 'Không tập luyện thể thao.' },
+          { key: 'B', label: 'Dưới 30 phút/ngày.' },
+          { key: 'C', label: 'Từ 30 đến 60 phút/ngày.' },
+          { key: 'D', label: 'Trên 60 phút/ngày.' },
+        ] },
+      { id: 'than-22', section: 'than', group: 'Hơi thở & sự lưu thông khí', type: 'single',
+        text: 'Hãy tự quan sát nhịp thở tự nhiên của bạn hiện tại:',
+        options: [
+          { key: 'A', label: 'Hơi thở nông (chủ yếu thở bằng lồng ngực trên, hơi thở ngắn).' },
+          { key: 'B', label: 'Hơi thở trung bình (bình ổn, đều đặn).' },
+          { key: 'C', label: 'Hơi thở sâu (thở bụng, chậm rãi, thư thái).' },
+          { key: 'D', label: 'Thường xuyên có cảm giác ngộp thở, hụt hơi, hoặc phải thở dài mới dễ chịu.' },
+          { key: 'E', label: 'Khác', other: true },
+        ] },
+
+      // ---------- PHẦN TÂM ----------
+      { id: 'tam-1', section: 'tam', group: 'Áp lực công việc & sự nghiệp', type: 'single',
+        text: 'Khi nghĩ về công việc hiện tại, cảm xúc xuất hiện đầu tiên trong bạn là gì?',
+        options: [
+          { key: 'A', label: 'Hào hứng, có động lực, dù bận rộn nhưng thấy vui và ý nghĩa.' },
+          { key: 'B', label: 'Mệt mỏi, uể oải, cảm giác làm việc như một cỗ máy được lập trình sẵn.' },
+          { key: 'C', label: 'Căng thẳng, áp lực nặng nề (áp lực doanh số, deadline, hoặc mâu thuẫn với sếp/đồng nghiệp).' },
+          { key: 'D', label: 'Bế tắc, muốn thay đổi công việc hoặc định hướng nhưng chưa tìm ra lối thoát.' },
+          { key: 'E', label: 'Khác', other: true },
+        ] },
+      { id: 'tam-2', section: 'tam', group: 'Áp lực công việc & sự nghiệp', type: 'multi',
+        text: 'Sau một ngày làm việc trở về nhà, bạn thường ở trạng thái nào?',
+        options: [
+          { key: 'A', label: 'Nhẹ nhõm, gác lại hoàn toàn việc cơ quan để dành trọn vẹn thời gian nghỉ ngơi.' },
+          { key: 'B', label: 'Vẫn mang việc về nhà làm tiếp, hoặc đầu óc liên tục nghĩ về các đầu việc ngày mai.' },
+          { key: 'C', label: 'Kiệt sức hoàn toàn, chỉ muốn nằm im một chỗ, không muốn nói chuyện với ai.' },
+          { key: 'D', label: 'Khác', other: true },
+        ] },
+      { id: 'tam-3', section: 'tam', group: 'Tình cảm gia đình & không gian sống', type: 'single',
+        text: 'Mối quan hệ giữa bạn và những người thân yêu trong gia đình (bố mẹ, bạn đời, con cái) hiện ra sao?',
+        options: [
+          { key: 'A', label: 'Ấm áp, hòa thuận, gia đình là nơi bình an nhất để tôi trở về.' },
+          { key: 'B', label: 'Bình thường, ít chia sẻ sâu sắc nhưng không có mâu thuẫn lớn.' },
+          { key: 'C', label: 'Đang có những khoảng cách, bất đồng quan điểm sống (với bạn đời hoặc bố mẹ) chưa thể dung hòa.' },
+          { key: 'D', label: 'Thường xuyên xảy ra tranh cãi, căng thẳng hoặc tôi có cảm giác cô đơn ngay trong chính ngôi nhà của mình.' },
+          { key: 'E', label: 'Khác', other: true },
+        ] },
+      { id: 'tam-4', section: 'tam', group: 'Tình cảm gia đình & không gian sống', type: 'multi',
+        text: 'Khi ở nhà, bạn có cảm nhận được sự nâng đỡ về năng lượng không?',
+        options: [
+          { key: 'A', label: 'Có, không gian nhà giúp tôi phục hồi năng lượng rất nhanh.' },
+          { key: 'B', label: 'Nhà hơi bừa bộn hoặc ngột ngạt, tôi có cảm giác bí bách, khó tập trung hoặc khó thư giãn khi ở nhà.' },
+          { key: 'C', label: 'Tôi thường có xu hướng muốn ra ngoài đi dạo, đi cà phê hoặc đi làm hơn là ở nhà.' },
+          { key: 'D', label: 'Khác', other: true },
+        ] },
+      { id: 'tam-5', section: 'tam', group: 'Bạn bè & các mối quan hệ xã hội', type: 'single',
+        text: 'Cách bạn kết nối với bạn bè, xã hội gần đây như thế nào?',
+        options: [
+          { key: 'A', label: 'Vẫn duy trì các cuộc gặp gỡ chất lượng, vui vẻ với những người bạn tích cực.' },
+          { key: 'B', label: 'Tôi thu mình lại, ngại giao tiếp xã hội, cảm thấy việc gặp gỡ người khác khá tốn năng lượng.' },
+          { key: 'C', label: 'Có nhiều mối quan hệ xã giao nhưng khi gặp chuyện buồn, tôi không biết phải tìm đến ai để chia sẻ thật lòng.' },
+          { key: 'D', label: 'Khác', other: true },
+        ] },
+      { id: 'tam-6', section: 'tam', group: 'Đầu tư, tài chính & nỗi lo tiền bạc', type: 'multi',
+        text: 'Khi nhắc đến khía cạnh tài chính cá nhân hoặc các khoản đầu tư (kinh doanh, đất đai, chứng khoán, tích lũy...), bạn cảm thấy thế nào?',
+        options: [
+          { key: 'A', label: 'An tâm, dòng tiền ổn định, các khoản đầu tư đang đi đúng hướng hoặc trong tầm kiểm soát.' },
+          { key: 'B', label: 'Lo lắng âm ỉ, cảm thấy thu nhập hiện tại chưa đủ an toàn cho tương lai.' },
+          { key: 'C', label: 'Rất áp lực, đang bị mắc kẹt, thâm hụt tài chính hoặc các khoản đầu tư đang gặp rủi ro lớn khiến tôi mất ngủ, đứng ngồi không yên.' },
+          { key: 'D', label: 'Tiếc nuối, dằn vặt vì những quyết định đầu tư sai lầm trong quá khứ.' },
+          { key: 'E', label: 'Khác', other: true },
+        ] },
+      { id: 'tam-7', section: 'tam', group: 'Khả năng tự cân bằng', type: 'multi',
+        text: 'Cách bạn thường chọn để "F5" (khởi động lại) tâm trí của mình sau những biến cố hay áp lực là gì?',
+        options: [
+          { key: 'A', label: 'Đi hòa mình vào thiên nhiên (đi rừng, đi bộ quanh hồ, ngắm cây cỏ).' },
+          { key: 'B', label: 'Tìm đến các liệu pháp chăm sóc cơ thể (massage, sauna, xông hơi).' },
+          { key: 'C', label: 'Ăn uống đồ ngọt, đồ cay nóng hoặc mua sắm để giải tỏa nhanh.' },
+          { key: 'D', label: 'Tìm người chia sẻ, tâm sự để xả bớt năng lượng nghẽn.' },
+          { key: 'E', label: 'Tôi không biết cách giải tỏa, thường chọn cách chịu đựng cho qua chuyện.' },
+          { key: 'F', label: 'Khác', other: true },
+        ] },
+    ];
+
+    const QUESTION_STEPS = QUESTIONS.length; // 29
+    const TOTAL_STEPS = QUESTION_STEPS + 3;  // + 2 intros + contact (done screen excluded from progress)
+
+    function buildFlow() {
+      const flow = [];
+      flow.push({ type: 'intro', section: 'than' });
+      QUESTIONS.filter(q => q.section === 'than').forEach(q => flow.push({ type: 'question', q }));
+      flow.push({ type: 'intro', section: 'tam' });
+      QUESTIONS.filter(q => q.section === 'tam').forEach(q => flow.push({ type: 'question', q }));
+      flow.push({ type: 'summary' });
+      flow.push({ type: 'contact' });
+      flow.push({ type: 'done' });
+      return flow;
+    }
+
+    const FLOW = buildFlow();
+    const STORAGE_KEY = 'ho-so-khai-bao-than-tam-menh-v1';
+
+    let state = { idx: 0, answers: {}, contact: {}, returnToSummary: false };
+
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          if (parsed && typeof parsed === 'object') state = Object.assign(state, parsed);
+        }
+      } catch (e) { /* private mode or unavailable — ignore */ }
+    }
+
+    function saveState() {
+      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (e) { /* ignore */ }
+    }
+
+    function questionIndexOf(qId) {
+      return QUESTIONS.findIndex(q => q.id === qId);
+    }
+
+    function currentQuestionNumber() {
+      const step = FLOW[state.idx];
+      if (step.type === 'question') return questionIndexOf(step.q.id) + 1;
+      // for intro/contact/done, count based on how many question steps precede it
+      let count = 0;
+      for (let i = 0; i < state.idx; i++) if (FLOW[i].type === 'question') count++;
+      return count;
+    }
+
+    function updateHeader() {
+      const step = FLOW[state.idx];
+      const pill = document.getElementById('sectionPill');
+      const label = document.getElementById('progressLabel');
+      const fill = document.getElementById('progressFill');
+
+      if (step.type === 'done') {
+        pill.textContent = 'Hoàn tất';
+        label.textContent = 'Đã gửi phiếu khảo sát';
+        fill.style.width = '100%';
+        return;
+      }
+
+      const sectionName = (step.type === 'question') ? (step.q.section === 'than' ? 'Phần Thân' : 'Phần Tâm')
+        : (step.type === 'intro') ? (step.section === 'than' ? 'Phần Thân' : 'Phần Tâm')
+        : (step.type === 'summary') ? 'Tổng kết'
+        : 'Thông tin liên hệ';
+      pill.textContent = sectionName;
+
+      const qNum = currentQuestionNumber();
+      label.textContent = step.type === 'contact'
+        ? `Câu ${QUESTION_STEPS} / ${QUESTION_STEPS} · Bước cuối`
+        : step.type === 'summary'
+        ? `Đã hoàn thành ${QUESTION_STEPS} / ${QUESTION_STEPS} câu`
+        : `Câu ${qNum} / ${QUESTION_STEPS}`;
+
+      const pct = Math.min(100, Math.round((qNum / QUESTION_STEPS) * 100));
+      fill.style.width = pct + '%';
+    }
+
+    function goTo(idx) {
+      state.idx = Math.max(0, Math.min(FLOW.length - 1, idx));
+      saveState();
+      render();
+    }
+
+    function next() {
+      if (state.returnToSummary) {
+        state.returnToSummary = false;
+        goTo(FLOW.findIndex(s => s.type === 'summary'));
+        return;
+      }
+      goTo(state.idx + 1);
+    }
+
+    function back() {
+      if (state.returnToSummary) {
+        state.returnToSummary = false;
+        goTo(FLOW.findIndex(s => s.type === 'summary'));
+        return;
+      }
+      goTo(state.idx - 1);
+    }
+
+    /* ================= RENDER ================= */
+    function render() {
+      const stage = document.getElementById('stage');
+      const step = FLOW[state.idx];
+      updateHeader();
+
+      if (step.type === 'intro') stage.innerHTML = renderIntro(step);
+      else if (step.type === 'question') stage.innerHTML = renderQuestion(step.q);
+      else if (step.type === 'summary') stage.innerHTML = renderSummary();
+      else if (step.type === 'contact') stage.innerHTML = renderContact();
+      else if (step.type === 'done') stage.innerHTML = renderDone();
+
+      stage.classList.remove('quiz-card');
+      void stage.offsetWidth; // restart animation
+      stage.classList.add('quiz-card');
+
+      wireEvents(step);
+    }
+
+    function renderIntro(step) {
+      if (step.section === 'than') {
+        return `
+          <div class="intro-icon">🌿</div>
+          <p class="intro-eyebrow">Phần 1 / 2 — Thân</p>
+          <h1 class="intro-title">Trước tiên, hãy lắng nghe cơ thể bạn</h1>
+          <p class="intro-body">Chào bạn, để giúp chúng tôi thấu hiểu sâu sắc nhất về trạng thái cơ thể hiện tại và tìm ra nguyên nhân gốc rễ của các triệu chứng khó chịu, xin dành ít phút trả lời các câu hỏi dưới đây. Không có câu trả lời đúng hay sai — chỉ cần chọn điều gần nhất với cảm nhận thật của bạn.</p>
+          <div class="intro-meta">
+            <div class="intro-meta-item">⏱️ Khoảng 6–8 phút</div>
+            <div class="intro-meta-item">🔒 Thông tin được bảo mật</div>
+            <div class="intro-meta-item">✅ 22 câu hỏi</div>
+          </div>
+          <button class="btn-primary btn-primary-lg" data-action="next">Bắt đầu</button>
+        `;
+      }
+      return `
+        <div class="intro-icon">💛</div>
+        <p class="intro-eyebrow">Phần 2 / 2 — Tâm</p>
+        <h1 class="intro-title">Cảm ơn bạn đã kiên nhẫn. Giờ đến phần Tâm</h1>
+        <p class="intro-body">Cuộc sống hàng ngày với những lo toan về công việc, gia đình, các mối quan hệ hay áp lực tài chính đều tác động trực tiếp lên sức khỏe của chúng ta. Hãy chia sẻ một cách tự nhiên nhất về những trải nghiệm gần đây của bạn.</p>
+          <div class="intro-meta">
+            <div class="intro-meta-item">⏱️ Khoảng 3–4 phút</div>
+            <div class="intro-meta-item">✅ 7 câu hỏi</div>
+          </div>
+        <button class="btn-primary btn-primary-lg" data-action="next">Tiếp tục</button>
+      `;
+    }
+
+    function renderQuestion(q) {
+      const saved = state.answers[q.id] || {};
+      const selectedKeys = saved.selected || [];
+      const otherText = saved.otherText || '';
+      const qNum = questionIndexOf(q.id) + 1;
+
+      const extraHtml = (q.extraFields || []).map(f => `
+        <div class="q-extra-field">
+          <label for="extra-${f.key}">${f.label} <span class="optional-tag">(không bắt buộc)</span></label>
+          <input type="${f.type}" id="extra-${f.key}" data-extra-key="${f.key}"
+                 placeholder="${f.placeholder || ''}"
+                 value="${(saved.extra && saved.extra[f.key]) ? saved.extra[f.key] : ''}">
+        </div>
+      `).join('');
+
+      const optionsHtml = q.options.map(o => {
+        const isSelected = selectedKeys.includes(o.key);
+        return `
+          <button class="opt${isSelected ? ' selected' : ''}" data-opt-key="${o.key}" data-other="${!!o.other}" type="button">
+            ${q.type === 'multi' ? `<span class="opt-check">✓</span>` : `<span class="opt-badge">${o.key}</span>`}
+            <span class="opt-label">${o.label}</span>
+          </button>
+          ${(o.other && isSelected) ? `<input type="text" class="opt-other-input" id="otherInput" data-owner-key="${o.key}" placeholder="Mời bạn nhập chi tiết..." value="${otherText.replace(/"/g, '&quot;')}">` : ''}
+        `;
+      }).join('');
+
+      return `
+        <p class="q-group">${q.group} · <span class="q-number">Câu ${qNum}</span></p>
+        <h2 class="q-title">${q.text}</h2>
+        ${q.type === 'multi' ? `<span class="q-multi-tag">☑ Có thể chọn nhiều đáp án</span>` : `<div class="q-spacer"></div>`}
+        ${extraHtml ? `<div class="q-extra">${extraHtml}</div>` : ''}
+        ${q.subtitle ? `<p class="q-subtitle">${q.subtitle}</p>` : ''}
+        <div class="options" id="optionsWrap">${optionsHtml}</div>
+        <div class="q-foot">
+          <button class="btn-back" data-action="back" ${state.idx === 0 ? 'disabled' : ''}>← Quay lại</button>
+          <button class="btn-primary" id="continueBtn" data-action="next" ${selectedKeys.length ? '' : 'disabled'}>Tiếp tục</button>
+        </div>
+      `;
+    }
+
+    function formatAnswerPreview(q) {
+      const saved = state.answers[q.id];
+      if (!saved || !saved.selected || !saved.selected.length) return '— Chưa trả lời';
+
+      const labels = saved.selected.map(key => {
+        const opt = q.options.find(o => o.key === key);
+        if (!opt) return key;
+        if (opt.other) return saved.otherText ? `Khác: ${saved.otherText}` : 'Khác (chưa ghi rõ)';
+        return opt.label;
+      });
+      let text = labels.join('; ');
+
+      if (q.extraFields && q.extraFields.length && saved.extra) {
+        const extras = q.extraFields
+          .map(f => saved.extra[f.key] ? `${f.label}: ${saved.extra[f.key]}` : null)
+          .filter(Boolean);
+        if (extras.length) text += (text ? ' · ' : '') + extras.join(', ');
+      }
+      return text || '— Chưa trả lời';
+    }
+
+    function buildAnswersSummaryText() {
+      const lines = [];
+      lines.push('=== THÔNG TIN LIÊN HỆ ===');
+      lines.push(`Họ tên: ${state.contact.full_name || CURRENT_USER.first_name + ' ' + CURRENT_USER.last_name}`);
+      lines.push(`Số điện thoại: ${state.contact.phone || '(chưa cung cấp)'}`);
+      lines.push(`Email: ${state.contact.email || CURRENT_USER.email}`);
+      [['than', 'PHẦN THÂN'], ['tam', 'PHẦN TÂM']].forEach(([sec, label]) => {
+        lines.push(`=== ${label} ===`);
+        let lastGroup = null;
+        QUESTIONS.filter(q => q.section === sec).forEach(q => {
+          if (q.group !== lastGroup) {
+            lines.push(`--- ${q.group} ---`);
+            lastGroup = q.group;
+          }
+          const qNum = questionIndexOf(q.id) + 1;
+          lines.push(`${qNum}. ${q.text}`);
+          lines.push(`   → ${formatAnswerPreview(q)}`);
+        });
+      });
+      return lines.join('\n');
+    }
+
+    function renderSummary() {
+      const sections = [
+        { id: 'than', label: '🌿 Phần Thân' },
+        { id: 'tam', label: '💛 Phần Tâm' },
+      ];
+      const bodyHtml = sections.map(sec => {
+        const items = QUESTIONS.filter(q => q.section === sec.id).map(q => {
+          const qNum = questionIndexOf(q.id) + 1;
+          const preview = formatAnswerPreview(q);
+          return `
+            <button type="button" class="sum-row" data-jump="${q.id}">
+              <div class="sum-row-main">
+                <span class="sum-row-num">${qNum}</span>
+                <div class="sum-row-text">
+                  <div class="sum-row-q">${q.text}</div>
+                  <div class="sum-row-a">${preview}</div>
+                </div>
+              </div>
+              <span class="sum-row-edit">Sửa</span>
+            </button>`;
+        }).join('');
+        return `<div class="sum-section"><p class="sum-section-title">${sec.label}</p>${items}</div>`;
+      }).join('');
+
+      return `
+        <p class="intro-eyebrow">Tổng kết</p>
+        <h2 class="q-title">Xem lại câu trả lời của bạn</h2>
+        <p class="intro-body" style="margin-bottom:24px;">Kiểm tra nhanh trước khi gửi. Bấm vào câu nào để sửa lại — xong sẽ tự quay về đây.</p>
+        <div class="sum-list">${bodyHtml}</div>
+        <div class="q-foot">
+          <button class="btn-back" data-action="back">← Quay lại</button>
+          <button class="btn-primary" data-action="next">Tiếp tục</button>
+        </div>
+      `;
+    }
+
+    function renderContact() {
+      const c = state.contact;
+      const fullName = c.full_name || `${CURRENT_USER.first_name} ${CURRENT_USER.last_name}`.trim();
+      const email = c.email || CURRENT_USER.email || '';
+      return `
+        <p class="intro-eyebrow">Bước cuối</p>
+        <h2 class="q-title">Gần xong rồi — cho chúng tôi biết cách liên hệ với bạn</h2>
+        <div class="q-spacer"></div>
+        <div class="field">
+          <label for="c-name">Họ và tên *</label>
+          <input type="text" id="c-name" placeholder="Nguyễn Văn A" value="${fullName}">
+        </div>
+        <div class="field">
+          <label for="c-phone">Số điện thoại *</label>
+          <input type="tel" id="c-phone" placeholder="09xx xxx xxx" value="${c.phone || ''}">
+        </div>
+        <div class="field">
+          <label for="c-email">Email <span class="optional-tag">(không bắt buộc)</span></label>
+          <input type="email" id="c-email" placeholder="ban@email.com" value="${email}">
+        </div>
+        <div class="privacy-note">
+          🔒 Thông tin sức khỏe của bạn chỉ được Người hướng dẫn và đội ngũ tư vấn AI Agents CC xem để soạn lộ trình cá nhân hóa, không chia sẻ cho bên thứ ba.
+        </div>
+        <div class="q-foot">
+          <button class="btn-back" data-action="back">← Quay lại</button>
+          <button class="btn-primary" id="submitBtn" data-action="submit">Gửi phiếu khảo sát</button>
+        </div>
+      `;
+    }
+
+    function renderDone() {
+      return `
+        <div class="done-wrap">
+          <div class="done-icon">🌿</div>
+          <h1 class="intro-title">Cảm ơn bạn đã dành thời gian chia sẻ</h1>
+          <p class="intro-body" style="margin-left:auto;margin-right:auto;">
+            Đội ngũ AI Agents CC đã nhận được phiếu khảo sát của bạn. Dựa trên những chia sẻ này, chúng tôi sẽ soạn một lộ trình ăn uống thuận tự nhiên cá nhân hóa và gửi tới bạn trong thời gian sớm nhất, sau khi đã được Người hướng dẫn xem xét kỹ lưỡng.
+          </p>
+          <button class="btn-primary btn-primary-lg" style="max-width:280px;margin:26px auto 0;" onclick="location.href=getPostIntakeRedirectUrl()">Vào cộng đồng</button>
+        </div>
+      `;
+    }
+
+    /* ================= EVENTS ================= */
+    function wireEvents(step) {
+      const stage = document.getElementById('stage');
+
+      stage.querySelectorAll('[data-action="back"]').forEach(btn => btn.addEventListener('click', back));
+      stage.querySelectorAll('[data-action="next"]').forEach(btn => btn.addEventListener('click', () => {
+        if (step.type === 'question') commitQuestion(step.q, /*advance*/ true);
+        else next();
+      }));
+
+      if (step.type === 'question') {
+        const q = step.q;
+        const wrap = document.getElementById('optionsWrap');
+
+        const wireOtherInput = (inp) => {
+          inp.addEventListener('input', () => {
+            const saved = state.answers[q.id];
+            if (saved) { saved.otherText = inp.value; saveState(); }
+          });
+          inp.addEventListener('keydown', e => { if (e.key === 'Enter') commitQuestion(q, true); });
+        };
+
+        // wire the other-input if it was already present from the initial render
+        // (e.g. navigating back into a question that already has "Khác" selected)
+        const existingOtherInput = document.getElementById('otherInput');
+        if (existingOtherInput) wireOtherInput(existingOtherInput);
+
+        wrap.querySelectorAll('.opt').forEach(btn => {
+          btn.addEventListener('click', () => {
+            // Surgical DOM update only — no full render() here, to avoid the
+            // whole-card fade/slide animation replaying on every single tap
+            // (that replay was the source of the reported lag/jank).
+            const key = btn.getAttribute('data-opt-key');
+            const isOther = btn.getAttribute('data-other') === 'true';
+            const saved = state.answers[q.id] || { selected: [], otherText: '', extra: {} };
+            const wasSelected = saved.selected.includes(key);
+
+            if (q.type === 'multi') {
+              saved.selected = wasSelected ? saved.selected.filter(k => k !== key) : [...saved.selected, key];
+              btn.classList.toggle('selected', !wasSelected);
+            } else {
+              saved.selected = [key];
+              wrap.querySelectorAll('.opt').forEach(b => b.classList.remove('selected'));
+              btn.classList.add('selected');
+            }
+            state.answers[q.id] = saved;
+            saveState();
+
+            // drop any other-input whose option is no longer selected
+            wrap.querySelectorAll('.opt-other-input').forEach(inp => {
+              if (!saved.selected.includes(inp.getAttribute('data-owner-key'))) inp.remove();
+            });
+
+            // create the other-input on demand, right after its button
+            if (isOther && saved.selected.includes(key) && !wrap.querySelector(`.opt-other-input[data-owner-key="${key}"]`)) {
+              const inp = document.createElement('input');
+              inp.type = 'text';
+              inp.className = 'opt-other-input';
+              inp.id = 'otherInput';
+              inp.setAttribute('data-owner-key', key);
+              inp.placeholder = 'Mời bạn nhập chi tiết...';
+              inp.value = saved.otherText || '';
+              btn.insertAdjacentElement('afterend', inp);
+              wireOtherInput(inp);
+              setTimeout(() => inp.focus(), 30);
+            }
+
+            const continueBtn = document.getElementById('continueBtn');
+            if (continueBtn) continueBtn.disabled = !saved.selected.length;
+
+            if (!isOther && q.type === 'single' && !(q.extraFields && q.extraFields.length)) {
+              setTimeout(() => commitQuestion(q, true), 320);
+            }
+          });
+        });
+
+        stage.querySelectorAll('[data-extra-key]').forEach(inp => {
+          inp.addEventListener('input', () => {
+            const saved = state.answers[q.id] || { selected: [], otherText: '', extra: {} };
+            saved.extra = saved.extra || {};
+            saved.extra[inp.getAttribute('data-extra-key')] = inp.value;
+            state.answers[q.id] = saved;
+            saveState();
+          });
+        });
+      }
+
+      if (step.type === 'summary') {
+        stage.querySelectorAll('[data-jump]').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const qId = btn.getAttribute('data-jump');
+            const qIdx = FLOW.findIndex(s => s.type === 'question' && s.q.id === qId);
+            if (qIdx >= 0) {
+              state.returnToSummary = true;
+              goTo(qIdx);
+            }
+          });
+        });
+      }
+
+      if (step.type === 'contact') {
+        const submitBtn = document.getElementById('submitBtn');
+        ['c-name', 'c-phone', 'c-email'].forEach(id => {
+          document.getElementById(id).addEventListener('input', () => {
+            state.contact.full_name = document.getElementById('c-name').value;
+            state.contact.phone = document.getElementById('c-phone').value;
+            state.contact.email = document.getElementById('c-email').value;
+            saveState();
+          });
+        });
+        submitBtn.addEventListener('click', submitIntake);
+      }
+    }
+
+    function commitQuestion(q, advance) {
+      const saved = state.answers[q.id];
+      if (!saved || !saved.selected || !saved.selected.length) return;
+      if (advance) next();
+    }
+
+    async function submitIntake() {
+      state.contact.full_name = document.getElementById('c-name').value.trim();
+      state.contact.phone = document.getElementById('c-phone').value.trim();
+      state.contact.email = document.getElementById('c-email').value.trim();
+
+      if (!state.contact.full_name || !state.contact.phone) {
+        alert('Vui lòng nhập Họ tên và Số điện thoại để chúng tôi liên hệ gửi kết quả.');
+        return;
+      }
+
+      const submitBtn = document.getElementById('submitBtn');
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Đang gửi...';
+
+      try {
+        const res = await fetch('/api/ttm/intake/save', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            userId: CURRENT_USER.id,
+            answers: state.answers,
+            summaryText: buildAnswersSummaryText(),
+          }),
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Gửi phiếu khảo sát thất bại.');
+
+        try {
+          localStorage.removeItem(STORAGE_KEY);
+          CURRENT_USER.ttm_intake_done_at = new Date().toISOString();
+          localStorage.setItem('currentUser', JSON.stringify(CURRENT_USER));
+        } catch (e) { /* ignore */ }
+
+        goTo(FLOW.length - 1);
+      } catch (err) {
+        alert('Không gửi được phiếu khảo sát: ' + err.message + '\nVui lòng thử lại.');
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Gửi phiếu khảo sát';
+      }
+    }
+
+    function resetAll() {
+      if (!confirm('Xóa toàn bộ tiến trình đã lưu và làm lại từ câu 1?')) return;
+      try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
+      state = { idx: 0, answers: {}, contact: {} };
+      render();
+    }
+
+    /* ================= INIT ================= */
+    loadState();
+    render();
+    document.getElementById('resetLink').addEventListener('click', resetAll);
+  </script>
+</body>
+
+</html>

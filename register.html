@@ -1,15 +1,22 @@
 ﻿<!DOCTYPE html>
-<html lang="vi">
+<html lang="vi" class="auth-html">
 <head>
 <meta charset="UTF-8">
+  <script src="assets/js/auth-fetch.js?v=1"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" href="/assets/img/logo.png">
+<link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
+<link rel="manifest" href="/manifest.json?v=2">
+<meta name="apple-mobile-web-app-title" content="AI Agents CC">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0ea5e9">
 <title>Đăng ký — AI AGENTS CC</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/base.css">
-<link rel="stylesheet" href="assets/css/components.css">
-<link rel="stylesheet" href="assets/css/layout.css">
+<link rel="stylesheet" href="assets/css/base.css?v=2">
+<link rel="stylesheet" href="assets/css/components.css?v=11">
+<link rel="stylesheet" href="assets/css/layout.css?v=6">
 <style>
 .auth-tagline {
   font-size: 11px; font-weight: 600; text-transform: uppercase;
@@ -88,42 +95,42 @@
       <div class="auth-tagline">Bắt đầu ngay hôm nay</div>
 
       <h1 class="auth-heading">
-        Tham gia<br>
-        <span class="hl">2,000+</span> học viên<br>
-        AI Agent.
+        Xây<br>
+        <span class="hl">AI Agent</span><br>
+        trong 21 ngày.
       </h1>
 
       <p class="auth-desc">
-        Học thực chiến, xây dựng agent thật, và kết nối với cộng đồng đang thay đổi cách làm việc với AI.
+        Học thực chiến từ prompt engineering đến deploy agent thật, cùng cộng đồng người Việt.
       </p>
 
       <ul class="benefit-list">
         <li class="benefit-item">
-          <div class="benefit-icon">🎯</div>
+          <div class="benefit-icon">🚀</div>
           <div class="benefit-text">
-            <strong>21 Day AI Agent Challenge</strong>
-            <span>Thử thách có cấu trúc, theo dõi tiến độ mỗi ngày</span>
+            <strong>Thử thách cộng đồng</strong>
+            <span>21 ngày, mỗi ngày một task cụ thể, theo dõi tiến độ</span>
           </div>
         </li>
         <li class="benefit-item">
-          <div class="benefit-icon">⚡</div>
+          <div class="benefit-icon">📚</div>
           <div class="benefit-text">
-            <strong>Tín hiệu thực chiến</strong>
-            <span>Case study, template, và prompt đã được kiểm chứng</span>
+            <strong>Khoá học & tài liệu</strong>
+            <span>Prompt, workflow n8n / Make, SOP từng bước</span>
           </div>
         </li>
         <li class="benefit-item">
           <div class="benefit-icon">🏆</div>
           <div class="benefit-text">
-            <strong>Leaderboard & Gamification</strong>
-            <span>XP, level, streak — học mà như chơi game</span>
+            <strong>XP, cấp độ & bảng xếp hạng</strong>
+            <span>Đăng bài, nộp bài thử thách để lên cấp</span>
           </div>
         </li>
         <li class="benefit-item">
           <div class="benefit-icon">🤝</div>
           <div class="benefit-text">
-            <strong>Cộng đồng hỗ trợ</strong>
-            <span>Hỏi đáp, feedback, và peer review 24/7</span>
+            <strong>Cộng đồng đồng hành</strong>
+            <span>Chia sẻ thành quả, hỏi đáp, hỗ trợ nhau mỗi ngày</span>
           </div>
         </li>
       </ul>
@@ -134,14 +141,8 @@
   <div class="auth-right">
 
     <div class="form-logo">
-      <div class="form-logo-mark">
-        <svg viewBox="0 0 20 20" fill="none">
-          <circle cx="10" cy="10" r="3" fill="currentColor"/>
-          <path d="M10 3v2M10 15v2M3 10h2M15 10h2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-          <path d="M5.5 5.5l1.5 1.5M13 13l1.5 1.5M14.5 5.5L13 7M7 13l-1.5 1.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-        </svg>
-      </div>
-      <div class="form-logo-name">AI AGENT <span>CC</span></div>
+      <div class="form-logo-mark" style="background:transparent;"><img src="assets/img/logo.png" alt="Logo" style="width:100%;height:100%;object-fit:contain;"></div>
+      <div class="form-logo-name">AI AGENTS CC</div>
     </div>
 
     <div class="form-header">
@@ -168,6 +169,7 @@
       <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01" stroke-linecap="round"/></svg>
       <span data-msg>Đã xảy ra lỗi. Vui lòng thử lại.</span>
     </div>
+    <a id="existsLogin" href="index.html" class="btn btn-primary btn-lg btn-full" style="display:none;margin:-4px 0 16px;text-decoration:none;justify-content:center;">→ Đăng nhập ngay</a>
 
     <form id="registerForm" autocomplete="on" novalidate>
 
@@ -244,7 +246,7 @@
 
       <label class="terms-row">
         <input type="checkbox" id="terms" name="terms" required>
-        <span>Tôi đồng ý với <a href="terms.html" target="_blank" rel="noopener">Điều khoản sử dụng</a> và <a href="privacy-policy.html" target="_blank" rel="noopener">Chính sách bảo mật</a></span>
+        <span>Tôi đã đọc và đồng ý với <a href="#" onclick="openRulesPreview(); return false;">Nội quy cộng đồng</a>, <a href="terms.html" target="_blank" rel="noopener">Điều khoản sử dụng</a> và <a href="privacy-policy.html" target="_blank" rel="noopener">Chính sách bảo mật</a></span>
       </label>
 
       <button type="submit" class="btn btn-primary btn-lg btn-full" id="submitBtn">
@@ -272,9 +274,39 @@
 </div>
 
 <script src="https://accounts.google.com/gsi/client" async defer></script>
-<script src="assets/js/app.js"></script>
+<script src="assets/js/app.js?v=28"></script>
 <script>
-const GOOGLE_CLIENT_ID = '879415234564-unts08kj8pfh8pkspvhh404gqg0g3ce1.apps.googleusercontent.com';
+// Xem Nội quy cộng đồng ngay trên trang đăng ký (chưa có tài khoản nên không mở được noi-quy.html)
+function openRulesPreview() {
+  let wrap = document.getElementById('rulesPreview');
+  if (!wrap) {
+    wrap = document.createElement('div');
+    wrap.id = 'rulesPreview';
+    wrap.className = 'rules-consent';
+    wrap.innerHTML = `
+      <div class="rules-consent-box">
+        <div class="rules-consent-head"><div class="rules-consent-title">📜 Nội quy cộng đồng</div></div>
+        <div class="rules-consent-body md-content">Đang tải nội quy...</div>
+        <div class="rules-consent-foot">
+          <div class="rules-consent-actions">
+            <button type="button" class="rules-consent-btn" id="rulesPreviewAgree">Tôi đồng ý</button>
+          </div>
+        </div>
+      </div>`;
+    wrap.addEventListener('click', e => { if (e.target === wrap) wrap.style.display = 'none'; });
+    wrap.querySelector('#rulesPreviewAgree').onclick = () => {
+      document.getElementById('terms').checked = true;
+      wrap.style.display = 'none';
+    };
+    document.body.appendChild(wrap);
+    fetch('/api/settings').then(r => r.json()).then(s => {
+      wrap.querySelector('.rules-consent-body').innerHTML = renderSimpleMarkdown(s.rules_content || '');
+    }).catch(() => { wrap.querySelector('.rules-consent-body').textContent = 'Không tải được nội quy.'; });
+  }
+  wrap.style.display = 'flex';
+}
+
+const GOOGLE_CLIENT_ID = '879415234564-unts08kj8pfh8pkspvhh404gqg0g3ce1.apps.googleusercontent.com.apps.googleusercontent.com';
 let gTokenClient;
 
 function initGoogleClient() {
@@ -326,7 +358,7 @@ async function handleGoogleToken(access_token) {
       setGoogleBtnState('Đăng ký với Google', false);
       return;
     }
-    sessionStorage.setItem('currentUser', JSON.stringify(data.user));
+    localStorage.setItem('currentUser', JSON.stringify(data.user));
     window.location.href = 'feed.html';
   } catch {
     const msgEl = document.querySelector('#errorBanner [data-msg]');
@@ -388,6 +420,7 @@ function setLoading(on) {
 form.addEventListener('submit', async (e) => {
   e.preventDefault();
   hideAlert('errorBanner');
+  document.getElementById('existsLogin').style.display = 'none';
 
   const pw      = document.getElementById('password').value;
   const pwConf  = document.getElementById('password_confirmation').value;
@@ -401,7 +434,7 @@ form.addEventListener('submit', async (e) => {
   pwErr.style.display = 'none';
 
   if (!document.getElementById('terms').checked) {
-    showAlert('errorBanner', 'Vui lòng đồng ý với điều khoản sử dụng.');
+    showAlert('errorBanner', 'Vui lòng đọc và đồng ý với Nội quy cộng đồng.');
     return;
   }
 
@@ -415,22 +448,29 @@ form.addEventListener('submit', async (e) => {
     const res = await fetch('/api/auth/register', {
       method:  'POST',
       headers: { 'Content-Type': 'application/json' },
-      body:    JSON.stringify({ first_name, last_name, email, password: pw }),
+      body:    JSON.stringify({ first_name, last_name, email, password: pw, rules_accepted: true }),
     });
     const data = await res.json();
 
     if (!res.ok) {
       setLoading(false);
       showAlert('errorBanner', data.error || 'Đăng ký thất bại. Vui lòng thử lại.');
+      // Email đã có tài khoản → nút đi thẳng sang trang đăng nhập (điền sẵn email, mở đúng cách đăng nhập)
+      if (data.code === 'email_exists') {
+        const a = document.getElementById('existsLogin');
+        a.href = `index.html?email=${encodeURIComponent(email)}${data.via === 'google' ? '&via=google' : data.via === 'code' ? '&via=code' : ''}`;
+        a.style.display = 'flex';
+        a.scrollIntoView({ block: 'center', behavior: 'smooth' });
+      }
       return;
     }
 
     // Lưu thông tin tạm để feed dùng
-    sessionStorage.setItem('currentUser', JSON.stringify(data.user));
+    localStorage.setItem('currentUser', JSON.stringify(data.user));
     window.location.href = 'feed.html';
   } catch (err) {
     setLoading(false);
-    showAlert('errorBanner', 'Không kết nối được server. Hãy chạy: node server.js');
+    showAlert('errorBanner', 'Chưa gửi được do mạng chập chờn. Vui lòng kiểm tra kết nối mạng rồi bấm lại.');
   }
 });
 </script>

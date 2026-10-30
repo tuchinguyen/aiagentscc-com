@@ -1,0 +1,1597 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8">
+  <script src="assets/js/auth-fetch.js?v=1"></script>
+  <script>(function(){try{var t=localStorage.getItem('theme');if(t==='dark'||(!t&&window.matchMedia('(prefers-color-scheme: dark)').matches))document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" href="/assets/img/logo.png">
+  <link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
+  <link rel="manifest" href="/manifest.json?v=2">
+  <meta name="apple-mobile-web-app-title" content="AI Agents CC">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="theme-color" content="#0ea5e9">
+  <title>Space — AI AGENTS CC</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/base.css?v=2">
+  <link rel="stylesheet" href="assets/css/components.css?v=11">
+  <link rel="stylesheet" href="assets/css/layout.css?v=6">
+  <style>
+    .feed-filters {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+
+    .pillar-dropdown { position: relative; }
+
+    .pillar-menu {
+      display: none;
+      position: absolute;
+      right: 0;
+      top: calc(100% + 6px);
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 4px;
+      min-width: 160px;
+      z-index: 50;
+      box-shadow: var(--shadow-md);
+    }
+
+    .pillar-menu.open { display: block; }
+
+    .pillar-option {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      width: 100%;
+      text-align: left;
+      padding: 8px 10px;
+      font-size: var(--fs-sm);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      background: none;
+      border: none;
+      color: var(--text);
+      transition: background 0.1s;
+      font-family: var(--font-body);
+    }
+
+    .pillar-option:hover { background: var(--bg-hover); }
+
+    /* Space header */
+    .space-header-card {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 18px 20px;
+      margin-bottom: 16px;
+    }
+    .space-header-icon {
+      width: 48px; height: 48px; border-radius: var(--radius-md);
+      background: var(--bg-active);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 24px; flex-shrink: 0;
+    }
+    .space-header-name {
+      font-family: var(--font-heading);
+      font-size: var(--fs-xl);
+      font-weight: 800;
+      color: var(--text);
+      margin-bottom: 4px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .space-header-desc { font-size: var(--fs-sm); color: var(--text-muted); line-height: 1.5; }
+    .space-visibility-badge {
+      font-size: 11px; font-weight: 700; padding: 2px 9px; border-radius: 99px;
+    }
+    .space-visibility-badge.public { background: #d1fae5; color: #065f46; }
+    .space-visibility-badge.private { background: #fef3c7; color: #92400e; }
+
+    /* Post composer */
+    .composer-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 14px 16px;
+      margin-bottom: 16px;
+    }
+    .composer-top { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+    .composer-avatar {
+      width: 38px; height: 38px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; font-weight: 700; color: #fff; flex-shrink: 0;
+    }
+    .composer-title-input {
+      flex: 1;
+      border: none;
+      background: transparent;
+      font-size: var(--fs-md);
+      font-weight: 600;
+      color: var(--text);
+      outline: none;
+    }
+    .composer-title-input::placeholder { color: var(--text-light); font-weight: 500; }
+    .composer-textarea {
+      width: 100%;
+      border: none;
+      background: transparent;
+      resize: none;
+      font-family: var(--font-body);
+      font-size: var(--fs-base);
+      color: var(--text);
+      outline: none;
+      margin-bottom: 10px;
+      min-height: 40px;
+    }
+    .composer-textarea::placeholder { color: var(--text-light); }
+    .composer-actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+      padding-top: 10px;
+      border-top: 1px solid var(--border);
+    }
+    .composer-pillar-select {
+      border: 1px solid var(--border);
+      background: var(--bg-input);
+      border-radius: var(--radius-md);
+      padding: 7px 10px;
+      font-size: var(--fs-sm);
+      color: var(--text-muted);
+      outline: none;
+      cursor: pointer;
+      max-width: 100%;
+      min-width: 0;
+    }
+
+    /* Composer toolbar (attach image/video/doc/gif/poll + emoji) */
+    .composer-toolbar { display: flex; align-items: center; gap: 2px; padding-bottom: 6px; position: relative; }
+    .composer-tool-btn {
+      width: 30px; height: 30px; border: none; background: transparent; border-radius: var(--radius-md);
+      font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center;
+      transition: background .15s;
+    }
+    .composer-tool-btn:hover { background: var(--bg-hover); }
+    .composer-tool-btn.active { background: var(--color-primary); }
+    .composer-emoji-wrap { position: relative; }
+    .emoji-picker {
+      display: none; position: absolute; top: 34px; left: 0; z-index: 20;
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-md);
+      padding: 8px; box-shadow: 0 8px 24px rgba(0,0,0,.12); grid-template-columns: repeat(8, 1fr); gap: 2px; width: 240px;
+    }
+    .emoji-picker.open { display: grid; }
+    .emoji-picker button { border: none; background: transparent; font-size: 17px; padding: 4px; border-radius: 6px; cursor: pointer; }
+    .emoji-picker button:hover { background: var(--bg-hover); }
+
+    .composer-attach-box {
+      display: flex; align-items: center; gap: 8px; background: var(--bg-hover);
+      border-radius: var(--radius-md); padding: 8px 10px; margin-bottom: 8px;
+    }
+    .composer-attach-icon { font-size: 15px; flex-shrink: 0; }
+    .composer-attach-input {
+      flex: 1; border: none; background: transparent; font-size: var(--fs-sm); color: var(--text);
+      outline: none; font-family: var(--font-body);
+    }
+    .composer-attach-remove { border: none; background: transparent; color: var(--text-muted); font-size: 16px; cursor: pointer; flex-shrink: 0; }
+    .composer-poll-box {
+      background: var(--bg-hover); border-radius: var(--radius-md); padding: 10px; margin-bottom: 8px;
+      display: flex; flex-direction: column; gap: 8px;
+    }
+    .composer-poll-box input {
+      width: 100%; box-sizing: border-box; border: 1px solid var(--border); background: var(--bg-card);
+      border-radius: var(--radius-sm); padding: 7px 10px; font-size: var(--fs-sm); color: var(--text);
+      outline: none; font-family: var(--font-body);
+    }
+    .composer-poll-opt-row { display: flex; }
+    .composer-poll-add, .composer-attach-remove-text {
+      border: none; background: transparent; color: var(--color-primary); font-size: 12px; font-weight: 600;
+      cursor: pointer; padding: 4px 0;
+    }
+    .composer-attach-remove-text { color: var(--text-muted); }
+
+    /* Post media (image / video / doc link) */
+    .post-media-img { display: block; width: 100%; max-height: 420px; object-fit: contain; background: var(--bg-hover); border-radius: var(--radius-md); margin: 8px 0; }
+    .post-media-video { position: relative; width: 100%; padding-top: 56.25%; border-radius: var(--radius-md); overflow: hidden; margin: 8px 0; }
+    .post-media-video iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: none; }
+    .post-media-link {
+      display: inline-flex; align-items: center; gap: 6px; font-size: var(--fs-sm); font-weight: 600;
+      color: var(--color-primary); background: var(--bg-hover); border-radius: var(--radius-md);
+      padding: 8px 12px; margin: 8px 0; text-decoration: none;
+    }
+
+    /* Poll */
+    .post-poll { margin: 8px 0; border: 1px solid var(--border); border-radius: var(--radius-md); padding: 10px 12px; }
+    .poll-question { font-size: var(--fs-sm); font-weight: 700; color: var(--text); margin-bottom: 8px; }
+    .poll-options { display: flex; flex-direction: column; gap: 6px; }
+    .poll-opt {
+      position: relative; border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 7px 10px;
+      font-size: var(--fs-sm); color: var(--text); cursor: pointer; overflow: hidden; transition: border-color .15s;
+    }
+    .poll-opt:hover { border-color: var(--color-primary); }
+    .poll-opt-bar { position: absolute; inset: 0; background: var(--bg-active); z-index: 0; transition: width .3s; }
+    .poll-opt-row { position: relative; z-index: 1; display: flex; justify-content: space-between; gap: 8px; }
+    .poll-opt-voted { cursor: pointer; }
+    .poll-opt-mine { border-color: var(--color-primary); font-weight: 600; }
+    .poll-total { font-size: 11px; color: var(--text-muted); margin-top: 8px; }
+
+    .post-list { display: flex; flex-direction: column; gap: 8px; }
+
+    .profile-user-row { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+    .profile-name { font-size: var(--fs-base); font-weight: 700; color: var(--text); }
+    .profile-title { font-size: var(--fs-xs); color: var(--text-muted); margin-top: 1px; }
+    .profile-level-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 5px; }
+    .profile-level { font-size: var(--fs-xs); color: var(--text-muted); }
+    .profile-xp { font-size: var(--fs-xs); font-weight: 700; color: var(--accent-green); }
+    .xp-next { font-size: 10px; color: var(--text-light); text-align: right; margin-top: 3px; }
+
+    @media (max-width: 768px) {
+      .feed-filters { gap: 4px; }
+      .tab-item { padding: 8px 10px; font-size: 12px; }
+      .composer-pillar-select { max-width: calc(100vw - 64px); }
+    }
+
+    /* ── Post Detail Modal ──────────────────────────────── */
+    .post-modal-overlay {
+      position: fixed; inset: 0; background: rgba(15, 23, 42, .5); z-index: 1000;
+      display: flex; align-items: center; justify-content: center; padding: 16px;
+      opacity: 0; pointer-events: none; transition: opacity .2s;
+    }
+    .post-modal-overlay.open { opacity: 1; pointer-events: all; }
+    .post-modal {
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; width: 100%; max-width: 680px; max-height: 90vh;
+      display: flex; flex-direction: column; box-shadow: 0 20px 60px rgba(0, 0, 0, .18);
+      transform: translateY(16px); transition: transform .2s; overflow: hidden;
+    }
+    .post-modal-overlay.open .post-modal { transform: translateY(0); }
+    .pm-header { display: flex; align-items: center; justify-content: space-between; padding: 14px 20px; border-bottom: 1px solid var(--border); flex-shrink: 0; }
+    .pm-header-badges { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+    .pm-close { width: 32px; height: 32px; border-radius: 50%; border: none; background: var(--bg-hover); color: var(--text-muted); cursor: pointer; font-size: 20px; line-height: 1; display: flex; align-items: center; justify-content: center; transition: background .15s; flex-shrink: 0; }
+    .pm-close:hover { background: var(--border); }
+    .pm-body { overflow-y: auto; flex: 1; padding: 20px; }
+    .pm-author-row { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+    .pm-avatar { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; color: #fff; flex-shrink: 0; }
+    .pm-author-name { font-size: var(--fs-sm); font-weight: 700; color: var(--text); }
+    .pm-author-meta { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+    .pm-title { font-family: var(--font-heading); font-size: 20px; font-weight: 800; color: var(--text); margin-bottom: 12px; line-height: 1.35; }
+    .pm-content { font-size: var(--fs-base); color: var(--text); line-height: 1.75; white-space: pre-wrap; }
+    .pm-actions { display: flex; align-items: center; gap: 14px; padding: 12px 20px; border-top: 1px solid var(--border); flex-shrink: 0; }
+    .pm-like-btn { display: inline-flex; align-items: center; gap: 6px; padding: 7px 16px; border-radius: var(--radius-md); border: 1.5px solid var(--border); background: var(--bg-card); cursor: pointer; font-size: var(--fs-sm); font-weight: 600; color: var(--text-muted); transition: all .15s; font-family: var(--font-body); }
+    .pm-like-btn:hover, .pm-like-btn.liked { border-color: #f43f5e; color: #f43f5e; background: #fff1f2; }
+    .pm-cmt-count-lbl { font-size: var(--fs-sm); color: var(--text-muted); display: flex; align-items: center; gap: 5px; }
+    .pm-comments { flex-shrink: 0; max-height: 320px; overflow-y: auto; border-top: 1px solid var(--border); }
+    .pm-cmt-item { display: flex; gap: 10px; padding: 12px 20px; border-bottom: 1px solid var(--border); }
+    .pm-cmt-item:last-child { border-bottom: none; }
+    .pm-cmt-avatar { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: #fff; flex-shrink: 0; }
+    .pm-cmt-body { flex: 1; min-width: 0; }
+    .pm-cmt-header { display: flex; align-items: center; gap: 7px; margin-bottom: 3px; flex-wrap: wrap; }
+    .pm-cmt-name { font-size: var(--fs-xs); font-weight: 700; color: var(--text); }
+    .pm-cmt-time { font-size: 11px; color: var(--text-muted); }
+    .pm-cmt-text { font-size: var(--fs-sm); color: var(--text); line-height: 1.55; }
+    .pm-empty-cmt { text-align: center; padding: 20px; color: var(--text-muted); font-size: var(--fs-sm); }
+    .pm-reply-btn { display: inline-flex; align-items: center; gap: 4px; margin-top: 5px; padding: 2px 0; font-size: 11px; font-weight: 600; color: var(--text-muted); background: none; border: none; cursor: pointer; font-family: var(--font-body); transition: color .15s; }
+    .pm-reply-btn:hover { color: var(--color-primary); }
+    .pm-reply-form { display: none; margin-top: 8px; align-items: flex-end; gap: 6px; }
+    .pm-reply-form.open { display: flex; }
+    .pm-reply-input { flex: 1; padding: 7px 10px; border: 1px solid var(--border); border-radius: var(--radius-md); font-size: 12px; font-family: var(--font-body); color: var(--text); resize: none; min-height: 32px; max-height: 72px; background: var(--bg-hover); outline: none; transition: border-color .15s, background .15s; }
+    .pm-reply-input:focus { border-color: var(--color-primary); background: var(--bg-card); }
+    .pm-reply-submit { padding: 6px 12px; height: 32px; background: var(--color-primary); color: #fff; border: none; border-radius: var(--radius-md); cursor: pointer; font-size: 12px; font-weight: 600; font-family: var(--font-body); white-space: nowrap; transition: background .15s; }
+    .pm-reply-submit:hover { background: #0284c7; }
+    .pm-reply-cancel { padding: 6px 10px; height: 32px; background: none; color: var(--text-muted); border: 1px solid var(--border); border-radius: var(--radius-md); cursor: pointer; font-size: 12px; font-weight: 600; font-family: var(--font-body); white-space: nowrap; }
+    .pm-reply-cancel:hover { background: var(--bg-hover); }
+    .pm-replies { padding-left: 42px; border-bottom: 1px solid var(--border); }
+    .pm-replies .pm-cmt-item { border-bottom: none; padding: 8px 20px 8px 0; }
+    .pm-replies .pm-cmt-avatar { width: 26px; height: 26px; font-size: 10px; }
+    .pm-comment-form { display: flex; gap: 10px; align-items: flex-end; padding: 12px 20px; border-top: 1px solid var(--border); flex-shrink: 0; }
+    .pm-comment-input { flex: 1; padding: 9px 13px; border: 1px solid var(--border); border-radius: var(--radius-md); font-size: var(--fs-sm); font-family: var(--font-body); color: var(--text); resize: none; min-height: 38px; max-height: 100px; background: var(--bg-hover); outline: none; transition: border-color .15s, background .15s; }
+    .pm-comment-input:focus { border-color: var(--color-primary); background: var(--bg-card); }
+    .pm-comment-submit { padding: 9px 16px; background: var(--color-primary); color: #fff; border: none; border-radius: var(--radius-md); cursor: pointer; font-size: var(--fs-sm); font-weight: 600; font-family: var(--font-body); transition: background .15s; white-space: nowrap; height: 38px; }
+    .pm-comment-submit:hover { background: #0284c7; }
+    .pm-comment-submit:disabled { opacity: .6; cursor: not-allowed; }
+    .post-card { cursor: pointer; }
+    .post-card:hover { box-shadow: 0 4px 16px rgba(14, 165, 233, .12); transform: translateY(-1px); transition: box-shadow .15s, transform .15s; }
+  </style>
+</head>
+<body>
+
+<div id="app">
+
+  <!-- Sidebar -->
+  <aside id="sidebar">
+    <div id="sidebar-logo">
+      <div class="sidebar-logo-mark" style="background:transparent;"><img src="assets/img/logo.png" alt="Logo" style="width:100%;height:100%;object-fit:contain;"></div>
+      <div class="sidebar-logo-text">AI AGENTS <span>CC</span></div>
+    </div>
+
+    <nav id="sidebar-nav">
+      <div class="nav-section-label">Cộng đồng</div>
+
+      <a href="feed.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
+        </svg>
+        Feed
+      </a>
+
+
+      <div class="nav-section-label" style="margin-top:8px;">Học tập</div>
+
+      <a href="challenge.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <path
+            d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z" />
+        </svg>
+        Challenge
+      </a>
+
+      <div class="nav-section-label" style="margin-top:8px;">Khác</div>
+
+      <a href="marketplace.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <path
+            d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z" />
+        </svg>
+        Marketplace
+      </a>
+    </nav>
+
+    <div id="sidebar-user">
+      <div class="user-avatar-wrap">
+        <div class="avatar-placeholder avatar-md" id="sbAvatar" style="background:#7c3aed;">?</div>
+        <div class="user-status-dot"></div>
+      </div>
+      <div class="user-info">
+        <div class="user-name" id="sbName">—</div>
+        <div class="user-level" id="sbLevel">—</div>
+      </div>
+      <a href="index.html" class="icon-btn" title="Đăng xuất" style="margin-left:auto;" onclick="doLogout()">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4" />
+          <polyline points="16 17 21 12 16 7" />
+          <line x1="21" y1="12" x2="9" y2="12" />
+        </svg>
+      </a>
+    </div>
+  </aside>
+
+  <!-- Main area -->
+  <div id="main">
+
+    <!-- Mobile topbar -->
+    <div id="mobile-topbar">
+      <button class="mob-menu-btn" onclick="toggleSidebar()" aria-label="Menu">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <line x1="3" y1="6" x2="21" y2="6" />
+          <line x1="3" y1="12" x2="21" y2="12" />
+          <line x1="3" y1="18" x2="21" y2="18" />
+        </svg>
+      </button>
+      <span style="flex:1;font-size:var(--fs-md);font-weight:600;color:var(--text)" id="mobTitle">Space</span>
+      <div class="mob-topbar-right">
+        <button class="icon-btn" id="themeToggleMob" type="button" aria-label="Chuyển chế độ sáng/tối">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"></svg>
+        </button>
+        <button class="icon-btn" id="notifBellMob" aria-label="Thông báo" style="position:relative;">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+          </svg>
+          <span id="notifBadgeMob" style="display:none;position:absolute;top:2px;right:2px;background:#ef4444;color:#fff;font-size:10px;font-weight:700;border-radius:99px;min-width:16px;height:16px;padding:0 4px;line-height:16px;text-align:center;">0</span>
+        </button>
+        <div id="topbarAvatarMob" style="width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;background:#7c3aed;flex-shrink:0;"></div>
+      </div>
+</div>
+
+    <!-- Desktop topbar -->
+    <nav id="subnav-bar" class="subnav-bar" aria-label="Điều hướng nhanh">
+      <a href="feed.html" class="subnav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        Feed
+      </a>
+      <a href="spaces.html" class="subnav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></svg>
+        Spaces
+      </a>
+      <a href="courses.html" class="subnav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/></svg>
+        Courses
+      </a>
+      <a href="members.html" class="subnav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+        Members
+      </a>
+      <a href="leaderboard.html" class="subnav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/></svg>
+        Leaderboard
+      </a>
+        <a href="calendar.html" class="subnav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          Calendar
+        </a>
+        <a href="about.html" class="subnav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+          About
+        </a>
+      <div class="topbar-right">
+        <button class="icon-btn" id="themeToggle" type="button" aria-label="Chuyển chế độ sáng/tối">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"></svg>
+        </button>
+        <div style="position:relative;">
+          <button class="icon-btn" id="notifBell" aria-label="Thông báo" style="position:relative;">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+            </svg>
+            <span id="notifBadge" style="display:none;position:absolute;top:2px;right:2px;background:#ef4444;color:#fff;font-size:10px;font-weight:700;border-radius:99px;min-width:16px;height:16px;padding:0 4px;line-height:16px;text-align:center;">0</span>
+          </button>
+          <div id="notifDropdown" style="display:none;"></div>
+        </div>
+        <a href="#" class="icon-btn" aria-label="Tin nhắn">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path
+              d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+          </svg>
+        </a>
+        <div class="topbar-search">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <circle cx="11" cy="11" r="8" />
+            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+          </svg>
+          <input type="text" id="globalSearchInput" placeholder="Tìm kiếm..." autocomplete="off">
+          <div id="globalSearchResults" class="gsr-panel"></div>
+        </div>
+        <div id="topbarAvatar"
+          style="width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;background:#7c3aed;cursor:pointer;flex-shrink:0;">
+        </div>
+      </div>
+    </nav>
+
+    <div id="topbar">
+      <div class="topbar-title">
+        <span id="topbarIcon" style="font-size:16px;">💬</span>
+        <span id="topbarName">Space</span>
+      </div>
+    </div>
+
+    <div id="content-row">
+
+      <!-- Feed -->
+      <main id="feed">
+
+        <!-- Space header -->
+        <div class="space-header-card" id="spaceHeaderCard" style="display:none;">
+          <div class="space-header-icon" id="spaceHeaderIcon">💬</div>
+          <div>
+            <div class="space-header-name">
+              <span id="spaceHeaderName">—</span>
+              <span class="space-visibility-badge" id="spaceHeaderVisBadge"></span>
+            </div>
+            <div class="space-header-desc" id="spaceHeaderDesc"></div>
+          </div>
+        </div>
+
+        <!-- Locked panel (private/secret, not yet an approved member) -->
+        <div class="composer-card" id="spaceLockedPanel" style="display:none;text-align:center;padding:36px 20px;">
+          <div style="font-size:32px;margin-bottom:10px;">🔒</div>
+          <div style="font-weight:700;color:var(--text);margin-bottom:6px;" id="spaceLockedTitle">Space này bị khoá</div>
+          <div style="font-size:var(--fs-sm);color:var(--text-muted);margin-bottom:16px;" id="spaceLockedDesc">Bạn cần được duyệt để xem nội dung.</div>
+          <button class="btn btn-primary btn-sm" id="spaceLockedJoinBtn" onclick="requestJoinSpace()" style="display:none;">Yêu cầu tham gia</button>
+        </div>
+
+        <div id="spaceContentArea">
+        <!-- Post composer -->
+        <div class="composer-card">
+          <div class="composer-top">
+            <div class="composer-avatar" id="composerAvatar"></div>
+            <input type="text" id="composerTitle" class="composer-title-input" placeholder="Tiêu đề (tuỳ chọn)">
+          </div>
+          <textarea id="composerContent" class="composer-textarea" rows="2" placeholder="Bạn đang nghĩ gì?"></textarea>
+          <div id="composerAttachWrap" style="display:none;"></div>
+          <div class="composer-toolbar">
+            <button type="button" class="composer-tool-btn" data-type="image" onclick="toggleAttach('image')" title="Ảnh">🖼️</button>
+            <button type="button" class="composer-tool-btn" data-type="video" onclick="toggleAttach('video')" title="Video">🎬</button>
+            <button type="button" class="composer-tool-btn" data-type="doc" onclick="toggleAttach('doc')" title="Tài liệu">📄</button>
+            <button type="button" class="composer-tool-btn" data-type="gif" onclick="toggleAttach('gif')" title="GIF">🎞️</button>
+            <button type="button" class="composer-tool-btn" data-type="poll" onclick="toggleAttach('poll')" title="Bình chọn">📊</button>
+            <div class="composer-emoji-wrap">
+              <button type="button" class="composer-tool-btn" onclick="toggleEmojiPicker(event)" title="Emoji">😀</button>
+              <div class="emoji-picker" id="emojiPicker"></div>
+            </div>
+          </div>
+          <div class="composer-actions">
+            <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;min-width:0;max-width:100%;">
+              <select id="composerTopic" class="composer-pillar-select">
+                <option value="">Chọn Topic *</option>
+              </select>
+              <select id="composerPillar" class="composer-pillar-select">
+                <option value="">Không thuộc trụ cột</option>
+              </select>
+            </div>
+            <button class="btn btn-primary btn-sm" id="composerSubmitBtn" onclick="submitPost()">Đăng bài</button>
+          </div>
+        </div>
+
+        <!-- Tabs + filter -->
+        <div class="feed-filters">
+          <div class="tab-nav" style="margin-bottom:0;border:0;flex:1;min-width:0;">
+            <button class="tab-item active" data-tab="latest">Mới nhất</button>
+            <button class="tab-item" data-tab="popular">🔥 Phổ biến</button>
+          </div>
+
+          <div class="pillar-dropdown">
+            <button class="tab-item" id="pillarBtn" onclick="togglePillarMenu()"
+              style="display:flex;align-items:center;gap:4px;">
+              Trụ cột
+              <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+            <div class="pillar-menu" id="pillarMenu"></div>
+          </div>
+        </div>
+
+        <!-- Post list — rendered by JS -->
+        <div class="post-list" id="postList">
+          <div style="text-align:center;padding:40px 0;color:var(--text-muted)">
+            <div class="spinner" style="display:inline-block;margin-bottom:8px"></div>
+            <div style="font-size:var(--fs-sm)">Đang tải bài đăng...</div>
+          </div>
+        </div>
+        </div>
+      </main>
+
+      <!-- Right panel -->
+      <aside id="right-panel">
+
+        <!-- Courses attached to this Space (or its Group) — rendered by JS -->
+        <div class="rp-card" id="spaceCoursesCard" style="display:none;"></div>
+
+        <!-- Profile card — rendered by JS -->
+        <div class="rp-card" id="profileCard">
+          <div style="text-align:center;padding:16px 0;color:var(--text-muted);font-size:var(--fs-sm)">Đang tải...
+          </div>
+        </div>
+
+      </aside>
+    </div>
+  </div>
+</div>
+
+<!-- Mobile overlay + sidebar -->
+<div id="mob-overlay" onclick="closeSidebar()"></div>
+<div id="mob-sidebar">
+  <div
+    style="padding:14px 16px;border-bottom:1px solid var(--border);font-size:var(--fs-md);font-weight:700;color:var(--text);display:flex;align-items:center;gap:8px;">
+    <div
+      style="width:28px;height:28px;background:var(--color-primary);border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+      <svg width="16" height="16" fill="none" viewBox="0 0 20 20">
+        <circle cx="10" cy="10" r="3" fill="#fff" />
+        <path d="M10 3v2M10 15v2M3 10h2M15 10h2" stroke="#fff" stroke-width="2" stroke-linecap="round" />
+      </svg>
+    </div>
+    <span class="mob-brand-name">AI AGENTS CC</span>
+  </div>
+  <nav style="flex:1;overflow-y:auto;padding:8px;">
+    <div class="nav-section-label">Cộng đồng</div>
+    <a href="feed.html" class="nav-item">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
+      </svg>
+      Feed
+    </a>
+    <div class="nav-section-label">Học tập</div>
+    <a href="challenge.html" class="nav-item">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <path
+          d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z" />
+      </svg>
+      Challenge
+    </a>
+    <div class="nav-section-label">Khác</div>
+    <a href="marketplace.html" class="nav-item">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z"/>
+      </svg>
+      Marketplace
+    </a>
+  </nav>
+  <div id="mob-sidebar-user" style="background:var(--bg-app);">
+    <div class="user-avatar-wrap">
+      <div class="avatar-placeholder avatar-md" id="sbAvatarMob"
+        style="background:#7c3aed;width:32px;height:32px;font-size:12px;font-weight:700;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;">
+        ?</div>
+    </div>
+    <div class="user-info">
+      <div class="user-name" id="sbNameMob">—</div>
+      <div class="user-level" id="sbLevelMob">—</div>
+    </div>
+  </div>
+</div>
+
+<!-- Mobile bottom nav -->
+  <!-- Mobile main menu (full site navigation) -->
+  <div id="mob-mainmenu-overlay" onclick="closeMainMenu()"></div>
+  <div id="mob-mainmenu">
+    <div style="padding:14px 16px;border-bottom:1px solid var(--border);font-size:var(--fs-md);font-weight:700;color:var(--text);display:flex;align-items:center;gap:8px;">
+      <div style="width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;"><img src="assets/img/logo.png" alt="Logo" style="width:100%;height:100%;object-fit:contain;"></div>
+      Menu chính
+    </div>
+    <nav style="flex:1;overflow-y:auto;padding:8px;">
+      <a href="feed.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        Feed
+      </a>
+      <a href="spaces.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></svg>
+        Spaces
+      </a>
+      <a href="courses.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/></svg>
+        Courses
+      </a>
+      <a href="members.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+        Members
+      </a>
+      <a href="leaderboard.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/></svg>
+        Leaderboard
+      </a>
+      <a href="calendar.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        Calendar
+      </a>
+      <a href="about.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+        About
+      </a>
+    </nav>
+  </div>
+
+<nav id="mobile-nav">
+  <a href="feed.html" class="mob-nav-btn">
+    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+      <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
+    </svg>
+    Feed
+  </a>
+  <a href="spaces.html" class="mob-nav-btn active">
+    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></svg>
+    Spaces
+  </a>
+  <a href="courses.html" class="mob-nav-btn">
+    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/></svg>
+    Courses
+  </a>
+  <a href="members.html" class="mob-nav-btn">
+    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+      <path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>
+    </svg>
+    Members
+  </a>
+  <button class="mob-nav-btn" onclick="toggleMainMenu()">
+    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+      <line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/>
+    </svg>
+    Menu
+  </button>
+</nav>
+
+<script src="assets/js/app.js?v=28"></script>
+<script>
+  const API = '/api';
+  const SPACE_ID = new URLSearchParams(location.search).get('id');
+  if (!SPACE_ID) window.location.href = 'feed.html';
+
+  let PILLARS = {};
+  let PILLARS_LIST = [];
+  const AV_COLORS = ['#0ea5e9', '#8b5cf6', '#10b981', '#f59e0b', '#ec4899', '#3b82f6', '#ef4444', '#14b8a6'];
+  const LEVELS = [
+    { level: 1, name: 'Khởi động', xpMin: 0, xpMax: 45 }, { level: 2, name: 'Học viên', xpMin: 45, xpMax: 120 },
+    { level: 3, name: 'Thực hành', xpMin: 120, xpMax: 250 }, { level: 4, name: 'Nâng cao', xpMin: 250, xpMax: 450 },
+    { level: 5, name: 'Chuyên gia', xpMin: 450, xpMax: 700 }, { level: 6, name: 'Bậc thầy', xpMin: 700, xpMax: 1000 },
+    { level: 7, name: 'Huyền thoại', xpMin: 1000, xpMax: 1500 }, { level: 8, name: 'Tiên tri', xpMin: 1500, xpMax: 2200 },
+    { level: 9, name: 'Thần thánh', xpMin: 2200, xpMax: 9999 },
+  ];
+  function getLevelDef(xp) { for (let i = LEVELS.length - 1; i >= 0; i--) if (xp >= LEVELS[i].xpMin) return LEVELS[i]; return LEVELS[0]; }
+
+  let currentUser = null;
+  let currentSpace = null;
+  let activePillar = '';
+  let activeSort = '';
+
+  // ── Auth ─────────────────────────────────────────────────────
+  function doLogout() {
+    localStorage.removeItem('currentUser');
+    window.location.href = 'index.html';
+  }
+
+  function initUser() {
+    const raw = localStorage.getItem('currentUser');
+    if (!raw) { window.location.href = 'index.html'; return; }
+    currentUser = JSON.parse(raw);
+    const initials = (currentUser.first_name[0] + (currentUser.last_name ? currentUser.last_name[0] : '')).toUpperCase();
+    const color = AV_COLORS[currentUser.id % AV_COLORS.length];
+    document.getElementById('sbAvatar').textContent = initials;
+    document.getElementById('sbAvatar').style.background = color;
+    document.getElementById('sbName').textContent = currentUser.first_name + ' ' + currentUser.last_name;
+    const lv = getLevelDef(currentUser.xp || 0);
+    document.getElementById('sbLevel').textContent = lv.name + ' · Lv.' + lv.level;
+    const sbAvatarMob = document.getElementById('sbAvatarMob');
+    if (sbAvatarMob) { sbAvatarMob.textContent = initials; sbAvatarMob.style.background = color; }
+    const sbNameMob = document.getElementById('sbNameMob');
+    if (sbNameMob) sbNameMob.textContent = currentUser.first_name + ' ' + currentUser.last_name;
+    const sbLevelMob = document.getElementById('sbLevelMob');
+    if (sbLevelMob) sbLevelMob.textContent = lv.name + ' · Lv.' + lv.level;
+    const tbAv = document.getElementById('topbarAvatar');
+    if (tbAv) {
+      tbAv.textContent = initials;
+      tbAv.style.background = color;
+      tbAv.onclick = () => window.location.href = `profile.html?id=${currentUser.id}`;
+    }
+    const sbUserWrap = document.querySelector('#sidebar-user .user-avatar-wrap');
+    if (sbUserWrap) {
+      sbUserWrap.style.cursor = 'pointer';
+      sbUserWrap.onclick = () => window.location.href = `profile.html?id=${currentUser.id}`;
+    }
+    const sbUserInfo = document.querySelector('#sidebar-user .user-info');
+    if (sbUserInfo) {
+      sbUserInfo.style.cursor = 'pointer';
+      sbUserInfo.onclick = () => window.location.href = `profile.html?id=${currentUser.id}`;
+    }
+
+    const cAvatar = document.getElementById('composerAvatar');
+    if (cAvatar) { cAvatar.textContent = initials; cAvatar.style.background = color; }
+  }
+
+  // Sessions cached before the admin-role field existed (or after a role change) can hold a
+  // stale is_admin — refresh it from the server so admin-only UI (pin toggle) shows correctly.
+  async function refreshAdminFlag() {
+    if (!currentUser) return;
+    try {
+      const u = await fetch(`${API}/users/${currentUser.id}?requester_id=${currentUser.id}`).then(r => r.json());
+      if (typeof u.is_admin === 'boolean' && u.is_admin !== currentUser.is_admin) {
+        currentUser.is_admin = u.is_admin;
+        localStorage.setItem('currentUser', JSON.stringify(currentUser));
+      }
+    } catch (e) {}
+  }
+
+  // ── Space header ───────────────────────────────────────────────
+  async function loadSpaceInfo() {
+    try {
+      const uid = currentUser ? currentUser.id : '';
+      const res = await fetch(`${API}/spaces/${SPACE_ID}?user_id=${uid}`);
+      if (!res.ok) { window.location.href = 'feed.html'; return; }
+      const data = await res.json();
+      const space = data.space;
+      if (!space) { window.location.href = 'feed.html'; return; }
+      currentSpace = { ...space, join_status: data.join_status, content_locked: data.content_locked };
+
+      document.title = `${space.name} — AI AGENTS CC`;
+      document.getElementById('mobTitle').textContent = space.name;
+      document.getElementById('topbarIcon').textContent = space.icon || '💬';
+      document.getElementById('topbarName').textContent = space.name;
+      document.getElementById('spaceHeaderIcon').textContent = space.icon || '💬';
+      document.getElementById('spaceHeaderName').textContent = space.name;
+      document.getElementById('spaceHeaderDesc').textContent = space.description || '';
+      const badge = document.getElementById('spaceHeaderVisBadge');
+      if (space.visibility === 'secret') {
+        badge.textContent = '🕵️ Secret';
+        badge.className = 'space-visibility-badge private';
+      } else if (space.visibility === 'private') {
+        badge.textContent = '🔒 Private';
+        badge.className = 'space-visibility-badge private';
+      } else {
+        badge.textContent = '🌐 Public';
+        badge.className = 'space-visibility-badge public';
+      }
+      document.getElementById('composerContent').placeholder = `Đăng bài trong ${space.name}...`;
+      document.getElementById('spaceHeaderCard').style.display = 'flex';
+
+      if (data.content_locked) {
+        document.getElementById('spaceContentArea').style.display = 'none';
+        document.getElementById('spaceLockedPanel').style.display = 'block';
+        const joinBtn = document.getElementById('spaceLockedJoinBtn');
+        if (data.join_status === 'pending') {
+          document.getElementById('spaceLockedDesc').textContent = 'Yêu cầu tham gia của bạn đang chờ Admin duyệt.';
+        } else if (space.visibility === 'private' && space.allow_join_requests) {
+          document.getElementById('spaceLockedDesc').textContent = 'Bạn cần được duyệt để xem nội dung của Space này.';
+          joinBtn.style.display = 'inline-flex';
+        } else {
+          document.getElementById('spaceLockedDesc').textContent = 'Bạn cần được mời để tham gia Space này.';
+        }
+      } else {
+        document.getElementById('spaceContentArea').style.display = '';
+        document.getElementById('spaceLockedPanel').style.display = 'none';
+        loadFeed();
+        loadSpaceCourses();
+      }
+    } catch (e) {
+      window.location.href = 'feed.html';
+    }
+  }
+
+  // ── Courses attached to this Space (or its Group) ───────────────
+  // Admin can attach a course to a single Space (only that Space's members
+  // see it here) or to a whole Space Group (every Space in that group shows
+  // it) — see admin.html's "Sửa khóa học" modal.
+  async function loadSpaceCourses() {
+    const card = document.getElementById('spaceCoursesCard');
+    if (!currentSpace) return;
+    try {
+      const uid = currentUser ? `?user_id=${currentUser.id}` : '';
+      const { courses } = await fetch(`${API}/courses${uid}`).then(r => r.json());
+      const mine = (courses || []).filter(c =>
+        c.space_id === currentSpace.id ||
+        (c.group_id && currentSpace.group_id && c.group_id === currentSpace.group_id)
+      );
+      if (!mine.length) { card.style.display = 'none'; return; }
+
+      card.style.display = 'block';
+      card.innerHTML = `
+        <p class="widget-title">📚 Khoá học</p>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          ${mine.map(c => `
+        <a href="course-view.html?id=${c.id}" style="display:flex;align-items:center;gap:10px;text-decoration:none;color:inherit;padding:6px 0;">
+          <div style="width:34px;height:34px;border-radius:8px;background:${c.cover_color || 'var(--color-primary)'};color:#fff;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;">🎓</div>
+          <div style="min-width:0;">
+            <div style="font-size:var(--fs-sm);font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escHtml(c.title)}</div>
+            <div style="font-size:var(--fs-xs);color:var(--text-muted);">${c.lesson_count} bài học</div>
+          </div>
+        </a>`).join('')}
+        </div>`;
+    } catch (e) { card.style.display = 'none'; }
+  }
+
+  async function requestJoinSpace() {
+    const btn = document.getElementById('spaceLockedJoinBtn');
+    btn.disabled = true;
+    btn.textContent = 'Đang gửi...';
+    try {
+      const res = await fetch(`${API}/spaces/${SPACE_ID}/join`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ user_id: currentUser.id }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Không thể gửi yêu cầu.');
+      await loadSpaceInfo();
+    } catch (e) {
+      alert(e.message || 'Không thể gửi yêu cầu.');
+      btn.disabled = false;
+      btn.textContent = 'Yêu cầu tham gia';
+    }
+  }
+
+  // ── Pillars (dynamic — admin-managed) ─────────────────────────────
+  async function loadPillars() {
+    try {
+      const { pillars } = await fetch(`${API}/pillars`).then(r => r.json());
+      PILLARS_LIST = pillars || [];
+      PILLARS = {};
+      // Kim/Thủy's seeded colors (#94a3b8/#1f2937) are unreadable on a dark
+      // card — lighten them in dark mode, matching base.css's --pillar-kim/
+      // -thuy dark overrides.
+      const isDarkTheme = document.documentElement.getAttribute('data-theme') === 'dark';
+      if (isDarkTheme) {
+        PILLARS_LIST.forEach(p => {
+          if (p.key === 'kim') p.color = '#cbd5e1';
+          if (p.key === 'thuy') p.color = '#64748b';
+        });
+      }
+      PILLARS_LIST.forEach(p => { PILLARS[p.key] = p; });
+      const sel = document.getElementById('composerPillar');
+      if (sel) {
+        PILLARS_LIST.forEach(p => {
+          const opt = document.createElement('option');
+          opt.value = p.key;
+          opt.textContent = `${p.icon || '🔥'} ${p.label}`;
+          sel.appendChild(opt);
+        });
+      }
+      const menu = document.getElementById('pillarMenu');
+      if (menu) {
+        menu.innerHTML = PILLARS_LIST.map(p =>
+          `<button class="pillar-option" onclick="setPillar('${p.key}',this)">${p.icon || '🔥'} ${escHtml(p.label)}</button>`
+        ).join('');
+      }
+    } catch (e) {}
+  }
+
+  // ── Post composer ───────────────────────────────────────────────
+  async function loadComposerTopics() {
+    const topicSel = document.getElementById('composerTopic');
+    if (!topicSel) return;
+    try {
+      const { topics } = await fetch(`${API}/topics?space_id=${SPACE_ID}`).then(r => r.json());
+      if (!topics || !topics.length) {
+        topicSel.innerHTML = '<option value="">Space này chưa có Topic</option>';
+        return;
+      }
+      topics.forEach(t => {
+        const opt = document.createElement('option');
+        opt.value = t.id;
+        opt.textContent = `${t.icon || '🏷️'} ${t.name}`;
+        topicSel.appendChild(opt);
+      });
+    } catch (e) {}
+  }
+
+  // ── Composer toolbar: attachments (image/video/doc/gif/poll) ─────
+  let activeAttachType = null;
+
+  function toggleAttach(type) {
+    activeAttachType = activeAttachType === type ? null : type;
+    renderAttachBox();
+  }
+  function clearAttach() {
+    activeAttachType = null;
+    renderAttachBox();
+  }
+  function renderAttachBox() {
+    const wrap = document.getElementById('composerAttachWrap');
+    document.querySelectorAll('.composer-tool-btn[data-type]').forEach(b => b.classList.toggle('active', b.dataset.type === activeAttachType));
+    if (!activeAttachType) { wrap.style.display = 'none'; wrap.innerHTML = ''; return; }
+    wrap.style.display = 'block';
+    if (activeAttachType === 'poll') {
+      wrap.innerHTML = `
+    <div class="composer-poll-box">
+      <input type="text" id="composerPollQuestion" placeholder="Đặt câu hỏi cho bình chọn...">
+      <div id="composerPollOptions">
+        <div class="composer-poll-opt-row"><input type="text" class="poll-opt-input" placeholder="Lựa chọn 1"></div>
+        <div class="composer-poll-opt-row"><input type="text" class="poll-opt-input" placeholder="Lựa chọn 2"></div>
+      </div>
+      <div style="display:flex;gap:14px;">
+        <button type="button" class="composer-poll-add" onclick="addPollOption()">+ Thêm lựa chọn</button>
+        <button type="button" class="composer-attach-remove-text" onclick="clearAttach()">Huỷ bình chọn</button>
+      </div>
+    </div>`;
+    } else {
+      const meta = {
+        image: ['🖼️', 'Dán link ảnh hoặc bấm Tải ảnh lên'],
+        video: ['🎬', 'Dán link video (YouTube, Vimeo...)'],
+        doc:   ['📄', 'Dán link tài liệu (Google Docs, PDF...)'],
+        gif:   ['🎞️', 'Dán link GIF (https://...)'],
+      }[activeAttachType];
+      wrap.innerHTML = `
+    <div class="composer-attach-box">
+      <span class="composer-attach-icon">${meta[0]}</span>
+      <input type="text" id="composerAttachUrl" class="composer-attach-input" placeholder="${meta[1]}">
+      <button type="button" class="composer-attach-remove" onclick="clearAttach()">×</button>
+    </div>`;
+      if (activeAttachType === 'image') dhSetupComposerImageUpload(currentUser?.id);
+    }
+  }
+  function addPollOption() {
+    const wrap = document.getElementById('composerPollOptions');
+    if (!wrap || wrap.children.length >= 6) return;
+    const row = document.createElement('div');
+    row.className = 'composer-poll-opt-row';
+    row.innerHTML = `<input type="text" class="poll-opt-input" placeholder="Lựa chọn ${wrap.children.length + 1}">`;
+    wrap.appendChild(row);
+  }
+
+  // ── Composer toolbar: emoji picker ────────────────────────────────
+  const EMOJI_LIST = ['😀','😂','😍','🤔','👍','🔥','🎉','💡','🚀','❤️','😢','😅','🙌','👏','💪','🤝','✅','⚡','🎯','📌','😎','🥳','🤯','😴','👀','🙏','💯','⭐','✨','🤖','😁','😊'];
+  function toggleEmojiPicker(e) {
+    e?.stopPropagation();
+    const el = document.getElementById('emojiPicker');
+    const open = el.classList.toggle('open');
+    if (open && !el.dataset.built) {
+      el.innerHTML = EMOJI_LIST.map(em => `<button type="button" onclick="insertEmoji('${em}')">${em}</button>`).join('');
+      el.dataset.built = '1';
+    }
+  }
+  function insertEmoji(em) {
+    const ta = document.getElementById('composerContent');
+    const start = ta.selectionStart ?? ta.value.length;
+    const end = ta.selectionEnd ?? ta.value.length;
+    ta.value = ta.value.slice(0, start) + em + ta.value.slice(end);
+    ta.focus();
+    ta.selectionStart = ta.selectionEnd = start + em.length;
+    document.getElementById('emojiPicker').classList.remove('open');
+  }
+  document.addEventListener('click', e => {
+    const wrap = document.querySelector('.composer-emoji-wrap');
+    if (wrap && !wrap.contains(e.target)) document.getElementById('emojiPicker')?.classList.remove('open');
+  });
+
+  async function submitPost() {
+    const contentEl = document.getElementById('composerContent');
+    const titleEl   = document.getElementById('composerTitle');
+    const pillarEl  = document.getElementById('composerPillar');
+    const topicEl   = document.getElementById('composerTopic');
+    const btn       = document.getElementById('composerSubmitBtn');
+    const content   = contentEl.value.trim();
+    if (!content) { contentEl.focus(); return; }
+    if (!topicEl.value) { alert('Vui lòng chọn Topic cho bài đăng.'); topicEl.focus(); return; }
+
+    const payload = {
+      user_id: currentUser.id,
+      title: titleEl.value.trim(),
+      content,
+      pillar: pillarEl.value || null,
+      space_id: SPACE_ID,
+      topic_id: topicEl.value,
+    };
+    if (activeAttachType === 'poll') {
+      const question = document.getElementById('composerPollQuestion')?.value.trim();
+      const options = [...document.querySelectorAll('.poll-opt-input')].map(i => i.value.trim()).filter(Boolean);
+      if (question && options.length >= 2) {
+        payload.poll_question = question;
+        payload.poll_options = options;
+      }
+    } else if (activeAttachType) {
+      const url = document.getElementById('composerAttachUrl')?.value.trim();
+      if (url) payload[`${activeAttachType}_url`] = url;
+    }
+
+    btn.disabled = true;
+    btn.textContent = 'Đang đăng...';
+    try {
+      const res = await fetch(`${API}/posts`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error || 'Không đăng được bài. Vui lòng thử lại.');
+      contentEl.value = '';
+      titleEl.value = '';
+      pillarEl.value = '';
+      clearAttach();
+      contentEl.style.height = '';
+      await loadFeed();
+    } catch (e) {
+      alert(e.message || 'Không đăng được bài. Vui lòng thử lại.');
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Đăng bài';
+    }
+  }
+
+  document.getElementById('composerContent')?.addEventListener('input', function () {
+    this.style.height = 'auto';
+    this.style.height = this.scrollHeight + 'px';
+  });
+
+  // ── Feed (scoped to this space) ─────────────────────────────────
+  // Tải 20 bài mỗi lần; cuộn tới cuối danh sách (hoặc bấm "Xem thêm") để tải tiếp bài cũ hơn
+  const FEED_PAGE = 20;
+  let feedOffset = 0, feedDone = false, feedBusy = false, feedErr = false, feedSeq = 0;
+  function feedPageUrl(offset) {
+    let url = `${API}/feed?limit=${FEED_PAGE}&offset=${offset}&space_id=${SPACE_ID}&user_id=${currentUser ? currentUser.id : ''}`;
+    if (activePillar) url += `&pillar=${activePillar}`;
+    if (activeSort) url += `&sort=${activeSort}`;
+    return url;
+  }
+  async function loadFeed() {
+    const el = document.getElementById('postList');
+    const seq = ++feedSeq;
+    feedOffset = 0; feedDone = false; feedBusy = true; feedErr = false;
+    feedMoreRender();
+    el.innerHTML = '<div style="text-align:center;padding:40px 0;color:var(--text-muted);font-size:var(--fs-sm)">Đang tải...</div>';
+    try {
+      const { posts } = await fetch(feedPageUrl(0)).then(r => r.json());
+      if (seq !== feedSeq) return;
+      if (!posts.length) {
+        el.innerHTML = '<div style="text-align:center;padding:48px 0;color:var(--text-muted)"><div style="font-size:32px;margin-bottom:8px">📭</div><div style="font-size:var(--fs-sm)">Chưa có bài đăng nào trong Space này.</div></div>';
+        feedDone = true;
+        return;
+      }
+      el.innerHTML = posts.map(p => renderPost(p)).join('');
+      feedOffset = posts.length;
+      feedDone = posts.length < FEED_PAGE;
+    } catch (e) {
+      if (seq !== feedSeq) return;
+      el.innerHTML = '<div style="text-align:center;padding:40px 0;color:#ef4444;font-size:var(--fs-sm)">⚠️ Không tải được dữ liệu.<br>Vui lòng kiểm tra kết nối mạng rồi tải lại trang.</div>';
+      feedDone = true;
+    } finally {
+      if (seq === feedSeq) { feedBusy = false; feedMoreRender(); }
+    }
+  }
+  async function loadMoreFeed() {
+    if (feedBusy || feedDone) return;
+    const seq = feedSeq;
+    feedBusy = true; feedErr = false;
+    feedMoreRender();
+    try {
+      const { posts } = await fetch(feedPageUrl(feedOffset)).then(r => r.json());
+      if (seq !== feedSeq) return;
+      const el = document.getElementById('postList');
+      // Có bài mới đăng trong lúc xem → các trang sau lệch 1 bài; bỏ bài đã hiện để không trùng
+      const seen = new Set([...el.querySelectorAll('[data-post-id]')].map(a => a.dataset.postId));
+      el.insertAdjacentHTML('beforeend', posts.filter(p => !seen.has(String(p.id))).map(p => renderPost(p)).join(''));
+      feedOffset += posts.length;
+      feedDone = posts.length < FEED_PAGE;
+    } catch (e) {
+      if (seq === feedSeq) feedErr = true;
+    } finally {
+      if (seq === feedSeq) {
+        feedBusy = false;
+        feedMoreRender();
+        // Khung "Xem thêm" vẫn còn trong màn hình (danh sách ngắn) → tải tiếp luôn
+        const box = document.getElementById('feedMore');
+        if (!feedDone && !feedErr && box && box.getBoundingClientRect().top < innerHeight + 600) setTimeout(loadMoreFeed, 50);
+      }
+    }
+  }
+  function feedMoreRender() {
+    const list = document.getElementById('postList');
+    let box = document.getElementById('feedMore');
+    if (!box) {
+      box = document.createElement('div');
+      box.id = 'feedMore';
+      box.style.cssText = 'text-align:center;padding:16px 0 24px;color:var(--text-muted);font-size:var(--fs-sm)';
+      list.after(box);
+      if ('IntersectionObserver' in window)
+        new IntersectionObserver(es => { if (es.some(x => x.isIntersecting)) loadMoreFeed(); }, { rootMargin: '600px 0px' }).observe(box);
+    }
+    const btn = label => '<button type="button" onclick="loadMoreFeed()" style="border:1px solid var(--border);background:var(--bg-card);color:var(--text);border-radius:999px;padding:8px 18px;font:inherit;font-weight:600;cursor:pointer">' + label + '</button>';
+    if (!feedOffset) box.innerHTML = '';
+    else if (feedBusy) box.innerHTML = 'Đang tải thêm bài…';
+    else if (feedErr) box.innerHTML = '⚠️ Không tải được thêm bài. ' + btn('Thử lại');
+    else if (!feedDone) box.innerHTML = btn('Xem thêm bài cũ hơn');
+    else box.innerHTML = feedOffset > FEED_PAGE ? 'Đã hiện hết bài đăng.' : '';
+  }
+
+  function renderPost(p) {
+    const initials = (p.first_name[0] + (p.last_name ? p.last_name[0] : '')).toUpperCase();
+    const color = AV_COLORS[p.author_id % AV_COLORS.length];
+    const name = p.first_name + ' ' + p.last_name;
+    const time = timeAgo(p.created_at);
+    const pl = PILLARS[p.pillar];
+    const pillarBadge = pl
+      ? `<span class="badge badge-pillar" style="background:${pl.color}20;color:${pl.color}">${escHtml(pl.label)}</span>` : '';
+    const pinnedBadge = p.is_pinned
+      ? `<span class="badge" style="background:#fef3c7;color:#92400e">📌 Đã ghim</span>` : '';
+    const pinBtn = (currentUser && currentUser.is_admin)
+      ? `<span class="post-stat pin-toggle-btn" onclick="event.stopPropagation();togglePin(${p.id})" style="cursor:pointer">
+        ${p.is_pinned ? '📌 Bỏ ghim' : '📍 Ghim'}
+      </span>` : '';
+
+    return `
+  <article class="post-card" data-post-id="${p.id}" data-pillar="${p.pillar || ''}" onclick="openPost(${p.id})" tabindex="0" role="button" aria-label="Mở bài đăng">
+    <div class="post-avatar" style="width:40px;height:40px;border-radius:50%;background:${color};display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:#fff;flex-shrink:0;">${initials}</div>
+    <div class="post-body">
+      <div class="post-meta">
+        <span class="post-author">${name}</span>
+        <span class="badge badge-level">Lv.${p.level}</span>
+        <span class="post-time">${time}</span>
+        ${pinnedBadge}
+      </div>
+      ${p.title ? `<h3 class="post-title">${escHtml(p.title)}</h3>` : ''}
+      <p class="post-excerpt">${escHtml(p.content)}</p>
+      ${buildPostMediaHtml(p)}
+      ${buildPollHtml(p)}
+      <div class="post-footer">
+        ${pillarBadge}
+        <span class="post-stat${p.liked ? ' liked' : ''}" onclick="event.stopPropagation();likePost(${p.id},this)" style="cursor:pointer">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
+          <span class="like-count">${p.likes_count}</span>
+        </span>
+        <span class="post-stat">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+          ${p.comments_count}
+        </span>
+        ${pinBtn}
+      </div>
+    </div>
+  </article>`;
+  }
+
+  async function togglePin(id) {
+    if (!currentUser || !currentUser.is_admin) return;
+    try {
+      const res = await fetch(`${API}/posts/${id}/pin`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ user_id: currentUser.id }),
+      });
+      const data = await res.json();
+      if (!res.ok) { alert(data.error || 'Không thể ghim bài viết.'); return; }
+      await loadFeed();
+    } catch (e) {
+      alert('Không thể ghim bài viết. Vui lòng thử lại.');
+    }
+  }
+
+  async function togglePmPin() {
+    if (!currentUser || !currentUser.is_admin || !_pmPostId) return;
+    try {
+      const res = await fetch(`${API}/posts/${_pmPostId}/pin`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ user_id: currentUser.id }),
+      });
+      const data = await res.json();
+      if (!res.ok) { alert(data.error || 'Không thể ghim bài viết.'); return; }
+      const uid = currentUser ? `?user_id=${currentUser.id}` : '';
+      const updated = await fetch(`${API}/posts/${_pmPostId}${uid}`).then(r => r.json());
+      renderPmPost(updated);
+      await loadFeed();
+    } catch (e) {
+      alert('Không thể ghim bài viết. Vui lòng thử lại.');
+    }
+  }
+
+  async function likePost(id, el) {
+    await dhToggleLike(id);
+  }
+
+  // ── Profile card ──────────────────────────────────────────────
+  async function loadProfileCard() {
+    if (!currentUser) return;
+    try {
+      const u = await fetch(`${API}/users/${currentUser.id}`).then(r => r.json());
+      const initials = (u.first_name[0] + (u.last_name ? u.last_name[0] : '')).toUpperCase();
+      const color = AV_COLORS[u.id % AV_COLORS.length];
+      const lv = getLevelDef(u.xp || 0);
+      const xpToNext = lv.xpMax - (u.xp || 0);
+      const xpPct = Math.min(Math.round(((u.xp || 0) - lv.xpMin) / (lv.xpMax - lv.xpMin) * 100), 100);
+      document.getElementById('profileCard').innerHTML = `
+    <a href="profile.html?id=${u.id}" class="profile-user-row" style="text-decoration:none;color:inherit;cursor:pointer;">
+      <div style="width:42px;height:42px;background:${color};border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:#fff;">${initials}</div>
+      <div>
+        <div class="profile-name">${u.first_name} ${u.last_name}</div>
+        <div class="profile-title">🏁 Level ${lv.level}</div>
+      </div>
+    </a>
+    <div class="profile-level-row">
+      <span class="profile-level">Lv.${lv.level}</span>
+      <span class="profile-xp">${u.xp} XP</span>
+    </div>
+    <div class="xp-bar" style="margin-bottom:4px;">
+      <div class="xp-bar-fill" style="width:${xpPct}%"></div>
+    </div>
+    <div class="xp-next">Còn ${Math.max(0, xpToNext)} XP để lên Lv.${lv.level + 1}</div>
+    <div class="stat-row">
+      <div class="stat-item">
+        <div class="stat-value" style="color:var(--color-primary)">${u.post_count}</div>
+        <div class="stat-label">Bài đăng</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value" style="color:var(--accent-purple)">${u.completed_days}</div>
+        <div class="stat-label">🏆 Challenge</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value" style="color:#f59e0b">${u.streak || 0}</div>
+        <div class="stat-label">🔥 Streak</div>
+      </div>
+    </div>`;
+    } catch (e) { }
+  }
+
+  // ── Pillar / Tab filter ───────────────────────────────────────
+  function togglePillarMenu() {
+    document.getElementById('pillarMenu').classList.toggle('open');
+  }
+
+  function setPillar(pillar, btn) {
+    activePillar = (activePillar === pillar) ? '' : pillar;
+    document.getElementById('pillarMenu').classList.remove('open');
+    document.getElementById('pillarBtn').innerHTML =
+      (activePillar ? btn.textContent : 'Trụ cột') +
+      ' <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>';
+    loadFeed();
+  }
+
+  document.querySelectorAll('.tab-item[data-tab]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tab-item[data-tab]').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      activeSort = btn.dataset.tab === 'popular' ? 'popular' : '';
+      loadFeed();
+    });
+  });
+
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('.pillar-dropdown'))
+      document.getElementById('pillarMenu')?.classList.remove('open');
+  });
+
+  // ── Post Modal ────────────────────────────────────────────────
+  let _pmPostId = null;
+  let _pmLiked = false;
+
+  async function openPost(postId) {
+    _pmPostId = postId;
+    _pmLiked = false;
+    const overlay = document.getElementById('postModalOverlay');
+    overlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    document.getElementById('pmBody').innerHTML = '<div style="text-align:center;padding:48px;color:var(--text-muted)">Đang tải...</div>';
+    document.getElementById('pmComments').innerHTML = '';
+    document.getElementById('pmCommentInput').value = '';
+    document.getElementById('pmLikeBtn').classList.remove('liked');
+    try {
+      const uid = currentUser ? `?user_id=${currentUser.id}` : '';
+      const [post, cmts] = await Promise.all([
+        fetch(`${API}/posts/${postId}${uid}`).then(r => r.json()),
+        fetch(`${API}/posts/${postId}/comments`).then(r => r.json()),
+      ]);
+      if (post && post.error) { document.getElementById('pmBody').innerHTML = '<div style="padding:40px;text-align:center;color:var(--text-muted)">🔒 ' + post.error + '</div>'; return; }
+      renderPmPost(post);
+      renderPmComments(cmts.comments || []);
+    } catch (e) {
+      document.getElementById('pmBody').innerHTML = '<div style="padding:40px;text-align:center;color:#ef4444">Không thể tải bài đăng.</div>';
+    }
+  }
+
+  function renderPmPost(p) {
+    const pl = PILLARS[p.pillar] || null;
+    const ini = ((p.first_name || '?')[0] + ((p.last_name || '')[0] || '')).toUpperCase();
+    const col = AV_COLORS[p.author_id % AV_COLORS.length];
+    const isAdmin = currentUser && currentUser.is_admin;
+    const pinPill = p.is_pinned
+      ? (isAdmin
+          ? `<button onclick="togglePmPin()" style="font-size:11px;font-weight:700;padding:3px 10px;border-radius:99px;border:none;background:#fef3c7;color:#92400e;cursor:pointer;font-family:var(--font-body);">📌 Đã ghim (bấm để bỏ)</button>`
+          : `<span style="font-size:11px;font-weight:700;padding:3px 10px;border-radius:99px;background:#fef3c7;color:#92400e">📌 Đã ghim</span>`)
+      : (isAdmin
+          ? `<button onclick="togglePmPin()" style="font-size:11px;font-weight:700;padding:3px 10px;border-radius:99px;border:1px solid var(--border);background:var(--bg-card);color:var(--text-muted);cursor:pointer;font-family:var(--font-body);">📍 Ghim bài viết</button>`
+          : '');
+    document.getElementById('pmHeaderBadges').innerHTML =
+      (pl ? `<span style="font-size:11px;font-weight:700;padding:3px 10px;border-radius:99px;background:${pl.color}20;color:${pl.color}">${pl.label}</span>` : '') +
+      pinPill;
+    pmPostExtras(p); // nút ✏️ Sửa bài (tác giả) + nhãn bài bị ẩn — app.js
+    document.getElementById('pmLikeCount').textContent = p.likes_count || 0;
+    document.getElementById('pmCmtCount').textContent = p.comments_count || 0;
+    document.getElementById('pmBody').innerHTML = `
+  <div class="pm-author-row">
+    <div class="pm-avatar" style="background:${col}">${ini}</div>
+    <div>
+      <div class="pm-author-name">${escHtml(p.first_name)} ${escHtml(p.last_name || '')}</div>
+      <div class="pm-author-meta">Lv.${p.level} · ${timeAgo(p.created_at)}</div>
+    </div>
+  </div>
+  ${p.title ? `<div class="pm-title">${escHtml(p.title)}</div>` : ''}
+  <div class="pm-content">${escHtml(p.content || '')}</div>
+  ${buildPostMediaHtml(p)}
+  ${buildPollHtml(p)}`;
+  }
+
+  function renderPmComments(comments) {
+    const el = document.getElementById('pmComments');
+    if (!comments.length) {
+      el.innerHTML = '<div class="pm-empty-cmt">Chưa có bình luận nào. Hãy là người đầu tiên! 💬</div>';
+      return;
+    }
+    const roots = comments.filter(c => !c.parent_id);
+    const replyMap = {};
+    comments.filter(c => c.parent_id).forEach(c => {
+      (replyMap[c.parent_id] = replyMap[c.parent_id] || []).push(c);
+    });
+    el.innerHTML = roots.map(c => renderPmComment(c, replyMap[c.id] || [])).join('');
+  }
+
+  function renderPmComment(c, replies) {
+    const ini = ((c.first_name || '?')[0] + ((c.last_name || '')[0] || '')).toUpperCase();
+    const col = AV_COLORS[c.author_id % AV_COLORS.length];
+    const repliesHtml = replies.length ? `<div class="pm-replies">${replies.map(r => {
+      const rIni = ((r.first_name || '?')[0] + ((r.last_name || '')[0] || '')).toUpperCase();
+      const rCol = AV_COLORS[r.author_id % AV_COLORS.length];
+      return `<div class="pm-cmt-item">
+      <div class="pm-cmt-avatar pm-reply-avatar" style="background:${rCol};width:26px;height:26px;font-size:10px;">${rIni}</div>
+      <div class="pm-cmt-body">
+        <div class="pm-cmt-header">
+          <span class="pm-cmt-name">${escHtml(r.first_name)} ${escHtml(r.last_name || '')}</span>
+          <span class="pm-cmt-time">${timeAgo(r.created_at)}</span>
+        </div>
+        <div class="pm-cmt-text">${escHtml(r.content)}</div>
+      </div>
+    </div>`;
+    }).join('')
+      }</div>` : '';
+    return `<div class="pm-cmt-item" style="border-bottom:${repliesHtml ? 'none' : ''}">
+  <div class="pm-cmt-avatar" style="background:${col}">${ini}</div>
+  <div class="pm-cmt-body">
+    <div class="pm-cmt-header">
+      <span class="pm-cmt-name">${escHtml(c.first_name)} ${escHtml(c.last_name || '')}</span>
+      <span class="pm-cmt-time">${timeAgo(c.created_at)}</span>
+    </div>
+    <div class="pm-cmt-text">${escHtml(c.content)}</div>
+    <button class="pm-reply-btn" onclick="pmToggleReply(${c.id})">
+      <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"/></svg>
+      Trả lời
+    </button>
+    <div class="pm-reply-form" id="pm-rf-${c.id}">
+      <textarea class="pm-reply-input" id="pm-ri-${c.id}"
+        placeholder="Trả lời ${escHtml(c.first_name)}..." rows="1"
+        onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();pmSubmitReply(${c.id});}"></textarea>
+      <button class="pm-reply-submit" onclick="pmSubmitReply(${c.id})">Gửi</button>
+      <button class="pm-reply-cancel" onclick="pmToggleReply(${c.id})">Hủy</button>
+    </div>
+  </div>
+</div>${repliesHtml}`;
+  }
+
+  function pmToggleReply(commentId) {
+    document.querySelectorAll('.pm-reply-form.open').forEach(f => {
+      if (f.id !== `pm-rf-${commentId}`) f.classList.remove('open');
+    });
+    const form = document.getElementById(`pm-rf-${commentId}`);
+    if (!form) return;
+    form.classList.toggle('open');
+    if (form.classList.contains('open')) document.getElementById(`pm-ri-${commentId}`)?.focus();
+  }
+
+  async function pmSubmitReply(parentId) {
+    const input = document.getElementById(`pm-ri-${parentId}`);
+    const text = input?.value.trim();
+    if (!text || !currentUser) return;
+    try {
+      await fetch(`${API}/posts/${_pmPostId}/comments`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ user_id: currentUser.id, content: text, parent_id: parentId }),
+      });
+      input.value = '';
+      document.getElementById(`pm-rf-${parentId}`).classList.remove('open');
+      const { comments } = await fetch(`${API}/posts/${_pmPostId}/comments`).then(r => r.json());
+      renderPmComments(comments);
+      const el = document.getElementById('pmCmtCount');
+      el.textContent = Number(el.textContent) + 1;
+    } catch (e) { }
+  }
+
+  async function pmLike() {
+    await dhToggleLike(_pmPostId);   // app.js — thích / bỏ thích, trái tim đỏ
+  }
+
+  async function pmSubmitComment() {
+    const input = document.getElementById('pmCommentInput');
+    const text = input.value.trim();
+    if (!text || !currentUser) return;
+    const btn = document.getElementById('pmCommentSubmit');
+    btn.disabled = true;
+    try {
+      await fetch(`${API}/posts/${_pmPostId}/comments`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ user_id: currentUser.id, content: text }),
+      });
+      input.value = '';
+      const { comments } = await fetch(`${API}/posts/${_pmPostId}/comments`).then(r => r.json());
+      renderPmComments(comments);
+      const el = document.getElementById('pmCmtCount');
+      el.textContent = Number(el.textContent) + 1;
+    } catch (e) { }
+    btn.disabled = false;
+  }
+
+  function closePostModal() {
+    document.getElementById('postModalOverlay').classList.remove('open');
+    document.body.style.overflow = '';
+    _pmPostId = null;
+  }
+
+  function escHtml(s) { return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+  function escAttr(s) { return String(s || '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+
+  // ── Post media (image / video / doc / gif) + poll rendering ────
+  function youtubeEmbedUrl(url) {
+    // YouTube (kể cả /live/), Vimeo, Google Drive → link nhúng (app.js videoEmbedUrl)
+    return videoEmbedUrl(url);
+  }
+  function vimeoEmbedUrl(url) {
+    const m = String(url).match(/vimeo\.com\/(\d+)/);
+    return m ? `https://player.vimeo.com/video/${m[1]}` : null;
+  }
+  function buildPostMediaHtml(p) {
+    let html = '';
+    if (p.image_url) html += `<img src="${escAttr(p.image_url)}" class="post-media-img" loading="lazy" onerror="this.remove()">`;
+    if (p.gif_url) html += `<img src="${escAttr(p.gif_url)}" class="post-media-img" loading="lazy" onerror="this.remove()">`;
+    if (p.video_url) {
+      const embed = youtubeEmbedUrl(p.video_url) || vimeoEmbedUrl(p.video_url);
+      html += embed
+        ? `<div class="post-media-video"><iframe src="${escAttr(embed)}" allowfullscreen loading="lazy"></iframe></div>`
+        : `<a href="${escAttr(p.video_url)}" target="_blank" rel="noopener" class="post-media-link" onclick="event.stopPropagation()">🎬 Xem video ↗</a>`;
+    }
+    if (p.doc_url) html += `<a href="${escAttr(p.doc_url)}" target="_blank" rel="noopener" class="post-media-link" onclick="event.stopPropagation()">📄 Mở tài liệu ↗</a>`;
+    return html;
+  }
+  function buildPollHtml(p) {
+    if (!p.poll_question || !Array.isArray(p.poll_options) || !p.poll_options.length) return '';
+    const total = p.poll_total || 0;
+    const voted = p.my_vote !== null && p.my_vote !== undefined;
+    const opts = p.poll_options.map((opt, i) => {
+      const count = (p.poll_tallies && p.poll_tallies[i]) || 0;
+      const pct = total ? Math.round(count / total * 100) : 0;
+      const isMine = p.my_vote === i;
+      if (voted) {
+        return `<div class="poll-opt poll-opt-voted ${isMine ? 'poll-opt-mine' : ''}" onclick="event.stopPropagation();votePoll(${p.id},${i},this)">
+      <div class="poll-opt-bar" style="width:${pct}%"></div>
+      <div class="poll-opt-row"><span>${isMine ? '✓ ' : ''}${escHtml(opt)}</span><span>${pct}%</span></div>
+    </div>`;
+      }
+      return `<div class="poll-opt" onclick="event.stopPropagation();votePoll(${p.id},${i},this)">${escHtml(opt)}</div>`;
+    }).join('');
+    return `<div class="post-poll" data-post-id="${p.id}">
+    <div class="poll-question">📊 ${escHtml(p.poll_question)}</div>
+    <div class="poll-options">${opts}</div>
+    <div class="poll-total">${total} lượt bình chọn</div>
+  </div>`;
+  }
+  async function votePoll(postId, optionIndex, el) {
+    if (!currentUser) return;
+    try {
+      await fetch(`${API}/posts/${postId}/vote`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ user_id: currentUser.id, option_index: optionIndex }),
+      });
+      const updated = await fetch(`${API}/posts/${postId}?user_id=${currentUser.id}`).then(r => r.json());
+      document.querySelectorAll(`.post-poll[data-post-id="${postId}"]`).forEach(pollEl => {
+        pollEl.outerHTML = buildPollHtml(updated);
+      });
+    } catch (e) {}
+  }
+
+  // ── Helpers ───────────────────────────────────────────────────
+  function timeAgo(dateStr) {
+    const diff = Date.now() - new Date(dateStr).getTime();
+    const m = Math.floor(diff / 60000);
+    if (m < 1) return 'vừa xong';
+    if (m < 60) return `${m} phút trước`;
+    const h = Math.floor(m / 60);
+    if (h < 24) return `${h} giờ trước`;
+    const d = Math.floor(h / 24);
+    if (d < 30) return `${d} ngày trước`;
+    return `${Math.floor(d / 30)} tháng trước`;
+  }
+
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closePostModal(); });
+
+  // ── Init ──────────────────────────────────────────────────────
+  initUser();
+  Promise.all([loadPillars(), refreshAdminFlag()]).then(loadSpaceInfo);
+  loadProfileCard();
+  loadComposerTopics();
+</script>
+
+<!-- Post Detail Modal -->
+<div id="postModalOverlay" class="post-modal-overlay" onclick="if(event.target===this)closePostModal()">
+  <div class="post-modal">
+    <div class="pm-header">
+      <div class="pm-header-badges" id="pmHeaderBadges"></div>
+      <button class="pm-close" onclick="closePostModal()">×</button>
+    </div>
+    <div class="pm-body" id="pmBody"></div>
+    <div class="pm-actions">
+      <button class="pm-like-btn" id="pmLikeBtn" onclick="pmLike()">
+        <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round"
+            d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+        </svg>
+        <span id="pmLikeCount">0</span> Thích
+      </button>
+      <span class="pm-cmt-count-lbl">
+        <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round"
+            d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+        </svg>
+        <span id="pmCmtCount">0</span> bình luận
+      </span>
+    </div>
+    <div class="pm-comments" id="pmComments"></div>
+    <div class="pm-comment-form">
+      <textarea id="pmCommentInput" class="pm-comment-input" placeholder="Viết bình luận..." rows="1"
+        onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();pmSubmitComment();}"></textarea>
+      <button class="pm-comment-submit" id="pmCommentSubmit" onclick="pmSubmitComment()">Gửi</button>
+    </div>
+  </div>
+</div>
+</body>
+</html>

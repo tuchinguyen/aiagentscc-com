@@ -1,0 +1,1216 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8">
+  <script src="assets/js/auth-fetch.js?v=1"></script>
+  <script>(function(){try{var t=localStorage.getItem('theme');if(t==='dark'||(!t&&window.matchMedia('(prefers-color-scheme: dark)').matches))document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" href="/assets/img/logo.png">
+  <link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
+  <link rel="manifest" href="/manifest.json?v=2">
+  <meta name="apple-mobile-web-app-title" content="AI Agents CC">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="theme-color" content="#0ea5e9">
+  <title>Khóa học — AI AGENTS CC</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/base.css?v=2">
+  <link rel="stylesheet" href="assets/css/components.css?v=11">
+  <link rel="stylesheet" href="assets/css/layout.css?v=6">
+  <style>
+    /* ── Course view layout ──────────────────────────── */
+    .cv-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+    .cv-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: var(--fs-sm);
+      font-weight: 600;
+      color: var(--text-muted);
+      text-decoration: none;
+      flex-shrink: 0;
+    }
+    .cv-back:hover { color: var(--text); }
+    .cv-header-title {
+      font-family: var(--font-heading);
+      font-size: 19px;
+      font-weight: 800;
+      color: var(--text);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .cv-grid {
+      display: grid;
+      grid-template-columns: 300px 1fr;
+      gap: 18px;
+      align-items: start;
+    }
+    .cv-grid > * { min-width: 0; }
+    @media (max-width: 860px) {
+      .cv-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ── Landing (not-yet-enrolled) state ────────────── */
+    .cv-landing-cover {
+      height: 160px;
+      border-radius: var(--radius-lg);
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 48px; margin-bottom: 18px;
+    }
+    .cv-landing-body {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      max-width: 640px;
+    }
+    .cv-landing-title {
+      font-family: var(--font-heading);
+      font-size: 22px; font-weight: 800; color: var(--text); margin-bottom: 8px;
+    }
+    .cv-landing-desc {
+      font-size: var(--fs-base); color: var(--text-muted); line-height: 1.7; margin-bottom: 14px;
+    }
+    .cv-landing-meta {
+      display: flex; flex-wrap: wrap; gap: 14px;
+      font-size: var(--fs-sm); color: var(--text-muted);
+      margin-bottom: 18px; padding-bottom: 18px; border-bottom: 1px solid var(--border);
+    }
+    .cv-price-row {
+      display: flex; align-items: baseline; gap: 10px; margin-bottom: 14px;
+    }
+    .cv-price-now { font-size: 24px; font-weight: 800; color: var(--color-primary); }
+    .cv-price-compare { font-size: 15px; color: var(--text-muted); text-decoration: line-through; }
+    .cv-price-off {
+      font-size: 11px; font-weight: 700; color: #dc2626; background: #fee2e2;
+      padding: 2px 8px; border-radius: 99px;
+    }
+    .cv-enroll-btn {
+      background: var(--color-primary); color: #fff; border: none;
+      border-radius: var(--radius-md); padding: 10px 20px; font-size: 14px; font-weight: 700;
+      cursor: pointer; font-family: var(--font-body); display: inline-block; text-decoration: none;
+      transition: filter .15s;
+    }
+    .cv-enroll-btn:hover { filter: brightness(0.92); }
+    .cv-enroll-btn:disabled { cursor: default; opacity: .6; }
+    .cv-enroll-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 13px; font-weight: 700; padding: 8px 16px; border-radius: var(--radius-md);
+    }
+    .cv-enroll-badge.approved { background: #d1fae5; color: #065f46; }
+    .cv-enroll-badge.pending { background: #fef3c7; color: #92400e; }
+
+    .cv-lessons-col {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 14px;
+      position: sticky;
+      top: 16px;
+      max-height: calc(100vh - 90px);
+      overflow-y: auto;
+    }
+    /* Nút "Nội dung" — chỉ hiện trên mobile (≤860px), ẩn mặc định trên desktop
+       vì màn hình rộng đã thấy sẵn danh sách bài học bên cạnh. Khai báo TRƯỚC
+       @media bên dưới — nếu để sau, rule display:none không-media này sẽ đứng
+       sau và thắng rule display:flex trong @media do cùng độ đặc hiệu, khiến
+       nút luôn ẩn kể cả trên mobile (lỗi thực tế đã gặp). */
+    .cv-toc-toggle {
+      display: none;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      padding: 11px 14px;
+      margin-bottom: 12px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      background: var(--bg-card);
+      color: var(--color-primary);
+      font-weight: 700;
+      font-size: 13.5px;
+      font-family: inherit;
+      cursor: pointer;
+    }
+    .cv-toc-toggle:hover { background: var(--bg-hover); }
+    .cv-toc-toggle svg { width: 16px; height: 16px; transition: transform .15s; flex-shrink: 0; }
+    .cv-toc-toggle.cv-toc-active svg { transform: rotate(180deg); }
+
+    @media (max-width: 860px) {
+      .cv-lessons-col { position: static; max-height: none; min-width: 0; display: none; }
+      .cv-lessons-col.cv-toc-open { display: block; }
+      .cv-toc-toggle { display: flex; }
+      /* iOS Safari tự động zoom trang khi focus vào input/textarea có font-size < 16px */
+      .ex-textarea, .lc-reply-input, .lc-input { font-size: 16px; }
+      /* Tên bài học/chương dài không được ép nowrap trên màn hình hẹp, tránh tràn viền */
+      .lesson-title { white-space: normal; overflow: visible; text-overflow: clip; overflow-wrap: anywhere; }
+      .module-title { overflow-wrap: anywhere; }
+      .cv-header-title { overflow-wrap: anywhere; white-space: normal; }
+    }
+    .cv-lessons-title {
+      font-size: var(--fs-xs);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      color: var(--text-muted);
+      padding: 4px 6px 10px;
+    }
+
+    .cv-content-col {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 22px 24px;
+      min-height: 300px;
+    }
+    .cv-lesson-title {
+      font-family: var(--font-heading);
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--text);
+      margin-bottom: 14px;
+    }
+    .cv-nav-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      margin-top: 24px;
+      padding-top: 18px;
+      border-top: 1px solid var(--border);
+    }
+    .cv-nav-row .btn {
+      flex: 1;
+      min-width: 0;
+      /* text-overflow:ellipsis không đáng tin cậy khi đặt trực tiếp lên
+         chính flex container (mất icon mũi tên, canh lề sai ở một số
+         trình duyệt) — bọc phần chữ trong .cv-nav-btn-text riêng bên dưới
+         để cắt "..." đúng chỗ, giữ mũi tên luôn hiện đầy đủ. */
+    }
+    .cv-nav-row .btn .cv-nav-arrow { flex-shrink: 0; }
+    .cv-nav-row .btn .cv-nav-btn-text {
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    /* ── Lesson list (mirrors courses.html) ──────────── */
+    .lesson-list { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+    .lesson-row {
+      display: flex; align-items: center; gap: 12px;
+      padding: 10px 12px; border: 1px solid transparent; border-radius: 10px;
+      cursor: pointer; transition: background .12s, border-color .12s;
+      min-width: 0;
+    }
+    .lesson-row:hover { background: var(--bg-hover); border-color: var(--color-primary); }
+    .lesson-row.active { background: var(--bg-active); border-color: var(--color-primary); }
+    .lesson-num {
+      width: 26px; height: 26px; border-radius: 8px;
+      background: var(--bg-hover); color: var(--color-primary); font-size: 11px; font-weight: 700;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .lesson-row.active .lesson-num { background: var(--color-primary); color: #fff; }
+    .lesson-info { flex: 1; min-width: 0; }
+    .lesson-title {
+      font-size: var(--fs-sm); font-weight: 600; color: var(--text);
+      margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .lesson-dur { font-size: 11px; color: var(--text-muted); }
+
+    /* ── Module (chương) groups ─────────────────────── */
+    .module-group { margin-bottom: 10px; min-width: 0; }
+    .module-header {
+      display: flex; align-items: center; justify-content: space-between; gap: 8px;
+      padding: 10px 12px; cursor: pointer; border-radius: 10px; background: var(--bg-hover);
+      border: 1px solid var(--border);
+      min-width: 0;
+    }
+    .module-header-text { min-width: 0; }
+    .module-title { font-size: var(--fs-sm); font-weight: 700; color: var(--text); }
+    .module-count { font-size: 11px; font-weight: 500; color: var(--text-muted); margin-top: 1px; }
+    .module-chevron { width: 16px; height: 16px; flex-shrink: 0; color: var(--text-muted); transition: transform .15s; }
+    .module-group.collapsed .module-chevron { transform: rotate(-90deg); }
+    .module-group.collapsed .module-lessons { display: none; }
+    .module-lessons { display: flex; flex-direction: column; gap: 6px; padding-top: 6px; min-width: 0; }
+
+    /* ── Video + rich content (mirrors courses.html) ─── */
+    .video-wrap {
+      position: relative; padding-bottom: 56.25%; height: 0;
+      overflow: hidden; border-radius: 10px; background: #0f172a; margin-bottom: 20px;
+    }
+    .video-wrap iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: none; border-radius: 10px; }
+
+    .lesson-content { font-size: var(--fs-base); color: var(--text); line-height: 1.75; }
+    .lesson-content h1 { font-size: 22px; font-weight: 700; margin: 16px 0 8px; }
+    .lesson-content h2 { font-size: 19px; font-weight: 700; margin: 14px 0 6px; }
+    .lesson-content h3 { font-size: 16px; font-weight: 700; margin: 12px 0 6px; }
+    .lesson-content h4 { font-size: 15px; font-weight: 700; margin: 10px 0 4px; }
+    .lesson-content p { margin: 6px 0; }
+    .lesson-content ul, .lesson-content ol { padding-left: 22px; margin: 8px 0; }
+    .lesson-content li { margin: 3px 0; }
+    .lesson-content a { color: var(--color-primary); text-decoration: underline; }
+    .lesson-content blockquote { margin: 10px 0; padding: 6px 14px; border-left: 3px solid var(--border); color: var(--text-muted); }
+    .lesson-content pre { margin: 10px 0; padding: 10px 12px; background: #0f172a; color: #e2e8f0; border-radius: 8px; font-family: monospace; font-size: 13px; overflow-x: auto; white-space: pre-wrap; }
+    .lesson-content code { background: var(--bg-hover); padding: 1px 6px; border-radius: 4px; font-family: monospace; font-size: 13px; }
+    .lesson-content pre code { background: transparent; padding: 0; }
+    .lesson-content img { max-width: 100%; border-radius: 8px; margin: 6px 0; }
+    .lesson-content hr { border: 0; border-top: 1px solid var(--border); margin: 14px 0; }
+
+    .ex-block { margin: 20px 0 4px; padding: 16px 18px; background: var(--bg-hover); border: 1px solid var(--border); border-radius: 10px; }
+    .ex-title { font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 10px; }
+    .ex-prompt { font-size: var(--fs-base); color: var(--text); line-height: 1.7; margin-bottom: 12px; white-space: pre-wrap; }
+    .ex-textarea { width: 100%; min-height: 100px; padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; font-family: inherit; font-size: var(--fs-base); resize: vertical; outline: none; background: var(--bg-card); color: var(--text); }
+    .ex-textarea:focus { border-color: var(--color-primary); }
+    .ex-error { color: #ef4444; font-size: 13px; margin: 8px 0; }
+    .ex-block .btn { margin-top: 10px; }
+    .ex-result-header { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 14px; }
+    .ex-score { font-size: 16px; font-weight: 700; color: var(--text); }
+    .ex-badge { font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 99px; }
+    .ex-badge.pass { background: #dcfce7; color: #166534; }
+    .ex-badge.fail { background: #fee2e2; color: #991b1b; }
+    .ex-xp { font-size: 12px; font-weight: 700; color: var(--accent-green); background: #d1fae5; padding: 3px 10px; border-radius: 99px; }
+    .ex-sub-heading { font-size: 12px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: .03em; margin: 12px 0 4px; }
+    .ex-list { padding-left: 20px; margin: 0; font-size: var(--fs-base); line-height: 1.7; }
+    .ex-list.issues li { color: #b91c1c; }
+    .ex-list.hints li { color: var(--text); }
+
+    .ex-quiz-q { margin: 14px 0; }
+    .ex-quiz-q-text { font-weight: 600; margin-bottom: 8px; }
+    .ex-quiz-options { display: flex; flex-direction: column; gap: 6px; }
+    .ex-quiz-option { display: flex; align-items: center; gap: 8px; padding: 8px 10px; border: 1px solid var(--border); border-radius: 8px; cursor: pointer; background: var(--bg-card); }
+    .ex-quiz-option:hover { border-color: var(--color-primary); }
+    .ex-quiz-option input { flex-shrink: 0; }
+
+    .ex-resubmit-banner { background: #fef3c7; color: #92400e; border-radius: 8px; padding: 10px 14px; margin-bottom: 12px; font-size: var(--fs-base); }
+    .ex-teacher-note { margin-top: 12px; padding: 10px 14px; background: #e0e7ff; color: #3730a3; border-radius: 8px; font-size: var(--fs-base); }
+
+    .ex-answer-box { background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; font-size: var(--fs-base); white-space: pre-wrap; margin-bottom: 4px; }
+    .ex-quiz-option-result { padding: 8px 10px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg-card); font-size: var(--fs-base); }
+    .ex-quiz-option-result.correct { border-color: #10b981; background: #ecfdf5; color: #065f46; font-weight: 600; }
+    .ex-quiz-option-result.wrong { border-color: #ef4444; background: #fef2f2; color: #991b1b; font-weight: 600; }
+
+    /* ── Lesson discussion (comments right below the lesson) ──────── */
+    .lc-section { margin-top: 28px; padding-top: 18px; border-top: 1px solid var(--border); }
+    .lc-title { display: flex; align-items: center; gap: 7px; font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 14px; }
+    .lc-count { color: var(--text-muted); font-weight: 600; }
+
+    .lc-comments { display: flex; flex-direction: column; }
+    .lc-empty { text-align: center; padding: 20px; color: var(--text-muted); font-size: var(--fs-sm); }
+
+    .lc-item { display: flex; gap: 10px; padding: 12px 0; border-bottom: 1px solid var(--border); }
+    .lc-item:last-child { border-bottom: none; }
+    .lc-avatar { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: #fff; flex-shrink: 0; }
+    .lc-body { flex: 1; min-width: 0; }
+    .lc-header { display: flex; align-items: center; gap: 7px; margin-bottom: 3px; flex-wrap: wrap; }
+    .lc-name { font-size: var(--fs-xs); font-weight: 700; color: var(--text); }
+    .lc-time { font-size: 11px; color: var(--text-muted); }
+    .lc-text { font-size: var(--fs-sm); color: var(--text); line-height: 1.55; white-space: pre-wrap; }
+
+    .lc-reply-btn { display: inline-flex; align-items: center; gap: 4px; margin-top: 5px; padding: 2px 0; font-size: 11px; font-weight: 600; color: var(--text-muted); background: none; border: none; cursor: pointer; font-family: var(--font-body); transition: color .15s; }
+    .lc-reply-btn:hover { color: var(--color-primary); }
+
+    .lc-reply-form { display: none; margin-top: 8px; align-items: flex-end; gap: 6px; }
+    .lc-reply-form.open { display: flex; }
+    .lc-reply-input { flex: 1; padding: 7px 10px; border: 1px solid var(--border); border-radius: var(--radius-md); font-size: 12px; font-family: var(--font-body); color: var(--text); resize: none; min-height: 32px; max-height: 72px; background: var(--bg-hover); outline: none; transition: border-color .15s, background .15s; }
+    .lc-reply-input:focus { border-color: var(--color-primary); background: var(--bg-card); }
+    .lc-reply-submit { padding: 6px 12px; height: 32px; background: var(--color-primary); color: #fff; border: none; border-radius: var(--radius-md); cursor: pointer; font-size: 12px; font-weight: 600; font-family: var(--font-body); white-space: nowrap; transition: background .15s; }
+    .lc-reply-submit:hover { background: var(--color-primary-dark); }
+    .lc-reply-cancel { padding: 6px 10px; height: 32px; background: none; color: var(--text-muted); border: 1px solid var(--border); border-radius: var(--radius-md); cursor: pointer; font-size: 12px; font-weight: 600; font-family: var(--font-body); white-space: nowrap; }
+    .lc-reply-cancel:hover { background: var(--bg-hover); }
+
+    .lc-replies { padding-left: 42px; }
+    .lc-replies .lc-item { border-bottom: none; padding: 8px 0; }
+    .lc-replies .lc-avatar { width: 26px; height: 26px; font-size: 10px; }
+
+    .lc-form { display: flex; gap: 10px; align-items: flex-end; padding-top: 14px; }
+    .lc-input { flex: 1; padding: 9px 13px; border: 1px solid var(--border); border-radius: var(--radius-md); font-size: var(--fs-sm); font-family: var(--font-body); color: var(--text); resize: none; min-height: 38px; max-height: 100px; background: var(--bg-hover); outline: none; transition: border-color .15s, background .15s; }
+    .lc-input:focus { border-color: var(--color-primary); background: var(--bg-card); }
+    .lc-submit { padding: 9px 16px; background: var(--color-primary); color: #fff; border: none; border-radius: var(--radius-md); cursor: pointer; font-size: var(--fs-sm); font-weight: 600; font-family: var(--font-body); transition: background .15s; white-space: nowrap; height: 38px; }
+    .lc-submit:hover { background: var(--color-primary-dark); }
+    .lc-submit:disabled { opacity: .6; cursor: not-allowed; }
+
+  </style>
+</head>
+
+<body>
+
+  <div id="app">
+    <aside id="sidebar">
+      <div id="sidebar-logo">
+        <div class="sidebar-logo-mark" style="background:transparent;"><img src="assets/img/logo.png" alt="Logo" style="width:100%;height:100%;object-fit:contain;"></div>
+        <div class="sidebar-logo-text">AI AGENTS <span>CC</span></div>
+      </div>
+      <nav id="sidebar-nav">
+        <div class="nav-section-label">Cộng đồng</div>
+        <a href="feed.html" class="nav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
+          </svg>
+          Feed
+        </a>
+        <div class="nav-section-label" style="margin-top:8px;">Học tập</div>
+        <a href="challenge.html" class="nav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z" />
+          </svg>
+          Challenge
+        </a>
+        <div class="nav-section-label" style="margin-top:8px;">Khác</div>
+        <a href="marketplace.html" class="nav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z" />
+          </svg>
+          Marketplace
+        </a>
+      </nav>
+      <div id="sidebar-user">
+        <div class="user-avatar-wrap">
+          <div class="avatar-placeholder avatar-md" id="sbAvatar" style="background:#7c3aed;"></div>
+          <div class="user-status-dot"></div>
+        </div>
+        <div class="user-info">
+          <div class="user-name" id="sbName">—</div>
+          <div class="user-level" id="sbLevel">—</div>
+        </div>
+        <a href="index.html" class="icon-btn" title="Đăng xuất" style="margin-left:auto;" onclick="doLogout()">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4" />
+            <polyline points="16 17 21 12 16 7" />
+            <line x1="21" y1="12" x2="9" y2="12" />
+          </svg>
+        </a>
+      </div>
+    </aside>
+
+    <div id="main">
+      <div id="mobile-topbar">
+        <button class="mob-menu-btn" onclick="toggleSidebar()" aria-label="Menu">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <line x1="3" y1="6" x2="21" y2="6" /><line x1="3" y1="12" x2="21" y2="12" /><line x1="3" y1="18" x2="21" y2="18" />
+          </svg>
+        </button>
+        <span style="flex:1;font-size:var(--fs-md);font-weight:600;color:var(--text)" id="mobTitle">Khóa học</span>
+        <div class="mob-topbar-right">
+          <button class="icon-btn" id="themeToggleMob" type="button" aria-label="Chuyển chế độ sáng/tối">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"></svg>
+          </button>
+          <button class="icon-btn" id="notifBellMob" aria-label="Thông báo" style="position:relative;">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+            </svg>
+            <span id="notifBadgeMob" style="display:none;position:absolute;top:2px;right:2px;background:#ef4444;color:#fff;font-size:10px;font-weight:700;border-radius:99px;min-width:16px;height:16px;padding:0 4px;line-height:16px;text-align:center;">0</span>
+          </button>
+          <div id="topbarAvatarMob" style="width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;background:#7c3aed;flex-shrink:0;"></div>
+        </div>
+</div>
+      <nav id="subnav-bar" class="subnav-bar" aria-label="Điều hướng nhanh">
+        <a href="feed.html" class="subnav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+          Feed
+        </a>
+        <a href="spaces.html" class="subnav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></svg>
+          Spaces
+        </a>
+        <a href="courses.html" class="subnav-item active">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/></svg>
+          Courses
+        </a>
+        <a href="members.html" class="subnav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+          Members
+        </a>
+        <a href="leaderboard.html" class="subnav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/></svg>
+          Leaderboard
+        </a>
+        <a href="calendar.html" class="subnav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          Calendar
+        </a>
+        <a href="about.html" class="subnav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+          About
+        </a>
+        <div class="topbar-right">
+          <button class="icon-btn" id="themeToggle" type="button" aria-label="Chuyển chế độ sáng/tối">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"></svg>
+          </button>
+          <div style="position:relative;">
+            <button class="icon-btn" id="notifBell" aria-label="Thông báo" style="position:relative;">
+              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+              </svg>
+              <span id="notifBadge" style="display:none;position:absolute;top:2px;right:2px;background:#ef4444;color:#fff;font-size:10px;font-weight:700;border-radius:99px;min-width:16px;height:16px;padding:0 4px;line-height:16px;text-align:center;">0</span>
+            </button>
+            <div id="notifDropdown" style="display:none;"></div>
+          </div>
+          <a href="#" class="icon-btn" aria-label="Tin nhắn">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <path
+                d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+            </svg>
+          </a>
+          <div class="topbar-search">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <circle cx="11" cy="11" r="8" />
+              <line x1="21" y1="21" x2="16.65" y2="16.65" />
+            </svg>
+            <input type="text" id="globalSearchInput" placeholder="Tìm kiếm..." autocomplete="off">
+            <div id="globalSearchResults" class="gsr-panel"></div>
+          </div>
+          <div id="topbarAvatar"
+            style="width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;background:#7c3aed;cursor:pointer;flex-shrink:0;">
+          </div>
+        </div>
+      </nav>
+
+      <div id="topbar">
+        <div class="topbar-title" id="topbarTitle">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="width:17px;height:17px"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/></svg>
+          Đang tải...
+        </div>
+      </div>
+
+      <div id="content-row">
+        <main id="feed">
+          <div class="cv-header">
+            <a href="courses.html" class="cv-back">
+              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" width="14" height="14" stroke-linecap="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+              Khóa học
+            </a>
+            <div class="cv-header-title" id="cvCourseTitle">Đang tải...</div>
+          </div>
+
+          <div id="cvLanding" style="display:none;">
+            <div class="cv-landing-cover" id="cvCover">🎓</div>
+            <div class="cv-landing-body">
+              <h1 class="cv-landing-title" id="cvLandingTitle">—</h1>
+              <p class="cv-landing-desc" id="cvLandingDesc"></p>
+              <div class="cv-landing-meta">
+                <span>👤 Giảng viên: <strong id="cvInstructor">—</strong></span>
+                <span id="cvLessonCountMeta"></span>
+              </div>
+              <div class="cv-price-row" id="cvPriceRow" style="display:none;"></div>
+              <div id="cvEnrollWrap"></div>
+            </div>
+          </div>
+
+          <button class="cv-toc-toggle" onclick="toggleCvToc()">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg>
+            📑 Nội dung
+          </button>
+
+          <div class="cv-grid" id="cvGrid" style="display:none;">
+            <aside class="cv-lessons-col">
+              <div class="cv-lessons-title">Danh sách bài học</div>
+              <div class="lesson-list" id="cvLessonList"></div>
+            </aside>
+            <section class="cv-content-col" id="cvContentCol"></section>
+          </div>
+
+          <div id="cvLoading" style="text-align:center;padding:60px 20px;color:var(--text-muted);">Đang tải...</div>
+        </main>
+      </div>
+    </div>
+  </div>
+
+  <div id="mob-overlay" onclick="closeSidebar()"></div>
+  <div id="mob-sidebar">
+    <div style="padding:14px 16px;border-bottom:1px solid var(--border);font-size:var(--fs-md);font-weight:700;color:var(--text);display:flex;align-items:center;gap:8px;">
+      <div style="width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;"><img src="assets/img/logo.png" alt="Logo" style="width:100%;height:100%;object-fit:contain;"></div>
+      <span class="mob-brand-name">AI AGENTS CC</span>
+    </div>
+    <nav style="flex:1;overflow-y:auto;padding:8px;">
+      <div class="nav-section-label">Cộng đồng</div>
+      <a href="feed.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        Feed
+      </a>
+      <div class="nav-section-label">Học tập</div>
+      <a href="challenge.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z"/></svg>
+        Challenge
+      </a>
+      <div class="nav-section-label">Khác</div>
+      <a href="marketplace.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z"/></svg>
+        Marketplace
+      </a>
+    </nav>
+  </div>
+  <!-- Mobile main menu (full site navigation) -->
+  <div id="mob-mainmenu-overlay" onclick="closeMainMenu()"></div>
+  <div id="mob-mainmenu">
+    <div style="padding:14px 16px;border-bottom:1px solid var(--border);font-size:var(--fs-md);font-weight:700;color:var(--text);display:flex;align-items:center;gap:8px;">
+      <div style="width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;"><img src="assets/img/logo.png" alt="Logo" style="width:100%;height:100%;object-fit:contain;"></div>
+      Menu chính
+    </div>
+    <nav style="flex:1;overflow-y:auto;padding:8px;">
+      <a href="feed.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        Feed
+      </a>
+      <a href="spaces.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></svg>
+        Spaces
+      </a>
+      <a href="courses.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/></svg>
+        Courses
+      </a>
+      <a href="members.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+        Members
+      </a>
+      <a href="leaderboard.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/></svg>
+        Leaderboard
+      </a>
+      <a href="calendar.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        Calendar
+      </a>
+      <a href="about.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+        About
+      </a>
+    </nav>
+  </div>
+
+  <nav id="mobile-nav">
+    <a href="feed.html" class="mob-nav-btn">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
+      </svg>
+      Feed
+    </a>
+    <a href="spaces.html" class="mob-nav-btn">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></svg>
+      Spaces
+    </a>
+    <a href="courses.html" class="mob-nav-btn active">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/></svg>
+      Courses
+    </a>
+    <a href="members.html" class="mob-nav-btn">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>
+      </svg>
+      Members
+    </a>
+    <button class="mob-nav-btn" onclick="toggleMainMenu()">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/>
+      </svg>
+      Menu
+    </button>
+  </nav>
+
+  <script src="assets/js/app.js?v=28"></script>
+  <script>
+    const API = '/api';
+    const AV_COLORS = ['#0ea5e9', '#8b5cf6', '#10b981', '#f59e0b', '#ec4899', '#3b82f6', '#ef4444', '#14b8a6'];
+    const LEVELS = [
+      { level: 1, name: 'Khởi động', xpMin: 0, xpMax: 45 }, { level: 2, name: 'Học viên', xpMin: 45, xpMax: 120 },
+      { level: 3, name: 'Thực hành', xpMin: 120, xpMax: 250 }, { level: 4, name: 'Nâng cao', xpMin: 250, xpMax: 450 },
+      { level: 5, name: 'Chuyên gia', xpMin: 450, xpMax: 700 }, { level: 6, name: 'Bậc thầy', xpMin: 700, xpMax: 1000 },
+      { level: 7, name: 'Huyền thoại', xpMin: 1000, xpMax: 1500 }, { level: 8, name: 'Tiên tri', xpMin: 1500, xpMax: 2200 },
+      { level: 9, name: 'Thần thánh', xpMin: 2200, xpMax: 9999 },
+    ];
+    function getLevel(xp) { for (let i = LEVELS.length - 1; i >= 0; i--) if (xp >= LEVELS[i].xpMin) return LEVELS[i]; return LEVELS[0]; }
+    function escHtml(s) { return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+
+    let currentUser = null;
+    let courseId = null;
+    let lessons = [];
+    let modules = [];
+    let activeLessonId = null;
+
+    // ── Auth ──────────────────────────────────────────────────
+    (function () {
+      const raw = localStorage.getItem('currentUser');
+      if (!raw) { window.location.href = 'index.html'; return; }
+      currentUser = JSON.parse(raw);
+      const initials = (currentUser.first_name[0] + (currentUser.last_name || '')[0]).toUpperCase();
+      const color = AV_COLORS[currentUser.id % AV_COLORS.length];
+      document.getElementById('sbAvatar').textContent = initials;
+      document.getElementById('sbAvatar').style.background = color;
+      document.getElementById('sbName').textContent = currentUser.first_name + ' ' + currentUser.last_name;
+      const lv = getLevel(currentUser.xp || 0);
+      document.getElementById('sbLevel').textContent = lv.name + ' · Lv.' + lv.level;
+      const tbAv = document.getElementById('topbarAvatar');
+      if (tbAv) { tbAv.textContent = initials; tbAv.style.background = color; }
+      ['sbAvatar', 'sbName', 'topbarAvatar'].forEach(id => { const el = document.getElementById(id); if (el) { el.style.cursor = 'pointer'; el.onclick = () => location.href = `profile.html?id=${currentUser.id}`; } });
+    })();
+
+    function doLogout() {
+      localStorage.removeItem('currentUser');
+      window.location.href = 'index.html';
+    }
+
+    // YouTube (kể cả /live/), Vimeo, Google Drive → link nhúng (videoEmbedUrl trong app.js)
+    function toEmbedUrl(raw) {
+      if (!raw) return null;
+      return videoEmbedUrl(raw) || raw.trim();
+    }
+
+    function toggleCvToc() {
+      const open = document.querySelector('.cv-lessons-col').classList.toggle('cv-toc-open');
+      document.querySelectorAll('.cv-toc-toggle').forEach(btn => btn.classList.toggle('cv-toc-active', open));
+      if (open) document.getElementById('cvGrid').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function selectLesson(id) {
+      const lesson = lessons.find(l => l.id === id);
+      if (!lesson) return;
+      activeLessonId = id;
+      // Bấm chọn bài học khác thì tự thu gọn danh sách trên mobile (nếu đang mở)
+      document.querySelector('.cv-lessons-col')?.classList.remove('cv-toc-open');
+      document.querySelectorAll('.cv-toc-toggle').forEach(btn => btn.classList.remove('cv-toc-active'));
+      document.querySelectorAll('#cvLessonList .lesson-row').forEach(row => {
+        row.classList.toggle('active', Number(row.dataset.id) === id);
+      });
+      const activeRow = document.querySelector(`#cvLessonList .lesson-row[data-id="${id}"]`);
+      // Chỉ mở module chứa bài đang học, các module khác thu gọn
+      const activeGroup = activeRow?.closest('.module-group');
+      if (activeGroup) {
+        document.querySelectorAll('#cvLessonList .module-group').forEach(g => g.classList.toggle('collapsed', g !== activeGroup));
+      }
+
+      let html = `<div class="cv-lesson-title">${escHtml(lesson.title)}</div>`;
+      if (lesson.video_url) {
+        html += `<div class="video-wrap"><iframe src="${escHtml(toEmbedUrl(lesson.video_url))}" allowfullscreen
+          allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture"></iframe></div>`;
+      }
+      if (lesson.content?.trim()) {
+        const isHtml = /<[a-z][\s\S]*>/i.test(lesson.content);
+        html += `<div class="lesson-content">${isHtml ? lesson.content : escHtml(lesson.content).replace(/\n/g, '<br>')}</div>`;
+      }
+      if (!lesson.video_url && !lesson.content?.trim()) {
+        html += `<div style="text-align:center;padding:30px;color:var(--text-muted);">📄 Bài học chưa có nội dung.</div>`;
+      }
+      if (lesson.exercise_enabled) {
+        html += renderExerciseBlock(lesson);
+      }
+
+      const idx = lessons.findIndex(l => l.id === id);
+      const prev = lessons[idx - 1];
+      const next = lessons[idx + 1];
+      html += `<div class="cv-nav-row">
+        ${prev ? `<button class="btn btn-secondary" onclick="selectLesson(${prev.id})"><span class="cv-nav-arrow">←</span><span class="cv-nav-btn-text">${escHtml(prev.title)}</span></button>` : '<span></span>'}
+        ${next ? `<button class="btn btn-primary" onclick="selectLesson(${next.id})"><span class="cv-nav-btn-text">${escHtml(next.title)}</span><span class="cv-nav-arrow">→</span></button>` : '<span></span>'}
+      </div>`;
+
+      html += `<button class="cv-toc-toggle" onclick="toggleCvToc()" style="margin-top:16px;margin-bottom:0;">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg>
+        📑 Nội dung
+      </button>`;
+
+      html += `<div class="lc-section">
+        <div class="lc-title">💬 Thảo luận <span class="lc-count" id="lcCount"></span></div>
+        <div class="lc-comments" id="lcComments"><div class="lc-empty">Đang tải bình luận...</div></div>
+        <div class="lc-form">
+          <textarea id="lcInput" class="lc-input" placeholder="Đặt câu hỏi hoặc chia sẻ suy nghĩ về bài học..." rows="1"
+            onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();lcSubmitComment();}"></textarea>
+          <button class="lc-submit" id="lcSubmit" onclick="lcSubmitComment()">Gửi</button>
+        </div>
+      </div>`;
+
+      document.getElementById('cvContentCol').innerHTML = html;
+      loadLessonComments(id);
+    }
+
+    function timeAgo(dateStr) {
+      const diff = Date.now() - new Date(dateStr).getTime();
+      const m = Math.floor(diff / 60000);
+      if (m < 1) return 'vừa xong';
+      if (m < 60) return `${m} phút trước`;
+      const h = Math.floor(m / 60);
+      if (h < 24) return `${h} giờ trước`;
+      const d = Math.floor(h / 24);
+      if (d < 30) return `${d} ngày trước`;
+      return `${Math.floor(d / 30)} tháng trước`;
+    }
+
+    // ── Lesson discussion ────────────────────────────────────
+    async function loadLessonComments(lessonId) {
+      try {
+        const { comments } = await fetch(`/api/courses/lessons/${lessonId}/comments`).then(r => r.json());
+        if (activeLessonId !== lessonId) return; // user switched lesson before this resolved
+        renderLcComments(comments || []);
+      } catch (e) {
+        if (activeLessonId !== lessonId) return;
+        document.getElementById('lcComments').innerHTML = '<div class="lc-empty">Không tải được bình luận.</div>';
+      }
+    }
+
+    function renderLcComments(comments) {
+      const countEl = document.getElementById('lcCount');
+      if (countEl) countEl.textContent = comments.length ? `(${comments.length})` : '';
+      const el = document.getElementById('lcComments');
+      if (!el) return;
+      if (!comments.length) {
+        el.innerHTML = '<div class="lc-empty">Chưa có bình luận nào. Hãy là người đầu tiên! 💬</div>';
+        return;
+      }
+      const roots = comments.filter(c => !c.parent_id);
+      const replyMap = {};
+      comments.filter(c => c.parent_id).forEach(c => {
+        (replyMap[c.parent_id] = replyMap[c.parent_id] || []).push(c);
+      });
+      el.innerHTML = roots.map(c => renderLcComment(c, replyMap[c.id] || [])).join('');
+    }
+
+    function renderLcComment(c, replies) {
+      const ini = ((c.first_name || '?')[0] + ((c.last_name || '')[0] || '')).toUpperCase();
+      const col = AV_COLORS[c.author_id % AV_COLORS.length];
+      const repliesHtml = replies.length ? `<div class="lc-replies">${replies.map(r => {
+        const rIni = ((r.first_name || '?')[0] + ((r.last_name || '')[0] || '')).toUpperCase();
+        const rCol = AV_COLORS[r.author_id % AV_COLORS.length];
+        return `<div class="lc-item">
+        <div class="lc-avatar" style="background:${rCol}">${rIni}</div>
+        <div class="lc-body">
+          <div class="lc-header">
+            <span class="lc-name">${escHtml(r.first_name)} ${escHtml(r.last_name || '')}</span>
+            <span class="lc-time">${timeAgo(r.created_at)}</span>
+          </div>
+          <div class="lc-text">${escHtml(r.content)}</div>
+        </div>
+      </div>`;
+      }).join('')}</div>` : '';
+      return `<div class="lc-item" ${repliesHtml ? 'style="border-bottom:none;"' : ''}>
+    <div class="lc-avatar" style="background:${col}">${ini}</div>
+    <div class="lc-body">
+      <div class="lc-header">
+        <span class="lc-name">${escHtml(c.first_name)} ${escHtml(c.last_name || '')}</span>
+        <span class="lc-time">${timeAgo(c.created_at)}</span>
+      </div>
+      <div class="lc-text">${escHtml(c.content)}</div>
+      <button class="lc-reply-btn" onclick="lcToggleReply(${c.id})">
+        <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"/></svg>
+        Trả lời
+      </button>
+      <div class="lc-reply-form" id="lc-rf-${c.id}">
+        <textarea class="lc-reply-input" id="lc-ri-${c.id}"
+          placeholder="Trả lời ${escHtml(c.first_name)}..." rows="1"
+          onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();lcSubmitReply(${c.id});}"></textarea>
+        <button class="lc-reply-submit" onclick="lcSubmitReply(${c.id})">Gửi</button>
+        <button class="lc-reply-cancel" onclick="lcToggleReply(${c.id})">Hủy</button>
+      </div>
+    </div>
+  </div>${repliesHtml}`;
+    }
+
+    function lcToggleReply(commentId) {
+      document.querySelectorAll('.lc-reply-form.open').forEach(f => {
+        if (f.id !== `lc-rf-${commentId}`) f.classList.remove('open');
+      });
+      const form = document.getElementById(`lc-rf-${commentId}`);
+      if (!form) return;
+      form.classList.toggle('open');
+      if (form.classList.contains('open')) document.getElementById(`lc-ri-${commentId}`)?.focus();
+    }
+
+    async function lcSubmitReply(parentId) {
+      const input = document.getElementById(`lc-ri-${parentId}`);
+      const text = input?.value.trim();
+      if (!text || !currentUser) return;
+      const lessonId = activeLessonId;
+      try {
+        await fetch(`/api/courses/lessons/${lessonId}/comments`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ user_id: currentUser.id, content: text, parent_id: parentId }),
+        });
+        input.value = '';
+        const { comments } = await fetch(`/api/courses/lessons/${lessonId}/comments`).then(r => r.json());
+        if (activeLessonId !== lessonId) return;
+        renderLcComments(comments || []);
+      } catch (e) { }
+    }
+
+    async function lcSubmitComment() {
+      const input = document.getElementById('lcInput');
+      const text = input.value.trim();
+      if (!text || !currentUser) return;
+      const btn = document.getElementById('lcSubmit');
+      const lessonId = activeLessonId;
+      btn.disabled = true;
+      try {
+        await fetch(`/api/courses/lessons/${lessonId}/comments`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ user_id: currentUser.id, content: text }),
+        });
+        input.value = '';
+        const { comments } = await fetch(`/api/courses/lessons/${lessonId}/comments`).then(r => r.json());
+        if (activeLessonId !== lessonId) return;
+        renderLcComments(comments || []);
+      } finally {
+        btn.disabled = false;
+      }
+    }
+
+    // Bài tập 'link' (chọn từ Danh sách bài tập) không AI chấm, không nộp bài —
+    // chỉ hướng dẫn + 1 link, học viên tự đọc và bấm vào làm.
+    function renderLinkedAssignmentBlock(lesson) {
+      const a = lesson.linkedAssignment;
+      if (!a) return `<div class="ex-block"><div class="ex-title">📝 Bài tập</div><div style="color:var(--text-muted);">Bài tập chưa được thiết lập.</div></div>`;
+      const linkHtml = !a.link_url ? '' : (a.display_mode === 'embed'
+        ? `<iframe src="${escHtml(a.link_url)}" style="width:100%;min-height:480px;border:0;border-radius:8px;margin-top:10px;"></iframe>`
+        : `<a class="btn btn-primary" href="${escHtml(a.link_url)}" target="_blank" rel="noopener" style="display:inline-block;margin-top:10px;text-decoration:none;">Làm bài tập →</a>`);
+      return `
+      <div class="ex-block">
+        <div class="ex-title">📝 ${escHtml(a.title)}</div>
+        ${a.instructions ? `<div class="ex-prompt">${escHtml(a.instructions)}</div>` : ''}
+        ${linkHtml}
+      </div>`;
+    }
+
+    function renderExerciseBlock(lesson) {
+      if (lesson.exercise_type === 'link') return renderLinkedAssignmentBlock(lesson);
+      const s = lesson.my_submission;
+      const isResubmit = s && s.status === 'needs_resubmit';
+
+      if (s && !isResubmit) {
+        const issuesHtml = s.issues.length
+          ? s.issues.map(i => `<li>${escHtml(i)}</li>`).join('')
+          : '<li style="list-style:none;margin-left:-18px;color:var(--text-muted);">Không có vấn đề nào — làm tốt lắm!</li>';
+        const hintsHtml = s.hints.length
+          ? s.hints.map(h => `<li>${escHtml(h)}</li>`).join('')
+          : '<li style="list-style:none;margin-left:-18px;color:var(--text-muted);">Không có gợi ý thêm.</li>';
+
+        let submittedHtml;
+        if (s.quiz_review) {
+          submittedHtml = s.quiz_review.map((q, i) => `
+      <div class="ex-quiz-q">
+        <div class="ex-quiz-q-text">Câu ${i + 1}: ${escHtml(q.question_text)}</div>
+        <div class="ex-quiz-options">
+          ${q.options.map((opt, oi) => {
+            const isCorrect = oi === q.correct_index;
+            const isPicked = oi === q.picked_index;
+            const cls = isCorrect ? 'correct' : (isPicked ? 'wrong' : '');
+            const marker = isCorrect && isPicked ? ' ✅' : isCorrect ? ' (đáp án đúng)' : isPicked ? ' ❌' : '';
+            return `<div class="ex-quiz-option-result ${cls}">${escHtml(opt)}${marker}</div>`;
+          }).join('')}
+        </div>
+      </div>`).join('');
+        } else {
+          submittedHtml = `
+      <div class="ex-prompt">${escHtml(lesson.exercise_prompt || '')}</div>
+      <div class="ex-sub-heading">Bài làm của bạn</div>
+      <div class="ex-answer-box">${escHtml(s.answer_text)}</div>`;
+        }
+
+        return `
+      <div class="ex-block">
+        <div class="ex-title">📝 ${s.quiz_review ? 'Bài tập trắc nghiệm' : 'Bài tập'}</div>
+        ${submittedHtml}
+        <div class="ex-sub-heading">AI chấm & phân tích</div>
+        <div class="ex-result-header">
+          <span class="ex-score">${s.score}/${s.max_score} điểm</span>
+          <span class="ex-badge ${s.passed ? 'pass' : 'fail'}">${s.passed ? '✅ Đạt' : '❌ Chưa đạt'}</span>
+          ${s.xp_awarded ? `<span class="ex-xp">+${s.xp_awarded} XP</span>` : ''}
+        </div>
+        <div class="ex-sub-heading">Vấn đề cần sửa</div>
+        <ul class="ex-list issues">${issuesHtml}</ul>
+        <div class="ex-sub-heading">Gợi ý để bạn tự sửa</div>
+        <ul class="ex-list hints">${hintsHtml}</ul>
+        ${s.status === 'finalized' && s.teacher_note ? `<div class="ex-teacher-note">👩‍🏫 Nhận xét giáo viên: ${escHtml(s.teacher_note)}</div>` : ''}
+      </div>`;
+      }
+
+      const resubmitBanner = isResubmit
+        ? `<div class="ex-resubmit-banner">⚠️ Giáo viên yêu cầu bạn nộp lại${s.teacher_note ? ': ' + escHtml(s.teacher_note) : '.'}</div>`
+        : '';
+
+      if (lesson.exercise_type === 'quiz') {
+        const questions = lesson.quiz_questions || [];
+        if (!questions.length) {
+          return `<div class="ex-block"><div class="ex-title">📝 Bài tập</div><div style="color:var(--text-muted);">Bài tập trắc nghiệm chưa có câu hỏi.</div></div>`;
+        }
+        const questionsHtml = questions.map((q, i) => `
+      <div class="ex-quiz-q">
+        <div class="ex-quiz-q-text">Câu ${i + 1}: ${escHtml(q.question_text)}</div>
+        <div class="ex-quiz-options">
+          ${q.options.map((opt, oi) => `
+          <label class="ex-quiz-option">
+            <input type="radio" name="q_${q.id}" value="${oi}">
+            <span>${escHtml(opt)}</span>
+          </label>`).join('')}
+        </div>
+      </div>`).join('');
+        return `
+      <div class="ex-block">
+        <div class="ex-title">📝 Bài tập trắc nghiệm</div>
+        ${resubmitBanner}
+        ${lesson.exercise_prompt ? `<div class="ex-prompt">${escHtml(lesson.exercise_prompt)}</div>` : ''}
+        ${questionsHtml}
+        <div class="ex-error" id="exError_${lesson.id}" style="display:none;"></div>
+        <button class="btn btn-primary" id="exSubmitBtn_${lesson.id}" onclick="handleExerciseSubmit(${lesson.id})">Nộp bài trắc nghiệm</button>
+        <div style="font-size:12px;color:var(--text-muted);margin-top:6px;">⚠️ Bạn chỉ được nộp 1 lần cho bài tập này.</div>
+      </div>`;
+      }
+      return `
+      <div class="ex-block">
+        <div class="ex-title">📝 Bài tập</div>
+        ${resubmitBanner}
+        <div class="ex-prompt">${escHtml(lesson.exercise_prompt || '')}</div>
+        <textarea class="ex-textarea" id="exAnswer_${lesson.id}" placeholder="Nhập bài làm của bạn...">${isResubmit ? escHtml(s.answer_text) : ''}</textarea>
+        <div class="ex-error" id="exError_${lesson.id}" style="display:none;"></div>
+        <button class="btn btn-primary" id="exSubmitBtn_${lesson.id}" onclick="handleExerciseSubmit(${lesson.id})">Nộp bài tập</button>
+        <div style="font-size:12px;color:var(--text-muted);margin-top:6px;">⚠️ Bạn chỉ được nộp 1 lần cho bài tập này — AI sẽ chấm điểm ngay khi nộp.</div>
+      </div>`;
+    }
+
+    async function handleExerciseSubmit(lessonId) {
+      const lesson = lessons.find(l => l.id === lessonId);
+      const errorEl = document.getElementById(`exError_${lessonId}`);
+      const btn = document.getElementById(`exSubmitBtn_${lessonId}`);
+      const isQuiz = lesson.exercise_type === 'quiz';
+      const submitLabel = isQuiz ? 'Nộp bài trắc nghiệm' : 'Nộp bài tập';
+      errorEl.style.display = 'none';
+
+      let body;
+      if (isQuiz) {
+        const answers = {};
+        let allAnswered = true;
+        (lesson.quiz_questions || []).forEach(q => {
+          const picked = document.querySelector(`input[name="q_${q.id}"]:checked`);
+          if (!picked) allAnswered = false; else answers[q.id] = Number(picked.value);
+        });
+        if (!allAnswered) {
+          errorEl.textContent = 'Vui lòng trả lời tất cả câu hỏi.';
+          errorEl.style.display = 'block';
+          return;
+        }
+        body = { user_id: currentUser.id, answers };
+      } else {
+        const textarea = document.getElementById(`exAnswer_${lessonId}`);
+        const answer = textarea.value.trim();
+        if (!answer) {
+          errorEl.textContent = 'Vui lòng nhập bài làm trước khi nộp.';
+          errorEl.style.display = 'block';
+          textarea.focus();
+          return;
+        }
+        body = { user_id: currentUser.id, answer };
+      }
+
+      btn.disabled = true;
+      btn.textContent = isQuiz ? 'Đang chấm...' : '🤖 AI đang chấm bài...';
+      try {
+        const res = await fetch(`${API}/courses/lessons/${lessonId}/exercise/submit`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body),
+        }).then(r => r.json());
+        if (res.error) {
+          errorEl.textContent = res.error;
+          errorEl.style.display = 'block';
+          btn.disabled = false;
+          btn.textContent = submitLabel;
+          return;
+        }
+        lesson.my_submission = res.my_submission;
+        if (res.my_submission.xp_awarded && currentUser) {
+          currentUser.xp = (currentUser.xp || 0) + res.my_submission.xp_awarded;
+          localStorage.setItem('currentUser', JSON.stringify(currentUser));
+        }
+        selectLesson(lessonId);
+      } catch (e) {
+        errorEl.textContent = 'Có lỗi xảy ra. Vui lòng thử lại.';
+        errorEl.style.display = 'block';
+        btn.disabled = false;
+        btn.textContent = submitLabel;
+      }
+    }
+
+    function lessonRowHtml(l) {
+      return `
+    <div class="lesson-row" data-id="${l.id}" onclick="selectLesson(${l.id})">
+      <div class="lesson-num">${l.order_num || '—'}</div>
+      <div class="lesson-info">
+        <div class="lesson-title">${escHtml(l.title)}</div>
+        <div class="lesson-dur">${l.duration_min ? l.duration_min + ' phút' : ''}${l.video_url ? ' · 🎬 Video' : ''}</div>
+      </div>
+    </div>`;
+    }
+
+    // Dạng accordion: mở 1 module thì các module khác tự thu gọn
+    function toggleModule(moduleKey) {
+      const el = document.querySelector(`.module-group[data-module="${moduleKey}"]`);
+      if (!el) return;
+      const willOpen = el.classList.contains('collapsed');
+      document.querySelectorAll('#cvLessonList .module-group').forEach(g => g.classList.add('collapsed'));
+      if (willOpen) el.classList.remove('collapsed');
+    }
+
+    const chevronSvg = '<svg class="module-chevron" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 9l6 6 6-6"/></svg>';
+
+    function renderLessonList() {
+      const el = document.getElementById('cvLessonList');
+      if (!modules.length) {
+        el.innerHTML = lessons.map(lessonRowHtml).join('');
+        return;
+      }
+      const byModule = {};
+      const noModule = [];
+      lessons.forEach(l => {
+        if (l.module_id && modules.some(m => m.id === l.module_id)) {
+          (byModule[l.module_id] = byModule[l.module_id] || []).push(l);
+        } else noModule.push(l);
+      });
+      let html = modules.map(m => {
+        const ls = byModule[m.id] || [];
+        return `
+    <div class="module-group collapsed" data-module="${m.id}">
+      <div class="module-header" onclick="toggleModule(${m.id})">
+        <div class="module-header-text">
+          <div class="module-title">${escHtml(m.title)}</div>
+          <div class="module-count">${ls.length} bài học</div>
+        </div>
+        ${chevronSvg}
+      </div>
+      <div class="module-lessons">${ls.map(lessonRowHtml).join('') || ''}</div>
+    </div>`;
+      }).join('');
+      if (noModule.length) {
+        html += `
+    <div class="module-group collapsed" data-module="none">
+      <div class="module-header" onclick="toggleModule('none')">
+        <div class="module-header-text">
+          <div class="module-title">Bài học khác</div>
+          <div class="module-count">${noModule.length} bài học</div>
+        </div>
+        ${chevronSvg}
+      </div>
+      <div class="module-lessons">${noModule.map(lessonRowHtml).join('')}</div>
+    </div>`;
+      }
+      el.innerHTML = html;
+    }
+
+    function fmtPrice(p) { return !p ? 'Miễn phí' : Number(p).toLocaleString('vi-VN') + '₫'; }
+
+    // join_mode (server): 'open' = vào học ngay · 'approval' = gửi yêu cầu, chờ admin duyệt · 'payment' = thanh toán
+    function renderEnrollWrap(c) {
+      const wrap = document.getElementById('cvEnrollWrap');
+      const note = text => `<div style="font-size:13px;color:var(--text-muted);margin-top:8px;line-height:1.5;">${text}</div>`;
+      if (c.enroll_status === 'pending') {
+        wrap.innerHTML = `<span class="cv-enroll-badge pending">⏳ Đang chờ admin duyệt</span>`
+          + note('Yêu cầu của bạn đã được gửi đến Ban tổ chức. Khi được duyệt, bạn sẽ nhận được thông báo trên ứng dụng và email.');
+      } else if (c.join_mode === 'payment') {
+        const href = c.checkout_product_id ? `checkout.html?id=${c.checkout_product_id}` : '#';
+        wrap.innerHTML = `<a href="${href}" class="cv-enroll-btn">THANH TOÁN KHÓA HỌC</a>`
+          + '<div class="rules-note">Bằng việc đăng ký, bạn đồng ý với <a href="noi-quy.html">Nội quy cộng đồng</a> và chính sách hoàn phí.</div>';
+      } else if (c.join_mode === 'approval') {
+        wrap.innerHTML = `<button class="cv-enroll-btn" onclick="enrollCourse()">Gửi yêu cầu tham gia</button>`
+          + note('Khoá học riêng tư — Ban tổ chức sẽ xem và duyệt yêu cầu của bạn.');
+      } else {
+        wrap.innerHTML = `<button class="cv-enroll-btn" onclick="enrollCourse()">Vào học ngay</button>`;
+      }
+    }
+
+    async function enrollCourse() {
+      const wrap = document.getElementById('cvEnrollWrap');
+      wrap.innerHTML = `<button class="cv-enroll-btn" disabled>Đang gửi...</button>`;
+      try {
+        const res = await fetch(`${API}/courses/${courseId}/enroll`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ user_id: currentUser.id }),
+        }).then(r => r.json());
+        if (res.error) {
+          wrap.innerHTML = `<div style="color:#ef4444;font-size:13px;">${escHtml(res.error)}</div>`;
+          return;
+        }
+        // Vào học ngay → tải lại để mở giao diện bài học; cần duyệt → hiện trạng thái chờ duyệt
+        if (res.status === 'pending') { renderEnrollWrap({ enroll_status: 'pending' }); return; }
+        location.reload();
+      } catch (e) {
+        wrap.innerHTML = `<div style="color:#ef4444;font-size:13px;">Có lỗi xảy ra. Vui lòng thử lại.</div>`;
+      }
+    }
+
+    function renderLanding(c, lessonCount) {
+      document.getElementById('cvCover').style.background = c.cover_color || 'linear-gradient(135deg, #6366f1, #8b5cf6)';
+      document.getElementById('cvLandingTitle').textContent = c.title || 'Khóa học';
+      document.getElementById('cvLandingDesc').textContent = c.description || '';
+      document.getElementById('cvInstructor').textContent = c.instructor || 'Admin';
+      document.getElementById('cvLessonCountMeta').textContent = `📚 ${lessonCount} bài học`;
+      const priceRow = document.getElementById('cvPriceRow');
+      if (c.visibility === 'private') {
+        const hasDiscount = c.compare_price > c.price;
+        const offPct = hasDiscount ? Math.round((1 - c.price / c.compare_price) * 100) : 0;
+        priceRow.innerHTML = `
+          <span class="cv-price-now">${fmtPrice(c.price)}</span>
+          ${hasDiscount ? `<span class="cv-price-compare">${fmtPrice(c.compare_price)}</span><span class="cv-price-off">-${offPct}%</span>` : ''}`;
+        priceRow.style.display = 'flex';
+      } else {
+        priceRow.style.display = 'none';
+      }
+      renderEnrollWrap(c);
+      document.getElementById('cvLanding').style.display = '';
+    }
+
+    async function loadPage() {
+      const params = new URLSearchParams(location.search);
+      courseId = Number(params.get('id'));
+      if (!courseId) { location.href = 'courses.html'; return; }
+
+      try {
+        const data = await fetch(`${API}/courses/${courseId}?user_id=${currentUser.id}`).then(r => r.json());
+        if (data.error || !data.course) { location.href = 'courses.html'; return; }
+        const c = data.course;
+
+        document.title = `${c.title} — AI AGENTS CC`;
+        document.getElementById('topbarTitle').innerHTML = `<svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="width:17px;height:17px"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/></svg>${escHtml(c.title)}`;
+        document.getElementById('mobTitle').textContent = c.title;
+        document.getElementById('cvCourseTitle').textContent = c.title;
+        document.getElementById('cvLoading').style.display = 'none';
+
+        lessons = data.lessons || [];
+        modules = data.modules || [];
+
+        // Not enrolled yet — show the course landing (info + enroll/checkout) instead of content.
+        if (c.enroll_status !== 'approved') {
+          renderLanding(c, data.lesson_count || 0);
+          return;
+        }
+
+        if (!lessons.length) {
+          document.getElementById('cvGrid').style.display = '';
+          document.getElementById('cvLessonList').innerHTML = '<div style="padding:10px 6px;color:var(--text-muted);font-size:var(--fs-sm);">Chưa có bài học nào.</div>';
+          document.getElementById('cvContentCol').innerHTML = '<div style="text-align:center;padding:40px;color:var(--text-muted);">Khóa học này chưa có bài học nào.</div>';
+          return;
+        }
+
+        document.getElementById('cvGrid').style.display = '';
+        renderLessonList();
+        selectLesson(lessons[0].id);
+      } catch (e) {
+        document.getElementById('cvLoading').innerHTML = '<div style="color:#ef4444;">⚠️ Không kết nối được máy chủ. Vui lòng kiểm tra kết nối mạng rồi thử lại.</div>';
+      }
+    }
+
+    loadPage();
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8">
+  <script src="assets/js/auth-fetch.js?v=1"></script>
+  <script>(function(){try{var t=localStorage.getItem('theme');if(t==='dark'||(!t&&window.matchMedia('(prefers-color-scheme: dark)').matches))document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex">
+  <link rel="icon" type="image/png" href="/assets/img/logo.png">
+  <link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
+  <meta name="theme-color" content="#0f766e">
+  <title>Kịch bản Zoom — AI AGENTS CC</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/base.css?v=2">
+  <link rel="stylesheet" href="assets/css/van-hanh.css?v=3">
+  <style>
+    .ks-wrap { width: 100%; box-sizing: border-box; max-width: 1400px; margin: 0 auto; padding: 24px 16px 60px; display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+    .ks-head h1 { font-family: var(--font-heading); font-size: 24px; font-weight: 800; margin: 0; }
+    .ks-head p { margin: 4px 0 0; color: var(--text-muted); font-size: 13.5px; max-width: 80ch; }
+    .ks-tabs { display: flex; gap: 8px; flex-wrap: wrap; }
+    .ks-tab { border: 1px solid var(--border); background: var(--bg-card); color: var(--text); border-radius: 99px; padding: 8px 16px; font: inherit; font-size: 13.5px; font-weight: 600; cursor: pointer; }
+    .ks-tab.on { background: var(--color-primary); border-color: var(--color-primary); color: #fff; }
+    .ks-body { display: grid; grid-template-columns: 290px minmax(0, 1fr); gap: 16px; align-items: start; }
+    .ks-list { background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 8px; display: flex; flex-direction: column; gap: 4px; position: sticky; top: 12px; max-height: calc(100vh - 40px); overflow: auto; }
+    .ks-item { text-align: left; border: none; background: none; border-radius: 10px; padding: 9px 10px; cursor: pointer; font: inherit; color: var(--text); display: flex; flex-direction: column; gap: 2px; }
+    .ks-item:hover { background: var(--bg-hover); }
+    .ks-item.on { background: var(--bg-active); }
+    .ks-item b { font-size: 13.5px; line-height: 1.35; }
+    .ks-item span { font-size: 12px; color: var(--text-muted); }
+    .ks-add { border-top: 1px solid var(--border); margin-top: 6px; padding: 10px 6px 4px; display: grid; gap: 6px; }
+    .ks-add input { width: 100%; box-sizing: border-box; border: 1px solid var(--border); border-radius: 8px; padding: 7px 9px; font: inherit; font-size: 13px; background: var(--bg-card); color: var(--text); }
+    .ks-add .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+    .ks-panel { background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 18px 20px; min-width: 0; }
+    .ks-top { display: flex; flex-wrap: wrap; gap: 10px; align-items: flex-start; justify-content: space-between; }
+    .ks-title { font-family: var(--font-heading); font-size: 20px; font-weight: 800; margin: 0; }
+    .ks-title-in { font-family: var(--font-heading); font-size: 18px; font-weight: 700; width: 100%; }
+    .ks-meta { font-size: 13px; color: var(--text-muted); margin-top: 4px; display: flex; gap: 6px 14px; flex-wrap: wrap; align-items: center; }
+    .ks-btns { display: flex; gap: 6px; flex-wrap: wrap; }
+    .ks-btn { border: 1px solid var(--border); background: var(--bg-card); color: var(--text); border-radius: 8px; padding: 7px 12px; font-size: 13px; cursor: pointer; font-family: inherit; white-space: nowrap; }
+    .ks-btn:hover { background: var(--bg-hover); }
+    .ks-btn.pri { background: var(--color-primary); border-color: var(--color-primary); color: #fff; }
+    .ks-btn.danger { color: #dc2626; }
+    .ks-sum { margin-top: 14px; }
+    .ks-bar { display: flex; height: 12px; border-radius: 99px; overflow: hidden; background: var(--bg-hover); }
+    .ks-bar i { display: block; height: 100%; }
+    .ks-bar .c { background: #10b981; } .ks-bar .s { background: #f59e0b; }
+    .ks-sumtxt { display: flex; gap: 6px 16px; flex-wrap: wrap; font-size: 13px; margin-top: 8px; }
+    .ks-sumtxt b { font-variant-numeric: tabular-nums; }
+    .dotc { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 5px; vertical-align: 0; }
+    .ks-warn { margin-top: 8px; display: flex; flex-direction: column; gap: 4px; }
+    .ks-warn div { font-size: 12.5px; background: #fef3c7; color: #92400e; border-radius: 8px; padding: 5px 10px; }
+    [data-theme="dark"] .ks-warn div { background: #3a2c12; color: #fde68a; }
+    .ks-segs { margin-top: 16px; display: flex; flex-direction: column; gap: 10px; }
+    .ks-group { font-size: 12px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: var(--text-muted); margin: 6px 0 -2px; }
+    .ks-seg { display: grid; grid-template-columns: 96px minmax(0, 1fr); gap: 14px; border: 1px solid var(--border); border-left: 4px solid #10b981; border-radius: 12px; padding: 12px 14px; }
+    .ks-seg.sale { border-left-color: #f59e0b; }
+    .ks-time { font-variant-numeric: tabular-nums; font-weight: 700; font-size: 13.5px; }
+    .ks-time small { display: block; font-weight: 500; color: var(--text-muted); font-size: 12px; }
+    .ks-seg h3 { margin: 0; font-size: 15px; }
+    .ks-chips { display: flex; gap: 6px; flex-wrap: wrap; margin: 4px 0 6px; }
+    .chip { display: inline-block; border-radius: 999px; padding: 1px 9px; font-size: 11.5px; font-weight: 700; background: var(--bg-hover); color: var(--text); white-space: nowrap; }
+    .chip.c { background: #d1fae5; color: #065f46; } .chip.s { background: #fef3c7; color: #92400e; }
+    [data-theme="dark"] .chip.c { background: #10372a; color: #6ee7b7; } [data-theme="dark"] .chip.s { background: #3a2c12; color: #fde68a; }
+    .ks-script { white-space: pre-wrap; font-size: 13.5px; line-height: 1.6; color: var(--text); }
+    .ks-seg input, .ks-seg select, .ks-seg textarea, .ks-notes textarea, .ks-start { border: 1px solid var(--border); border-radius: 8px; padding: 7px 9px; font: inherit; font-size: 13.5px; background: var(--bg-card); color: var(--text); box-sizing: border-box; }
+    .ks-seg textarea, .ks-notes textarea { width: 100%; resize: vertical; line-height: 1.55; }
+    .ks-erow { display: grid; grid-template-columns: 110px 170px minmax(0, 1fr); gap: 6px; margin-bottom: 6px; }
+    .ks-erow input[data-f="title"] { grid-column: 1 / -1; font-weight: 600; }
+    .ks-etools { display: flex; gap: 4px; margin-top: 6px; }
+    .ks-etools button { border: 1px solid var(--border); background: var(--bg-card); color: var(--text); border-radius: 7px; padding: 3px 9px; font-size: 12px; cursor: pointer; }
+    .ks-adds { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 4px; }
+    .ks-notes { margin-top: 16px; }
+    .ks-notes h4 { margin: 0 0 6px; font-size: 14px; }
+    .ks-foot { font-size: 12px; color: var(--text-muted); margin-top: 14px; }
+    .ks-empty { color: var(--text-muted); font-size: 13.5px; padding: 30px 10px; text-align: center; }
+    @media (max-width: 900px) {
+      .ks-body { grid-template-columns: 1fr; }
+      .ks-list { position: static; max-height: none; flex-direction: row; overflow-x: auto; }
+      .ks-item { min-width: 190px; }
+      .ks-add { min-width: 220px; border-top: none; border-left: 1px solid var(--border); margin: 0; }
+      .ks-seg { grid-template-columns: 1fr; gap: 6px; }
+      .ks-erow { grid-template-columns: 1fr 1fr; }
+    }
+    .ks-dl { position: relative; display: inline-block; }
+    .ks-dl > summary { list-style: none; }
+    .ks-dl > summary::-webkit-details-marker { display: none; }
+    .ks-dl-menu { position: absolute; right: 0; top: calc(100% + 6px); z-index: 20; background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,.18); padding: 6px; min-width: 260px; }
+    .ks-dl-menu button { display: block; width: 100%; text-align: left; border: 0; background: none; color: var(--text); padding: 9px 10px; border-radius: 7px; font: inherit; font-size: 13.5px; cursor: pointer; }
+    .ks-dl-menu button:hover { background: var(--bg-hover); }
+    .ks-dl-menu small { display: block; color: var(--text-muted); font-size: 11.5px; }
+    @media print {
+      .vh-side, .ks-tabs, .ks-list, .ks-btns, .vh-note, .ks-head p, #ksNote { display: none !important; }
+      .vh-shell, .ks-body { display: block !important; }
+      .ks-wrap { padding: 0; max-width: none; }
+      .ks-panel { border: none; padding: 0; }
+      .ks-seg { break-inside: avoid; }
+      body { background: #fff; color: #000; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="vh-shell">
+    <aside class="vh-side" id="vhSide" aria-label="Điều hướng vận hành"></aside>
+    <main class="ks-wrap vh-main">
+      <div class="ks-head">
+        <h1>🎤 Kịch bản live Zoom</h1>
+        <p>Mỗi buổi 90–120 phút: 60–90 phút đầu là nội dung (chia thành từng phần, mỗi phần bao nhiêu phút), 30 phút cuối là chốt sale. Giờ từng phần tự tính theo giờ bắt đầu. Admin chỉnh sửa được; nhân viên xem và in.</p>
+      </div>
+      <div id="ksNote"></div>
+      <div class="ks-tabs" id="ksTabs" role="tablist"></div>
+      <div class="ks-body">
+        <nav class="ks-list" id="ksList" aria-label="Danh sách buổi"></nav>
+        <section class="ks-panel" id="ksPanel"><div class="ks-empty">Đang tải…</div></section>
+      </div>
+    </main>
+  </div>
+
+  <script src="assets/js/van-hanh.js?v=6"></script>
+  <script>
+    VH.nav('kich-ban');
+    const esc = VH.esc;
+    let D = null, prog = 'workshop3', slot = null, editing = false, draft = null;
+    try { prog = localStorage.getItem('ksProg') || 'workshop3'; } catch (e) {}
+    const ROLE_OPTS = () => Object.entries(D.roles);
+    const toMin = hm => { const [h, m] = String(hm || '20:00').split(':').map(Number); return (h || 0) * 60 + (m || 0); };
+    const toHM = m => `${String(Math.floor(m / 60) % 24).padStart(2, '0')}:${String(m % 60).padStart(2, '0')}`;
+    const dmy = d => d ? d.split('-').reverse().join('/') : '';
+    const progOf = () => D.programs.find(p => p.key === prog) || D.programs[0];
+    const curScript = () => progOf().scripts.find(s => s.slot === slot);
+
+    async function ksLoad(keep) {
+      try { D = await VH.api('/api/zoom-scripts'); }
+      catch (e) { document.getElementById('ksPanel').innerHTML = `<div class="ks-empty">${esc(e.message)}</div>`; return; }
+      document.getElementById('ksNote').innerHTML = D.me.is_admin
+        ? '<div class="vh-note">✏️ Bạn là admin — bấm <b>Chỉnh sửa</b> để sửa thời gian, nội dung và thời lượng từng phần.</div>'
+        : '<div class="vh-note">👁️ Bạn đang xem kịch bản. Chỉ admin chỉnh sửa được — cần sửa gì hãy nhắn admin.</div>';
+      if (!D.programs.some(p => p.key === prog)) prog = 'workshop3';
+      if (!keep || !curScript()) slot = (progOf().scripts[0] || {}).slot || null;
+      render();
+    }
+    function totals(segs) {
+      const c = segs.filter(s => s.kind === 'content').reduce((a, s) => a + (+s.minutes || 0), 0);
+      const s = segs.filter(s => s.kind === 'sale').reduce((a, x) => a + (+x.minutes || 0), 0);
+      return { c, s, t: c + s };
+    }
+    function warnings(segs) {
+      const { c, s, t } = totals(segs), w = [];
+      if (c < 60 || c > 90) w.push(`Phần nội dung đang ${c} phút — nên trong khoảng 60–90 phút.`);
+      if (s !== 30) w.push(`Phần chốt sale đang ${s} phút — chuẩn là 30 phút cuối buổi.`);
+      if (t < 90 || t > 120) w.push(`Tổng buổi đang ${t} phút — nên trong khoảng 90–120 phút.`);
+      const firstSale = segs.findIndex(x => x.kind === 'sale');
+      if (firstSale >= 0 && segs.slice(firstSale).some(x => x.kind === 'content')) w.push('Có phần nội dung nằm sau phần chốt sale — chốt sale nên ở cuối buổi.');
+      return w;
+    }
+    function render() {
+      document.getElementById('ksTabs').innerHTML = D.programs.map(p =>
+        `<button type="button" role="tab" class="ks-tab${p.key === prog ? ' on' : ''}" aria-selected="${p.key === prog}" onclick="ksProg('${p.key}')">${esc(p.label)} <span style="opacity:.75">(${p.scripts.length})</span></button>`).join('');
+      const P = progOf();
+      document.getElementById('ksList').innerHTML = (P.scripts.length ? P.scripts.map(s => {
+        const T = totals(s.segments);
+        return `<button type="button" class="ks-item${s.slot === slot ? ' on' : ''}" onclick="ksPick('${esc(s.slot)}')"><b>${esc(s.title)}</b>
+          <span>${s.date ? dmy(s.date) + ' · ' : ''}${esc(s.start_time)} · ${T.t} phút${s.customized ? ' · ✏️ đã chỉnh' : ''}</span></button>`;
+      }).join('') : `<div class="ks-empty">${prog === 'other' ? 'Chưa có kịch bản Zoom khác.' : 'Chưa có buổi nào — thêm buổi trong Admin.'}</div>`)
+        + (prog === 'other' && D.me.is_admin ? `<div class="ks-add"><b style="font-size:13px;">+ Thêm kịch bản Zoom khác</b>
+            <input id="ksNewTitle" placeholder="Tên buổi, VD: Zoom chia sẻ Giấm AI Agents CC">
+            <div class="row2"><input id="ksNewDate" type="date" aria-label="Ngày"><input id="ksNewTime" type="time" value="20:00" aria-label="Giờ bắt đầu"></div>
+            <button class="ks-btn pri" type="button" onclick="ksAddOther()">Tạo từ mẫu chung</button></div>` : '');
+      renderPanel();
+    }
+    function renderPanel() {
+      const S = curScript(), box = document.getElementById('ksPanel');
+      if (!S) { box.innerHTML = `<div class="ks-empty">Chọn một buổi ở danh sách bên trái.</div>`; return; }
+      const v = editing ? draft : S;
+      const T = totals(v.segments), start = toMin(v.start_time), end = start + T.t;
+      const admin = D.me.is_admin;
+      const top = editing
+        ? `<div style="flex:1;min-width:240px;"><input class="ks-title-in ks-start" id="ksTitle" value="${esc(v.title)}" oninput="draft.title=this.value" aria-label="Tên kịch bản">
+            <div class="ks-meta">${S.session_title && S.session_title !== v.title ? `Buổi: ${esc(S.session_title)} · ` : ''}${S.date ? 'Ngày ' + dmy(S.date) + ' · ' : ''}
+            <label>Bắt đầu lúc <input class="ks-start" type="time" id="ksStart" value="${esc(v.start_time)}" oninput="draft.start_time=this.value||'20:00';refreshTimes()"></label></div></div>`
+        : `<div style="flex:1;min-width:240px;"><h2 class="ks-title">${esc(v.title)}</h2>
+            <div class="ks-meta">${S.session_title && S.session_title !== v.title ? `<span>Buổi: ${esc(S.session_title)}</span>` : ''}${S.date ? `<span>📅 ${dmy(S.date)}</span>` : ''}<span>🕗 ${toHM(start)} – ${toHM(end)}</span><span>${T.t} phút</span></div></div>`;
+      const btns = editing
+        ? `<button class="ks-btn pri" type="button" onclick="ksSave()">💾 Lưu</button><button class="ks-btn" type="button" onclick="ksCancel()">Huỷ</button>
+           ${prog === 'other' ? `<button class="ks-btn danger" type="button" onclick="ksDelete()">🗑 Xoá kịch bản</button>` : (S.customized ? `<button class="ks-btn danger" type="button" onclick="ksReset()">↺ Khôi phục mẫu gốc</button>` : '')}`
+        : `${admin ? `<button class="ks-btn pri" type="button" onclick="ksEdit()">✏️ Chỉnh sửa</button>` : ''}<details class="ks-dl"><summary class="ks-btn">🖨️ In / Tải về ▾</summary><div class="ks-dl-menu">
+            <button type="button" onclick="ksPdf(this)">📄 PDF<small>Mở hộp in → chọn máy in hoặc "Lưu dưới dạng PDF"</small></button>
+            <button type="button" onclick="ksDocx(this)">📝 Word (.docx)<small>Tải file Word để chỉnh sửa tiếp</small></button></div></details>`;
+      let segHtml = '', lastKind = null;
+      v.segments.forEach((s, i) => {
+        if (s.kind !== lastKind) { segHtml += `<div class="ks-group">${s.kind === 'sale' ? '💰 Chốt sale' : '📚 Nội dung'}</div>`; lastKind = s.kind; }
+        segHtml += editing ? segEdit(s, i) : segView(s, i);
+      });
+      box.innerHTML = `
+        <div class="ks-top">${top}<div class="ks-btns">${btns}</div></div>
+        <div class="ks-sum" id="ksSum"></div>
+        <div class="ks-segs" id="ksSegs">${segHtml}</div>
+        ${editing ? `<div class="ks-adds"><button class="ks-btn" type="button" onclick="ksAddSeg('content')">+ Phần nội dung</button><button class="ks-btn" type="button" onclick="ksAddSeg('sale')">+ Phần chốt sale</button></div>` : ''}
+        ${editing ? `<div class="ks-notes"><h4>Ghi chú chung cho buổi (chuẩn bị, link, tài liệu…)</h4><textarea rows="3" oninput="draft.notes=this.value">${esc(v.notes)}</textarea></div>`
+          : (v.notes ? `<div class="ks-notes"><h4>Ghi chú chung</h4><div class="ks-script">${esc(v.notes)}</div></div>` : '')}
+        ${!editing ? `<div class="ks-foot">${S.customized ? `Chỉnh lần cuối ${esc(S.updated_at || '')}${S.updated_by ? ' bởi ' + esc(S.updated_by) : ''}.` : 'Đang dùng kịch bản mẫu gốc.'}</div>` : ''}`;
+      refreshTimes();
+    }
+    function segTimes(v) {
+      let t = toMin(v.start_time);
+      return v.segments.map(s => { const a = t; t += (+s.minutes || 0); return [a, t]; });
+    }
+    function segView(s, i) {
+      const role = D.roles[s.role] || '';
+      return `<article class="ks-seg${s.kind === 'sale' ? ' sale' : ''}">
+        <div class="ks-time" data-t="${i}"></div>
+        <div><h3>${esc(s.title)}</h3>
+          <div class="ks-chips"><span class="chip ${s.kind === 'sale' ? 's' : 'c'}">${s.kind === 'sale' ? '💰 Chốt sale' : '📚 Nội dung'}</span>${role ? `<span class="chip">👤 ${esc(role)}</span>` : ''}</div>
+          <div class="ks-script">${esc(s.script)}</div></div>
+      </article>`;
+    }
+    function segEdit(s, i) {
+      const n = draft.segments.length;
+      return `<article class="ks-seg${s.kind === 'sale' ? ' sale' : ''}">
+        <div class="ks-time" data-t="${i}"></div>
+        <div>
+          <div class="ks-erow">
+            <input data-f="title" value="${esc(s.title)}" placeholder="Tên phần" aria-label="Tên phần" oninput="draft.segments[${i}].title=this.value">
+            <input type="number" min="0" max="240" value="${+s.minutes || 0}" aria-label="Số phút" oninput="draft.segments[${i}].minutes=+this.value||0;refreshTimes()" title="Số phút">
+            <select aria-label="Loại" onchange="draft.segments[${i}].kind=this.value;renderPanel()"><option value="content"${s.kind === 'content' ? ' selected' : ''}>📚 Nội dung</option><option value="sale"${s.kind === 'sale' ? ' selected' : ''}>💰 Chốt sale</option></select>
+            <select aria-label="Người phụ trách" onchange="draft.segments[${i}].role=this.value">${ROLE_OPTS().map(([k, l]) => `<option value="${k}"${s.role === k ? ' selected' : ''}>${esc(l)}</option>`).join('')}</select>
+          </div>
+          <textarea rows="${Math.min(10, Math.max(3, String(s.script).split('\n').length + 1))}" placeholder="Lời dẫn, câu hỏi tương tác, việc cần làm…" aria-label="Nội dung chi tiết" oninput="draft.segments[${i}].script=this.value">${esc(s.script)}</textarea>
+          <div class="ks-etools">
+            <button type="button" onclick="ksMove(${i},-1)" ${i === 0 ? 'disabled' : ''} title="Lên">↑</button>
+            <button type="button" onclick="ksMove(${i},1)" ${i === n - 1 ? 'disabled' : ''} title="Xuống">↓</button>
+            <button type="button" onclick="ksDup(${i})" title="Nhân đôi">⧉</button>
+            <button type="button" onclick="ksDel(${i})" title="Xoá phần này">🗑 Xoá</button>
+          </div>
+        </div>
+      </article>`;
+    }
+    // Cập nhật giờ từng phần + thanh tổng mà không vẽ lại ô nhập (giữ con trỏ)
+    function refreshTimes() {
+      const v = editing ? draft : curScript();
+      if (!v) return;
+      const times = segTimes(v);
+      document.querySelectorAll('.ks-time[data-t]').forEach(el => {
+        const i = +el.dataset.t, s = v.segments[i];
+        if (!s || !times[i]) return;
+        el.innerHTML = `${toHM(times[i][0])} – ${toHM(times[i][1])}<small>${+s.minutes || 0} phút</small>`;
+      });
+      const T = totals(v.segments), w = warnings(v.segments);
+      const pc = T.t ? T.c / T.t * 100 : 0;
+      document.getElementById('ksSum').innerHTML = `
+        <div class="ks-bar" role="img" aria-label="Nội dung ${T.c} phút, chốt sale ${T.s} phút"><i class="c" style="width:${pc}%"></i><i class="s" style="width:${100 - pc}%"></i></div>
+        <div class="ks-sumtxt"><span><i class="dotc" style="background:#10b981"></i>Nội dung <b>${T.c}</b> phút</span><span><i class="dotc" style="background:#f59e0b"></i>Chốt sale <b>${T.s}</b> phút</span>
+          <span>Tổng <b>${T.t}</b> phút · ${toHM(toMin(v.start_time))} – ${toHM(toMin(v.start_time) + T.t)}</span><span>${v.segments.length} phần</span></div>
+        ${w.length ? `<div class="ks-warn">${w.map(x => `<div>⚠️ ${esc(x)}</div>`).join('')}</div>` : ''}`;
+    }
+    function ksProg(p) {
+      if (editing && !confirm('Bạn đang chỉnh sửa chưa lưu. Bỏ thay đổi?')) return;
+      editing = false; prog = p; slot = (progOf().scripts[0] || {}).slot || null;
+      try { localStorage.setItem('ksProg', p); } catch (e) {}
+      render();
+    }
+    function ksPick(s) {
+      if (editing && !confirm('Bạn đang chỉnh sửa chưa lưu. Bỏ thay đổi?')) return;
+      editing = false; slot = s; render();
+      if (window.innerWidth < 900) document.getElementById('ksPanel').scrollIntoView({ behavior: 'smooth' });
+    }
+    function ksEdit() { draft = JSON.parse(JSON.stringify(curScript())); editing = true; renderPanel(); }
+    function ksCancel() { editing = false; draft = null; renderPanel(); }
+    function ksMove(i, d) { const a = draft.segments; [a[i], a[i + d]] = [a[i + d], a[i]]; renderPanel(); }
+    function ksDup(i) { const a = draft.segments; a.splice(i + 1, 0, { ...a[i], id: 's' + Date.now().toString(36) }); renderPanel(); }
+    function ksDel(i) { if (draft.segments.length <= 1) return alert('Kịch bản cần ít nhất 1 phần.'); draft.segments.splice(i, 1); renderPanel(); }
+    function ksAddSeg(kind) {
+      const seg = { id: 's' + Date.now().toString(36), kind, title: kind === 'sale' ? 'Phần chốt sale mới' : 'Phần nội dung mới', minutes: 10, role: 'host', script: '' };
+      const a = draft.segments;
+      if (kind === 'content') { const fs = a.findIndex(x => x.kind === 'sale'); a.splice(fs < 0 ? a.length : fs, 0, seg); } else a.push(seg);
+      renderPanel();
+    }
+    async function ksSave() {
+      const body = { title: draft.title, start_time: draft.start_time, notes: draft.notes, segments: draft.segments };
+      try {
+        await VH.api(`/api/zoom-scripts/${prog}/${encodeURIComponent(slot)}`, { method: 'PUT', body });
+        editing = false; draft = null;
+        await ksLoad(true);
+      } catch (e) { alert(e.message); }
+    }
+    async function ksReset() {
+      if (!confirm('Khôi phục kịch bản mẫu gốc cho buổi này? Phần đã chỉnh sẽ mất.')) return;
+      try { await VH.api(`/api/zoom-scripts/${prog}/${encodeURIComponent(slot)}`, { method: 'DELETE' }); editing = false; await ksLoad(true); } catch (e) { alert(e.message); }
+    }
+    async function ksDelete() {
+      if (!confirm('Xoá hẳn kịch bản này?')) return;
+      try { await VH.api(`/api/zoom-scripts/other/${encodeURIComponent(slot)}`, { method: 'DELETE' }); editing = false; await ksLoad(false); } catch (e) { alert(e.message); }
+    }
+    async function ksAddOther() {
+      const title = document.getElementById('ksNewTitle').value.trim();
+      if (!title) return document.getElementById('ksNewTitle').focus();
+      try {
+        const r = await VH.api('/api/zoom-scripts/other', { method: 'POST', body: { title, event_date: document.getElementById('ksNewDate').value, start_time: document.getElementById('ksNewTime').value } });
+        await ksLoad(true); slot = r.slot; render(); ksEdit();
+      } catch (e) { alert(e.message); }
+    }
+    // ── In / Tải về: PDF (hộp in của trình duyệt) hoặc Word .docx (tạo ngay trên máy) ──
+    document.addEventListener('click', e => { document.querySelectorAll('.ks-dl[open]').forEach(d => { if (!d.contains(e.target)) d.open = false; }); });
+    // In luôn ở giao diện sáng (giao diện tối in ra chữ trắng trên giấy trắng)
+    let ksTheme = null;
+    window.addEventListener('beforeprint', () => { ksTheme = document.documentElement.getAttribute('data-theme'); document.documentElement.setAttribute('data-theme', 'light'); });
+    window.addEventListener('afterprint', () => { if (ksTheme === null) document.documentElement.removeAttribute('data-theme'); else document.documentElement.setAttribute('data-theme', ksTheme); });
+    function ksPdf(btn) { btn.closest('details').open = false; setTimeout(() => window.print(), 50); }
+    let ksDocxLib = null;
+    const ksLoadDocx = () => ksDocxLib || (ksDocxLib = new Promise((ok, fail) => {
+      const sc = document.createElement('script');
+      sc.src = 'https://cdn.jsdelivr.net/npm/docx@8.5.0/build/index.umd.js';
+      sc.onload = () => window.docx ? ok(window.docx) : fail(new Error('Không tải được thư viện Word.'));
+      sc.onerror = () => { ksDocxLib = null; fail(new Error('Không tải được thư viện Word — kiểm tra mạng rồi thử lại.')); };
+      document.head.appendChild(sc);
+    }));
+    async function ksDocx(btn) {
+      const old = btn.innerHTML;
+      btn.disabled = true; btn.innerHTML = '⏳ Đang tạo file Word…';
+      try {
+        const d = await ksLoadDocx();
+        const S = curScript(), v = S, P = progOf();
+        const T = totals(v.segments), start = toMin(v.start_time), times = segTimes(v);
+        const { Document, Packer, Paragraph, TextRun, Table, TableRow, TableCell, WidthType, ShadingType, HeadingLevel } = d;
+        const run = (text, o = {}) => new TextRun({ text: String(text || ''), size: 22, ...o });
+        const para = (text, o = {}, p = {}) => new Paragraph({ ...p, children: [run(text, o)] });
+        const lines = txt => String(txt || '').split('\n').map(l => para(l, {}, { spacing: { after: 60 } }));
+        const shade = fill => ({ type: ShadingType.CLEAR, color: 'auto', fill });
+        const cell = (children, w, fill) => new TableCell({ children, width: { size: w, type: WidthType.PERCENTAGE },
+          margins: { top: 80, bottom: 80, left: 100, right: 100 }, ...(fill ? { shading: shade(fill) } : {}) });
+        const rows = [new TableRow({ tableHeader: true, children: [
+          cell([para('Giờ', { bold: true })], 16, 'E2E8F0'), cell([para('Phần', { bold: true })], 28, 'E2E8F0'),
+          cell([para('Nội dung chi tiết / lời dẫn', { bold: true })], 56, 'E2E8F0')] })];
+        let last = null;
+        v.segments.forEach((s, i) => {
+          const sale = s.kind === 'sale';
+          if (s.kind !== last) {
+            last = s.kind;
+            rows.push(new TableRow({ children: [new TableCell({ columnSpan: 3, shading: shade(sale ? 'FEF3C7' : 'D1FAE5'),
+              margins: { top: 60, bottom: 60, left: 100, right: 100 }, children: [para(sale ? 'CHỐT SALE' : 'NỘI DUNG', { bold: true })] })] }));
+          }
+          rows.push(new TableRow({ children: [
+            cell([para(`${toHM(times[i][0])} – ${toHM(times[i][1])}`, { bold: true }), para(`${+s.minutes || 0} phút`, { size: 20, color: '64748B' })], 16),
+            cell([para(s.title, { bold: true }), ...(D.roles[s.role] ? [para('Phụ trách: ' + D.roles[s.role], { size: 20, color: '64748B' })] : [])], 28),
+            cell(lines(s.script), 56)] }));
+        });
+        const meta = [S.session_title && S.session_title !== v.title ? 'Buổi: ' + S.session_title : '', S.date ? 'Ngày ' + dmy(S.date) : '',
+          `${toHM(start)} – ${toHM(start + T.t)}`, `${T.t} phút`].filter(Boolean).join('  ·  ');
+        const doc = new Document({
+          creator: 'AI Agents CC', title: v.title || 'Kịch bản Zoom',
+          styles: { default: { document: { run: { font: 'Arial' } } } },
+          sections: [{ properties: { page: { margin: { top: 1000, bottom: 1000, left: 1000, right: 1000 } } }, children: [
+            para('KỊCH BẢN LIVE ZOOM · ' + P.label.toUpperCase(), { size: 20, color: '0D9488', bold: true }),
+            para(v.title, { bold: true, size: 36 }, { heading: HeadingLevel.HEADING_1, spacing: { after: 120 } }),
+            para(meta, {}, { spacing: { after: 80 } }),
+            para(`Nội dung ${T.c} phút  ·  Chốt sale ${T.s} phút  ·  ${v.segments.length} phần`, { color: '475569' }, { spacing: { after: 200 } }),
+            new Table({ width: { size: 100, type: WidthType.PERCENTAGE }, rows }),
+            ...(v.notes ? [para('Ghi chú chung', { bold: true, size: 26 }, { heading: HeadingLevel.HEADING_2, spacing: { before: 300, after: 100 } }), ...lines(v.notes)] : []),
+          ] }],
+        });
+        const blob = await Packer.toBlob(doc);
+        const name = ('Kich ban Zoom - ' + (v.title || 'buoi')).normalize('NFD').replace(/[̀-ͯ]/g, '')
+          .replace(/đ/g, 'd').replace(/Đ/g, 'D').replace(/[^\w\- ]+/g, '').trim().slice(0, 90) + '.docx';
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob); a.download = name;
+        document.body.appendChild(a); a.click(); a.remove();
+        setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+        btn.closest('details').open = false;
+      } catch (e) { alert(e.message || 'Không tạo được file Word.'); }
+      finally { btn.disabled = false; btn.innerHTML = old; }
+    }
+    window.addEventListener('beforeunload', e => { if (editing) { e.preventDefault(); e.returnValue = ''; } });
+    ksLoad(false);
+  </script>
+</body>
+
+</html>

@@ -3,15 +3,22 @@
 
 <head>
   <meta charset="UTF-8">
+  <script src="assets/js/auth-fetch.js?v=1"></script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" href="/assets/img/logo.png">
+  <link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
+  <link rel="manifest" href="/manifest.json?v=2">
+  <meta name="apple-mobile-web-app-title" content="AI Agents CC">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="theme-color" content="#0ea5e9">
   <title>Thanh toán — AI AGENTS CC</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
     href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap"
     rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/base.css">
-  <link rel="stylesheet" href="assets/css/components.css">
+  <link rel="stylesheet" href="assets/css/base.css?v=2">
+  <link rel="stylesheet" href="assets/css/components.css?v=11">
   <style>
     * {
       box-sizing: border-box;
@@ -234,6 +241,12 @@
       font-size: 22px;
       font-weight: 800;
       color: #7c3aed;
+    }
+
+    .co-price-compare {
+      font-size: 13px;
+      color: var(--text-muted);
+      text-decoration: line-through;
     }
 
     /* Form */
@@ -654,13 +667,8 @@
       Quay lại Marketplace
     </a>
     <a href="feed.html" class="co-logo">
-      <div class="co-logo-mark">
-        <svg viewBox="0 0 20 20" fill="none">
-          <circle cx="10" cy="10" r="3" fill="currentColor" />
-          <path d="M10 3v2M10 15v2M3 10h2M15 10h2" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-        </svg>
-      </div>
-      <div class="co-logo-text">AI AGENTS <span>CC</span></div>
+      <div class="co-logo-mark" style="background:transparent;"><img src="assets/img/logo.png" alt="Logo" style="width:100%;height:100%;object-fit:contain;"></div>
+      <div class="co-logo-text">AI AGENTS CC</div>
     </a>
     <div class="co-secure">
       <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="width:14px;height:14px">
@@ -708,23 +716,13 @@
             </div>
             <div class="co-price-row">
               <div class="co-price-label">Tổng thanh toán</div>
-              <div class="co-price-val" id="productPrice"></div>
+              <div style="text-align:right;">
+                <div class="co-price-compare" id="productComparePrice" style="display:none;"></div>
+                <div class="co-price-val" id="productPrice"></div>
+              </div>
             </div>
           </div>
 
-          <div class="co-card">
-            <div class="co-card-header">Bạn sẽ nhận được</div>
-            <div class="co-card-body">
-              <div class="benefit-item"><span class="benefit-check">✓</span><span>Truy cập ngay sau khi thanh toán được
-                  xác nhận</span></div>
-              <div class="benefit-item"><span class="benefit-check">✓</span><span>File/link được gửi qua email đã đăng
-                  ký</span></div>
-              <div class="benefit-item"><span class="benefit-check">✓</span><span>Hỗ trợ từ người bán trong 7 ngày sau
-                  mua</span></div>
-              <div class="benefit-item"><span class="benefit-check">✓</span><span>Đổi trả trong 24h nếu không đúng mô
-                  tả</span></div>
-            </div>
-          </div>
         </div>
 
         <!-- Right: Form -->
@@ -756,7 +754,7 @@
               <div style="width:40px;height:40px;border-radius:10px;background:#f5f3ff;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">🏦</div>
               <div>
                 <div style="font-size:var(--fs-sm);font-weight:700;color:var(--text)">Chuyển khoản ngân hàng</div>
-                <div style="font-size:12px;color:var(--text-muted);margin-top:2px">Xác nhận tự động qua SePay · BIDV</div>
+                <div style="font-size:12px;color:var(--text-muted);margin-top:2px">Xác nhận tự động qua SePay</div>
               </div>
               <div style="margin-left:auto;width:18px;height:18px;border-radius:50%;border:2px solid #7c3aed;display:flex;align-items:center;justify-content:center;flex-shrink:0">
                 <div style="width:8px;height:8px;border-radius:50%;background:#7c3aed"></div>
@@ -767,9 +765,7 @@
           <button class="co-confirm-btn" id="confirmBtn" onclick="confirmOrder()">
             Xác nhận đặt hàng →
           </button>
-          <p class="co-terms">Bằng cách đặt hàng, bạn đồng ý với <a href="terms.html" target="_blank" rel="noopener" style="color:#7c3aed">điều khoản sử
-              dụng</a>, <a href="payment-policy.html" target="_blank" rel="noopener" style="color:#7c3aed">chính sách thanh toán</a>
-            và <a href="refund-policy.html" target="_blank" rel="noopener" style="color:#7c3aed">chính sách hoàn tiền</a>.</p>
+          <p class="co-terms">Bằng cách đặt hàng, bạn đồng ý với <a href="terms.html" target="_blank" rel="noopener" style="color:#7c3aed">điều khoản sử dụng</a>, <a href="payment-policy.html" target="_blank" rel="noopener" style="color:#7c3aed">chính sách thanh toán</a> và <a href="refund-policy.html" target="_blank" rel="noopener" style="color:#7c3aed">chính sách hoàn tiền</a>.</p>
         </div>
 
       </div>
@@ -806,7 +802,7 @@
             <!-- Bank transfer panel -->
             <div id="detail-bank" class="co-card-body" style="border-bottom:1px solid var(--border)">
               <div class="qr-wrap">
-                <img id="sePayQR" class="qr-img" src="" alt="QR chuyển khoản BIDV" style="display:none">
+                <img id="sePayQR" class="qr-img" src="" alt="QR chuyển khoản ngân hàng" style="display:none">
                 <div id="qrLoading" class="qr-placeholder">
                   <span>🔄</span>
                   <span style="font-size:12px">Đang tạo QR...</span>
@@ -816,19 +812,19 @@
               <div class="bank-info">
                 <div class="bank-row">
                   <span class="bank-key">Ngân hàng</span>
-                  <span class="bank-val">BIDV</span>
+                  <span class="bank-val" id="bankName"></span>
                 </div>
                 <div class="bank-row">
                   <span class="bank-key">Số tài khoản</span>
                   <div style="display:flex;align-items:center;gap:6px">
-                    <span class="bank-val">96247NGUYEN</span>
-                    <button class="bank-copy" id="copyAccBtn" onclick="copyAndMark('96247NGUYEN','copyAccBtn')">Sao
+                    <span class="bank-val" id="bankAcc"></span>
+                    <button class="bank-copy" id="copyAccBtn" onclick="copyAndMark(BANK.acc,'copyAccBtn')">Sao
                       chép</button>
                   </div>
                 </div>
                 <div class="bank-row">
                   <span class="bank-key">Chủ tài khoản</span>
-                  <span class="bank-val">TỪ CHÍ NGUYỆN</span>
+                  <span class="bank-val" id="bankOwner"></span>
                 </div>
                 <div class="bank-row">
                   <span class="bank-key">Số tiền</span>
@@ -872,7 +868,7 @@
     <div id="successState">
       <div class="success-icon">✅</div>
       <div class="success-title">Thanh toán thành công!</div>
-      <div class="success-sub">
+      <div class="success-sub" id="successSub">
         Hệ thống đã xác nhận thanh toán của bạn.<br>
         Sản phẩm sẽ được gửi qua email trong vòng <strong>1–4 giờ</strong>.
       </div>
@@ -881,9 +877,9 @@
         <div style="font-size:var(--fs-sm);color:var(--text);font-weight:600" id="successProductTitle"></div>
         <div style="font-size:12px;color:var(--text-muted);margin-top:4px" id="successOrderInfo"></div>
       </div>
-      <div class="success-actions">
+      <div class="success-actions" id="successActions">
         <a href="marketplace.html" class="btn-outline-purple">← Về Marketplace</a>
-        <a href="feed.html" class="btn-solid-purple">Về Bảng tin</a>
+        <a href="feed.html" class="btn-solid-purple">Về Feed</a>
       </div>
     </div>
 
@@ -891,7 +887,7 @@
     <div id="pendingState">
       <div class="success-icon" style="background:#fef9c3;font-size:36px">⏳</div>
       <div class="success-title">Đã ghi nhận xác nhận của bạn!</div>
-      <div class="success-sub">
+      <div class="success-sub" id="pendingSub">
         Chúng tôi đã nhận được thông tin chuyển khoản.<br>
         Admin sẽ kiểm tra và xác nhận trong vòng <strong>1–4 giờ</strong> làm việc.<br>
         Một email xác nhận đã được gửi đến hộp thư của bạn.
@@ -903,7 +899,7 @@
       </div>
       <div class="success-actions">
         <a href="marketplace.html" class="btn-outline-purple">← Về Marketplace</a>
-        <a href="feed.html" class="btn-solid-purple">Về Bảng tin</a>
+        <a href="feed.html" class="btn-solid-purple">Về Feed</a>
       </div>
     </div>
 
@@ -917,10 +913,10 @@
       agent: { label: 'AI Agent', icon: '🤖', bg: '#ede9fe', color: '#5b21b6' },
       ebook: { label: 'Ebook & Tài liệu', icon: '📚', bg: '#d1fae5', color: '#065f46' },
       tool: { label: 'Công cụ & Script', icon: '🔧', bg: '#dbeafe', color: '#1e40af' },
-      course: { label: 'Mini Course', icon: '🎓', bg: '#fce7f3', color: '#9d174d' },
+      course: { label: 'Khóa học', icon: '🎓', bg: '#fce7f3', color: '#9d174d' },
       other: { label: 'Khác', icon: '📦', bg: '#f1f5f9', color: '#475569' },
     };
-    const BANK = { name: 'BIDV', acc: '96247NGUYEN', owner: 'TỪ CHÍ NGUYỆN' };
+    let BANK = { name: 'BIDV', acc: '96247NGUYEN', owner: 'TỪ CHÍ NGUYỆN' };
 
     function escHtml(s) { const d = document.createElement('div'); d.textContent = s || ''; return d.innerHTML; }
     function fmtPrice(p) { return p === 0 ? 'Miễn phí' : p.toLocaleString('vi-VN') + '₫'; }
@@ -934,7 +930,7 @@
 
     // ── Init ──────────────────────────────────────────────────────
     async function init() {
-      const raw = sessionStorage.getItem('currentUser');
+      const raw = localStorage.getItem('currentUser');
       if (!raw) return (location.href = 'index.html');
       currentUser = JSON.parse(raw);
 
@@ -943,9 +939,20 @@
       if (!id) return (location.href = 'marketplace.html');
 
       try {
-        const p = await fetch(`${API}/products/${id}`).then(r => r.json());
+        const [p, settings] = await Promise.all([
+          fetch(`${API}/products/${id}`).then(r => r.json()),
+          fetch(`${API}/settings`).then(r => r.json()).catch(() => ({})),
+        ]);
         if (p.error) throw new Error(p.error);
         currentProduct = p;
+        BANK = {
+          name: settings.mp_bank_name || BANK.name,
+          acc: settings.mp_bank_account_number || BANK.acc,
+          owner: settings.mp_bank_account_name || BANK.owner,
+        };
+        document.getElementById('bankName').textContent = BANK.name;
+        document.getElementById('bankAcc').textContent = BANK.acc;
+        document.getElementById('bankOwner').textContent = BANK.owner;
         renderProduct(p);
         document.getElementById('loadingState').style.display = 'none';
         document.getElementById('checkoutContent').style.display = '';
@@ -972,6 +979,13 @@
       document.getElementById('sellerAv').style.background = avColor(p.seller_id);
       document.getElementById('sellerName').textContent = sellerName;
       document.getElementById('productPrice').textContent = fmtPrice(p.price);
+      const compareEl = document.getElementById('productComparePrice');
+      if (p.compare_price > p.price) {
+        compareEl.textContent = fmtPrice(p.compare_price);
+        compareEl.style.display = '';
+      } else {
+        compareEl.style.display = 'none';
+      }
 
       document.getElementById('buyerName').value = `${currentUser.first_name || ''} ${currentUser.last_name || ''}`.trim();
       document.getElementById('buyerEmail').value = currentUser.email || '';
@@ -1027,7 +1041,7 @@
 
     // ── SePay QR ──────────────────────────────────────────────────
     function buildSePayURL(note) {
-      return `https://qr.sepay.vn/img?bank=BIDV&acc=${BANK.acc}&template=compact&amount=${currentProduct.price}&des=${encodeURIComponent(note)}`;
+      return `https://qr.sepay.vn/img?bank=${encodeURIComponent(BANK.name)}&acc=${encodeURIComponent(BANK.acc)}&template=compact&amount=${currentProduct.price}&des=${encodeURIComponent(note)}`;
     }
 
     function loadSePayQR(note) {
@@ -1152,7 +1166,13 @@
       document.getElementById('pendingState').style.display = 'block';
       document.getElementById('pendingProductTitle').textContent = currentProduct?.title || '';
       document.getElementById('pendingOrderInfo').textContent =
-        `Mã đơn #${currentOrderId} · ${fmtPrice(currentProduct?.price)} · Chuyển khoản BIDV`;
+        `Mã đơn #${currentOrderId} · ${fmtPrice(currentProduct?.price)} · Chuyển khoản ngân hàng`;
+      if (currentProduct?.course_id) {
+        document.getElementById('pendingSub').innerHTML =
+          `Chúng tôi đã nhận được thông tin chuyển khoản.<br>
+           Admin sẽ kiểm tra và xác nhận trong vòng <strong>1–4 giờ</strong> làm việc.<br>
+           Bạn sẽ được <strong>tự động thêm vào khóa học</strong> ngay khi thanh toán được xác nhận — không cần thao tác gì thêm.`;
+      }
       startPendingPolling();
     }
 
@@ -1163,7 +1183,13 @@
       document.getElementById('successState').style.display = 'block';
       document.getElementById('successProductTitle').textContent = currentProduct?.title || '';
       document.getElementById('successOrderInfo').textContent =
-        `Mã đơn #${currentOrderId} · ${fmtPrice(currentProduct?.price)} · Chuyển khoản BIDV`;
+        `Mã đơn #${currentOrderId} · ${fmtPrice(currentProduct?.price)} · Chuyển khoản ngân hàng`;
+      if (currentProduct?.course_id) {
+        document.getElementById('successSub').innerHTML =
+          `Hệ thống đã xác nhận thanh toán của bạn.<br>Bạn đã được <strong>tự động thêm vào khóa học</strong> — vào học ngay bên dưới.`;
+        document.getElementById('successActions').innerHTML =
+          `<a href="course-view.html?id=${currentProduct.course_id}" class="btn-solid-purple">Vào học ngay →</a>`;
+      }
     }
 
     init();

@@ -1,0 +1,723 @@
+{
+  "_ghi_chu": "Kịch bản Zoom mặc định. Admin sửa trên trang kich-ban-zoom.html (lưu vào cơ sở dữ liệu); file này chỉ là mẫu gốc để 'Khôi phục mặc định'. kind: content = nội dung, sale = chốt sale. role: tech | host | content | marketing | reminder.",
+  "workshop3": {
+    "0": [
+      {
+        "kind": "content",
+        "minutes": 5,
+        "role": "tech",
+        "title": "Mở phòng & đón khách",
+        "script": "Nhạc nhẹ, slide chào mừng. Nhắc đổi tên Zoom."
+      },
+      {
+        "kind": "content",
+        "minutes": 10,
+        "role": "host",
+        "title": "Mở đầu & giới thiệu chủ đề",
+        "script": "Chào mừng, giới thiệu người chia sẻ và kết quả mọi người nhận được sau buổi."
+      },
+      {
+        "kind": "content",
+        "minutes": 40,
+        "role": "host",
+        "title": "Nội dung chính",
+        "script": "Chia nhỏ thành 2–3 ý, mỗi ý có ví dụ và câu hỏi tương tác."
+      },
+      {
+        "kind": "content",
+        "minutes": 15,
+        "role": "host",
+        "title": "Thực hành / hỏi đáp",
+        "script": "Bài thực hành ngắn hoặc trả lời câu hỏi trong chat."
+      },
+      {
+        "kind": "sale",
+        "minutes": 10,
+        "role": "host",
+        "title": "Câu chuyện & giá trị",
+        "script": "Chia sẻ câu chuyện học viên liên quan chủ đề."
+      },
+      {
+        "kind": "sale",
+        "minutes": 10,
+        "role": "host",
+        "title": "Lời mời",
+        "script": "Mời tham gia Workshop 3 buổi / đặt lịch tư vấn 1-1 / chương trình phù hợp."
+      },
+      {
+        "kind": "sale",
+        "minutes": 10,
+        "role": "host",
+        "title": "Giải đáp & kết",
+        "script": "Giải đáp phân vân, cảm ơn, nhắc người phụ trách sẽ nhắn Zalo sau buổi."
+      }
+    ],
+    "1": [
+      {
+        "kind": "content",
+        "minutes": 5,
+        "role": "tech",
+        "title": "Mở phòng & đón khách",
+        "script": "Nhạc nhẹ, slide chào mừng. Nhắc đổi tên Zoom."
+      },
+      {
+        "kind": "content",
+        "minutes": 10,
+        "role": "host",
+        "title": "Mở đầu & giới thiệu chủ đề",
+        "script": "Chào mừng, giới thiệu người chia sẻ và kết quả mọi người nhận được sau buổi."
+      },
+      {
+        "kind": "content",
+        "minutes": 40,
+        "role": "host",
+        "title": "Nội dung chính",
+        "script": "Chia nhỏ thành 2–3 ý, mỗi ý có ví dụ và câu hỏi tương tác."
+      },
+      {
+        "kind": "content",
+        "minutes": 15,
+        "role": "host",
+        "title": "Thực hành / hỏi đáp",
+        "script": "Bài thực hành ngắn hoặc trả lời câu hỏi trong chat."
+      },
+      {
+        "kind": "sale",
+        "minutes": 10,
+        "role": "host",
+        "title": "Câu chuyện & giá trị",
+        "script": "Chia sẻ câu chuyện học viên liên quan chủ đề."
+      },
+      {
+        "kind": "sale",
+        "minutes": 10,
+        "role": "host",
+        "title": "Lời mời",
+        "script": "Mời tham gia Workshop 3 buổi / đặt lịch tư vấn 1-1 / chương trình phù hợp."
+      },
+      {
+        "kind": "sale",
+        "minutes": 10,
+        "role": "host",
+        "title": "Giải đáp & kết",
+        "script": "Giải đáp phân vân, cảm ơn, nhắc người phụ trách sẽ nhắn Zalo sau buổi."
+      }
+    ],
+    "2": [
+      {
+        "kind": "content",
+        "minutes": 5,
+        "role": "tech",
+        "title": "Mở phòng & đón khách",
+        "script": "Nhạc nhẹ, slide chào mừng. Nhắc đổi tên Zoom."
+      },
+      {
+        "kind": "content",
+        "minutes": 10,
+        "role": "host",
+        "title": "Mở đầu & giới thiệu chủ đề",
+        "script": "Chào mừng, giới thiệu người chia sẻ và kết quả mọi người nhận được sau buổi."
+      },
+      {
+        "kind": "content",
+        "minutes": 40,
+        "role": "host",
+        "title": "Nội dung chính",
+        "script": "Chia nhỏ thành 2–3 ý, mỗi ý có ví dụ và câu hỏi tương tác."
+      },
+      {
+        "kind": "content",
+        "minutes": 15,
+        "role": "host",
+        "title": "Thực hành / hỏi đáp",
+        "script": "Bài thực hành ngắn hoặc trả lời câu hỏi trong chat."
+      },
+      {
+        "kind": "sale",
+        "minutes": 10,
+        "role": "host",
+        "title": "Câu chuyện & giá trị",
+        "script": "Chia sẻ câu chuyện học viên liên quan chủ đề."
+      },
+      {
+        "kind": "sale",
+        "minutes": 10,
+        "role": "host",
+        "title": "Lời mời",
+        "script": "Mời tham gia Workshop 3 buổi / đặt lịch tư vấn 1-1 / chương trình phù hợp."
+      },
+      {
+        "kind": "sale",
+        "minutes": 10,
+        "role": "host",
+        "title": "Giải đáp & kết",
+        "script": "Giải đáp phân vân, cảm ơn, nhắc người phụ trách sẽ nhắn Zalo sau buổi."
+      }
+    ]
+  },
+  "workshop8": {
+    "0": [
+      {
+        "kind": "content",
+        "minutes": 5,
+        "role": "tech",
+        "title": "Mở phòng & đón khách",
+        "script": "Nhạc nhẹ, slide chào mừng. Nhắc đổi tên Zoom."
+      },
+      {
+        "kind": "content",
+        "minutes": 10,
+        "role": "host",
+        "title": "Mở đầu & giới thiệu chủ đề",
+        "script": "Chào mừng, giới thiệu người chia sẻ và kết quả mọi người nhận được sau buổi."
+      },
+      {
+        "kind": "content",
+        "minutes": 40,
+        "role": "host",
+        "title": "Nội dung chính",
+        "script": "Chia nhỏ thành 2–3 ý, mỗi ý có ví dụ và câu hỏi tương tác."
+      },
+      {
+        "kind": "content",
+        "minutes": 15,
+        "role": "host",
+        "title": "Thực hành / hỏi đáp",
+        "script": "Bài thực hành ngắn hoặc trả lời câu hỏi trong chat."
+      },
+      {
+        "kind": "sale",
+        "minutes": 10,
+        "role": "host",
+        "title": "Câu chuyện & giá trị",
+        "script": "Chia sẻ câu chuyện học viên liên quan chủ đề."
+      },
+      {
+        "kind": "sale",
+        "minutes": 10,
+        "role": "host",
+        "title": "Lời mời",
+        "script": "Mời tham gia Workshop 3 buổi / đặt lịch tư vấn 1-1 / chương trình phù hợp."
+      },
+      {
+        "kind": "sale",
+        "minutes": 10,
+        "role": "host",
+        "title": "Giải đáp & kết",
+        "script": "Giải đáp phân vân, cảm ơn, nhắc người phụ trách sẽ nhắn Zalo sau buổi."
+      }
+    ],
+    "1": [
+      {
+        "kind": "content",
+        "minutes": 5,
+        "role": "tech",
+        "title": "Mở phòng & đón khách",
+        "script": "Nhạc nhẹ, slide chào mừng. Nhắc đổi tên Zoom."
+      },
+      {
+        "kind": "content",
+        "minutes": 10,
+        "role": "host",
+        "title": "Mở đầu & giới thiệu chủ đề",
+        "script": "Chào mừng, giới thiệu người chia sẻ và kết quả mọi người nhận được sau buổi."
+      },
+      {
+        "kind": "content",
+        "minutes": 40,
+        "role": "host",
+        "title": "Nội dung chính",
+        "script": "Chia nhỏ thành 2–3 ý, mỗi ý có ví dụ và câu hỏi tương tác."
+      },
+      {
+        "kind": "content",
+        "minutes": 15,
+        "role": "host",
+        "title": "Thực hành / hỏi đáp",
+        "script": "Bài thực hành ngắn hoặc trả lời câu hỏi trong chat."
+      },
+      {
+        "kind": "sale",
+        "minutes": 10,
+        "role": "host",
+        "title": "Câu chuyện & giá trị",
+        "script": "Chia sẻ câu chuyện học viên liên quan chủ đề."
+      },
+      {
+        "kind": "sale",
+        "minutes": 10,
+        "role": "host",
+        "title": "Lời mời",
+        "script": "Mời tham gia Workshop 3 buổi / đặt lịch tư vấn 1-1 / chương trình phù hợp."
+      },
+      {
+        "kind": "sale",
+        "minutes": 10,
+        "role": "host",
+        "title": "Giải đáp & kết",
+        "script": "Giải đáp phân vân, cảm ơn, nhắc người phụ trách sẽ nhắn Zalo sau buổi."
+      }
+    ],
+    "2": [
+      {
+        "kind": "content",
+        "minutes": 5,
+        "role": "tech",
+        "title": "Mở phòng & đón khách",
+        "script": "Nhạc nhẹ, slide chào mừng. Nhắc đổi tên Zoom."
+      },
+      {
+        "kind": "content",
+        "minutes": 10,
+        "role": "host",
+        "title": "Mở đầu & giới thiệu chủ đề",
+        "script": "Chào mừng, giới thiệu người chia sẻ và kết quả mọi người nhận được sau buổi."
+      },
+      {
+        "kind": "content",
+        "minutes": 40,
+        "role": "host",
+        "title": "Nội dung chính",
+        "script": "Chia nhỏ thành 2–3 ý, mỗi ý có ví dụ và câu hỏi tương tác."
+      },
+      {
+        "kind": "content",
+        "minutes": 15,
+        "role": "host",
+        "title": "Thực hành / hỏi đáp",
+        "script": "Bài thực hành ngắn hoặc trả lời câu hỏi trong chat."
+      },
+      {
+        "kind": "sale",
+        "minutes": 10,
+        "role": "host",
+        "title": "Câu chuyện & giá trị",
+        "script": "Chia sẻ câu chuyện học viên liên quan chủ đề."
+      },
+      {
+        "kind": "sale",
+        "minutes": 10,
+        "role": "host",
+        "title": "Lời mời",
+        "script": "Mời tham gia Workshop 3 buổi / đặt lịch tư vấn 1-1 / chương trình phù hợp."
+      },
+      {
+        "kind": "sale",
+        "minutes": 10,
+        "role": "host",
+        "title": "Giải đáp & kết",
+        "script": "Giải đáp phân vân, cảm ơn, nhắc người phụ trách sẽ nhắn Zalo sau buổi."
+      }
+    ],
+    "3": [
+      {
+        "kind": "content",
+        "minutes": 5,
+        "role": "tech",
+        "title": "Mở phòng & đón khách",
+        "script": "Nhạc nhẹ, slide chào mừng. Nhắc đổi tên Zoom."
+      },
+      {
+        "kind": "content",
+        "minutes": 10,
+        "role": "host",
+        "title": "Mở đầu & giới thiệu chủ đề",
+        "script": "Chào mừng, giới thiệu người chia sẻ và kết quả mọi người nhận được sau buổi."
+      },
+      {
+        "kind": "content",
+        "minutes": 40,
+        "role": "host",
+        "title": "Nội dung chính",
+        "script": "Chia nhỏ thành 2–3 ý, mỗi ý có ví dụ và câu hỏi tương tác."
+      },
+      {
+        "kind": "content",
+        "minutes": 15,
+        "role": "host",
+        "title": "Thực hành / hỏi đáp",
+        "script": "Bài thực hành ngắn hoặc trả lời câu hỏi trong chat."
+      },
+      {
+        "kind": "sale",
+        "minutes": 10,
+        "role": "host",
+        "title": "Câu chuyện & giá trị",
+        "script": "Chia sẻ câu chuyện học viên liên quan chủ đề."
+      },
+      {
+        "kind": "sale",
+        "minutes": 10,
+        "role": "host",
+        "title": "Lời mời",
+        "script": "Mời tham gia Workshop 3 buổi / đặt lịch tư vấn 1-1 / chương trình phù hợp."
+      },
+      {
+        "kind": "sale",
+        "minutes": 10,
+        "role": "host",
+        "title": "Giải đáp & kết",
+        "script": "Giải đáp phân vân, cảm ơn, nhắc người phụ trách sẽ nhắn Zalo sau buổi."
+      }
+    ],
+    "4": [
+      {
+        "kind": "content",
+        "minutes": 5,
+        "role": "tech",
+        "title": "Mở phòng & đón khách",
+        "script": "Nhạc nhẹ, slide chào mừng. Nhắc đổi tên Zoom."
+      },
+      {
+        "kind": "content",
+        "minutes": 10,
+        "role": "host",
+        "title": "Mở đầu & giới thiệu chủ đề",
+        "script": "Chào mừng, giới thiệu người chia sẻ và kết quả mọi người nhận được sau buổi."
+      },
+      {
+        "kind": "content",
+        "minutes": 40,
+        "role": "host",
+        "title": "Nội dung chính",
+        "script": "Chia nhỏ thành 2–3 ý, mỗi ý có ví dụ và câu hỏi tương tác."
+      },
+      {
+        "kind": "content",
+        "minutes": 15,
+        "role": "host",
+        "title": "Thực hành / hỏi đáp",
+        "script": "Bài thực hành ngắn hoặc trả lời câu hỏi trong chat."
+      },
+      {
+        "kind": "sale",
+        "minutes": 10,
+        "role": "host",
+        "title": "Câu chuyện & giá trị",
+        "script": "Chia sẻ câu chuyện học viên liên quan chủ đề."
+      },
+      {
+        "kind": "sale",
+        "minutes": 10,
+        "role": "host",
+        "title": "Lời mời",
+        "script": "Mời tham gia Workshop 3 buổi / đặt lịch tư vấn 1-1 / chương trình phù hợp."
+      },
+      {
+        "kind": "sale",
+        "minutes": 10,
+        "role": "host",
+        "title": "Giải đáp & kết",
+        "script": "Giải đáp phân vân, cảm ơn, nhắc người phụ trách sẽ nhắn Zalo sau buổi."
+      }
+    ],
+    "5": [
+      {
+        "kind": "content",
+        "minutes": 5,
+        "role": "tech",
+        "title": "Mở phòng & đón khách",
+        "script": "Nhạc nhẹ, slide chào mừng. Nhắc đổi tên Zoom."
+      },
+      {
+        "kind": "content",
+        "minutes": 10,
+        "role": "host",
+        "title": "Mở đầu & giới thiệu chủ đề",
+        "script": "Chào mừng, giới thiệu người chia sẻ và kết quả mọi người nhận được sau buổi."
+      },
+      {
+        "kind": "content",
+        "minutes": 40,
+        "role": "host",
+        "title": "Nội dung chính",
+        "script": "Chia nhỏ thành 2–3 ý, mỗi ý có ví dụ và câu hỏi tương tác."
+      },
+      {
+        "kind": "content",
+        "minutes": 15,
+        "role": "host",
+        "title": "Thực hành / hỏi đáp",
+        "script": "Bài thực hành ngắn hoặc trả lời câu hỏi trong chat."
+      },
+      {
+        "kind": "sale",
+        "minutes": 10,
+        "role": "host",
+        "title": "Câu chuyện & giá trị",
+        "script": "Chia sẻ câu chuyện học viên liên quan chủ đề."
+      },
+      {
+        "kind": "sale",
+        "minutes": 10,
+        "role": "host",
+        "title": "Lời mời",
+        "script": "Mời tham gia Workshop 3 buổi / đặt lịch tư vấn 1-1 / chương trình phù hợp."
+      },
+      {
+        "kind": "sale",
+        "minutes": 10,
+        "role": "host",
+        "title": "Giải đáp & kết",
+        "script": "Giải đáp phân vân, cảm ơn, nhắc người phụ trách sẽ nhắn Zalo sau buổi."
+      }
+    ],
+    "6": [
+      {
+        "kind": "content",
+        "minutes": 5,
+        "role": "tech",
+        "title": "Mở phòng & đón khách",
+        "script": "Nhạc nhẹ, slide chào mừng. Nhắc đổi tên Zoom."
+      },
+      {
+        "kind": "content",
+        "minutes": 10,
+        "role": "host",
+        "title": "Mở đầu & giới thiệu chủ đề",
+        "script": "Chào mừng, giới thiệu người chia sẻ và kết quả mọi người nhận được sau buổi."
+      },
+      {
+        "kind": "content",
+        "minutes": 40,
+        "role": "host",
+        "title": "Nội dung chính",
+        "script": "Chia nhỏ thành 2–3 ý, mỗi ý có ví dụ và câu hỏi tương tác."
+      },
+      {
+        "kind": "content",
+        "minutes": 15,
+        "role": "host",
+        "title": "Thực hành / hỏi đáp",
+        "script": "Bài thực hành ngắn hoặc trả lời câu hỏi trong chat."
+      },
+      {
+        "kind": "sale",
+        "minutes": 10,
+        "role": "host",
+        "title": "Câu chuyện & giá trị",
+        "script": "Chia sẻ câu chuyện học viên liên quan chủ đề."
+      },
+      {
+        "kind": "sale",
+        "minutes": 10,
+        "role": "host",
+        "title": "Lời mời",
+        "script": "Mời tham gia Workshop 3 buổi / đặt lịch tư vấn 1-1 / chương trình phù hợp."
+      },
+      {
+        "kind": "sale",
+        "minutes": 10,
+        "role": "host",
+        "title": "Giải đáp & kết",
+        "script": "Giải đáp phân vân, cảm ơn, nhắc người phụ trách sẽ nhắn Zalo sau buổi."
+      }
+    ],
+    "7": [
+      {
+        "kind": "content",
+        "minutes": 5,
+        "role": "tech",
+        "title": "Mở phòng & đón khách",
+        "script": "Nhạc nhẹ, slide chào mừng. Nhắc đổi tên Zoom."
+      },
+      {
+        "kind": "content",
+        "minutes": 10,
+        "role": "host",
+        "title": "Mở đầu & giới thiệu chủ đề",
+        "script": "Chào mừng, giới thiệu người chia sẻ và kết quả mọi người nhận được sau buổi."
+      },
+      {
+        "kind": "content",
+        "minutes": 40,
+        "role": "host",
+        "title": "Nội dung chính",
+        "script": "Chia nhỏ thành 2–3 ý, mỗi ý có ví dụ và câu hỏi tương tác."
+      },
+      {
+        "kind": "content",
+        "minutes": 15,
+        "role": "host",
+        "title": "Thực hành / hỏi đáp",
+        "script": "Bài thực hành ngắn hoặc trả lời câu hỏi trong chat."
+      },
+      {
+        "kind": "sale",
+        "minutes": 10,
+        "role": "host",
+        "title": "Câu chuyện & giá trị",
+        "script": "Chia sẻ câu chuyện học viên liên quan chủ đề."
+      },
+      {
+        "kind": "sale",
+        "minutes": 10,
+        "role": "host",
+        "title": "Lời mời",
+        "script": "Mời tham gia Workshop 3 buổi / đặt lịch tư vấn 1-1 / chương trình phù hợp."
+      },
+      {
+        "kind": "sale",
+        "minutes": 10,
+        "role": "host",
+        "title": "Giải đáp & kết",
+        "script": "Giải đáp phân vân, cảm ơn, nhắc người phụ trách sẽ nhắn Zalo sau buổi."
+      }
+    ]
+  },
+  "program377": {
+    "day1": [
+      {
+        "kind": "content",
+        "minutes": 5,
+        "role": "tech",
+        "title": "Mở phòng & đón khách",
+        "script": "Nhạc nhẹ, slide chào mừng. Nhắc đổi tên Zoom."
+      },
+      {
+        "kind": "content",
+        "minutes": 10,
+        "role": "host",
+        "title": "Mở đầu & giới thiệu chủ đề",
+        "script": "Chào mừng, giới thiệu người chia sẻ và kết quả mọi người nhận được sau buổi."
+      },
+      {
+        "kind": "content",
+        "minutes": 40,
+        "role": "host",
+        "title": "Nội dung chính",
+        "script": "Chia nhỏ thành 2–3 ý, mỗi ý có ví dụ và câu hỏi tương tác."
+      },
+      {
+        "kind": "content",
+        "minutes": 15,
+        "role": "host",
+        "title": "Thực hành / hỏi đáp",
+        "script": "Bài thực hành ngắn hoặc trả lời câu hỏi trong chat."
+      },
+      {
+        "kind": "sale",
+        "minutes": 10,
+        "role": "host",
+        "title": "Câu chuyện & giá trị",
+        "script": "Chia sẻ câu chuyện học viên liên quan chủ đề."
+      },
+      {
+        "kind": "sale",
+        "minutes": 10,
+        "role": "host",
+        "title": "Lời mời",
+        "script": "Mời tham gia Workshop 3 buổi / đặt lịch tư vấn 1-1 / chương trình phù hợp."
+      },
+      {
+        "kind": "sale",
+        "minutes": 10,
+        "role": "host",
+        "title": "Giải đáp & kết",
+        "script": "Giải đáp phân vân, cảm ơn, nhắc người phụ trách sẽ nhắn Zalo sau buổi."
+      }
+    ],
+    "day15": [
+      {
+        "kind": "content",
+        "minutes": 5,
+        "role": "tech",
+        "title": "Mở phòng & đón khách",
+        "script": "Nhạc nhẹ, slide chào mừng. Nhắc đổi tên Zoom."
+      },
+      {
+        "kind": "content",
+        "minutes": 10,
+        "role": "host",
+        "title": "Mở đầu & giới thiệu chủ đề",
+        "script": "Chào mừng, giới thiệu người chia sẻ và kết quả mọi người nhận được sau buổi."
+      },
+      {
+        "kind": "content",
+        "minutes": 40,
+        "role": "host",
+        "title": "Nội dung chính",
+        "script": "Chia nhỏ thành 2–3 ý, mỗi ý có ví dụ và câu hỏi tương tác."
+      },
+      {
+        "kind": "content",
+        "minutes": 15,
+        "role": "host",
+        "title": "Thực hành / hỏi đáp",
+        "script": "Bài thực hành ngắn hoặc trả lời câu hỏi trong chat."
+      },
+      {
+        "kind": "sale",
+        "minutes": 10,
+        "role": "host",
+        "title": "Câu chuyện & giá trị",
+        "script": "Chia sẻ câu chuyện học viên liên quan chủ đề."
+      },
+      {
+        "kind": "sale",
+        "minutes": 10,
+        "role": "host",
+        "title": "Lời mời",
+        "script": "Mời tham gia Workshop 3 buổi / đặt lịch tư vấn 1-1 / chương trình phù hợp."
+      },
+      {
+        "kind": "sale",
+        "minutes": 10,
+        "role": "host",
+        "title": "Giải đáp & kết",
+        "script": "Giải đáp phân vân, cảm ơn, nhắc người phụ trách sẽ nhắn Zalo sau buổi."
+      }
+    ]
+  },
+  "other": [
+    {
+      "kind": "content",
+      "minutes": 5,
+      "role": "tech",
+      "title": "Mở phòng & đón khách",
+      "script": "Nhạc nhẹ, slide chào mừng. Nhắc đổi tên Zoom."
+    },
+    {
+      "kind": "content",
+      "minutes": 10,
+      "role": "host",
+      "title": "Mở đầu & giới thiệu chủ đề",
+      "script": "Chào mừng, giới thiệu người chia sẻ và kết quả mọi người nhận được sau buổi."
+    },
+    {
+      "kind": "content",
+      "minutes": 40,
+      "role": "host",
+      "title": "Nội dung chính",
+      "script": "Chia nhỏ thành 2–3 ý, mỗi ý có ví dụ và câu hỏi tương tác."
+    },
+    {
+      "kind": "content",
+      "minutes": 15,
+      "role": "host",
+      "title": "Thực hành / hỏi đáp",
+      "script": "Bài thực hành ngắn hoặc trả lời câu hỏi trong chat."
+    },
+    {
+      "kind": "sale",
+      "minutes": 10,
+      "role": "host",
+      "title": "Câu chuyện & giá trị",
+      "script": "Chia sẻ câu chuyện học viên liên quan chủ đề."
+    },
+    {
+      "kind": "sale",
+      "minutes": 10,
+      "role": "host",
+      "title": "Lời mời",
+      "script": "Mời tham gia Workshop 3 buổi / đặt lịch tư vấn 1-1 / chương trình phù hợp."
+    },
+    {
+      "kind": "sale",
+      "minutes": 10,
+      "role": "host",
+      "title": "Giải đáp & kết",
+      "script": "Giải đáp phân vân, cảm ơn, nhắc người phụ trách sẽ nhắn Zalo sau buổi."
+    }
+  ]
+}

@@ -3,16 +3,24 @@
 
 <head>
   <meta charset="UTF-8">
+  <script src="assets/js/auth-fetch.js?v=1"></script>
+  <script>(function(){try{var t=localStorage.getItem('theme');if(t==='dark'||(!t&&window.matchMedia('(prefers-color-scheme: dark)').matches))document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" href="/assets/img/logo.png">
+  <link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
+  <link rel="manifest" href="/manifest.json?v=2">
+  <meta name="apple-mobile-web-app-title" content="AI Agents CC">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="theme-color" content="#0ea5e9">
   <title>Marketplace — AI AGENTS CC</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
     href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap"
     rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/base.css">
-  <link rel="stylesheet" href="assets/css/components.css">
-  <link rel="stylesheet" href="assets/css/layout.css">
+  <link rel="stylesheet" href="assets/css/base.css?v=2">
+  <link rel="stylesheet" href="assets/css/components.css?v=11">
+  <link rel="stylesheet" href="assets/css/layout.css?v=6">
   <style>
     /* ── Hero ─────────────────────────────────────────────── */
     .mp-hero {
@@ -85,6 +93,89 @@
       margin-top: 2px;
     }
 
+    .mp-hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 12px;
+      border-radius: 99px;
+      background: rgba(255, 255, 255, .18);
+      font-size: 11px;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .mp-hero-price-row {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+
+    .mp-hero-old-price {
+      font-size: 15px;
+      opacity: .65;
+      text-decoration: line-through;
+    }
+
+    .mp-hero-new-price {
+      font-family: var(--font-heading);
+      font-size: 28px;
+      font-weight: 800;
+    }
+
+    .mp-hero-discount {
+      background: #fbbf24;
+      color: #78350f;
+      font-size: 11px;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: 6px;
+    }
+
+    .mp-hero-ctas {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
+    }
+
+    .mp-hero-btn-primary {
+      padding: 10px 22px;
+      background: #fff;
+      color: #6d28d9;
+      border: none;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      font-size: var(--fs-sm);
+      font-weight: 700;
+      font-family: var(--font-body);
+      transition: transform .15s, box-shadow .15s;
+    }
+
+    .mp-hero-btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, .18);
+    }
+
+    .mp-hero-btn-secondary {
+      padding: 10px 22px;
+      background: rgba(255, 255, 255, .14);
+      color: #fff;
+      border: 1.5px solid rgba(255, 255, 255, .4);
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      font-size: var(--fs-sm);
+      font-weight: 600;
+      font-family: var(--font-body);
+      transition: background .15s;
+    }
+
+    .mp-hero-btn-secondary:hover {
+      background: rgba(255, 255, 255, .24);
+    }
+
     /* ── Filters ──────────────────────────────────────────── */
     .mp-filters {
       display: flex;
@@ -119,7 +210,7 @@
       font-size: var(--fs-sm);
       font-family: var(--font-body);
       color: var(--text);
-      background: #fff;
+      background: var(--bg-input);
       outline: none;
       transition: border-color .15s;
     }
@@ -140,7 +231,7 @@
       font-size: 12px;
       font-weight: 600;
       border: 1.5px solid var(--border);
-      background: #fff;
+      background: var(--bg-card);
       color: var(--text-muted);
       cursor: pointer;
       transition: all .15s;
@@ -166,7 +257,7 @@
       font-size: var(--fs-sm);
       font-family: var(--font-body);
       color: var(--text);
-      background: #fff;
+      background: var(--bg-input);
       cursor: pointer;
       outline: none;
       transition: border-color .15s;
@@ -185,7 +276,7 @@
     }
 
     .mp-card {
-      background: #fff;
+      background: var(--bg-card);
       border: 1px solid var(--border);
       border-radius: var(--radius-lg);
       overflow: hidden;
@@ -271,6 +362,18 @@
       border-top: 1px solid var(--border);
     }
 
+    .mp-price-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+    }
+
+    .mp-price-old {
+      font-size: 11px;
+      color: var(--text-muted);
+      text-decoration: line-through;
+    }
+
     .mp-price {
       font-family: var(--font-heading);
       font-size: 16px;
@@ -298,9 +401,14 @@
       color: #fff;
     }
 
-    .mp-buy-btn {
-      width: 100%;
+    .mp-card-actions {
+      display: flex;
+      gap: 6px;
       margin-top: 10px;
+    }
+
+    .mp-buy-btn {
+      flex: 1;
       padding: 8px;
       background: #7c3aed;
       color: #fff;
@@ -315,6 +423,25 @@
 
     .mp-buy-btn:hover {
       background: #6d28d9;
+    }
+
+    .mp-detail-btn {
+      flex: 1;
+      padding: 8px;
+      background: var(--bg-hover);
+      color: var(--text);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      font-size: var(--fs-sm);
+      font-weight: 600;
+      font-family: var(--font-body);
+      transition: background .15s, border-color .15s, color .15s;
+    }
+
+    .mp-detail-btn:hover {
+      border-color: #7c3aed;
+      color: #7c3aed;
     }
 
     .mp-empty {
@@ -351,7 +478,8 @@
     }
 
     .mp-modal {
-      background: #fff;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
       border-radius: var(--radius-lg);
       width: 100%;
       max-width: 600px;
@@ -361,7 +489,7 @@
       flex-direction: column;
       transform: translateY(12px);
       transition: transform .2s;
-      box-shadow: 0 20px 60px rgba(0, 0, 0, .2);
+      box-shadow: var(--shadow-modal);
     }
 
     .mp-modal-overlay.open .mp-modal {
@@ -470,6 +598,12 @@
       border-top: 1px solid var(--border);
     }
 
+    .mp-modal-compare-price {
+      font-size: 13px;
+      color: var(--text-muted);
+      text-decoration: line-through;
+    }
+
     .mp-modal-price {
       font-family: var(--font-heading);
       font-size: 24px;
@@ -483,27 +617,9 @@
       margin-top: 2px;
     }
 
-    .mp-policy-note {
-      font-size: 11px;
-      color: var(--text-muted);
-      text-align: right;
-      margin-top: 8px;
-    }
-
-    .mp-policy-note a, .mp-seller-agree a { color: #7c3aed; text-decoration: none; }
-    .mp-policy-note a:hover, .mp-seller-agree a:hover { text-decoration: underline; }
-
-    .mp-seller-agree {
-      display: flex;
-      gap: 8px;
-      align-items: flex-start;
-      font-size: var(--fs-sm);
-      color: var(--text-muted);
-      line-height: 1.5;
-      cursor: pointer;
-    }
-
-    .mp-seller-agree input { margin-top: 3px; accent-color: #7c3aed; flex-shrink: 0; }
+    .mp-policy-note { font-size: 11px; color: var(--text-muted); text-align: right; margin-top: 8px; }
+    .mp-policy-note a { color: #7c3aed; text-decoration: none; }
+    .mp-policy-note a:hover { text-decoration: underline; }
 
     .mp-modal-buy {
       padding: 10px 24px;
@@ -520,193 +636,6 @@
 
     .mp-modal-buy:hover {
       background: #6d28d9;
-    }
-
-    /* ── Post product modal ───────────────────────────────── */
-    .post-modal-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(15, 23, 42, .55);
-      z-index: 400;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity .2s;
-    }
-
-    .post-modal-overlay.open {
-      opacity: 1;
-      pointer-events: all;
-    }
-
-    .post-modal {
-      background: #fff;
-      border-radius: var(--radius-lg);
-      width: 100%;
-      max-width: 520px;
-      max-height: 90vh;
-      overflow-y: auto;
-      transform: translateY(12px);
-      transition: transform .2s;
-      box-shadow: 0 20px 60px rgba(0, 0, 0, .2);
-    }
-
-    .post-modal-overlay.open .post-modal {
-      transform: translateY(0);
-    }
-
-    .post-modal-header {
-      padding: 16px 20px 14px;
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .post-modal-title {
-      font-family: var(--font-heading);
-      font-size: 16px;
-      font-weight: 700;
-      color: var(--text);
-    }
-
-    .post-modal-close {
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      background: var(--bg-hover);
-      border: none;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--text-muted);
-    }
-
-    .post-modal-body {
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-    }
-
-    .form-group {
-      display: flex;
-      flex-direction: column;
-      gap: 5px;
-    }
-
-    .form-label {
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--text);
-    }
-
-    .form-input,
-    .form-select,
-    .form-textarea {
-      padding: 9px 12px;
-      border: 1.5px solid var(--border);
-      border-radius: var(--radius-md);
-      font-size: var(--fs-sm);
-      font-family: var(--font-body);
-      color: var(--text);
-      background: #fff;
-      outline: none;
-      transition: border-color .15s;
-      width: 100%;
-      box-sizing: border-box;
-    }
-
-    .form-input:focus,
-    .form-select:focus,
-    .form-textarea:focus {
-      border-color: #7c3aed;
-    }
-
-    .form-textarea {
-      resize: vertical;
-      min-height: 80px;
-    }
-
-    .form-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-    }
-
-    .color-picker-row {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-
-    .color-swatch {
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      cursor: pointer;
-      border: 2px solid transparent;
-      transition: transform .15s, border-color .15s;
-    }
-
-    .color-swatch:hover {
-      transform: scale(1.15);
-    }
-
-    .color-swatch.selected {
-      border-color: #1e293b;
-      transform: scale(1.1);
-    }
-
-    .post-modal-footer {
-      padding: 14px 20px;
-      border-top: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      justify-content: flex-end;
-      gap: 8px;
-    }
-
-    .btn-cancel {
-      padding: 8px 16px;
-      border: 1.5px solid var(--border);
-      border-radius: var(--radius-md);
-      font-size: var(--fs-sm);
-      font-weight: 600;
-      background: #fff;
-      color: var(--text-muted);
-      cursor: pointer;
-      font-family: var(--font-body);
-    }
-
-    .btn-cancel:hover {
-      background: var(--bg-hover);
-    }
-
-    .btn-submit-purple {
-      padding: 8px 20px;
-      background: #7c3aed;
-      color: #fff;
-      border: none;
-      border-radius: var(--radius-md);
-      cursor: pointer;
-      font-size: var(--fs-sm);
-      font-weight: 700;
-      font-family: var(--font-body);
-      transition: background .15s;
-    }
-
-    .btn-submit-purple:hover {
-      background: #6d28d9;
-    }
-
-    .btn-submit-purple:disabled {
-      opacity: .6;
-      cursor: not-allowed;
     }
 
     /* ── Right panel extras ───────────────────────────────── */
@@ -791,14 +720,7 @@
     <!-- Sidebar -->
     <aside id="sidebar">
       <div id="sidebar-logo">
-        <div class="sidebar-logo-mark">
-          <svg viewBox="0 0 20 20" fill="none">
-            <circle cx="10" cy="10" r="3" fill="currentColor" />
-            <path d="M10 3v2M10 15v2M3 10h2M15 10h2" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-            <path d="M5.5 5.5l1.5 1.5M13 13l1.5 1.5M14.5 5.5L13 7M7 13l-1.5 1.5" stroke="currentColor"
-              stroke-width="1.5" stroke-linecap="round" />
-          </svg>
-        </div>
+        <div class="sidebar-logo-mark" style="background:transparent;"><img src="assets/img/logo.png" alt="Logo" style="width:100%;height:100%;object-fit:contain;"></div>
         <div class="sidebar-logo-text">AI AGENTS <span>CC</span></div>
       </div>
       <nav id="sidebar-nav">
@@ -807,49 +729,15 @@
           <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
             <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
           </svg>
-          Bảng tin
-        </a>
-        <a href="cot.html" class="nav-item">
-          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-            <path
-              d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-          </svg>
-          CÔT
-        </a>
-        <a href="signal.html" class="nav-item">
-          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-            <path d="M13 10V3L4 14h7v7l9-11h-7z" />
-          </svg>
-          Tín hiệu
-        </a>
-        <a href="qa.html" class="nav-item">
-          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-            <path
-              d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
-          Hỏi đáp
+          Feed
         </a>
         <div class="nav-section-label" style="margin-top:8px;">Học tập</div>
-        <a href="courses.html" class="nav-item">
-          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-            <path
-              d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-          </svg>
-          Khóa học
-        </a>
         <a href="challenge.html" class="nav-item">
           <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
             <path
               d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z" />
           </svg>
           Challenge
-        </a>
-        <a href="leaderboard.html" class="nav-item">
-          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-            <path
-              d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
-          </svg>
-          Leaderboard
         </a>
         <div class="nav-section-label" style="margin-top:8px;">Khác</div>
         <a href="marketplace.html" class="nav-item active">
@@ -858,13 +746,6 @@
               d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
           </svg>
           Marketplace
-        </a>
-        <a href="members.html" class="nav-item">
-          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-            <path
-              d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
-          </svg>
-          Thành viên
         </a>
       </nav>
       <div id="sidebar-user">
@@ -879,7 +760,7 @@
           <div class="user-level" id="sbLevel">—</div>
         </div>
         <a href="index.html" class="icon-btn" title="Đăng xuất" style="margin-left:auto;"
-          onclick="sessionStorage.clear()">
+          onclick="doLogout(); return false;">
           <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
             <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4" />
             <polyline points="16 17 21 12 16 7" />
@@ -891,6 +772,68 @@
 
     <div id="main">
       <!-- Topbar -->
+      <nav id="subnav-bar" class="subnav-bar" aria-label="Điều hướng nhanh">
+        <a href="feed.html" class="subnav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+          Feed
+        </a>
+        <a href="spaces.html" class="subnav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></svg>
+          Spaces
+        </a>
+        <a href="courses.html" class="subnav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/></svg>
+          Courses
+        </a>
+        <a href="members.html" class="subnav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+          Members
+        </a>
+        <a href="leaderboard.html" class="subnav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/></svg>
+          Leaderboard
+        </a>
+        <a href="calendar.html" class="subnav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          Calendar
+        </a>
+        <a href="about.html" class="subnav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+          About
+        </a>
+        <div class="topbar-right">
+          <button class="icon-btn" id="themeToggle" type="button" aria-label="Chuyển chế độ sáng/tối">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"></svg>
+          </button>
+          <div style="position:relative;">
+            <button class="icon-btn" id="notifBell" aria-label="Thông báo" style="position:relative;">
+              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+              </svg>
+              <span id="notifBadge" style="display:none;position:absolute;top:2px;right:2px;background:#ef4444;color:#fff;font-size:10px;font-weight:700;border-radius:99px;min-width:16px;height:16px;padding:0 4px;line-height:16px;text-align:center;">0</span>
+            </button>
+            <div id="notifDropdown" style="display:none;"></div>
+          </div>
+          <a href="#" class="icon-btn" aria-label="Tin nhắn">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <path
+                d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+            </svg>
+          </a>
+          <div class="topbar-search">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <circle cx="11" cy="11" r="8" />
+              <line x1="21" y1="21" x2="16.65" y2="16.65" />
+            </svg>
+            <input type="text" id="globalSearchInput" placeholder="Tìm kiếm..." autocomplete="off">
+            <div id="globalSearchResults" class="gsr-panel"></div>
+          </div>
+          <div id="topbarAvatar"
+            style="width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;background:#7c3aed;cursor:pointer;">
+          </div>
+        </div>
+      </nav>
+
       <div id="topbar">
         <button class="icon-btn" id="sidebarToggle" aria-label="Menu" style="display:none">
           <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -905,28 +848,6 @@
           </svg>
           Marketplace
         </div>
-        <div class="topbar-right">
-          <button class="btn btn-primary btn-sm" onclick="openPostModal()"
-            style="background:#7c3aed;border-color:#7c3aed">
-            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"
-              style="width:13px;height:13px">
-              <path d="M12 4v16m8-8H4" stroke-linecap="round" />
-            </svg>
-            Đăng bán
-          </button>
-          <div style="position:relative;">
-            <button class="topbar-btn" id="notifBell" aria-label="Thông báo" style="position:relative;">
-              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-                <path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-              </svg>
-              <span id="notifBadge" style="display:none;position:absolute;top:2px;right:2px;background:#ef4444;color:#fff;font-size:10px;font-weight:700;border-radius:99px;min-width:16px;height:16px;padding:0 4px;line-height:16px;text-align:center;">0</span>
-            </button>
-            <div id="notifDropdown" style="display:none;"></div>
-          </div>
-          <div id="topbarAvatar"
-            style="width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;background:#7c3aed;cursor:pointer;">
-          </div>
-        </div>
       </div>
 
       <div id="content-row">
@@ -934,10 +855,10 @@
         <main id="feed" style="padding:20px 24px;">
 
           <!-- Hero -->
-          <div class="mp-hero">
+          <div class="mp-hero" id="mpHero">
             <div class="mp-hero-icon">🛒</div>
             <h1>Chợ Sản Phẩm Số</h1>
-            <p>Mua bán prompt, template, ebook, AI agent và công cụ số từ cộng đồng</p>
+            <p>Mua bán tài liệu, đề thi, khoá học và công cụ số từ cộng đồng</p>
             <div class="mp-hero-stats">
               <div class="mp-hero-stat">
                 <div class="mp-hero-stat-val" id="heroTotal">—</div>
@@ -965,7 +886,7 @@
               <button class="cat-pill" data-cat="agent">AI Agent</button>
               <button class="cat-pill" data-cat="ebook">Ebook</button>
               <button class="cat-pill" data-cat="tool">Công cụ</button>
-              <button class="cat-pill" data-cat="course">Mini Course</button>
+              <button class="cat-pill" data-cat="course">Khóa học</button>
             </div>
             <select class="mp-sort" id="mpSort">
               <option value="newest">Mới nhất</option>
@@ -1008,7 +929,6 @@
         </aside>
       </div><!-- /content-row -->
 
-
     </div><!-- /main -->
   </div><!-- /app -->
 
@@ -1016,81 +936,90 @@
   <div id="mob-overlay" onclick="closeSidebar()"></div>
   <div id="mob-sidebar">
     <div style="padding:14px 16px;border-bottom:1px solid var(--border);font-size:var(--fs-md);font-weight:700;color:var(--text);display:flex;align-items:center;gap:8px;">
-      <div style="width:28px;height:28px;background:var(--color-primary);border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-        <svg width="16" height="16" fill="none" viewBox="0 0 20 20"><circle cx="10" cy="10" r="3" fill="#fff"/><path d="M10 3v2M10 15v2M3 10h2M15 10h2" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg>
-      </div>
-      AI AGENTS CC
+      <div style="width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;"><img src="assets/img/logo.png" alt="Logo" style="width:100%;height:100%;object-fit:contain;"></div>
+      <span class="mob-brand-name">AI AGENTS CC</span>
     </div>
     <nav style="flex:1;overflow-y:auto;padding:8px;">
       <div class="nav-section-label">Cộng đồng</div>
       <a href="feed.html" class="nav-item">
         <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
-        Bảng tin
-      </a>
-      <a href="cot.html" class="nav-item">
-        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-        CÔT
-      </a>
-      <a href="signal.html" class="nav-item">
-        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-        Tín hiệu
-      </a>
-      <a href="qa.html" class="nav-item">
-        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-        Hỏi đáp
+        Feed
       </a>
       <div class="nav-section-label">Học tập</div>
-      <a href="courses.html" class="nav-item">
-        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/></svg>
-        Khóa học
-      </a>
       <a href="challenge.html" class="nav-item">
         <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z"/></svg>
         Challenge
-      </a>
-      <a href="leaderboard.html" class="nav-item">
-        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/></svg>
-        Leaderboard
       </a>
       <div class="nav-section-label">Khác</div>
       <a href="marketplace.html" class="nav-item active">
         <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z"/></svg>
         Chợ
       </a>
-      <a href="members.html" class="nav-item">
-        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-        Thành viên
-      </a>
     </nav>
   </div>
 
   <!-- Mobile bottom nav -->
+  <!-- Mobile main menu (full site navigation) -->
+  <div id="mob-mainmenu-overlay" onclick="closeMainMenu()"></div>
+  <div id="mob-mainmenu">
+    <div style="padding:14px 16px;border-bottom:1px solid var(--border);font-size:var(--fs-md);font-weight:700;color:var(--text);display:flex;align-items:center;gap:8px;">
+      <div style="width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;"><img src="assets/img/logo.png" alt="Logo" style="width:100%;height:100%;object-fit:contain;"></div>
+      Menu chính
+    </div>
+    <nav style="flex:1;overflow-y:auto;padding:8px;">
+      <a href="feed.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        Feed
+      </a>
+      <a href="spaces.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></svg>
+        Spaces
+      </a>
+      <a href="courses.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/></svg>
+        Courses
+      </a>
+      <a href="members.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+        Members
+      </a>
+      <a href="leaderboard.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/></svg>
+        Leaderboard
+      </a>
+      <a href="calendar.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        Calendar
+      </a>
+      <a href="about.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+        About
+      </a>
+    </nav>
+  </div>
+
   <nav id="mobile-nav">
     <a href="feed.html" class="mob-nav-btn">
       <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
         <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
       </svg>
-      Bảng tin
+      Feed
     </a>
-    <a href="challenge.html" class="mob-nav-btn">
-      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-        <path d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z"/>
-      </svg>
-      Challenge
+    <a href="spaces.html" class="mob-nav-btn">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></svg>
+      Spaces
     </a>
-    <a href="marketplace.html" class="mob-nav-btn active">
-      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-        <path d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
-      </svg>
-      Chợ
+    <a href="courses.html" class="mob-nav-btn">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/></svg>
+      Courses
     </a>
     <a href="members.html" class="mob-nav-btn">
       <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
         <path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>
       </svg>
-      Cộng đồng
+      Members
     </a>
-    <button class="mob-nav-btn" onclick="openSidebar()">
+    <button class="mob-nav-btn" onclick="toggleMainMenu()">
       <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
         <line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/>
       </svg>
@@ -1120,8 +1049,13 @@
         </div>
         <div class="mp-modal-desc" id="detailDesc"></div>
         <div class="mp-modal-long" id="detailLong"></div>
+        <a id="detailScheduleLink" href="challenge-detail.html?id=1" style="display:none;align-items:center;gap:8px;margin:0 24px 16px;padding:11px 14px;background:var(--bg-active);border:1px solid var(--color-primary);border-radius:var(--radius-md);color:var(--color-primary);font-size:var(--fs-sm);font-weight:600;text-decoration:none;">
+          <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          Xem lịch trình mẫu 4 tuần dùng kèm combo — trong Thử thách cộng đồng
+        </a>
         <div class="mp-modal-footer">
           <div>
+            <div class="mp-modal-compare-price" id="detailComparePrice" style="display:none"></div>
             <div class="mp-modal-price" id="detailPrice"></div>
             <div class="mp-modal-sales" id="detailSales"></div>
           </div>
@@ -1135,81 +1069,17 @@
     </div>
   </div>
 
-  <!-- Post product modal -->
-  <div class="post-modal-overlay" id="postOverlay" onclick="handlePostOverlayClick(event)">
-    <div class="post-modal">
-      <div class="post-modal-header">
-        <div class="post-modal-title">Đăng sản phẩm mới</div>
-        <button class="post-modal-close" onclick="closePostModal()">
-          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" style="width:14px;height:14px">
-            <path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" />
-          </svg>
-        </button>
-      </div>
-      <div class="post-modal-body">
-        <div class="form-group">
-          <label class="form-label">Tên sản phẩm *</label>
-          <input class="form-input" id="pmTitle" type="text" placeholder="VD: Bộ 50 Prompt ChatGPT Bán Hàng"
-            maxlength="120">
-        </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label class="form-label">Danh mục *</label>
-            <select class="form-select" id="pmCat">
-              <option value="prompt">📝 Prompt & Template</option>
-              <option value="agent">🤖 AI Agent & Workflow</option>
-              <option value="ebook">📚 Ebook & Tài liệu</option>
-              <option value="tool">🔧 Công cụ & Script</option>
-              <option value="course">🎓 Mini Course</option>
-              <option value="other">📦 Khác</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label class="form-label">Giá (VNĐ) *</label>
-            <input class="form-input" id="pmPrice" type="number" min="0" placeholder="VD: 199000">
-          </div>
-        </div>
-        <div class="form-group">
-          <label class="form-label">Mô tả ngắn *</label>
-          <textarea class="form-textarea" id="pmDesc" placeholder="Tóm tắt sản phẩm của bạn trong 1-2 câu..."
-            style="min-height:64px;"></textarea>
-        </div>
-        <div class="form-group">
-          <label class="form-label">Nội dung chi tiết</label>
-          <textarea class="form-textarea" id="pmLong"
-            placeholder="Mô tả đầy đủ: bao gồm gì, dùng như thế nào, ai phù hợp..."
-            style="min-height:120px;"></textarea>
-        </div>
-        <div class="form-group">
-          <label class="form-label">Màu bìa</label>
-          <div class="color-picker-row" id="pmColorPicker"></div>
-        </div>
-        <label class="mp-seller-agree">
-          <input type="checkbox" id="pmAgree">
-          <span>Tôi đồng ý với <a href="service-conditions.html" target="_blank" rel="noopener">Điều kiện cung cấp dịch vụ</a>,
-            <a href="terms.html" target="_blank" rel="noopener">Quy chế hoạt động</a> và mức
-            <a href="pricing-policy.html" target="_blank" rel="noopener">phí dịch vụ 30%</a> trên mỗi đơn hàng thành công.</span>
-        </label>
-      </div>
-      <div class="post-modal-footer">
-        <button class="btn-cancel" onclick="closePostModal()">Hủy</button>
-        <button class="btn-submit-purple" id="pmSubmitBtn" onclick="submitProduct()">Đăng sản phẩm</button>
-      </div>
-    </div>
-  </div>
-
-  <script src="assets/js/app.js"></script>
+  <script src="assets/js/app.js?v=28"></script>
   <script>
     const API = '/api';
     const AV_COLORS = ['#0ea5e9', '#8b5cf6', '#10b981', '#f59e0b', '#ec4899', '#3b82f6'];
-    const COVER_COLORS = ['#7c3aed', '#0ea5e9', '#10b981', '#f59e0b', '#ec4899', '#3b82f6', '#ef4444', '#0f172a'];
 
     const CAT_META = {
       prompt: { label: 'Prompt & Template', icon: '📝', bg: '#fef3c7', color: '#92400e' },
       agent: { label: 'AI Agent', icon: '🤖', bg: '#ede9fe', color: '#5b21b6' },
       ebook: { label: 'Ebook & Tài liệu', icon: '📚', bg: '#d1fae5', color: '#065f46' },
       tool: { label: 'Công cụ & Script', icon: '🔧', bg: '#dbeafe', color: '#1e40af' },
-      course: { label: 'Mini Course', icon: '🎓', bg: '#fce7f3', color: '#9d174d' },
+      course: { label: 'Khóa học', icon: '🎓', bg: '#fce7f3', color: '#9d174d' },
       other: { label: 'Khác', icon: '📦', bg: '#f1f5f9', color: '#475569' },
     };
 
@@ -1235,7 +1105,7 @@
 
     // Init
     function init() {
-      const raw = sessionStorage.getItem('currentUser');
+      const raw = localStorage.getItem('currentUser');
       if (!raw) return (location.href = 'index.html');
       const user = JSON.parse(raw);
 
@@ -1244,30 +1114,19 @@
       document.getElementById('sbAvatar').style.background = avColor(user.id);
       document.getElementById('sbName').textContent = `${user.first_name} ${user.last_name}`;
       const lv = getLevel(user.xp || 0);
-      document.getElementById('sbLevel').textContent = `Lv.${lv.level} · ${lv.name}`;
+      document.getElementById('sbLevel').textContent = `${lv.name} · Lv.${lv.level}`;
       ['sbAvatar','sbName'].forEach(id => { const el = document.getElementById(id); el.style.cursor='pointer'; el.onclick=()=>location.href=`profile.html?id=${user.id}`; });
       document.getElementById('topbarAvatar').textContent = avLetter(user);
       document.getElementById('topbarAvatar').style.background = avColor(user.id);
+      document.getElementById('topbarAvatar').onclick = () => location.href = `profile.html?id=${user.id}`;
 
-      buildColorPicker();
       setupFilters();
       loadProducts();
       loadRpProfile(user);
-    }
 
-    function buildColorPicker() {
-      const wrap = document.getElementById('pmColorPicker');
-      COVER_COLORS.forEach((c, i) => {
-        const sw = document.createElement('div');
-        sw.className = 'color-swatch' + (i === 0 ? ' selected' : '');
-        sw.style.background = c;
-        sw.dataset.color = c;
-        sw.onclick = () => {
-          wrap.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('selected'));
-          sw.classList.add('selected');
-        };
-        wrap.appendChild(sw);
-      });
+      // Deep-link from search results: marketplace.html?product_id=X
+      const productId = new URLSearchParams(location.search).get('product_id');
+      if (productId) openDetailModal(parseInt(productId));
     }
 
     function setupFilters() {
@@ -1300,15 +1159,59 @@
       try {
         const data = await fetch(`${API}/products`).then(r => r.json());
         allProducts = data.products || [];
-        document.getElementById('heroTotal').textContent = data.total || allProducts.length;
-        const sellers = new Set(allProducts.map(p => p.first_name + p.last_name));
-        document.getElementById('heroSellers').textContent = sellers.size;
+        renderHero();
         renderGrid();
         renderRpCats();
         renderRpFeatured();
       } catch {
         document.getElementById('mpGrid').innerHTML = '<div class="mp-empty"><div class="mp-empty-icon">⚠️</div>Không thể tải sản phẩm. Đảm bảo server đang chạy.</div>';
       }
+    }
+
+    // ── Hero — showcase the featured product as an online-store hero ──
+    function renderHero() {
+      const hero = document.getElementById('mpHero');
+      const sellers = new Set(allProducts.map(p => p.first_name + p.last_name));
+      const featured = allProducts.find(p => p.is_featured);
+
+      if (!featured) {
+        hero.innerHTML = `
+      <div class="mp-hero-icon">🛒</div>
+      <h1>Chợ Sản Phẩm Số</h1>
+      <p>Mua bán tài liệu, đề thi, khoá học và công cụ số từ cộng đồng</p>
+      <div class="mp-hero-stats">
+        <div class="mp-hero-stat"><div class="mp-hero-stat-val">${allProducts.length}</div><div class="mp-hero-stat-lbl">Sản phẩm</div></div>
+        <div class="mp-hero-stat"><div class="mp-hero-stat-val">${sellers.size}</div><div class="mp-hero-stat-lbl">Người bán</div></div>
+      </div>`;
+        return;
+      }
+
+      const hasDiscount = featured.compare_price > featured.price;
+      const offPct = hasDiscount ? Math.round((1 - featured.price / featured.compare_price) * 100) : 0;
+      hero.innerHTML = `
+      <div class="mp-hero-badge">🔥 Ưu đãi nổi bật</div>
+      <h1>${escHtml(featured.title)}</h1>
+      <p>${escHtml(featured.description || '')}</p>
+      <div class="mp-hero-price-row">
+        ${hasDiscount ? `<span class="mp-hero-old-price">${fmtPrice(featured.compare_price)}</span>` : ''}
+        <span class="mp-hero-new-price">${fmtPrice(featured.price)}</span>
+        ${hasDiscount ? `<span class="mp-hero-discount">-${offPct}%</span>` : ''}
+      </div>
+      <div class="mp-hero-ctas">
+        <button class="mp-hero-btn-primary" onclick="buyNow(${featured.id})">🛒 Mua ngay</button>
+        <button class="mp-hero-btn-secondary" onclick="viewDetail(${featured.id})">Xem chi tiết →</button>
+      </div>
+      <div class="mp-hero-stats">
+        <div class="mp-hero-stat"><div class="mp-hero-stat-val">${allProducts.length}</div><div class="mp-hero-stat-lbl">Sản phẩm</div></div>
+        <div class="mp-hero-stat"><div class="mp-hero-stat-val">${sellers.size}</div><div class="mp-hero-stat-lbl">Người bán</div></div>
+      </div>`;
+    }
+
+    // Open the product's own landing page if set, otherwise the built-in detail modal
+    function viewDetail(id) {
+      const p = allProducts.find(x => x.id === id);
+      if (p && p.detail_url) { location.href = p.detail_url; return; }
+      openDetailModal(id);
     }
 
     function getFiltered() {
@@ -1334,21 +1237,28 @@
       grid.innerHTML = list.map(p => {
         const cat = CAT_META[p.category] || CAT_META.other;
         const sellerName = `${p.first_name} ${p.last_name}`;
+        const hasDiscount = p.compare_price > p.price;
         return `
-    <div class="mp-card" onclick="openDetailModal(${p.id})">
+    <div class="mp-card" onclick="viewDetail(${p.id})">
       <div class="mp-cover" style="background:${escHtml(p.cover_color)}">${cat.icon}</div>
       <div class="mp-body">
         <span class="mp-cat-badge" style="background:${cat.bg};color:${cat.color}">${cat.icon} ${escHtml(cat.label)}</span>
         <div class="mp-title">${escHtml(p.title)}</div>
         <div class="mp-desc">${escHtml(p.description || '')}</div>
         <div class="mp-footer">
-          <div class="mp-price">${fmtPrice(p.price)}</div>
+          <div class="mp-price-wrap">
+            ${hasDiscount ? `<span class="mp-price-old">${fmtPrice(p.compare_price)}</span>` : ''}
+            <div class="mp-price">${fmtPrice(p.price)}</div>
+          </div>
           <div class="mp-seller">
             <div class="mp-seller-av" style="background:${avColor(p.id)}">${sellerName[0]}</div>
             <span>${escHtml(sellerName)}</span>
           </div>
         </div>
-        <button class="mp-buy-btn" onclick="event.stopPropagation();buyNow(${p.id})">🛒 Mua ngay</button>
+        <div class="mp-card-actions">
+          <button class="mp-buy-btn" onclick="event.stopPropagation();buyNow(${p.id})">🛒 Mua ngay</button>
+          <button class="mp-detail-btn" onclick="event.stopPropagation();viewDetail(${p.id})">👁️ Xem chi tiết</button>
+        </div>
       </div>
     </div>`;
       }).join('');
@@ -1371,7 +1281,7 @@
       const top = [...allProducts].sort((a, b) => b.sales_count - a.sales_count).slice(0, 4);
       document.getElementById('rpFeatured').innerHTML = top.map(p => {
         const cat = CAT_META[p.category] || CAT_META.other;
-        return `<div class="rp-feat-item" onclick="openDetailModal(${p.id})" style="cursor:pointer">
+        return `<div class="rp-feat-item" onclick="viewDetail(${p.id})" style="cursor:pointer">
       <div class="rp-feat-cover" style="background:${escHtml(p.cover_color)}">${cat.icon}</div>
       <div>
         <div class="rp-feat-title">${escHtml(p.title)}</div>
@@ -1417,6 +1327,14 @@
         document.getElementById('detailSellerXp').textContent = `${p.xp || 0} XP · Level ${p.level || 1}`;
         document.getElementById('detailDesc').textContent = p.description || '';
         document.getElementById('detailLong').textContent = p.long_description || '';
+        document.getElementById('detailScheduleLink').style.display = 'none'; // lịch trình combo của template — không dùng
+        const compareEl = document.getElementById('detailComparePrice');
+        if (p.compare_price > p.price) {
+          compareEl.textContent = fmtPrice(p.compare_price);
+          compareEl.style.display = '';
+        } else {
+          compareEl.style.display = 'none';
+        }
         document.getElementById('detailPrice').textContent = fmtPrice(p.price);
         document.getElementById('detailSales').textContent = `${p.sales_count || 0} lượt mua`;
         document.getElementById('detailBuyBtn').textContent = p.price === 0 ? '⬇️ Tải miễn phí' : '🛒 Mua ngay';
@@ -1438,58 +1356,6 @@
       location.href = `checkout.html?id=${id}`;
     }
     function buyNow(id) { location.href = `checkout.html?id=${id}`; }
-
-    // ── Post modal ────────────────────────────────────────────
-    function openPostModal() {
-      const raw = sessionStorage.getItem('currentUser');
-      if (!raw) return (location.href = 'index.html');
-      document.getElementById('postOverlay').classList.add('open');
-    }
-    function closePostModal() { document.getElementById('postOverlay').classList.remove('open'); }
-    function handlePostOverlayClick(e) { if (e.target === document.getElementById('postOverlay')) closePostModal(); }
-
-    async function submitProduct() {
-      const raw = sessionStorage.getItem('currentUser');
-      if (!raw) return;
-      const user = JSON.parse(raw);
-
-      const title = document.getElementById('pmTitle').value.trim();
-      const category = document.getElementById('pmCat').value;
-      const price = parseInt(document.getElementById('pmPrice').value || '0');
-      const description = document.getElementById('pmDesc').value.trim();
-      const long_description = document.getElementById('pmLong').value.trim();
-      const cover_color = document.querySelector('.color-swatch.selected')?.dataset.color || '#7c3aed';
-
-      if (!title) return alert('Vui lòng nhập tên sản phẩm.');
-      if (!description) return alert('Vui lòng nhập mô tả ngắn.');
-      if (isNaN(price) || price < 0) return alert('Giá không hợp lệ.');
-      if (!document.getElementById('pmAgree').checked)
-        return alert('Vui lòng đồng ý với Điều kiện cung cấp dịch vụ và phí dịch vụ trước khi đăng bán.');
-
-      const btn = document.getElementById('pmSubmitBtn');
-      btn.disabled = true; btn.textContent = 'Đang đăng...';
-
-      try {
-        const res = await fetch(`${API}/products`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ user_id: user.id, title, description, long_description, price, category, cover_color }),
-        });
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.error || 'Lỗi đăng sản phẩm.');
-        closePostModal();
-        document.getElementById('pmTitle').value = '';
-        document.getElementById('pmPrice').value = '';
-        document.getElementById('pmDesc').value = '';
-        document.getElementById('pmLong').value = '';
-        await loadProducts();
-        alert('⏳ Sản phẩm đã được gửi thành công!\n\nAdmin sẽ xem xét và duyệt trong vòng 24 giờ. Bạn sẽ nhận email thông báo kết quả.');
-      } catch (err) {
-        alert(err.message);
-      } finally {
-        btn.disabled = false; btn.textContent = 'Đăng sản phẩm';
-      }
-    }
 
     // ── Right panel profile ───────────────────────────────────
     async function loadRpProfile(user) {
@@ -1519,7 +1385,7 @@
       }
     }
 
-    document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeDetailModal(); closePostModal(); } });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDetailModal(); });
 
     init();
   </script>

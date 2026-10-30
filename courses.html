@@ -3,16 +3,24 @@
 
 <head>
   <meta charset="UTF-8">
+  <script src="assets/js/auth-fetch.js?v=1"></script>
+  <script>(function(){try{var t=localStorage.getItem('theme');if(t==='dark'||(!t&&window.matchMedia('(prefers-color-scheme: dark)').matches))document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" href="/assets/img/logo.png">
+  <link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
+  <link rel="manifest" href="/manifest.json?v=2">
+  <meta name="apple-mobile-web-app-title" content="AI Agents CC">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="theme-color" content="#0ea5e9">
   <title>Khóa học — AI AGENTS CC</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
     href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap"
     rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/base.css">
-  <link rel="stylesheet" href="assets/css/components.css">
-  <link rel="stylesheet" href="assets/css/layout.css">
+  <link rel="stylesheet" href="assets/css/base.css?v=2">
+  <link rel="stylesheet" href="assets/css/components.css?v=11">
+  <link rel="stylesheet" href="assets/css/layout.css?v=6">
   <style>
     /* ── Hero ─────────────────────────────────────────── */
     .courses-hero {
@@ -111,7 +119,21 @@
       font-family: var(--font-heading);
       font-weight: 800;
       color: rgba(255, 255, 255, .85);
+      position: relative;
     }
+
+    .course-visibility-badge {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 3px 9px;
+      border-radius: 99px;
+      background: rgba(255, 255, 255, .92);
+    }
+    .course-visibility-badge.public { color: #075985; }
+    .course-visibility-badge.private { color: #92400e; }
 
     .course-body {
       padding: 14px 16px;
@@ -156,6 +178,25 @@
       color: #6366f1;
     }
 
+    .course-price {
+      display: flex;
+      align-items: baseline;
+      gap: 7px;
+      margin-bottom: 10px;
+    }
+
+    .course-price-now {
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--color-primary);
+    }
+
+    .course-price-compare {
+      font-size: 12px;
+      color: var(--text-muted);
+      text-decoration: line-through;
+    }
+
     .course-instructor {
       font-size: 11px;
       color: var(--text-muted);
@@ -178,6 +219,32 @@
     .course-btn:hover {
       background: #4f46e5;
     }
+
+    .cm-enroll-btn {
+      background: var(--color-primary);
+      color: #fff;
+      border: none;
+      border-radius: var(--radius-md);
+      padding: 9px 18px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: var(--font-body);
+      transition: filter .15s;
+    }
+    .cm-enroll-btn:hover { filter: brightness(0.92); }
+    .cm-enroll-btn:disabled { cursor: default; opacity: .6; }
+    .cm-enroll-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 7px 14px;
+      border-radius: var(--radius-md);
+    }
+    .cm-enroll-badge.approved { background: #d1fae5; color: #065f46; }
+    .cm-enroll-badge.pending { background: #fef3c7; color: #92400e; }
 
     /* ── Course modal ─────────────────────────────────── */
     .course-modal-overlay {
@@ -303,16 +370,16 @@
     }
 
     .lesson-row:hover {
-      background: #f5f3ff;
-      border-color: #c4b5fd;
+      background: var(--bg-hover);
+      border-color: var(--color-primary);
     }
 
     .lesson-num {
       width: 28px;
       height: 28px;
       border-radius: 8px;
-      background: #ede9fe;
-      color: #6366f1;
+      background: var(--bg-hover);
+      color: var(--color-primary);
       font-size: 12px;
       font-weight: 700;
       display: flex;
@@ -458,8 +525,21 @@
       font-size: var(--fs-base);
       color: var(--text);
       line-height: 1.75;
-      white-space: pre-wrap;
     }
+    .lesson-content h1 { font-size: 22px; font-weight: 700; margin: 16px 0 8px; }
+    .lesson-content h2 { font-size: 19px; font-weight: 700; margin: 14px 0 6px; }
+    .lesson-content h3 { font-size: 16px; font-weight: 700; margin: 12px 0 6px; }
+    .lesson-content h4 { font-size: 15px; font-weight: 700; margin: 10px 0 4px; }
+    .lesson-content p { margin: 6px 0; }
+    .lesson-content ul, .lesson-content ol { padding-left: 22px; margin: 8px 0; }
+    .lesson-content li { margin: 3px 0; }
+    .lesson-content a { color: var(--color-primary); text-decoration: underline; }
+    .lesson-content blockquote { margin: 10px 0; padding: 6px 14px; border-left: 3px solid var(--border); color: var(--text-muted); }
+    .lesson-content pre { margin: 10px 0; padding: 10px 12px; background: #0f172a; color: #e2e8f0; border-radius: 8px; font-family: monospace; font-size: 13px; overflow-x: auto; white-space: pre-wrap; }
+    .lesson-content code { background: var(--bg-hover); padding: 1px 6px; border-radius: 4px; font-family: monospace; font-size: 13px; }
+    .lesson-content pre code { background: transparent; padding: 0; }
+    .lesson-content img { max-width: 100%; border-radius: 8px; margin: 6px 0; }
+    .lesson-content hr { border: 0; border-top: 1px solid var(--border); margin: 14px 0; }
 
     /* ── Right panel ──────────────────────────────────── */
     .profile-user-row {
@@ -526,6 +606,49 @@
       color: var(--text-muted);
     }
 
+    /* ── Tabs (Tất cả / Của tôi) ──────────────────────── */
+    .courses-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+
+    .courses-toolbar h1 {
+      font-family: var(--font-heading);
+      font-size: var(--fs-xl);
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    .courses-tabs {
+      display: flex;
+      gap: 6px;
+    }
+
+    .courses-tab {
+      padding: 7px 14px;
+      border-radius: var(--radius-md);
+      font-size: var(--fs-sm);
+      font-weight: 600;
+      color: var(--text-muted);
+      background: transparent;
+      border: 1px solid transparent;
+      cursor: pointer;
+      font-family: var(--font-body);
+    }
+
+    .courses-tab:hover {
+      background: var(--bg-hover);
+    }
+
+    .courses-tab.active {
+      background: var(--bg-active);
+      color: var(--color-primary);
+    }
+
     @media (max-width: 768px) {
       .courses-hero {
         flex-wrap: wrap;
@@ -551,14 +674,7 @@
     <!-- Sidebar -->
     <aside id="sidebar">
       <div id="sidebar-logo">
-        <div class="sidebar-logo-mark">
-          <svg viewBox="0 0 20 20" fill="none">
-            <circle cx="10" cy="10" r="3" fill="currentColor" />
-            <path d="M10 3v2M10 15v2M3 10h2M15 10h2" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-            <path d="M5.5 5.5l1.5 1.5M13 13l1.5 1.5M14.5 5.5L13 7M7 13l-1.5 1.5" stroke="currentColor"
-              stroke-width="1.5" stroke-linecap="round" />
-          </svg>
-        </div>
+        <div class="sidebar-logo-mark" style="background:transparent;"><img src="assets/img/logo.png" alt="Logo" style="width:100%;height:100%;object-fit:contain;"></div>
         <div class="sidebar-logo-text">AI AGENTS <span>CC</span></div>
       </div>
 
@@ -568,50 +684,17 @@
           <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
             <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
           </svg>
-          Bảng tin
-        </a>
-        <a href="cot.html" class="nav-item">
-          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-            <polygon
-              points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-          </svg>
-          CÔT
-        </a>
-        <a href="signal.html" class="nav-item">
-          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
-          </svg>
-          Tín hiệu
-        </a>
-        <a href="qa.html" class="nav-item">
-          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-            <path
-              d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
-          Hỏi đáp
+          Feed
         </a>
 
+
         <div class="nav-section-label" style="margin-top:8px;">Học tập</div>
-        <a href="courses.html" class="nav-item active">
-          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-            <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
-          </svg>
-          Khóa học
-        </a>
         <a href="challenge.html" class="nav-item">
           <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
             <path
               d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z" />
           </svg>
           Challenge
-        </a>
-        <a href="leaderboard.html" class="nav-item">
-          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-            <path
-              d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"
-              stroke-linecap="round" />
-          </svg>
-          Leaderboard
         </a>
 
         <div class="nav-section-label" style="margin-top:8px;">Khác</div>
@@ -621,13 +704,6 @@
               d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z" />
           </svg>
           Marketplace
-        </a>
-        <a href="members.html" class="nav-item">
-          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-            <path
-              d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
-          </svg>
-          Thành viên
         </a>
       </nav>
 
@@ -653,7 +729,7 @@
     <div id="main">
       <!-- Mobile topbar -->
       <div id="mobile-topbar">
-        <button class="mob-menu-btn" onclick="openSidebar()" aria-label="Menu">
+        <button class="mob-menu-btn" onclick="toggleSidebar()" aria-label="Menu">
           <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
             <line x1="3" y1="6" x2="21" y2="6" />
             <line x1="3" y1="12" x2="21" y2="12" />
@@ -661,18 +737,54 @@
           </svg>
         </button>
         <span style="flex:1;font-size:var(--fs-md);font-weight:600;color:var(--text)">Khóa học</span>
-      </div>
+        <div class="mob-topbar-right">
+          <button class="icon-btn" id="themeToggleMob" type="button" aria-label="Chuyển chế độ sáng/tối">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"></svg>
+          </button>
+          <button class="icon-btn" id="notifBellMob" aria-label="Thông báo" style="position:relative;">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+            </svg>
+            <span id="notifBadgeMob" style="display:none;position:absolute;top:2px;right:2px;background:#ef4444;color:#fff;font-size:10px;font-weight:700;border-radius:99px;min-width:16px;height:16px;padding:0 4px;line-height:16px;text-align:center;">0</span>
+          </button>
+          <div id="topbarAvatarMob" style="width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;background:#7c3aed;flex-shrink:0;"></div>
+        </div>
+</div>
 
       <!-- Desktop topbar -->
-      <div id="topbar">
-        <div class="topbar-title">
-          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-            style="width:17px;height:17px">
-            <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
-          </svg>
-          Khóa học
-        </div>
+      <nav id="subnav-bar" class="subnav-bar" aria-label="Điều hướng nhanh">
+        <a href="feed.html" class="subnav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+          Feed
+        </a>
+        <a href="spaces.html" class="subnav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></svg>
+          Spaces
+        </a>
+        <a href="courses.html" class="subnav-item active">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/></svg>
+          Courses
+        </a>
+        <a href="members.html" class="subnav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+          Members
+        </a>
+        <a href="leaderboard.html" class="subnav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/></svg>
+          Leaderboard
+        </a>
+        <a href="calendar.html" class="subnav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          Calendar
+        </a>
+        <a href="about.html" class="subnav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+          About
+        </a>
         <div class="topbar-right">
+          <button class="icon-btn" id="themeToggle" type="button" aria-label="Chuyển chế độ sáng/tối">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"></svg>
+          </button>
           <div style="position:relative;">
             <button class="icon-btn" id="notifBell" aria-label="Thông báo" style="position:relative;">
               <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
@@ -682,6 +794,33 @@
             </button>
             <div id="notifDropdown" style="display:none;"></div>
           </div>
+          <a href="#" class="icon-btn" aria-label="Tin nhắn">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <path
+                d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+            </svg>
+          </a>
+          <div class="topbar-search">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <circle cx="11" cy="11" r="8" />
+              <line x1="21" y1="21" x2="16.65" y2="16.65" />
+            </svg>
+            <input type="text" id="globalSearchInput" placeholder="Tìm kiếm..." autocomplete="off">
+            <div id="globalSearchResults" class="gsr-panel"></div>
+          </div>
+          <div id="topbarAvatar"
+            style="width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;background:#7c3aed;cursor:pointer;flex-shrink:0;">
+          </div>
+        </div>
+      </nav>
+
+      <div id="topbar">
+        <div class="topbar-title">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            style="width:17px;height:17px">
+            <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
+          </svg>
+          Khóa học
         </div>
       </div>
 
@@ -689,10 +828,10 @@
         <main id="feed">
           <!-- Hero -->
           <div class="courses-hero">
-            <div class="courses-hero-icon">🎓</div>
+            <div class="courses-hero-icon" id="coursesHeroIcon">🎓</div>
             <div class="courses-hero-body">
-              <div class="courses-hero-title">Khóa học AI Agent</div>
-              <div class="courses-hero-sub">Học từ cơ bản đến nâng cao — từ prompt engineering đến deploy agent thực
+              <div class="courses-hero-title" id="coursesHeroTitle">Khóa học AI AGENTS CC</div>
+              <div class="courses-hero-sub" id="coursesHeroDesc">Học từ cơ bản đến nâng cao — từ prompt engineering đến deploy AI Agent thực tế
                 chiến</div>
             </div>
             <div class="courses-hero-stats">
@@ -704,6 +843,15 @@
                 <div class="cs-stat-num" id="statLessons">—</div>
                 <div class="cs-stat-lbl">Bài học</div>
               </div>
+            </div>
+          </div>
+
+          <!-- Tabs -->
+          <div class="courses-toolbar">
+            <h1>Khóa học</h1>
+            <div class="courses-tabs">
+              <button class="courses-tab active" data-scope="all" onclick="setScope('all',this)">Tất cả</button>
+              <button class="courses-tab" data-scope="mine" onclick="setScope('mine',this)">Của tôi</button>
             </div>
           </div>
 
@@ -729,7 +877,7 @@
           <div class="rp-card" style="background:linear-gradient(135deg,#6366f1,#8b5cf6);border:0;">
             <p class="widget-title" style="color:#e0e7ff;">🔥 Thử thách 21 ngày</p>
             <p style="font-size:var(--fs-xs);color:rgba(255,255,255,.8);line-height:1.6;margin-bottom:10px;">Hoàn thành
-              các nhiệm vụ mỗi ngày để nâng cấp kỹ năng AI Agent.</p>
+              quy trình mỗi ngày để thanh lọc và cân bằng cơ thể.</p>
             <a href="challenge.html"
               style="display:inline-block;background:rgba(255,255,255,.2);color:#fff;text-decoration:none;border-radius:var(--radius-md);padding:7px 14px;font-size:var(--fs-xs);font-weight:600;">Tham
               gia ngay →</a>
@@ -739,83 +887,144 @@
     </div>
   </div>
 
-  <div id="mob-overlay"></div>
+  <div id="mob-overlay" onclick="closeSidebar()"></div>
   <div id="mob-sidebar">
-    <div
-      style="padding:14px 16px;border-bottom:1px solid var(--border);font-size:var(--fs-md);font-weight:700;color:var(--text);">
-      Menu</div>
+    <div style="padding:14px 16px;border-bottom:1px solid var(--border);font-size:var(--fs-md);font-weight:700;color:var(--text);display:flex;align-items:center;gap:8px;">
+      <div style="width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;"><img src="assets/img/logo.png" alt="Logo" style="width:100%;height:100%;object-fit:contain;"></div>
+      <span class="mob-brand-name">AI AGENTS CC</span>
+    </div>
     <nav style="flex:1;overflow-y:auto;padding:8px;">
-      <a href="feed.html" class="nav-item">Bảng tin</a>
-      <a href="cot.html" class="nav-item">⭐ CÔT</a>
-      <a href="signal.html" class="nav-item">⚡ Tín hiệu</a>
-      <a href="qa.html" class="nav-item">❓ Hỏi đáp</a>
-      <a href="courses.html" class="nav-item active">🎓 Khóa học</a>
-      <a href="challenge.html" class="nav-item">Challenge</a>
-      <a href="leaderboard.html" class="nav-item">Leaderboard</a>
-      <a href="members.html" class="nav-item">Thành viên</a>
+      <div class="nav-section-label">Cộng đồng</div>
+      <a href="feed.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        Feed
+      </a>
+      <div class="nav-section-label">Học tập</div>
+      <a href="challenge.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z"/></svg>
+        Challenge
+      </a>
+      <div class="nav-section-label">Khác</div>
+      <a href="marketplace.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z"/></svg>
+        Marketplace
+      </a>
     </nav>
   </div>
 
-  <!-- Course modal -->
-  <div class="course-modal-overlay" id="courseModalOverlay">
-    <div class="course-modal">
-      <div class="cm-cover" id="cmCover">
-        <button class="cm-close" onclick="closeCourseModal()">✕</button>
-      </div>
-      <div class="cm-header">
-        <div class="cm-title" id="cmTitle">—</div>
-        <div class="cm-desc" id="cmDesc"></div>
-        <div class="cm-instructor">Giảng viên: <strong id="cmInstructor">—</strong></div>
-      </div>
-      <div class="cm-body">
-        <div style="font-size:var(--fs-sm);font-weight:700;color:var(--text);margin-bottom:12px;" id="cmLessonsHeader">
-          Danh sách bài học</div>
-        <div class="lesson-list" id="cmLessonList">
-          <div style="text-align:center;padding:30px;color:var(--text-muted);">Đang tải...</div>
-        </div>
-      </div>
+  <!-- Mobile main menu (full site navigation) -->
+  <div id="mob-mainmenu-overlay" onclick="closeMainMenu()"></div>
+  <div id="mob-mainmenu">
+    <div style="padding:14px 16px;border-bottom:1px solid var(--border);font-size:var(--fs-md);font-weight:700;color:var(--text);display:flex;align-items:center;gap:8px;">
+      <div style="width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;"><img src="assets/img/logo.png" alt="Logo" style="width:100%;height:100%;object-fit:contain;"></div>
+      Menu chính
     </div>
+    <nav style="flex:1;overflow-y:auto;padding:8px;">
+      <a href="feed.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        Feed
+      </a>
+      <a href="spaces.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></svg>
+        Spaces
+      </a>
+      <a href="courses.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/></svg>
+        Courses
+      </a>
+      <a href="members.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+        Members
+      </a>
+      <a href="leaderboard.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/></svg>
+        Leaderboard
+      </a>
+      <a href="calendar.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        Calendar
+      </a>
+      <a href="about.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+        About
+      </a>
+    </nav>
   </div>
 
-  <!-- Lesson modal -->
-  <div class="lesson-modal-overlay" id="lessonModalOverlay">
-    <div class="lesson-modal">
-      <div class="lm-header">
-        <div class="lm-title" id="lmTitle">—</div>
-        <button class="lm-close" onclick="closeLessonModal()">✕</button>
-      </div>
-      <div class="lm-body" id="lmBody"></div>
-    </div>
-  </div>
+  <nav id="mobile-nav">
+    <a href="feed.html" class="mob-nav-btn">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
+      </svg>
+      Feed
+    </a>
+    <a href="spaces.html" class="mob-nav-btn">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></svg>
+      Spaces
+    </a>
+    <a href="courses.html" class="mob-nav-btn active">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/></svg>
+      Courses
+    </a>
+    <a href="members.html" class="mob-nav-btn">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>
+      </svg>
+      Members
+    </a>
+    <button class="mob-nav-btn" onclick="toggleMainMenu()">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/>
+      </svg>
+      Menu
+    </button>
+  </nav>
 
-  <script src="assets/js/app.js"></script>
+  <script src="assets/js/app.js?v=28"></script>
   <script>
     const API = '/api';
     const AV_COLORS = ['#0ea5e9', '#8b5cf6', '#10b981', '#f59e0b', '#ec4899', '#3b82f6'];
     const LEVELS = [
-      { level: 1, xpMin: 0, xpMax: 45 }, { level: 2, xpMin: 45, xpMax: 120 }, { level: 3, xpMin: 120, xpMax: 250 },
-      { level: 4, xpMin: 250, xpMax: 450 }, { level: 5, xpMin: 450, xpMax: 700 }, { level: 6, xpMin: 700, xpMax: 1000 },
-      { level: 7, xpMin: 1000, xpMax: 1500 }, { level: 8, xpMin: 1500, xpMax: 2200 }, { level: 9, xpMin: 2200, xpMax: 9999 },
+      { level: 1, name: 'Khởi động', xpMin: 0, xpMax: 45 }, { level: 2, name: 'Học viên', xpMin: 45, xpMax: 120 },
+      { level: 3, name: 'Thực hành', xpMin: 120, xpMax: 250 }, { level: 4, name: 'Nâng cao', xpMin: 250, xpMax: 450 },
+      { level: 5, name: 'Chuyên gia', xpMin: 450, xpMax: 700 }, { level: 6, name: 'Bậc thầy', xpMin: 700, xpMax: 1000 },
+      { level: 7, name: 'Huyền thoại', xpMin: 1000, xpMax: 1500 }, { level: 8, name: 'Tiên tri', xpMin: 1500, xpMax: 2200 },
+      { level: 9, name: 'Thần thánh', xpMin: 2200, xpMax: 9999 },
     ];
     function getLevelDef(xp) { for (let i = LEVELS.length - 1; i >= 0; i--) if (xp >= LEVELS[i].xpMin) return LEVELS[i]; return LEVELS[0]; }
     function escHtml(s) { return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+    function fmtPrice(p) { return !p ? 'Miễn phí' : Number(p).toLocaleString('vi-VN') + '₫'; }
 
     let currentUser = null;
     let allCourses = [];
+    let currentScope = 'all';
 
-    function doLogout() { sessionStorage.removeItem('currentUser'); window.location.href = 'index.html'; }
+    function setScope(scope, btn) {
+      currentScope = scope;
+      document.querySelectorAll('.courses-tab').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderGrid();
+    }
+
+    function doLogout() { localStorage.removeItem('currentUser'); window.location.href = 'index.html'; }
 
     function initUser() {
-      const raw = sessionStorage.getItem('currentUser');
+      const raw = localStorage.getItem('currentUser');
       if (!raw) { window.location.href = 'index.html'; return; }
       currentUser = JSON.parse(raw);
       const initials = ((currentUser.first_name || '?')[0] + (currentUser.last_name || '')[0]).toUpperCase();
       const name = [currentUser.first_name, currentUser.last_name].filter(Boolean).join(' ');
-      const lv = currentUser.level || 1;
+      const lv = getLevelDef(currentUser.xp || 0);
       document.getElementById('sbAvatar').textContent = initials;
       document.getElementById('sbAvatar').style.background = AV_COLORS[currentUser.id % AV_COLORS.length];
       document.getElementById('sbName').textContent = name;
-      document.getElementById('sbLevel').textContent = `Level ${lv}`;
+      document.getElementById('sbLevel').textContent = lv.name + ' · Lv.' + lv.level;
+      const tbAv = document.getElementById('topbarAvatar');
+      if (tbAv) {
+        tbAv.textContent = initials;
+        tbAv.style.background = AV_COLORS[currentUser.id % AV_COLORS.length];
+        tbAv.onclick = () => location.href = `profile.html?id=${currentUser.id}`;
+      }
       renderProfileCard();
     }
 
@@ -843,39 +1052,54 @@
 
     async function loadCourses() {
       try {
-        const data = await fetch(`${API}/courses`).then(r => r.json());
+        const qs = currentUser ? `?user_id=${currentUser.id}` : '';
+        const data = await fetch(`${API}/courses${qs}`).then(r => r.json());
         allCourses = data.courses || [];
         document.getElementById('statCourses').textContent = allCourses.length;
         document.getElementById('statLessons').textContent = data.total_lessons || 0;
         renderGrid();
         renderTopCourses();
+        maybeOpenCourseFromQuery();
       } catch (e) {
         document.getElementById('courseGrid').innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--text-muted);">Không thể tải khóa học.</div>';
       }
     }
 
+    function isMine(c) {
+      return c.enroll_status === 'approved';
+    }
+
     function renderGrid() {
       const grid = document.getElementById('courseGrid');
-      if (!allCourses.length) {
+      const list = currentScope === 'mine' ? allCourses.filter(isMine) : allCourses;
+      if (!list.length) {
         grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:60px 20px;color:var(--text-muted);">
       <div style="font-size:48px;margin-bottom:12px">📚</div>
-      <div style="font-size:var(--fs-base);font-weight:500">Chưa có khóa học nào. Admin sẽ sớm thêm khóa học mới!</div>
+      <div style="font-size:var(--fs-base);font-weight:500">${currentScope === 'mine' ? 'Bạn chưa tham gia khóa học nào.' : 'Chưa có khóa học nào. Admin sẽ sớm thêm khóa học mới!'}</div>
     </div>`;
         return;
       }
-      grid.innerHTML = allCourses.map((c, idx) => {
+      grid.innerHTML = list.map((c, idx) => {
         const color = c.cover_color || AV_COLORS[idx % AV_COLORS.length];
-        return `<div class="course-card" onclick="openCourseModal(${c.id})">
-      <div class="course-cover" style="background:${escHtml(color)}">🎓</div>
+        return `<div class="course-card" onclick="goToCourse(${c.id})">
+      <div class="course-cover" style="background:${escHtml(color)}">
+        🎓
+        <span class="course-visibility-badge ${c.visibility === 'private' ? 'private' : 'public'}">${c.visibility === 'private' ? '🔒 Riêng tư' : '🌐 Công khai'}</span>
+      </div>
       <div class="course-body">
         <div class="course-title">${escHtml(c.title)}</div>
         <div class="course-desc">${escHtml(c.description || '')}</div>
+        ${c.visibility === 'private' ? `
+        <div class="course-price">
+          <span class="course-price-now">${fmtPrice(c.price)}</span>
+          ${c.compare_price > c.price ? `<span class="course-price-compare">${fmtPrice(c.compare_price)}</span>` : ''}
+        </div>` : ''}
         <div class="course-footer">
           <div class="course-meta">
             <span class="course-lessons">${c.lesson_count || 0} bài học</span>
             <span class="course-instructor">👤 ${escHtml(c.instructor || 'Admin')}</span>
           </div>
-          <button class="course-btn" onclick="event.stopPropagation();openCourseModal(${c.id})">Xem khóa học →</button>
+          <button class="course-btn" onclick="event.stopPropagation();goToCourse(${c.id})">Xem khóa học →</button>
         </div>
       </div>
     </div>`;
@@ -888,7 +1112,7 @@
       if (!top.length) { el.innerHTML = '<div style="font-size:var(--fs-sm);color:var(--text-muted);text-align:center;padding:12px 0">Chưa có khóa học</div>'; return; }
       el.innerHTML = top.map((c, i) => {
         const color = c.cover_color || AV_COLORS[i % AV_COLORS.length];
-        return `<div class="top-course-item" onclick="openCourseModal(${c.id})">
+        return `<div class="top-course-item" onclick="goToCourse(${c.id})">
       <div class="tc-dot" style="background:${color}20;color:${color}">🎓</div>
       <div style="flex:1;min-width:0;">
         <div class="tc-name">${escHtml(c.title)}</div>
@@ -898,152 +1122,28 @@
       }).join('');
     }
 
-    async function openCourseModal(courseId) {
-      const overlay = document.getElementById('courseModalOverlay');
-      const idx = allCourses.findIndex(c => c.id === courseId);
-      const color = (allCourses[idx]?.cover_color) || AV_COLORS[Math.max(0, idx) % AV_COLORS.length];
-      document.getElementById('cmCover').style.background = color;
-      document.getElementById('cmTitle').textContent = 'Đang tải...';
-      document.getElementById('cmDesc').textContent = '';
-      document.getElementById('cmInstructor').textContent = '—';
-      document.getElementById('cmLessonsHeader').textContent = 'Danh sách bài học';
-      document.getElementById('cmLessonList').innerHTML = '<div style="text-align:center;padding:30px;color:var(--text-muted);">Đang tải...</div>';
-      overlay.classList.add('open');
-      document.body.style.overflow = 'hidden';
+    // Course detail (landing, checkout gate, and the 2-column lesson view once enrolled)
+    // all live on a dedicated page now — no more popups here.
+    function goToCourse(courseId) { location.href = `course-view.html?id=${courseId}`; }
+
+    function maybeOpenCourseFromQuery() {
+      const id = Number(new URLSearchParams(location.search).get('course_id'));
+      if (id) goToCourse(id);
+    }
+
+    async function loadCoursesHero() {
       try {
-        const data = await fetch(`${API}/courses/${courseId}`).then(r => r.json());
-        const c = data.course || {};
-        const lessons = data.lessons || [];
-        document.getElementById('cmCover').style.background = c.cover_color || color;
-        document.getElementById('cmTitle').textContent = c.title || 'Khóa học';
-        document.getElementById('cmDesc').textContent = c.description || '';
-        document.getElementById('cmInstructor').textContent = c.instructor || 'Admin';
-        document.getElementById('cmLessonsHeader').textContent = `Danh sách bài học (${lessons.length})`;
-        if (!lessons.length) {
-          document.getElementById('cmLessonList').innerHTML = '<div style="text-align:center;padding:20px;color:var(--text-muted);font-size:var(--fs-sm)">Chưa có bài học nào.</div>';
-          return;
-        }
-        document.getElementById('cmLessonList').innerHTML = lessons.map(l => `
-      <div class="lesson-row" onclick='openLessonModal(${JSON.stringify(l).replace(/'/g, "&#39;")})'>
-        <div class="lesson-num">${l.order_num || '—'}</div>
-        <div class="lesson-info">
-          <div class="lesson-title">${escHtml(l.title)}</div>
-          <div class="lesson-dur">${l.duration_min ? l.duration_min + ' phút' : 'Không xác định'}${l.video_url ? ' · 🎬 Video' : ''}</div>
-        </div>
-        <div class="lesson-arrow">›</div>
-      </div>`).join('');
-      } catch (e) {
-        document.getElementById('cmTitle').textContent = 'Không thể tải khóa học';
-        document.getElementById('cmLessonList').innerHTML = '<div style="text-align:center;padding:20px;color:var(--text-muted);font-size:var(--fs-sm)">Có lỗi xảy ra. Vui lòng thử lại.</div>';
-      }
+        const s = await fetch(`${API}/settings`).then(r => r.json());
+        document.getElementById('coursesHeroIcon').textContent = (s.courses_hero_icon || '🎓').trim();
+        document.getElementById('coursesHeroTitle').textContent = (s.courses_hero_title || 'Khóa học AI AGENTS CC').trim();
+        document.getElementById('coursesHeroDesc').textContent = (s.courses_hero_desc ||
+          'Học từ cơ bản đến nâng cao — từ prompt engineering đến deploy AI Agent thực tế').trim();
+      } catch (e) {}
     }
-
-    function closeCourseModal() {
-      document.getElementById('courseModalOverlay').classList.remove('open');
-      document.body.style.overflow = '';
-    }
-
-    function toEmbedUrl(raw) {
-      if (!raw) return null;
-      // If user pasted a full <iframe> tag, extract the src attribute
-      const srcMatch = raw.match(/\bsrc=["']([^"']+)["']/i);
-      const url = srcMatch ? srcMatch[1] : raw.trim();
-      try {
-        const u = new URL(url);
-        // Already an embed URL — ensure enablejsapi
-        if (u.pathname.startsWith('/embed/')) {
-          u.searchParams.set('enablejsapi', '1');
-          return u.toString();
-        }
-        if (u.hostname === 'youtu.be') return `https://www.youtube-nocookie.com/embed${u.pathname}?enablejsapi=1`;
-        const v = u.searchParams.get('v');
-        if (v) return `https://www.youtube-nocookie.com/embed/${v}?enablejsapi=1`;
-        const shorts = u.pathname.match(/\/shorts\/([^/?]+)/);
-        if (shorts) return `https://www.youtube-nocookie.com/embed/${shorts[1]}?enablejsapi=1`;
-      } catch { /**/ }
-      return url;
-    }
-
-    function toWatchUrl(url) {
-      if (!url) return url;
-      try {
-        const u = new URL(url);
-        // embed URL → watch URL
-        const embedMatch = u.pathname.match(/\/embed\/([^/?]+)/);
-        if (embedMatch) return `https://www.youtube.com/watch?v=${embedMatch[1]}`;
-        if (u.hostname.includes('youtu')) return url; // already watch or youtu.be
-      } catch { /**/ }
-      return url;
-    }
-
-    // Listen for YouTube player errors (150/153 = embed not allowed)
-    window.addEventListener('message', e => {
-      if (!e.data) return;
-      try {
-        const data = typeof e.data === 'string' ? JSON.parse(e.data) : e.data;
-        if (data.event === 'infoDelivery' && data.info?.playerState === -1) return;
-        if (data.event === 'onError' && (data.info === 150 || data.info === 153 || data.info === 101)) {
-          showVideoFallback();
-        }
-      } catch { /**/ }
-    });
-
-    function showVideoFallback() {
-      const wrap = document.getElementById('activeVideoWrap');
-      const fallback = document.getElementById('activeVideoFallback');
-      if (wrap) wrap.style.display = 'none';
-      if (fallback) fallback.style.display = 'flex';
-    }
-
-    function openLessonModal(lesson) {
-      document.getElementById('lmTitle').textContent = lesson.title || 'Bài học';
-      let html = '';
-      if (lesson.video_url) {
-        const embedUrl = toEmbedUrl(lesson.video_url);
-        const watchUrl = toWatchUrl(lesson.video_url);
-        html += `
-    <div id="activeVideoWrap" class="video-wrap">
-      <iframe src="${escHtml(embedUrl)}"
-        allowfullscreen
-        allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture"
-        onerror="showVideoFallback()">
-      </iframe>
-    </div>
-    <div id="activeVideoFallback" style="display:none;flex-direction:column;align-items:center;justify-content:center;background:#0f172a;border-radius:10px;padding:40px 20px;margin-bottom:20px;text-align:center;gap:12px">
-      <div style="font-size:36px">▶️</div>
-      <div style="color:#fff;font-size:14px;font-weight:600">Video không thể phát trực tiếp</div>
-      <div style="color:#94a3b8;font-size:12px;line-height:1.5">Chủ video đã tắt tính năng nhúng.<br>Vui lòng xem trực tiếp trên YouTube.</div>
-      <a href="${escHtml(watchUrl)}" target="_blank" rel="noopener"
-        style="display:inline-flex;align-items:center;gap:6px;margin-top:4px;padding:9px 18px;background:#ef4444;color:#fff;border-radius:8px;font-size:13px;font-weight:700;text-decoration:none;">
-        <svg fill="currentColor" viewBox="0 0 24 24" style="width:16px;height:16px"><path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
-        Xem trên YouTube
-      </a>
-    </div>`;
-      }
-      if (lesson.content?.trim()) {
-        html += `<div class="lesson-content">${escHtml(lesson.content)}</div>`;
-      }
-      if (!html) html = '<div style="text-align:center;padding:40px;color:var(--text-muted);">📄 Bài học chưa có nội dung.</div>';
-      document.getElementById('lmBody').innerHTML = html;
-      document.getElementById('lessonModalOverlay').classList.add('open');
-    }
-
-    function closeLessonModal() {
-      document.getElementById('lessonModalOverlay').classList.remove('open');
-      document.getElementById('lmBody').innerHTML = '';
-    }
-
-    document.getElementById('courseModalOverlay').addEventListener('click', e => { if (e.target === e.currentTarget) closeCourseModal(); });
-    document.getElementById('lessonModalOverlay').addEventListener('click', e => { if (e.target === e.currentTarget) closeLessonModal(); });
-    document.addEventListener('keydown', e => {
-      if (e.key === 'Escape') {
-        if (document.getElementById('lessonModalOverlay').classList.contains('open')) closeLessonModal();
-        else if (document.getElementById('courseModalOverlay').classList.contains('open')) closeCourseModal();
-      }
-    });
 
     initUser();
     loadCourses();
+    loadCoursesHero();
   </script>
 </body>
 

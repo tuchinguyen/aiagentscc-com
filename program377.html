@@ -1,0 +1,1862 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8">
+  <script src="assets/js/auth-fetch.js?v=1"></script>
+  <script>(function(){try{var t=localStorage.getItem('theme');if(t==='dark'||(!t&&window.matchMedia('(prefers-color-scheme: dark)').matches))document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" href="/assets/img/logo.png">
+  <link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
+  <link rel="manifest" href="/manifest.json?v=2">
+  <meta name="apple-mobile-web-app-title" content="AI Agents CC">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="theme-color" content="#0ea5e9">
+  <title>Chương trình 377 ngày — AI AGENTS CC</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/base.css?v=2">
+  <link rel="stylesheet" href="assets/css/components.css?v=11">
+  <link rel="stylesheet" href="assets/css/layout.css?v=6">
+  <style>
+    .p377-wrap { max-width: 760px; margin: 0 auto; }
+    .p377-hero { background: linear-gradient(135deg,#10b981,#0ea5e9); color:#fff; border-radius: var(--radius-lg); padding: 18px 20px; margin-bottom: 16px; }
+    .p377-hero-day { font-size: 30px; font-weight: 800; font-family: var(--font-heading); }
+    .p377-bar { background: rgba(255,255,255,.3); border-radius: 99px; height: 8px; margin-top: 10px; overflow: hidden; }
+    .p377-bar-fill { background: #fff; height: 100%; border-radius: 99px; }
+    .p377-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 18px 20px; margin-bottom: 16px; }
+    /* Khung báo cáo thứ 2 ngay dưới nút nhóm thảo luận (bản sao của form trong tab Ngày 1-377) */
+    .p377-report-top { border-color: var(--color-primary); padding: 0; }
+    /* Ảnh bữa ăn cạnh ô Bữa sáng/trưa/tối */
+    /* Video cảm nhận: cột trái hướng dẫn, cột phải quay / chọn video */
+    .p377-video-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); gap: 14px; align-items: start; }
+    .p377-video-guide { background: var(--bg-hover); border-radius: var(--radius-md, 10px); padding: 12px 14px; font-size: 13px; line-height: 1.6; color: var(--text); }
+    .p377-video-guide p, .p377-video-guide ul { margin: 0 0 8px; } .p377-video-guide ul { padding-left: 18px; } .p377-video-guide > :last-child { margin-bottom: 0; }
+    .p377-video-box { border: 1.5px dashed var(--border); border-radius: var(--radius-md, 10px); padding: 14px; display: flex; flex-direction: column; gap: 10px; font-size: 13px; color: var(--text-muted); }
+    .p377-video-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+    .p377-video-btn { border: 1px solid var(--border); background: var(--bg-hover); color: var(--text); border-radius: 8px; padding: 9px 12px; font-size: 13px; font-weight: 600; cursor: pointer; }
+    .p377-video-btn.primary { background: var(--color-primary); border-color: var(--color-primary); color: #fff; }
+    .p377-video-btn.danger { color: #ef4444; }
+    .p377-inapp { background: #fef3c7; color: #78350f; border: 1px solid #fcd34d; border-radius: 10px; padding: 10px 12px; font-size: 13.5px; line-height: 1.55; }
+    .p377-inapp b { color: #78350f; }
+    .p377-inapp .p377-video-actions { margin-top: 8px; }
+    [data-theme="dark"] .p377-inapp { background: #3a2c12; color: #fde68a; border-color: #92400e; }
+    [data-theme="dark"] .p377-inapp b { color: #fde68a; }
+    .p377-video-btn:disabled { opacity: .6; cursor: wait; }
+    .p377-video-box video, .p377-video-box iframe { width: 100%; max-height: 420px; aspect-ratio: 9 / 16; border: 0; border-radius: 8px; background: #000; }
+    .p377-video-box iframe { aspect-ratio: 16 / 9; }
+    .p377-rec-bar { display: flex; align-items: center; gap: 10px; font-weight: 700; color: var(--text); flex-wrap: wrap; }
+    .p377-rec-dot { width: 10px; height: 10px; border-radius: 50%; background: #ef4444; animation: p377blink 1s infinite; }
+    @keyframes p377blink { 50% { opacity: .2; } }
+    .p377-video-progress { height: 6px; border-radius: 3px; background: var(--bg-hover); overflow: hidden; }
+    .p377-video-progress > div { height: 100%; background: var(--color-primary); width: 0; transition: width .3s; }
+    @media (max-width: 640px) { .p377-video-grid { grid-template-columns: 1fr; } }
+    .p377-meals { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+    .p377-meals > .p377-field input { width: 100%; }
+    .p377-weight input { max-width: 180px; font-size: 16px !important; font-weight: 600; }
+    .p377-weight-hint { display: block; font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+    .p377-meals > .p377-field textarea { width: 100%; min-height: 78px; font-size: 15px; line-height: 1.5; }
+    .p377-field textarea.p377-big { font-size: 15px; line-height: 1.5; }
+    #p377Feeling, #p377FeelingTop { min-height: 104px; }
+    @media (max-width: 640px) { .p377-field textarea.p377-big { font-size: 16px; } }
+    @media (max-width: 640px) { .p377-meals > .p377-field textarea { font-size: 16px; min-height: 90px; } }
+    .p377-meal-photo { position: relative; aspect-ratio: 4 / 3; margin-top: 8px; }
+    .p377-meal-img-btn { position: absolute; inset: 0; width: 100%; border: 1.5px dashed var(--border); background: var(--bg-hover); color: var(--text-muted); border-radius: var(--radius-md, 10px); font-size: 13px; font-weight: 600; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; }
+    .p377-meal-img-btn span { font-size: 22px; }
+    .p377-meal-img-btn:hover { border-color: var(--color-primary); color: var(--color-primary); }
+    .p377-meal-img-btn:disabled { opacity: .6; cursor: wait; }
+    .p377-meal-img { position: absolute; inset: 0; border-radius: var(--radius-md, 10px); overflow: hidden; background: var(--bg-hover); display: flex; align-items: center; justify-content: center; text-align: center; padding: 0; font-size: 12px; color: var(--text-muted); }
+    .p377-meal-img:empty { display: none; }
+    .p377-meal-img-wrap { position: absolute; inset: 0; }
+    .p377-meal-img-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .p377-meal-img-wrap .p377-meal-img-x { position: absolute; top: 6px; right: 6px; width: 26px; height: 26px; border-radius: 50%; border: none; background: rgba(0,0,0,.6); color: #fff; cursor: pointer; font-size: 15px; line-height: 1; }
+    .p377-meal-img-wrap .p377-meal-img-change { position: absolute; left: 6px; bottom: 6px; border: none; border-radius: 6px; background: rgba(0,0,0,.6); color: #fff; cursor: pointer; font-size: 11.5px; font-weight: 600; padding: 4px 8px; }
+    @media (max-width: 640px) {
+      .p377-meals { grid-template-columns: 1fr; gap: 0; }
+      .p377-meal-photo { aspect-ratio: auto; height: 52px; }
+      .p377-meal-photo:has(.p377-meal-img:not(:empty)) { aspect-ratio: 16 / 9; height: auto; }
+      .p377-meal-img-btn { flex-direction: row; gap: 8px; }
+      .p377-meal-img-btn span { font-size: 18px; }
+    }
+    .p377-report-top > summary { list-style: none; cursor: pointer; padding: 14px 20px; font-weight: 700; display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+    .p377-report-top > summary::-webkit-details-marker { display: none; }
+    .p377-report-top > summary::after { content: '▾'; color: var(--text-muted); transition: transform .2s; }
+    .p377-report-top[open] > summary::after { transform: rotate(180deg); }
+    .p377-report-top .p377-report-top-body { padding: 0 20px 18px; }
+    .p377-report-top .p377-report-top-body > h3 { display: none; }
+    /* Nhạc thư giãn (trên khung báo cáo hôm nay) */
+    .p377-music { padding: 0; }
+    .p377-music > summary { list-style: none; cursor: pointer; padding: 12px 20px; font-weight: 700; display: flex; align-items: center; gap: 10px; }
+    .p377-music > summary::-webkit-details-marker { display: none; }
+    .p377-music > summary::after { content: '▾'; color: var(--text-muted); margin-left: auto; transition: transform .2s; }
+    .p377-music[open] > summary::after { transform: rotate(180deg); }
+    .p377-music-now { font-weight: 500; font-size: 13px; color: var(--text-muted); min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .p377-music-body { padding: 0 20px 16px; }
+    .p377-music audio { width: 100%; height: 40px; margin: 2px 0 8px; }
+    /* Khung YouTube: tối thiểu 200px theo điều khoản YouTube */
+    .p377-music-yt { width: 100%; max-width: 356px; height: 200px; margin: 2px 0 8px; border-radius: 10px; overflow: hidden; background: #000; }
+    .p377-music-yt iframe { width: 100%; height: 100%; border: 0; display: block; }
+    .p377-music-auto { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-muted); margin-bottom: 8px; cursor: pointer; }
+    .p377-music-hint { font-size: 13px; color: #b45309; background: #fffbeb; border: 1px solid #fde68a; border-radius: 8px; padding: 6px 10px; margin-bottom: 8px; }
+    .p377-music-row { display: flex; align-items: center; gap: 10px; padding: 8px 4px; border-top: 1px solid var(--border); }
+    .p377-music-row:first-child { border-top: none; }
+    .p377-music-row.playing .p377-music-title { color: var(--color-primary); font-weight: 700; }
+    .p377-music-play { width: 34px; height: 34px; border-radius: 50%; border: 1px solid var(--border); background: var(--bg-card); color: var(--text); cursor: pointer; flex-shrink: 0; font-size: 13px; }
+    .p377-music-row.playing .p377-music-play { background: var(--color-primary); border-color: var(--color-primary); color: #fff; }
+    .p377-music-info { flex: 1; min-width: 0; }
+    .p377-music-title { font-size: 14px; }
+    .p377-music-note { font-size: 12px; color: var(--text-muted); }
+    .p377-music-def { border: 1px solid var(--border); background: var(--bg-card); color: var(--text); border-radius: 999px; padding: 4px 10px; font-size: 12px; cursor: pointer; white-space: nowrap; flex-shrink: 0; }
+    .p377-music-def.on { background: #fef3c7; border-color: #f59e0b; color: #92400e; font-weight: 600; cursor: default; }
+    .p377-card h3 { font-size: var(--fs-md); margin-bottom: 12px; }
+    .p377-topic { display:inline-block; font-size: 11px; font-weight: 700; color: #0ea5e9; background: rgba(14,165,233,.1); padding: 3px 10px; border-radius: 99px; margin-bottom: 8px; }
+    .p377-video { width:100%; aspect-ratio:16/9; border:0; border-radius: var(--radius-md); margin: 10px 0; }
+    .p377-personal-note { font-size: 13.5px; font-weight: 600; color: #b45309; background: #fffbeb; border: 1px solid #fde68a; border-radius: var(--radius-md); padding: 10px 14px; margin-bottom: 14px; }
+    .p377-block { margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .p377-block:first-of-type { margin-top: 10px; }
+    .p377-block-title { font-family: var(--font-heading); font-size: 18px; font-weight: 800; margin-bottom: 8px; color: var(--text); }
+    .p377-block-body { font-size: 14px; line-height: 1.7; }
+    .p377-block-body p { margin-bottom: 10px; }
+    .p377-block-body p:last-child { margin-bottom: 0; }
+    .p377-block-body p.md-subhead { margin: 14px 0 6px; }
+    .p377-block-body p.md-subhead:first-child { margin-top: 0; }
+    .p377-block-body ul, .p377-block-body ol { padding-left: 20px; margin-bottom: 10px; }
+    .p377-block-body li { margin-bottom: 4px; }
+    .p377-block-body h2, .p377-block-body h3, .p377-block-body h4 { font-family: var(--font-heading); font-weight: 800; margin: 14px 0 8px; }
+    .p377-block-body hr { border: none; border-top: 1px solid var(--border); margin: 14px 0; }
+    .p377-table-wrap { overflow-x: auto; margin-bottom: 10px; -webkit-overflow-scrolling: touch; }
+    .p377-table-wrap table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .p377-table-wrap th, .p377-table-wrap td { padding: 8px 10px; border: 1px solid var(--border); text-align: left; vertical-align: top; }
+    .p377-table-wrap th { background: var(--bg-hover); font-weight: 700; white-space: nowrap; }
+    .p377-linked-lesson { margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .p377-linked-lesson a { font-size: 13.5px; font-weight: 700; color: var(--color-primary); text-decoration: none; }
+    .p377-linked-lesson a:hover { text-decoration: underline; }
+    .p377-assignment-btn { display: inline-block; margin-top: 10px; padding: 9px 18px; border-radius: var(--radius-md); background: var(--color-primary); color: #fff; font-size: 13.5px; font-weight: 700; text-decoration: none; }
+    .p377-assignment-btn:hover { opacity: .9; }
+    .p377-field { margin-bottom: 12px; }
+    .p377-field label { display:block; font-size: var(--fs-xs); font-weight: 700; color: var(--text-muted); margin-bottom: 4px; }
+    .p377-field input, .p377-field select, .p377-field textarea { width: 100%; padding: 8px 11px; border: 1px solid var(--border); border-radius: var(--radius-md); background: var(--bg-input); color: var(--text); font-family: inherit; font-size: var(--fs-sm); resize: vertical; }
+    .p377-row2 { display:flex; gap:10px; }
+    .p377-row2 > * { flex:1; min-width:0; }
+    .p377-checks { display: flex; flex-wrap: wrap; gap: 6px; }
+    .p377-check { padding: 5px 11px; border: 1px solid var(--border); border-radius: 999px; font-size: var(--fs-xs); font-weight: 600; cursor: pointer; user-select: none; background: var(--bg-card); color: var(--text-muted); }
+    .p377-check.on { background: var(--color-primary); border-color: var(--color-primary); color:#fff; }
+    .p377-msg { font-size: var(--fs-sm); margin-top: 8px; }
+    .p377-session { margin-top: 18px; padding-top: 18px; border-top: 1px solid var(--border); }
+    .p377-session:first-child { margin-top: 4px; padding-top: 0; border-top: none; }
+    .p377-session-title { font-family: var(--font-heading); font-size: 17px; font-weight: 800; color: var(--text); margin-bottom: 10px; }
+    .p377-session-info { background: rgba(139,92,246,.08); border-radius: var(--radius-md); padding: 12px 16px; margin-bottom: 12px; }
+    .p377-session-info-line { font-size: 15px; font-weight: 700; color: var(--text); }
+    .p377-session-info-line + .p377-session-info-line { margin-top: 6px; }
+    .p377-session-info-line strong { color: #8b5cf6; }
+    .p377-session-zoom-row { margin-bottom: 14px; }
+    .p377-session-zoom { display: inline-block; font-size: 13.5px; font-weight: 700; color: #fff; background: #8b5cf6; padding: 8px 18px; border-radius: 99px; text-decoration: none; }
+    .p377-session-zoom:hover { opacity: .9; }
+    .p377-session-zoom.disabled { background: var(--border); color: var(--text-muted); pointer-events: none; }
+    .p377-session-body { font-size: 14px; line-height: 1.8; }
+    .p377-session-body ul, .p377-session-body ol { padding-left: 22px; margin: 0 0 14px; }
+    .p377-session-body p { margin-bottom: 14px; }
+    .p377-session-body p:last-child, .p377-session-body ul:last-child, .p377-session-body ol:last-child { margin-bottom: 0; }
+    .p377-session-body img { max-width: 100%; height: auto; border-radius: 8px; }
+    .p377-session-body li { margin-bottom: 10px; }
+    .p377-session-body li:last-child { margin-bottom: 0; }
+    #p377Sessions { margin-top: 14px; }
+    .p377-video-wrap { position: relative; width: 100%; aspect-ratio: 16/9; border-radius: var(--radius-md); overflow: hidden; background: #0f172a; margin-top: 4px; }
+    .p377-video-wrap iframe, .p377-video-wrap video { width: 100%; height: 100%; border: 0; display: block; }
+    @media (max-width: 600px) { .p377-tabs { flex-wrap: wrap; } .p377-tab-btn { padding: 8px 12px; } }
+    .p377-empty { color: var(--text-muted); font-size: 13px; }
+    .p377-pending-box, .p377-cta-box { text-align:center; padding: 30px 20px; }
+    .p377-tabs { display:flex; gap:4px; border-bottom:1px solid var(--border); margin-bottom:16px; overflow-x:auto; }
+    .p377-tab-btn { padding:10px 16px; font-size:14px; font-weight:600; color:var(--text-muted); background:none; border:none; border-bottom:2px solid transparent; cursor:pointer; white-space:nowrap; font-family:inherit; }
+    .p377-tab-btn:hover { color:var(--text); }
+    .p377-tab-btn.active { color:var(--color-primary); border-bottom-color:var(--color-primary); }
+    .p377-tab-panel { display:none; }
+    .p377-tab-panel.active { display:block; }
+    .p377-day-row { display:flex; align-items:center; gap:12px; padding:10px 0; border-top:1px solid var(--border); cursor:pointer; }
+    .p377-day-row:first-child { border-top:none; }
+    .p377-day-row.locked { opacity:.5; cursor:not-allowed; }
+    .p377-day-num { font-weight:800; color:var(--color-primary); width:60px; flex-shrink:0; font-size:13px; }
+    .p377-day-info { flex:1; min-width:0; }
+    .p377-day-title { font-size:13.5px; font-weight:600; }
+    .p377-day-expand { padding:4px 8px 18px 72px; font-size:14px; line-height:1.7; }
+    /* Báo cáo các ngày (tab Ngày 1-377, dưới khung báo cáo hôm nay) */
+    .p377-hist-row { display:flex; align-items:center; gap:12px; padding:11px 4px; border-top:1px solid var(--border); }
+    .p377-hist-row:first-child { border-top:none; }
+    .p377-hist-row.has { cursor:pointer; }
+    .p377-hist-row.has:hover { background:var(--bg-hover); border-radius:8px; }
+    .p377-hist-row.open { background:var(--bg-hover); border-radius:8px 8px 0 0; }
+    .p377-hist-day { font-weight:800; color:var(--color-primary); width:74px; flex-shrink:0; font-size:13px; }
+    .p377-hist-date { flex:1; min-width:0; font-size:13px; color:var(--text-muted); }
+    .p377-hist-date b { color:var(--text); font-weight:600; }
+    .p377-hist-st { font-size:12px; font-weight:700; white-space:nowrap; border-radius:999px; padding:3px 10px; }
+    .p377-hist-st.ok { background:color-mix(in srgb, #10b981 15%, transparent); color:#059669; }
+    .p377-hist-st.no { background:var(--bg-hover); color:var(--text-muted); font-weight:600; }
+    .p377-hist-st.warn { background:color-mix(in srgb, #f59e0b 18%, transparent); color:#b45309; }
+    .p377-hist-st.urgent { background:color-mix(in srgb, #ef4444 15%, transparent); color:#dc2626; }
+    .p377-hist-chev { width:16px; color:var(--text-muted); font-size:12px; transition:transform .15s; }
+    .p377-hist-row.open .p377-hist-chev { transform:rotate(90deg); }
+    .p377-hist-detail { border:1px solid var(--border); border-top:none; border-radius:0 0 10px 10px; padding:14px 16px 16px; margin-bottom:6px; font-size:14px; line-height:1.6; }
+    .p377-hist-grid { display:grid; grid-template-columns:150px 1fr; gap:6px 14px; }
+    .p377-hist-grid dt { color:var(--text-muted); font-size:12.5px; font-weight:600; padding-top:2px; }
+    .p377-hist-grid dd { margin:0; }
+    .p377-hist-meals { display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:10px; margin-bottom:12px; }
+    .p377-hist-meal { border:1px solid var(--border); border-radius:10px; padding:8px 10px; }
+    .p377-hist-meal .lb { font-size:11.5px; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:.03em; }
+    .p377-hist-meal img { width:100%; aspect-ratio:4/3; object-fit:cover; border-radius:8px; margin-top:6px; display:block; }
+    .p377-hist-chip { display:inline-block; font-size:12px; border:1px solid var(--border); border-radius:999px; padding:1px 9px; margin:0 4px 4px 0; }
+    .p377-hist-video { margin-top:10px; }
+    .p377-hist-video iframe { width:100%; max-width:520px; aspect-ratio:16/9; border:0; border-radius:10px; display:block; }
+    .p377-hist-more { text-align:center; margin-top:10px; }
+    @media (max-width:640px) {
+      .p377-hist-grid { grid-template-columns:1fr; gap:2px; }
+      .p377-hist-grid dd { margin-bottom:8px; }
+      .p377-hist-meals { grid-template-columns:1fr; }
+      .p377-hist-day { width:62px; }
+    }
+    .p377-result-item { display:flex; gap:10px; padding:10px 0; border-top:1px solid var(--border); font-size:var(--fs-sm); }
+    .p377-result-item:first-child { border-top:none; }
+    .p377-result-date { font-weight:700; color:var(--color-primary); width:92px; flex-shrink:0; }
+    .p377-result-body-wrap { flex:1; min-width:0; }
+    .p377-result-summary-line { color:var(--text-muted); line-height:1.5; }
+    .p377-result-badge-line { font-size:11.5px; color:var(--text-muted); margin-top:2px; }
+    .p377-result-flag { display:inline-block; font-size:10.5px; font-weight:700; padding:2px 8px; border-radius:99px; margin-left:8px; }
+    .p377-result-flag.warning { background:rgba(245,158,11,.15); color:#f59e0b; }
+    .p377-result-flag.urgent { background:rgba(239,68,68,.15); color:#ef4444; }
+    .p377-ai-feedback .dh-md p, .p377-ai-feedback .dh-md ul, .p377-ai-feedback .dh-md ol { margin: 0 0 8px; }
+    .p377-ai-feedback .dh-md ul, .p377-ai-feedback .dh-md ol { padding-left: 20px; }
+    .p377-ai-feedback .dh-md > :last-child { margin-bottom: 0; }
+    .p377-ai-feedback { margin-top:8px; padding:10px 12px; border-radius:var(--radius-md); background:var(--bg-hover); border-left:3px solid var(--color-primary); font-size:var(--fs-sm); color:var(--text); line-height:1.6; }
+    .p377-ai-label { font-weight:700; font-size:11px; color:var(--color-primary); margin-bottom:4px; }
+    .p377-ai-warning { border-left-color:#f59e0b; background:rgba(245,158,11,.08); }
+    .p377-ai-warning .p377-ai-label { color:#f59e0b; }
+    .p377-ai-urgent { border-left-color:#ef4444; background:rgba(239,68,68,.08); }
+    .p377-ai-urgent .p377-ai-label { color:#ef4444; }
+    .p377-ai-pending { font-style:italic; color:var(--text-muted); border-left-color:var(--border); background:transparent; padding-left:10px; margin-top:8px; }
+  </style>
+</head>
+
+<body>
+
+  <div id="app">
+
+    <!-- Sidebar -->
+    <aside id="sidebar">
+      <div id="sidebar-logo">
+        <div class="sidebar-logo-mark" style="background:transparent;"><img src="assets/img/logo.png" alt="Logo" style="width:100%;height:100%;object-fit:contain;"></div>
+        <div class="sidebar-logo-text">AI AGENTS <span>CC</span></div>
+      </div>
+
+      <nav id="sidebar-nav">
+        <div class="nav-section-label">Cộng đồng</div>
+
+        <a href="feed.html" class="nav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
+          </svg>
+          Feed
+        </a>
+
+
+
+
+
+
+        <div class="nav-section-label" style="margin-top:8px;">Học tập</div>
+
+        <a href="challenge.html" class="nav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path
+              d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z" />
+          </svg>
+          Challenge
+        </a>
+
+        <div class="nav-section-label" style="margin-top:8px;">Khác</div>
+
+        <a href="marketplace.html" class="nav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path
+              d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z" />
+          </svg>
+          Marketplace
+        </a>
+      </nav>
+
+      <!-- Sidebar user -->
+      <div id="sidebar-user">
+        <div class="user-avatar-wrap">
+          <div class="avatar-placeholder avatar-md" id="sbAvatar" style="background:#7c3aed;">?</div>
+          <div class="user-status-dot"></div>
+        </div>
+        <div class="user-info">
+          <div class="user-name" id="sbName">—</div>
+          <div class="user-level" id="sbLevel">—</div>
+        </div>
+        <a href="index.html" class="icon-btn" title="Đăng xuất" style="margin-left:auto;" onclick="doLogout()">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4" />
+            <polyline points="16 17 21 12 16 7" />
+            <line x1="21" y1="12" x2="9" y2="12" />
+          </svg>
+        </a>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <div id="main">
+
+      <!-- Mobile topbar -->
+      <div id="mobile-topbar">
+        <button class="mob-menu-btn" onclick="toggleSidebar()" aria-label="Menu">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+          </svg>
+        </button>
+        <span style="flex:1;font-size:var(--fs-md);font-weight:600;color:var(--text)">🗓️ Chương trình 377 ngày</span>
+        <div class="mob-topbar-right">
+          <button class="icon-btn" id="themeToggleMob" type="button" aria-label="Chuyển chế độ sáng/tối">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"></svg>
+          </button>
+          <button class="icon-btn" id="notifBellMob" aria-label="Thông báo" style="position:relative;">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+            </svg>
+            <span id="notifBadgeMob" style="display:none;position:absolute;top:2px;right:2px;background:#ef4444;color:#fff;font-size:10px;font-weight:700;border-radius:99px;min-width:16px;height:16px;padding:0 4px;line-height:16px;text-align:center;">0</span>
+          </button>
+          <div id="topbarAvatarMob" style="width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;background:#7c3aed;flex-shrink:0;"></div>
+        </div>
+      </div>
+
+      <!-- Topbar -->
+      <nav id="subnav-bar" class="subnav-bar" aria-label="Điều hướng nhanh">
+        <a href="feed.html" class="subnav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+          Feed
+        </a>
+        <a href="spaces.html" class="subnav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></svg>
+          Spaces
+        </a>
+        <a href="courses.html" class="subnav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/></svg>
+          Courses
+        </a>
+        <a href="members.html" class="subnav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+          Members
+        </a>
+        <a href="leaderboard.html" class="subnav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/></svg>
+          Leaderboard
+        </a>
+        <a href="calendar.html" class="subnav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          Calendar
+        </a>
+        <a href="about.html" class="subnav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+          About
+        </a>
+        <div class="topbar-right">
+          <button class="icon-btn" id="themeToggle" type="button" aria-label="Chuyển chế độ sáng/tối">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"></svg>
+          </button>
+          <div style="position:relative;">
+            <button class="icon-btn" id="notifBell" aria-label="Thông báo" style="position:relative;">
+              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+              </svg>
+              <span id="notifBadge" style="display:none;position:absolute;top:2px;right:2px;background:#ef4444;color:#fff;font-size:10px;font-weight:700;border-radius:99px;min-width:16px;height:16px;padding:0 4px;line-height:16px;text-align:center;">0</span>
+            </button>
+            <div id="notifDropdown" style="display:none;"></div>
+          </div>
+          <a href="#" class="icon-btn" aria-label="Tin nhắn">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <path
+                d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+            </svg>
+          </a>
+          <div class="topbar-search">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <circle cx="11" cy="11" r="8" />
+              <line x1="21" y1="21" x2="16.65" y2="16.65" />
+            </svg>
+            <input type="text" id="globalSearchInput" placeholder="Tìm kiếm..." autocomplete="off">
+            <div id="globalSearchResults" class="gsr-panel"></div>
+          </div>
+          <div id="topbarAvatar"
+            style="width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;background:#7c3aed;cursor:pointer;flex-shrink:0;">
+          </div>
+        </div>
+      </nav>
+
+      <header id="topbar">
+        <button class="topbar-hamburger" id="hamburger" onclick="toggleSidebar()" aria-label="Mở menu">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path d="M4 6h16M4 12h16M4 18h16" stroke-linecap="round" />
+          </svg>
+        </button>
+
+        <div class="topbar-title">🗓️ Chương trình 377 ngày</div>
+      </header>
+
+      <div id="content-row">
+        <main id="feed" style="max-width:100%;">
+          <div class="p377-wrap">
+
+            <!-- Khung nổi bật: buổi Zoom/sự kiện trong 24 giờ (app.js renderTodayEventBanner) -->
+            <div id="dhLiveBanner" style="display:none;"></div>
+
+            <div class="p377-card" id="p377VideoCard" style="display:none;">
+              <h3>🎥 Video đào tạo khoá trước</h3>
+              <div class="p377-video-wrap" id="p377VideoWrap"></div>
+            </div>
+
+            <!-- Chưa đăng ký -->
+            <div class="p377-card p377-cta-box" id="p377NotEnrolled" style="display:none;text-align:left;">
+              <div id="p377LetterContent">
+                <h3 style="margin-bottom:8px;text-align:center;">Chương trình đồng hành 377 ngày</h3>
+                <p style="color:var(--text-muted);font-size:14px;margin-bottom:16px;">
+                  Mỗi ngày bạn sẽ được hướng dẫn 1 nội dung mới, và báo cáo lại tình trạng cơ thể mỗi ngày để được
+                  đồng hành sát sao. Ngày 1 của bạn sẽ bắt đầu ngay khi được duyệt.
+                </p>
+
+                <div style="font-weight:700;font-size:14px;margin-bottom:8px;">Nội dung trọng tâm Người hướng dẫn chia sẻ kiến thức trong 377 ngày:</div>
+                <ol style="padding-left:20px;font-size:13.5px;color:var(--text);line-height:1.8;margin-bottom:10px;">
+                  <li>Dinh dưỡng ngũ hành – Giải pháp cá nhân hóa chế độ dinh dưỡng cân bằng theo cơ địa HÀN NHIỆT</li>
+                  <li>Chuyển hóa sức khỏe gốc: Trở về gốc rễ sinh mệnh, nghệ thuật Dưỡng sinh chăm sóc và phục hồi Lục phủ Ngũ tạng</li>
+                  <li>Khai thông kinh lạc – kích hoạt cơ chế tự chữa lành bằng Y học bản địa Việt Nam - Tác động cột sống</li>
+                  <li>Thấu hiểu chu kỳ sinh học và chủ động vận hành quá trình tái tạo cơ thể cấp độ tế bào</li>
+                  <li>Điều hòa phong thủy nhà ở: Khơi thông sinh khí, chuyển hóa năng lượng không gian sống và nâng cao sức khỏe toàn diện</li>
+                  <li>Nghệ thuật quản trị và tối ưu Phong thủy tài chính cá nhân và gia đình</li>
+                  <li>Hàn gắn - chuyển hóa mối quan hệ và nâng cao tần số năng lượng qua "Năm vòng tròn lỗi đạo"</li>
+                  <li>Làm chủ tư duy và phát triển tâm thức qua "Năm vòng tròn kiểm soát"</li>
+                  <li>Lập trình vận mệnh: Khai phóng tiềm năng, kiến tạo bản đồ cuộc đời viên mãn</li>
+                  <li>Ứng dụng trí tuệ Kinh Dịch: Nghệ thuật cân bằng Thân – Tâm</li>
+                </ol>
+                <p style="color:var(--text-muted);font-size:13.5px;margin-bottom:18px;">
+                  Đây là hệ thống tri thức toàn diện giúp chủ động chăm sóc, phục hồi và phòng ngừa các bệnh mãn tính, u ung.
+                </p>
+
+                <div style="background:linear-gradient(135deg,#fef3c7,#fde68a);border-radius:var(--radius-lg);padding:16px 18px;margin-bottom:16px;">
+                  <div style="font-weight:700;font-size:14px;margin-bottom:6px;color:#92400e;">Mức đầu tư &amp; đặc quyền tham gia</div>
+                  <div style="font-size:13.5px;color:#78350f;line-height:1.7;">
+                    Giá niêm yết: <b>37.800.000 VNĐ</b> / Hội viên / Hành trình 377 ngày "Hồi sinh Thân - Tâm - Mệnh".<br><br>
+                    <b>Cơ hội duy nhất trong Tháng 10/2026:</b> Nhằm đồng hành cùng Dự án cộng đồng "1.000 Tổ Ấm Việt Thắp Sáng
+                    Y Học Bản Địa Việt Nam - Tác Động Cột Sống – Tự Chủ Sức Khỏe Tại Nhà" do Lâm triển khai, Ban dự án quyết
+                    định dành tặng mức trợ giá giới hạn — chỉ <b>11.800.000 VNĐ / người</b>.<br><br>
+                    Giá trị đầu tư: chi phí thực tế chỉ tương đương hơn 30.000đ/ngày — một khoản tích lũy xứng đáng cho sức
+                    khỏe gốc và tương lai trọn đời của chính bạn.<br><br>
+                    <b>Đặc quyền chuyển giao thương hiệu:</b> dành riêng cho các Anh/Chị có định hướng kiến tạo hoặc vận hành
+                    Trung tâm Chăm sóc Sức khỏe — vui lòng liên hệ trực tiếp với Ban tổ chức để nhận lộ trình cố vấn và chuyển giao
+                    chuyên sâu.
+                  </div>
+                </div>
+
+                <p style="font-size:13.5px;color:var(--text-muted);margin-bottom:16px;">
+                  Số điện thoại liên lạc tham gia: <b style="color:var(--text);">0918 694 886</b>
+                </p>
+              </div>
+
+              <div style="text-align:center;">
+                <button class="btn btn-primary" onclick="enrollP377()">Đăng ký tham gia</button>
+                <div class="p377-msg" id="p377EnrollMsg"></div>
+                <div class="rules-note">Bằng việc đăng ký, bạn đồng ý với <a href="noi-quy.html">Nội quy cộng đồng</a> và chính sách hoàn phí.</div>
+              </div>
+            </div>
+
+            <!-- Đang chờ duyệt -->
+            <div class="p377-card p377-pending-box" id="p377Pending" style="display:none;">
+              <h3>⏳ Đang chờ duyệt</h3>
+              <p style="color:var(--text-muted);font-size:14px;">Đăng ký tham gia chương trình 377 ngày thực hành của bạn đã được gởi đến Ban tổ chức AI Agents CC. Ban tổ chức sẽ xem và xét duyệt trong thời gian 24h. Khi được xét duyệt, bạn sẽ nhận được thông báo trên ứng dụng này và email.</p>
+            </div>
+
+            <!-- Đã duyệt nhưng chưa làm khảo sát Thân-Tâm-Mệnh -->
+            <div class="p377-card p377-pending-box" id="p377IntakeGate" style="display:none;">
+              <h3>🎉 Đăng ký đã được duyệt</h3>
+              <p style="color:var(--text-muted);font-size:14px;">Bước tiếp theo: hoàn thành phiếu khảo sát Thân – Tâm – Mệnh để Ban tổ chức cá nhân hoá lộ trình 377 ngày cho bạn. Sau khi hoàn thành, nội dung chương trình sẽ được mở.</p>
+              <a href="intake-than-tam-menh.html?redirect=377" class="btn btn-primary" style="display:inline-block;text-decoration:none;margin-top:10px;">📋 Làm khảo sát Thân – Tâm – Mệnh</a>
+            </div>
+
+            <!-- Đã duyệt: nội dung chương trình -->
+            <div id="p377Active" style="display:none;">
+              <div class="p377-hero">
+                <div class="p377-hero-day" id="p377DayLabel">Ngày 1/377</div>
+                <div class="p377-bar"><div class="p377-bar-fill" id="p377BarFill" style="width:0%;"></div></div>
+              </div>
+
+              <a class="dh-discuss-btn" id="p377DiscussLink" href="space.html?id=8">💬 Vào nhóm thảo luận của lớp <small>— hỏi đáp, chia sẻ cùng các bạn 377 ngày</small></a>
+              <a class="dh-discuss-btn secondary" id="p377CourseLink" href="course-view.html?id=12">🎬 Xem tổng hợp chương trình 377 ngày thực hành</a>
+
+              <details class="p377-card p377-music" id="p377Music" open hidden>
+                <summary>🎵 Nhạc thư giãn <span class="p377-music-now" id="p377MusicNow"></span></summary>
+                <div class="p377-music-body">
+                  <audio id="p377Audio" controls preload="none"></audio>
+                  <div class="p377-music-yt" id="p377YtBox" hidden><div id="p377YtPlayer"></div></div>
+                  <div class="p377-music-hint" id="p377MusicHint" hidden>🔇 Trình duyệt chưa cho tự phát nhạc — chạm vào bất kỳ đâu trên trang để bắt đầu nghe.</div>
+                  <label class="p377-music-auto"><input type="checkbox" id="p377MusicAuto" onchange="p377MusicSetAuto(this.checked)"> Tự phát nhạc khi mở báo cáo hằng ngày</label>
+                  <div id="p377MusicList"></div>
+                </div>
+              </details>
+
+              <details class="p377-card p377-report-top" id="p377ReportTop" open>
+                <summary id="p377ReportTopSummary">📝 Báo cáo hôm nay</summary>
+                <div class="p377-report-top-body" id="p377ReportTopBody"></div>
+              </details>
+
+              <div class="p377-tabs">
+                <button class="p377-tab-btn active" onclick="p377Tab('content', this)">📚 Nội dung 377 ngày</button>
+                <button class="p377-tab-btn" onclick="p377Tab('today', this)">📝 Ngày 1-377</button>
+                <button class="p377-tab-btn" onclick="p377Tab('results', this)">📈 Kết quả</button>
+                <button class="p377-tab-btn" onclick="p377Tab('sessions', this)">📅 Lịch Zoom / sự kiện</button>
+              </div>
+
+              <!-- Tab: Nội dung 377 ngày (tổng quan chương trình + danh sách nội dung admin soạn) -->
+              <div class="p377-tab-panel active" data-tab="content">
+                <div class="p377-card" id="p377TopicsOverviewCard" style="display:none;">
+                  <h3>Tổng quan chương trình</h3>
+                  <div id="p377TopicsOverviewBox" style="font-size:14px;line-height:1.7;"></div>
+                </div>
+                <div class="p377-card" style="border-color:var(--color-primary);">
+                  <h3>📍 Nội dung hôm nay</h3>
+                  <div id="p377TodayHighlight"><div class="p377-empty">Đang tải...</div></div>
+                </div>
+                <div class="p377-card">
+                  <h3>Nội dung từng ngày</h3>
+                  <div style="font-size:12px;color:var(--text-muted);margin-top:-8px;margin-bottom:10px;">Bấm vào 1 ngày để xem nội dung, bấm ngày khác sẽ tự thu gọn.</div>
+                  <div id="p377DaysList"><div class="p377-empty">Đang tải...</div></div>
+                </div>
+              </div>
+
+              <!-- Tab: Ngày 1-377 (nội dung hôm nay + báo cáo) -->
+              <div class="p377-tab-panel" data-tab="today">
+                <div class="p377-card">
+                  <div id="p377TodayContent"></div>
+                </div>
+
+                <div class="p377-card" id="p377ReportCard">
+                  <h3 id="p377FormTitle">Báo cáo hôm nay</h3>
+                  <div class="p377-field p377-weight"><label>⚖️ Cân nặng hôm nay (kg)</label><input id="p377Weight" type="text" inputmode="decimal" autocomplete="off" placeholder="VD: 65.4"><span class="p377-weight-hint">Cân buổi sáng, sau khi đi vệ sinh, trước khi ăn để so sánh chính xác.</span></div>
+                  <div class="p377-meals">
+                    <div class="p377-field"><label>Bữa sáng</label><textarea id="p377B" rows="3" placeholder="VD: cháo yến mạch..."></textarea><div class="p377-meal-photo"><button type="button" class="p377-meal-img-btn" id="p377BImgBtn" onclick="pickP377MealImage('B', this.id.endsWith('Top') ? 'Top' : '')"><span>📷</span>Thêm ảnh</button><div class="p377-meal-img" id="p377BImg"></div></div></div>
+                    <div class="p377-field"><label>Bữa trưa</label><textarea id="p377L" rows="3" placeholder="VD: cơm gạo lứt, canh rau..."></textarea><div class="p377-meal-photo"><button type="button" class="p377-meal-img-btn" id="p377LImgBtn" onclick="pickP377MealImage('L', this.id.endsWith('Top') ? 'Top' : '')"><span>📷</span>Thêm ảnh</button><div class="p377-meal-img" id="p377LImg"></div></div></div>
+                    <div class="p377-field"><label>Bữa tối</label><textarea id="p377D" rows="3" placeholder="VD: rau muống xào tỏi..."></textarea><div class="p377-meal-photo"><button type="button" class="p377-meal-img-btn" id="p377DImgBtn" onclick="pickP377MealImage('D', this.id.endsWith('Top') ? 'Top' : '')"><span>📷</span>Thêm ảnh</button><div class="p377-meal-img" id="p377DImg"></div></div></div>
+                  </div>
+                  <div class="p377-field"><label>Hôm nay ăn đủ những MÀU nào?</label><div class="p377-checks" id="p377Colors"></div></div>
+                  <div class="p377-field"><label>Hôm nay ăn đủ những VỊ nào?</label><div class="p377-checks" id="p377Tastes"></div></div>
+                  <div class="p377-row2">
+                    <div class="p377-field"><label>Nước tiểu — lượng</label>
+                      <select id="p377UrineAmount"><option value="">— chọn —</option><option>nhiều</option><option>vừa</option><option>ít</option></select>
+                    </div>
+                    <div class="p377-field"><label>Nước tiểu — màu sắc</label><input id="p377UrineColor" placeholder="VD: vàng nhạt"></div>
+                  </div>
+                  <div class="p377-row2">
+                    <div class="p377-field"><label>Phân — hình dạng</label><input id="p377StoolShape" placeholder="VD: bình thường, lỏng, táo..."></div>
+                    <div class="p377-field"><label>Phân — màu sắc</label><input id="p377StoolColor" placeholder="VD: nâu"></div>
+                  </div>
+                  <div class="p377-row2">
+                    <div class="p377-field"><label>Tập luyện — môn gì</label><input id="p377ExType" placeholder="VD: đi bộ, yoga..."></div>
+                    <div class="p377-field"><label>Tập luyện — thời gian (phút)</label><input id="p377ExMinutes" type="number" min="0"></div>
+                  </div>
+                  <div class="p377-row2">
+                    <div class="p377-field"><label>Mồ hôi — lượng</label>
+                      <select id="p377SweatAmount"><option value="">— chọn —</option><option>nhiều</option><option>ít</option></select>
+                    </div>
+                    <div class="p377-field"><label>Mồ hôi — vị</label>
+                      <select id="p377SweatTaste"><option value="">— chọn —</option><option>không vị</option><option>chua</option><option>hơi mặn</option><option>mặn</option></select>
+                    </div>
+                  </div>
+                  <div class="p377-field"><label>🙏 3 điều biết ơn hôm nay — điều 1</label><textarea id="p377Gratitude1" class="p377-big" rows="2" placeholder="VD: Biết ơn vì hôm nay có bữa ăn đủ đầy..."></textarea></div>
+                  <div class="p377-field"><label>🙏 3 điều biết ơn hôm nay — điều 2</label><textarea id="p377Gratitude2" class="p377-big" rows="2" placeholder=""></textarea></div>
+                  <div class="p377-field"><label>🙏 3 điều biết ơn hôm nay — điều 3</label><textarea id="p377Gratitude3" class="p377-big" rows="2" placeholder=""></textarea></div>
+                  <div class="p377-field"><label>Biểu hiện cơ thể / cảm nhận sức khỏe tổng quát</label><textarea id="p377Feeling" class="p377-big" rows="4" placeholder="VD: ngủ ngon hơn, đi tiêu dễ, còn hơi mệt buổi chiều…"></textarea></div>
+                  <div class="p377-field"><label>🎥 Video chia sẻ cảm nhận của bản thân (2–5 phút, không bắt buộc)</label>
+                    <div class="p377-video-grid">
+                      <div class="p377-video-guide" id="p377VideoGuide"></div>
+                      <div class="p377-video-box" id="p377VideoBox"></div>
+                    </div>
+                  </div>
+                  <button class="btn btn-primary" id="p377Save" onclick="saveP377Report(this.id.endsWith('Top') ? 'Top' : '')">Lưu báo cáo hôm nay</button>
+                  <div class="p377-msg" id="p377Msg"></div>
+                </div>
+
+                <div class="p377-card" id="p377HistoryCard">
+                  <h3>📚 Báo cáo các ngày</h3>
+                  <p style="color:var(--text-muted);font-size:12.5px;margin-top:-6px;margin-bottom:10px;">Bấm vào một ngày để xem đầy đủ báo cáo. Ngày mới nhất ở trên cùng.</p>
+                  <div id="p377History"><div class="p377-empty">Đang tải...</div></div>
+                </div>
+              </div>
+
+              <!-- Tab: Lịch Zoom / sự kiện sắp tới (trình bày giống trang 8 buổi) -->
+              <div class="p377-tab-panel" data-tab="sessions">
+                <div class="p377-card">
+                  <h3>📅 Lịch Zoom / sự kiện sắp tới</h3>
+                  <div id="p377Sessions"><div class="p377-empty">Chưa có buổi nào sắp tới.</div></div>
+                </div>
+              </div>
+
+              <!-- Tab: Kết quả (An Nhiên ghi nhận thay đổi sức khỏe từng ngày) -->
+              <div class="p377-tab-panel" data-tab="results">
+                <div class="p377-card">
+                  <h3>Kết quả — thay đổi sức khỏe qua từng ngày</h3>
+                  <p style="color:var(--text-muted);font-size:12.5px;margin-top:-6px;margin-bottom:10px;">
+                    Dựa vào hồ sơ, lộ trình và báo cáo mỗi ngày của bạn, An Nhiên sẽ ghi lại nhận xét ở đây.
+                  </p>
+                  <div id="p377Results"><div class="p377-empty">Đang tải...</div></div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </main>
+      </div>
+
+    </div><!-- /main -->
+
+  </div><!-- /app -->
+
+  <!-- Mobile sidebar overlay -->
+  <div id="mob-overlay" onclick="closeSidebar()"></div>
+  <div id="mob-sidebar">
+    <div style="padding:14px 16px;border-bottom:1px solid var(--border);font-size:var(--fs-md);font-weight:700;color:var(--text);display:flex;align-items:center;gap:8px;">
+      <div style="width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;"><img src="assets/img/logo.png" alt="Logo" style="width:100%;height:100%;object-fit:contain;"></div>
+      <span class="mob-brand-name">AI AGENTS CC</span>
+    </div>
+    <nav style="flex:1;overflow-y:auto;padding:8px;">
+      <div class="nav-section-label">Cộng đồng</div>
+      <a href="feed.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        Feed
+      </a>
+      <div class="nav-section-label">Học tập</div>
+      <a href="challenge.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z"/></svg>
+        Challenge
+      </a>
+      <div class="nav-section-label">Khác</div>
+      <a href="marketplace.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z"/></svg>
+        Marketplace
+      </a>
+    </nav>
+  </div>
+
+  <!-- Mobile main menu (full site navigation) -->
+  <div id="mob-mainmenu-overlay" onclick="closeMainMenu()"></div>
+  <div id="mob-mainmenu">
+    <div style="padding:14px 16px;border-bottom:1px solid var(--border);font-size:var(--fs-md);font-weight:700;color:var(--text);display:flex;align-items:center;gap:8px;">
+      <div style="width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;"><img src="assets/img/logo.png" alt="Logo" style="width:100%;height:100%;object-fit:contain;"></div>
+      Menu chính
+    </div>
+    <nav style="flex:1;overflow-y:auto;padding:8px;">
+      <a href="feed.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        Feed
+      </a>
+      <a href="spaces.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></svg>
+        Spaces
+      </a>
+      <a href="courses.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/></svg>
+        Courses
+      </a>
+      <a href="members.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+        Members
+      </a>
+      <a href="leaderboard.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/></svg>
+        Leaderboard
+      </a>
+      <a href="calendar.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        Calendar
+      </a>
+      <a href="about.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+        About
+      </a>
+    </nav>
+  </div>
+
+  <nav id="mobile-nav">
+    <a href="feed.html" class="mob-nav-btn">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
+      </svg>
+      Feed
+    </a>
+    <a href="spaces.html" class="mob-nav-btn">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></svg>
+      Spaces
+    </a>
+    <a href="courses.html" class="mob-nav-btn">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/></svg>
+      Courses
+    </a>
+    <a href="members.html" class="mob-nav-btn">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>
+      </svg>
+      Members
+    </a>
+    <button class="mob-nav-btn" onclick="toggleMainMenu()">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/>
+      </svg>
+      Menu
+    </button>
+  </nav>
+
+  <script src="assets/js/app.js?v=28"></script>
+  <script>
+const API = '/api';
+    const AV_COLORS = ['#0ea5e9', '#8b5cf6', '#10b981', '#f59e0b', '#ec4899', '#3b82f6', '#ef4444', '#14b8a6'];
+    function initials(u) { return ((u.first_name || '?')[0] + ((u.last_name || '')[0] || '')).toUpperCase(); }
+    function avColor(id) { return AV_COLORS[(id || 0) % AV_COLORS.length]; }
+    function doLogout() { localStorage.removeItem('currentUser'); window.location.href = 'index.html'; }
+    const LEVELS = [
+      { level: 1, name: 'Khởi động', xpMin: 0, xpMax: 45 }, { level: 2, name: 'Học viên', xpMin: 45, xpMax: 120 },
+      { level: 3, name: 'Thực hành', xpMin: 120, xpMax: 250 }, { level: 4, name: 'Nâng cao', xpMin: 250, xpMax: 450 },
+      { level: 5, name: 'Chuyên gia', xpMin: 450, xpMax: 700 }, { level: 6, name: 'Bậc thầy', xpMin: 700, xpMax: 1000 },
+      { level: 7, name: 'Huyền thoại', xpMin: 1000, xpMax: 1500 }, { level: 8, name: 'Tiên tri', xpMin: 1500, xpMax: 2200 },
+      { level: 9, name: 'Thần thánh', xpMin: 2200, xpMax: 9999 },
+    ];
+    function getLevel(xp) { for (let i = LEVELS.length - 1; i >= 0; i--) if (xp >= LEVELS[i].xpMin) return LEVELS[i]; return LEVELS[0]; }
+
+    let currentUser = null;
+    (function () {
+      const raw = localStorage.getItem('currentUser');
+      if (!raw) { window.location.href = 'index.html'; return; }
+      currentUser = JSON.parse(raw);
+      const ini = initials(currentUser);
+      const col = avColor(currentUser.id);
+      document.getElementById('sbAvatar').textContent = ini;
+      document.getElementById('sbAvatar').style.background = col;
+      document.getElementById('sbName').textContent = currentUser.first_name + ' ' + currentUser.last_name;
+      const lv = getLevel(currentUser.xp || 0);
+      document.getElementById('sbLevel').textContent = lv.name + ' · Lv.' + lv.level;
+      const tbAv = document.getElementById('topbarAvatar');
+      if (tbAv) { tbAv.textContent = ini; tbAv.style.background = col; tbAv.onclick = () => location.href = `profile.html?id=${currentUser.id}`; }
+    })();
+
+    const P377_TOPICS = {
+      dinh_duong_ngu_hanh: 'Dinh dưỡng ngũ hành theo cơ địa Hàn/Nhiệt',
+      chuyen_hoa_suc_khoe_goc: 'Chuyển hóa sức khỏe gốc — Lục phủ Ngũ tạng',
+      khai_thong_kinh_lac: 'Khai thông kinh lạc — Tác động cột sống',
+      chu_ky_sinh_hoc: 'Chu kỳ sinh học & tái tạo tế bào',
+      phong_thuy_nha_o: 'Điều hòa phong thủy nhà ở',
+      phong_thuy_tai_chinh: 'Phong thủy tài chính cá nhân & gia đình',
+      chuyen_hoa_moi_quan_he: 'Chuyển hóa mối quan hệ — Năm vòng tròn lỗi đạo',
+      tu_duy_tam_thuc: 'Làm chủ tư duy — Năm vòng tròn kiểm soát',
+      lap_trinh_van_menh: 'Lập trình vận mệnh',
+      kinh_dich_than_tam: 'Ứng dụng Kinh Dịch — cân bằng Thân-Tâm',
+    };
+    const COLORS = ['xanh','đỏ','vàng','trắng','đen'];
+    const TASTES = ['chua','cay','đắng','mặn','ngọt','chát','chất béo'];
+    const tasteLabel = c => c === 'chất béo' ? 'Chất béo' : 'Vị ' + c;
+    const sel = { colors: new Set(), tastes: new Set() };
+    // Link ảnh từng bữa (B=sáng, L=trưa, D=tối) — dùng chung cho 2 khung báo cáo, giống `sel`.
+    const mealImgs = { B: '', L: '', D: '' };
+    const MEAL_IMG_FIELDS = { B: 'meal_breakfast_img', L: 'meal_lunch_img', D: 'meal_dinner_img' };
+    let mealImgUploading = 0;   // ảnh / video đang tải → khoá nút Lưu
+    // Video cảm nhận: link Drive (dùng chung 2 khung) + việc đang quay/xử lý ở khung nào (sfx)
+    const feelingVideo = { url: '', busySfx: null, rec: null };
+    let p377ReportSaved = false;
+    const P377_VIDEO_MAX_SEC = 300, P377_VIDEO_MIN_SEC = 120;
+    function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+    // Khối nội dung 377 ngày được soạn dạng markdown (kể cả khi AI soạn nháp) —
+    // cần chuyển sang HTML trước khi hiển thị, không được nhét thẳng text thô
+    // vào innerHTML (newline bị trình duyệt gộp mất, nhìn như 1 đoạn dính liền).
+    // Cùng thuật toán với mdToHtml() ở lo-trinh.html, chỉ thêm "+" làm dấu gạch
+    // đầu dòng tương đương "-"/"*" vì AI hay dùng "+" cho ý phụ thụt lề.
+    function mdToHtml(md) {
+      const lines = esc(md).split('\n');
+      let html = '', inList = false, listType = null, para = [];
+
+      const inlineFmt = s => s
+        .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+        .replace(/(^|[^*])\*([^*\n]+)\*(?!\*)/g, '$1<em>$2</em>');
+
+      const flushPara = () => { if (para.length) { html += `<p>${para.join(' ')}</p>`; para = []; } };
+      const closeList = () => { if (inList) { html += listType === 'ol' ? '</ol>' : '</ul>'; inList = false; listType = null; } };
+
+      const isTableRow = l => /^\|.+\|$/.test(l);
+      const isSepRow = l => isTableRow(l) && /^\|[\s:|-]+\|$/.test(l) && l.includes('-');
+      const splitRow = l => l.replace(/^\||\|$/g, '').split('|').map(c => c.trim());
+
+      let i = 0;
+      while (i < lines.length) {
+        const line = lines[i].trim();
+
+        if (!line) { flushPara(); closeList(); i++; continue; }
+
+        if (isTableRow(line) && i + 1 < lines.length && isSepRow(lines[i + 1].trim())) {
+          flushPara(); closeList();
+          const headers = splitRow(line);
+          html += '<div class="p377-table-wrap"><table><thead><tr>' +
+            headers.map(h => `<th>${inlineFmt(h)}</th>`).join('') + '</tr></thead><tbody>';
+          i += 2;
+          while (i < lines.length && isTableRow(lines[i].trim())) {
+            const cells = splitRow(lines[i].trim());
+            html += '<tr>' + cells.map(c => `<td>${inlineFmt(c)}</td>`).join('') + '</tr>';
+            i++;
+          }
+          html += '</tbody></table></div>';
+          continue;
+        }
+
+        if (/^-{3,}$/.test(line)) { flushPara(); closeList(); html += '<hr>'; i++; continue; }
+
+        let m = line.match(/^(#{1,4})\s+(.*)$/);
+        if (m) { flushPara(); closeList(); const lvl = m[1].length + 1; html += `<h${lvl}>${inlineFmt(m[2])}</h${lvl}>`; i++; continue; }
+
+        // AI hay viết "- Buổi/giờ nào đó (...):" làm tiêu đề nhóm, rồi liệt kê ý
+        // con bằng "+ ..." ngay dưới — nếu render cả 2 làm bullet ngang hàng thì
+        // dòng tiêu đề trông y hệt 1 gạch đầu dòng bình thường, mất phân cấp. Khi
+        // gặp "- ..." mà dòng kế tiếp là "+ ...", coi dòng "-" là tiêu đề nhóm
+        // (in đậm, không phải bullet) thay vì <li> như bình thường.
+        m = line.match(/^-\s+(.*)$/);
+        if (m && /^\+\s+/.test((lines[i + 1] || '').trim())) {
+          flushPara(); closeList();
+          html += `<p class="md-subhead"><strong>${inlineFmt(m[1])}</strong></p>`;
+          i++; continue;
+        }
+
+        m = line.match(/^[-*+]\s+(.*)$/);
+        if (m) { flushPara(); if (listType !== 'ul') { closeList(); html += '<ul>'; inList = true; listType = 'ul'; } html += `<li>${inlineFmt(m[1])}</li>`; i++; continue; }
+
+        m = line.match(/^\d+[.)]\s+(.*)$/);
+        if (m) { flushPara(); if (listType !== 'ol') { closeList(); html += '<ol>'; inList = true; listType = 'ol'; } html += `<li>${inlineFmt(m[1])}</li>`; i++; continue; }
+
+        closeList();
+        para.push(inlineFmt(line));
+        i++;
+      }
+      flushPara(); closeList();
+      return html;
+    }
+
+    function fmtDate(s){ if(!s) return ''; return String(s).slice(0,10).split('-').reverse().join('/'); }
+    function todayStr(){ const d=new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; }
+
+    // Form báo cáo có 2 bản: trong tab "Ngày 1-377" (id gốc) và ngay dưới nút nhóm thảo luận
+    // (cùng id + hậu tố "Top", tạo bằng setupP377ReportTop). Màu/vị chọn chung qua `sel`.
+    const P377_FORM_SUFFIXES = ['', 'Top'];
+    const rf = (id, sfx = '') => document.getElementById(id + sfx);
+
+    function renderMealImgs() {
+      P377_FORM_SUFFIXES.forEach(sfx => Object.keys(mealImgs).forEach(code => {
+        const box = rf(`p377${code}Img`, sfx);
+        if (!box || box.dataset.busy) return;
+        const url = mealImgs[code];
+        box.innerHTML = url ? `<span class="p377-meal-img-wrap"><img src="${esc(url).replace(/"/g, '&quot;')}" alt="Ảnh bữa ăn" loading="lazy">`
+          + `<button type="button" class="p377-meal-img-x" title="Bỏ ảnh" onclick="mealImgs['${code}']=''; renderMealImgs();">×</button>`
+          + `<button type="button" class="p377-meal-img-change" onclick="pickP377MealImage('${code}', '${sfx}')">📷 Đổi ảnh</button></span>` : '';
+      }));
+    }
+
+    function pickP377MealImage(code, sfx) {
+      const picker = document.createElement('input');
+      picker.type = 'file'; picker.accept = 'image/*';
+      picker.onchange = async () => {
+        const file = picker.files[0];
+        if (!file) return;
+        const box = rf(`p377${code}Img`, sfx), btn = rf(`p377${code}ImgBtn`, sfx);
+        box.dataset.busy = '1'; btn.disabled = true; mealImgUploading++;
+        P377_FORM_SUFFIXES.forEach(x => { const b = rf('p377Save', x); if (b) b.disabled = true; });
+        try {
+          mealImgs[code] = await dhUploadImage(file, currentUser.id, 'p377_meal', t => { box.textContent = t; });
+          delete box.dataset.busy;
+        } catch (e) {
+          delete box.dataset.busy;
+          renderMealImgs();
+          alert(e.message || 'Tải ảnh thất bại, vui lòng thử lại.');
+          return;
+        } finally {
+          btn.disabled = false; mealImgUploading--;
+          if (!mealImgUploading) P377_FORM_SUFFIXES.forEach(x => { const b = rf('p377Save', x); if (b) b.disabled = false; });
+        }
+        renderMealImgs();
+      };
+      picker.click();
+    }
+
+    // ── Video cảm nhận ────────────────────────────────────────────
+    const fmtDur = sec => `${String(Math.floor(sec / 60)).padStart(2, '0')}:${String(Math.floor(sec % 60)).padStart(2, '0')}`;
+    function setP377MediaBusy(on) {
+      mealImgUploading += on ? 1 : -1;
+      P377_FORM_SUFFIXES.forEach(x => { const b = rf('p377Save', x); if (b) b.disabled = mealImgUploading > 0; });
+    }
+    function renderVideoGuide(md) {
+      P377_FORM_SUFFIXES.forEach(sfx => { const el = rf('p377VideoGuide', sfx); if (el) el.innerHTML = renderSimpleMarkdown(md || ''); });
+    }
+    function renderVideoBoxes() {
+      P377_FORM_SUFFIXES.forEach(sfx => {
+        const box = rf('p377VideoBox', sfx);
+        if (!box) return;
+        if (feelingVideo.busySfx !== null) {
+          if (feelingVideo.busySfx === sfx) return;   // khung đang quay/xử lý tự vẽ
+          box.innerHTML = '<div>⏳ Đang xử lý video ở khung báo cáo còn lại...</div>';
+          return;
+        }
+        const pick = `<div class="p377-video-actions">
+            <button type="button" class="p377-video-btn primary" onclick="p377VideoRecord('${sfx}')">🎥 Quay ngay</button>
+            <button type="button" class="p377-video-btn" onclick="p377VideoPickFile('${sfx}')">📁 Chọn video có sẵn</button>
+          </div>`;
+        box.innerHTML = feelingVideo.url
+          ? `<iframe src="${esc(feelingVideo.url).replace(/"/g, '&quot;')}" allow="autoplay; fullscreen" allowfullscreen loading="lazy"></iframe>
+             <div>✅ Đã lưu video. Video mới tải lên cần vài phút để Google Drive xử lý rồi mới xem được.</div>
+             <div class="p377-video-actions">
+               <button type="button" class="p377-video-btn" onclick="p377VideoRecord('${sfx}')">🎥 Quay lại</button>
+               <button type="button" class="p377-video-btn" onclick="p377VideoPickFile('${sfx}')">📁 Chọn video khác</button>
+               <button type="button" class="p377-video-btn danger" onclick="if(confirm('Bỏ video khỏi báo cáo hôm nay?')){feelingVideo.url='';renderVideoBoxes();p377AutoSave('${sfx}');}">🗑️ Bỏ video</button>
+             </div>`
+          : `${p377InAppNote()}${pick}<div><b>Quay ngay</b>: quay bằng camera trước, tự dừng ở 5 phút, file nhẹ nên tải nhanh.<br><b>Chọn video có sẵn</b>: video trong máy (tối đa 600MB) — sẽ được nén lại, quá 5 phút chỉ giữ 5 phút đầu.</div>`;
+      });
+    }
+    // Trình duyệt bên trong Zalo / Facebook / Messenger / Instagram / TikTok thường chặn camera và chọn file video
+    // → nhắc mở trang bằng Chrome / Safari (Android có nút mở thẳng Chrome)
+    const P377_INAPP = (() => {
+      const ua = navigator.userAgent || '';
+      if (/Zalo/i.test(ua)) return 'Zalo';
+      if (/FBAN\/Messenger|MessengerForiOS|FB_IAB\/MESSENGER/i.test(ua)) return 'Messenger';
+      if (/FBAN|FBAV|FB_IAB/i.test(ua)) return 'Facebook';
+      if (/Instagram/i.test(ua)) return 'Instagram';
+      if (/musical_ly|BytedanceWebview|TikTok/i.test(ua)) return 'TikTok';
+      if (/\bLine\//i.test(ua)) return 'Line';
+      return '';
+    })();
+    const P377_ANDROID = /Android/i.test(navigator.userAgent || '');
+    function p377InAppNote() {
+      if (!P377_INAPP) return '';
+      const how = P377_ANDROID ? 'bấm <b>⋮</b> ở góc trên → <b>Mở bằng trình duyệt</b> (Chrome)' : 'bấm <b>⋯</b> ở góc → <b>Mở bằng Safari</b> (hoặc trình duyệt khác)';
+      return `<div class="p377-inapp">⚠️ Bạn đang mở trang trong <b>${P377_INAPP}</b> — trình duyệt này thường <b>không quay / không chọn được video</b>.
+        Để gửi video, ${how}, đăng nhập rồi vào lại báo cáo hôm nay.
+        <br>📱 Hoặc mở bằng <b>icon AI Agents CC</b> trên màn hình chính điện thoại (nếu đã cài) → <b>377 ngày</b> → báo cáo hôm nay.
+        <div class="p377-video-actions">
+          ${P377_ANDROID ? `<button type="button" class="p377-video-btn primary" onclick="p377OpenChrome()">🌐 Mở bằng Chrome</button>` : ''}
+          <button type="button" class="p377-video-btn" onclick="p377CopyLink(this)">📋 Sao chép link</button>
+        </div></div>`;
+    }
+    function p377OpenChrome() {
+      const u = location.href.replace(/^https?:\/\//, '');
+      location.href = `intent://${u}#Intent;scheme=https;package=com.android.chrome;S.browser_fallback_url=${encodeURIComponent(location.href)};end`;
+    }
+    async function p377CopyLink(btn) {
+      const link = location.origin + '/program377.html';
+      try { await navigator.clipboard.writeText(link); }
+      catch {
+        const t = document.createElement('textarea'); t.value = link; document.body.appendChild(t); t.select();
+        try { document.execCommand('copy'); } catch {} t.remove();
+      }
+      btn.textContent = '✅ Đã chép — dán vào Chrome / Safari';
+    }
+    // Đã có báo cáo hôm nay → tự lưu lại để video không bị mất nếu quên bấm "Cập nhật"
+    function p377AutoSave(sfx) {
+      if (p377ReportSaved) saveP377Report(sfx);
+      else { const m = rf('p377Msg', sfx); if (m) { m.style.color = '#f59e0b'; m.textContent = 'Nhớ bấm "Lưu báo cáo hôm nay" để lưu video vào báo cáo.'; } }
+    }
+    function p377VideoEnd(sfx) {
+      if (feelingVideo.busySfx === sfx) feelingVideo.busySfx = null;
+      renderVideoBoxes();
+    }
+
+    async function p377VideoRecord(sfx) {
+      if (feelingVideo.busySfx !== null) return;
+      const inAppMsg = P377_INAPP ? `Bạn đang mở trang trong ${P377_INAPP} — trình duyệt này không cho quay video. Hãy mở trang bằng ${P377_ANDROID ? 'Chrome' : 'Safari'} (nút "Mở bằng ${P377_ANDROID ? 'Chrome' : 'trình duyệt'}" hoặc "Sao chép link" ngay trên khung video), hoặc mở bằng icon AI Agents CC trên màn hình chính, rồi quay lại.` : '';
+      if (!navigator.mediaDevices?.getUserMedia || !window.MediaRecorder) {
+        alert(inAppMsg || 'Trình duyệt này chưa hỗ trợ quay video trực tiếp. Bạn hãy quay bằng camera điện thoại rồi bấm "Chọn video có sẵn", hoặc mở trang bằng Safari / Chrome.');
+        return;
+      }
+      const box = rf('p377VideoBox', sfx);
+      let stream;
+      try {
+        stream = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode: 'user', width: { ideal: 854 }, height: { ideal: 480 }, frameRate: { ideal: 24, max: 30 } },
+          audio: { echoCancellation: true, noiseSuppression: true },
+        });
+      } catch (e) {
+        alert(inAppMsg || (e && e.name === 'NotAllowedError'
+          ? 'Trang chưa được phép dùng camera/micro. Bấm biểu tượng ổ khoá cạnh địa chỉ trang → cho phép Camera và Micro, rồi thử lại. Hoặc quay bằng camera điện thoại rồi bấm "Chọn video có sẵn".'
+          : 'Không mở được camera/micro (có thể ứng dụng khác đang dùng camera). Hãy thử lại, hoặc quay bằng camera điện thoại rồi bấm "Chọn video có sẵn".'));
+        return;
+      }
+      const mime = ['video/mp4;codecs=avc1.42E01E,mp4a.40.2', 'video/mp4', 'video/webm;codecs=vp9,opus', 'video/webm;codecs=vp8,opus', 'video/webm']
+        .find(t => { try { return MediaRecorder.isTypeSupported(t); } catch { return false; } }) || '';
+      let rec;
+      try { rec = new MediaRecorder(stream, { ...(mime ? { mimeType: mime } : {}), videoBitsPerSecond: 700000, audioBitsPerSecond: 64000 }); }
+      catch { rec = new MediaRecorder(stream); }
+      feelingVideo.busySfx = sfx;
+      renderVideoBoxes();
+      const chunks = [];
+      let sec = 0, canceled = false;
+      box.innerHTML = `<video class="p377-live" muted playsinline autoplay></video>
+        <div class="p377-rec-bar"><span class="p377-rec-dot"></span><span class="p377-rec-time">00:00</span> / 05:00
+          <button type="button" class="p377-video-btn primary p377-rec-stop">⏹ Dừng quay</button>
+          <button type="button" class="p377-video-btn p377-rec-cancel">Huỷ</button></div>
+        <div class="p377-rec-hint">Gợi ý nói 2–5 phút. Tự dừng ở 05:00.</div>`;
+      box.querySelector('.p377-live').srcObject = stream;
+      const timeEl = box.querySelector('.p377-rec-time'), hintEl = box.querySelector('.p377-rec-hint');
+      const timer = setInterval(() => {
+        sec++;
+        timeEl.textContent = fmtDur(sec);
+        if (sec === P377_VIDEO_MIN_SEC) hintEl.textContent = '👍 Đã đủ 2 phút — bạn có thể dừng bất cứ lúc nào.';
+        if (sec >= P377_VIDEO_MAX_SEC && rec.state === 'recording') rec.stop();
+      }, 1000);
+      rec.ondataavailable = e => { if (e.data && e.data.size) chunks.push(e.data); };
+      rec.onstop = () => {
+        clearInterval(timer);
+        stream.getTracks().forEach(t => t.stop());
+        if (canceled) { p377VideoEnd(sfx); return; }
+        const type = (rec.mimeType || mime || 'video/webm').split(';')[0];
+        const blob = new Blob(chunks, { type });
+        const url = URL.createObjectURL(blob);
+        const short = sec < P377_VIDEO_MIN_SEC;
+        box.innerHTML = `<video controls playsinline src="${url}"></video>
+          <div>Thời lượng ${fmtDur(sec)} · ${(blob.size / 1048576).toFixed(1)} MB${short ? '<br>⚠️ Video hơi ngắn (gợi ý 2–5 phút) — vẫn có thể gửi.' : ''}</div>
+          <div class="p377-video-actions">
+            <button type="button" class="p377-video-btn primary p377-rec-send">⬆️ Gửi video này</button>
+            <button type="button" class="p377-video-btn p377-rec-again">🔁 Quay lại</button>
+            <button type="button" class="p377-video-btn p377-rec-drop">Huỷ</button>
+          </div>`;
+        box.querySelector('.p377-rec-send').onclick = () => { URL.revokeObjectURL(url); p377VideoUpload(blob, `cam-nhan.${type.includes('mp4') ? 'mp4' : 'webm'}`, sfx); };
+        box.querySelector('.p377-rec-again').onclick = () => { URL.revokeObjectURL(url); feelingVideo.busySfx = null; p377VideoRecord(sfx); };
+        box.querySelector('.p377-rec-drop').onclick = () => { URL.revokeObjectURL(url); p377VideoEnd(sfx); };
+      };
+      box.querySelector('.p377-rec-stop').onclick = () => { if (rec.state === 'recording') rec.stop(); };
+      box.querySelector('.p377-rec-cancel').onclick = () => { canceled = true; if (rec.state === 'recording') rec.stop(); else p377VideoEnd(sfx); };
+      rec.start(1000);
+    }
+
+    function p377VideoPickFile(sfx) {
+      if (feelingVideo.busySfx !== null) return;
+      const picker = document.createElement('input');
+      picker.type = 'file'; picker.accept = 'video/*';
+      picker.onchange = () => {
+        const file = picker.files[0];
+        if (!file) return;
+        if (file.size > 600 * 1048576) { alert('Video quá lớn (tối đa 600MB). Hãy quay ngắn hơn hoặc dùng "Quay ngay".'); return; }
+        feelingVideo.busySfx = sfx;
+        renderVideoBoxes();
+        p377VideoUpload(file, file.name || 'video.mp4', sfx);
+      };
+      picker.click();
+    }
+
+    // Tải lên → máy chủ nén (480p) → lưu Drive. Theo dõi tiến độ; job id giữ trong localStorage để
+    // tải lại trang vẫn tiếp tục theo dõi được.
+    function p377VideoUpload(blob, name, sfx) {
+      const box = rf('p377VideoBox', sfx);
+      feelingVideo.busySfx = sfx;
+      setP377MediaBusy(true);
+      box.innerHTML = `<div class="p377-video-status">⬆️ Đang tải video lên... 0%</div><div class="p377-video-progress"><div></div></div>
+        <div>Vui lòng giữ trang mở cho tới khi tải lên xong.</div>`;
+      const statusEl = box.querySelector('.p377-video-status'), bar = box.querySelector('.p377-video-progress > div');
+      const fail = msg => { setP377MediaBusy(false); p377VideoEnd(sfx); alert(msg || 'Tải video thất bại, vui lòng thử lại.'); };
+      // Cloudflare chặn mỗi lần gửi > 100MB → video lớn chia phần 48MB gửi lần lượt (máy chủ ghép lại);
+      // mỗi phần lỗi mạng được thử lại 2 lần.
+      const PART = 48 * 1048576, total = blob.size > 90 * 1048576 ? Math.ceil(blob.size / PART) : 1;
+      if (total > 20) return fail('Video quá lớn (tối đa 600MB). Hãy quay ngắn hơn hoặc dùng "Quay ngay".');
+      const uploadId = total > 1 ? Date.now().toString(36) + Math.random().toString(36).slice(2, 10) : '';
+      const sendPart = (i) => new Promise(resolve => {
+        const part = total > 1 ? blob.slice(i * PART, Math.min(blob.size, (i + 1) * PART)) : blob;
+        const fd = new FormData();
+        fd.append('user_id', currentUser.id);
+        fd.append('video', part, name);
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', `${API}/program377/upload-video${total > 1 ? `?upload_id=${uploadId}&index=${i}&total=${total}` : ''}`);
+        xhr.upload.onprogress = e => {
+          if (!e.lengthComputable) return;
+          const done = i * PART + e.loaded * (part.size / e.total);
+          const pct = Math.min(99, Math.round(done / blob.size * 100));
+          statusEl.textContent = `⬆️ Đang tải video lên... ${pct}% (${(done / 1048576).toFixed(1)}/${(blob.size / 1048576).toFixed(1)} MB)${total > 1 ? ` · phần ${i + 1}/${total}` : ''}`;
+          bar.style.width = pct + '%';
+        };
+        xhr.onerror = () => resolve({ status: 0, d: {} });
+        xhr.onload = () => { let d = {}; try { d = JSON.parse(xhr.responseText); } catch {} resolve({ status: xhr.status, d }); };
+        xhr.send(fd);
+      });
+      (async () => {
+        let last = null;
+        for (let i = 0; i < total; i++) {
+          let r;
+          for (let t = 0; t < 3; t++) {
+            r = await sendPart(i);
+            if (r.status === 200 || (r.status && r.status < 500 && r.status !== 408 && r.status !== 429)) break;
+            await new Promise(ok => setTimeout(ok, 2000 * (t + 1)));
+          }
+          if (r.status === 0) return fail('Mất kết nối khi tải video, vui lòng kiểm tra mạng rồi thử lại.');
+          if (r.status === 413) return fail(r.d.error || 'Video quá lớn để tải lên. Hãy quay ngắn hơn hoặc dùng "Quay ngay".');
+          if (r.status !== 200) return fail(r.d.error);
+          last = r.d;
+        }
+        if (!last || !last.job_id) return fail();
+        try { localStorage.setItem('p377VideoJob', JSON.stringify({ id: last.job_id, date: todayStr() })); } catch {}
+        p377VideoWatch(last.job_id, sfx, true);
+      })();
+    }
+
+    async function p377VideoWatch(jobId, sfx, busyHeld) {
+      const box = rf('p377VideoBox', sfx);
+      feelingVideo.busySfx = sfx;
+      if (!busyHeld) setP377MediaBusy(true);
+      renderVideoBoxes();
+      const LABEL = { queued: '⏳ Đang chờ tới lượt nén video', converting: '⚙️ Đang nén video cho nhẹ (1–3 phút)...', uploading: '☁️ Đang lưu video lên Google Drive...' };
+      const done = () => { try { localStorage.removeItem('p377VideoJob'); } catch {} setP377MediaBusy(false); };
+      for (;;) {
+        let d;
+        try { d = await fetch(`${API}/program377/video-job/${jobId}?user_id=${currentUser.id}`).then(r => r.json().then(j => ({ ...j, _ok: r.ok }))); }
+        catch { d = { status: 'net' }; }
+        if (d.status === 'done' && d.url) {
+          done();
+          feelingVideo.url = d.url;
+          p377VideoEnd(sfx);
+          p377AutoSave(sfx);
+          return;
+        }
+        if (d.status === 'error' || d._ok === false) {
+          done();
+          p377VideoEnd(sfx);
+          alert(d.error || 'Xử lý video thất bại, vui lòng thử lại.');
+          return;
+        }
+        box.innerHTML = `<div>${LABEL[d.status] || '⏳ Đang xử lý video...'}${d.position > 1 ? ` (thứ ${d.position})` : ''}</div>
+          <div class="p377-video-progress"><div style="width:100%;opacity:.5;"></div></div>
+          <div>Bạn có thể tiếp tục điền báo cáo trong lúc chờ.</div>`;
+        await new Promise(r => setTimeout(r, 4000));
+      }
+    }
+
+    function setupP377ReportTop() {
+      const body = document.getElementById('p377ReportTopBody');
+      if (!body || body.childElementCount) return;
+      const clone = document.getElementById('p377ReportCard').cloneNode(true);
+      clone.querySelectorAll('[id]').forEach(el => { el.id += 'Top'; });
+      body.append(...clone.childNodes);
+    }
+
+    function renderChecks(){
+      P377_FORM_SUFFIXES.forEach(sfx => {
+        const colorsEl = rf('p377Colors', sfx), tastesEl = rf('p377Tastes', sfx);
+        if (!colorsEl || !tastesEl) return;
+        colorsEl.innerHTML='';
+        COLORS.forEach(c=>{ const b=document.createElement('span'); b.className='p377-check'+(sel.colors.has(c)?' on':''); b.textContent='Màu '+c; b.onclick=()=>{ sel.colors.has(c)?sel.colors.delete(c):sel.colors.add(c); renderChecks(); }; colorsEl.appendChild(b); });
+        tastesEl.innerHTML='';
+        TASTES.forEach(c=>{ const b=document.createElement('span'); b.className='p377-check'+(sel.tastes.has(c)?' on':''); b.textContent=tasteLabel(c); b.onclick=()=>{ sel.tastes.has(c)?sel.tastes.delete(c):sel.tastes.add(c); renderChecks(); }; tastesEl.appendChild(b); });
+      });
+    }
+
+    function fillReportForm(r) {
+      sel.colors = new Set(r?.meal_colors || []);
+      sel.tastes = new Set(r?.meal_tastes || []);
+      renderChecks();
+      Object.keys(mealImgs).forEach(code => { mealImgs[code] = r?.[MEAL_IMG_FIELDS[code]] || ''; });
+      renderMealImgs();
+      p377ReportSaved = !!r;
+      feelingVideo.url = r?.feeling_video_url || '';
+      renderVideoBoxes();
+      P377_FORM_SUFFIXES.forEach(sfx => {
+        if (!rf('p377B', sfx)) return;
+        if (rf('p377Weight', sfx)) rf('p377Weight', sfx).value = r?.weight_kg ?? '';
+        rf('p377B', sfx).value = r?.meal_breakfast || '';
+        rf('p377L', sfx).value = r?.meal_lunch || '';
+        rf('p377D', sfx).value = r?.meal_dinner || '';
+        rf('p377UrineAmount', sfx).value = r?.urine_amount || '';
+        rf('p377UrineColor', sfx).value = r?.urine_color || '';
+        rf('p377StoolShape', sfx).value = r?.stool_shape || '';
+        rf('p377StoolColor', sfx).value = r?.stool_color || '';
+        rf('p377ExType', sfx).value = r?.exercise_type || '';
+        rf('p377ExMinutes', sfx).value = r?.exercise_minutes || '';
+        rf('p377SweatAmount', sfx).value = r?.sweat_amount || '';
+        rf('p377SweatTaste', sfx).value = r?.sweat_taste || '';
+        rf('p377Gratitude1', sfx).value = r?.gratitude_1 || '';
+        rf('p377Gratitude2', sfx).value = r?.gratitude_2 || '';
+        rf('p377Gratitude3', sfx).value = r?.gratitude_3 || '';
+        rf('p377Feeling', sfx).value = r?.feeling_note || '';
+        rf('p377FormTitle', sfx).textContent = r ? 'Cập nhật báo cáo hôm nay' : 'Báo cáo hôm nay';
+        rf('p377Save', sfx).textContent = r ? 'Cập nhật' : 'Lưu báo cáo hôm nay';
+      });
+      const sum = document.getElementById('p377ReportTopSummary');
+      if (sum) sum.textContent = r ? '✅ Đã báo cáo hôm nay — bấm để xem / cập nhật' : '📝 Báo cáo hôm nay';
+      const top = document.getElementById('p377ReportTop');
+      if (top) top.open = !r;
+    }
+
+    async function enrollP377() {
+      try {
+        // Đăng ký trước, khảo sát Thân-Tâm-Mệnh làm SAU khi Ban tổ chức duyệt (xem load)
+        const res = await fetch(`${API}/program377/enroll`, { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ user_id: currentUser.id }) }).then(r=>r.json());
+        if (res.error) { document.getElementById('p377EnrollMsg').textContent = res.error; return; }
+        load();
+      } catch { document.getElementById('p377EnrollMsg').textContent = 'Có lỗi, thử lại.'; }
+    }
+
+    function p377Tab(name, btn) {
+      document.querySelectorAll('.p377-tab-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      document.querySelectorAll('.p377-tab-panel').forEach(p => p.classList.remove('active'));
+      document.querySelector(`.p377-tab-panel[data-tab="${name}"]`)?.classList.add('active');
+    }
+
+    // 6 mục cố định mỗi ngày — nội dung đến từ khối tái sử dụng theo mùa/thể
+    // trạng (server đã lắp ghép sẵn theo ngày thực tế + hồ sơ của người này).
+    const P377_BLOCK_ICONS = { an_uong: '🥗', tap_luyen: '🏃', bat_ta_bat_phong_bat_hu: '🛡️', quan_sat_co_the: '👁️', phong_thuy: '🏠', biet_on: '🙏' };
+    const P377_BLOCK_LABELS = {
+      an_uong: 'Ăn uống theo Ngũ Hành', tap_luyen: 'Duy trì tập luyện / vận động',
+      bat_ta_bat_phong_bat_hu: 'Bài trừ bát tà, bát phong, bát hư', quan_sat_co_the: 'Quan sát biểu hiện cơ thể',
+      phong_thuy: 'Phong thuỷ nhà ở & tài chính', biet_on: '3 điều biết ơn mỗi ngày',
+    };
+
+    // Bài tập liên kết (từ "Danh sách bài tập") — chỉ hướng dẫn + 1 link, không
+    // AI chấm điểm, hiển thị dạng nút mở link hoặc nhúng khung tuỳ display_mode.
+    function renderLinkedAssignmentHtml(a) {
+      const linkHtml = !a.link_url ? '' : (a.display_mode === 'embed'
+        ? `<iframe src="${esc(a.link_url)}" style="width:100%;min-height:480px;border:0;border-radius:8px;margin-top:10px;"></iframe>`
+        : `<a class="p377-assignment-btn" href="${esc(a.link_url)}" target="_blank" rel="noopener">Làm bài tập →</a>`);
+      return `
+      <div class="p377-block">
+        <div class="p377-block-title">📝 ${esc(a.title)}</div>
+        ${a.instructions ? `<div class="p377-block-body" style="white-space:pre-wrap;">${esc(a.instructions)}</div>` : ''}
+        ${linkHtml}
+      </div>`;
+    }
+
+    function renderDayContentHtml(day) {
+      const blocksHtml = (day.blocks || []).filter(b => b.bodyHtml).map(b => `
+      <div class="p377-block">
+        <div class="p377-block-title">${P377_BLOCK_ICONS[b.category] || ''} ${esc(b.title || P377_BLOCK_LABELS[b.category] || b.category)}</div>
+        <div class="p377-block-body">${mdToHtml(b.bodyHtml)}</div>
+      </div>`).join('');
+      return `
+      ${day.topic_key ? `<div class="p377-topic">${esc(P377_TOPICS[day.topic_key] || day.topic_key)}</div>` : ''}
+      <h3 style="margin-bottom:8px;">${esc(day.title)}</h3>
+      ${day.personalizedNote ? `<div class="p377-personal-note">✨ ${esc(day.personalizedNote)}</div>` : ''}
+      ${day.video_url ? `<iframe class="p377-video" src="${day.video_url}" allowfullscreen></iframe>` : ''}
+      ${day.body_html ? `<div style="font-size:14px;line-height:1.7;">${day.body_html}</div>` : ''}
+      ${blocksHtml}
+      ${day.exercise_title ? `<div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--border);"><b>📝 ${esc(day.exercise_title)}</b><div style="margin-top:6px;font-size:14px;color:var(--text-muted);">${esc(day.exercise_body || '')}</div></div>` : ''}
+      ${day.linkedAssignment ? renderLinkedAssignmentHtml(day.linkedAssignment) : ''}
+      ${day.linkedLesson ? `<div class="p377-linked-lesson"><a href="course-view.html?id=${day.linkedLesson.course_id}">📚 Bài học hôm nay: ${esc(day.linkedLesson.title)}</a></div>` : ''}
+      ${day.session ? `<div class="p377-linked-lesson">🗓️ <a href="${esc(day.session.link_url ? dhZoomHref(day.session.link_url) : '#')}" target="_blank" rel="noopener">${esc(day.session.title)} — ${esc(day.session.session_date)}</a></div>` : ''}
+    `;
+    }
+
+    // Lịch Zoom/sự kiện trùng đúng ngày thực của 1 ngày trong chương trình —
+    // tải 1 lần, tra theo ngày thay vì gọi API riêng cho mỗi lần mở 1 ngày.
+    let p377SessionsAllCache = null;
+    async function getP377SessionForDate(dateStr) {
+      if (!dateStr) return null;
+      if (!p377SessionsAllCache) {
+        try { p377SessionsAllCache = (await fetch(`${API}/program377/sessions`).then(r => r.json())).sessions || []; }
+        catch { p377SessionsAllCache = []; }
+      }
+      return p377SessionsAllCache.find(s => s.session_date === dateStr) || null;
+    }
+
+    async function renderTodayContent(dayNumberToday, targetId = 'p377TodayContent') {
+      const box = document.getElementById(targetId);
+      if (dayNumberToday < 1) { box.innerHTML = `<div class="p377-empty">Chương trình của bạn sẽ bắt đầu sớm.</div>`; return; }
+      try {
+        const d = await fetch(`${API}/program377/day/${dayNumberToday}?user_id=${currentUser.id}`).then(r=>r.json());
+        if (d.error || !d.day) { box.innerHTML = `<div class="p377-empty">Nội dung ngày hôm nay chưa được soạn — Người hướng dẫn sẽ cập nhật sớm.</div>`; return; }
+        d.day.session = await getP377SessionForDate(d.day.calendarDate);
+        box.innerHTML = renderDayContentHtml(d.day);
+      } catch { box.innerHTML = `<div class="p377-empty">Không tải được nội dung hôm nay.</div>`; }
+    }
+
+    async function renderP377TopicsOverview() {
+      try {
+        const s = await fetch(`${API}/settings`).then(r=>r.json());
+        const box = document.getElementById('p377TopicsOverviewCard');
+        if (s.p377_topics_overview) {
+          document.getElementById('p377TopicsOverviewBox').innerHTML = s.p377_topics_overview;
+          box.style.display = 'block';
+        } else {
+          box.style.display = 'none';
+        }
+      } catch { /* ẩn khối tổng quan nếu không tải được, không chặn phần còn lại của trang */ }
+    }
+
+    async function renderP377DaysList(dayNumberToday) {
+      const box = document.getElementById('p377DaysList');
+      p377OpenDay = null;
+      p377DayContentCache = {};
+      try {
+        const d = await fetch(`${API}/program377/days?user_id=${currentUser.id}`).then(r=>r.json());
+        if (!d.days.length) { box.innerHTML = `<div class="p377-empty">Nội dung chương trình đang được Người hướng dẫn soạn, sẽ sớm cập nhật.</div>`; return; }
+        box.innerHTML = d.days.map(day => `
+      <div>
+        <div class="p377-day-row${day.unlocked ? '' : ' locked'}" ${day.unlocked ? `onclick="toggleP377DayRow(${day.day_number})"` : ''}>
+          <div class="p377-day-num">Ngày ${day.day_number}</div>
+          <div class="p377-day-info">
+            ${day.unlocked ? `
+            <div class="p377-day-title">${esc(day.title)}</div>
+            ${day.topic_key ? `<div style="font-size:11.5px;color:var(--text-muted);">${esc(P377_TOPICS[day.topic_key] || day.topic_key)}</div>` : ''}
+            ` : `
+            <div class="p377-day-title" style="color:var(--text-muted);font-style:italic;">Chưa được mở khóa</div>
+            `}
+          </div>
+          <div style="font-size:16px;">${day.unlocked ? '🔓' : '🔒'}</div>
+        </div>
+        ${day.unlocked ? `<div class="p377-day-expand" id="p377DayExpand-${day.day_number}" style="display:none;"></div>` : ''}
+      </div>`).join('');
+      } catch { box.innerHTML = `<div class="p377-empty">Không tải được danh sách nội dung.</div>`; }
+    }
+
+    // Dạng mở rộng tại chỗ (accordion) — bấm 1 ngày để xem, bấm ngày khác tự thu gọn ngày cũ,
+    // không dùng popup vì danh sách dài tới 377 ngày, mở popup liên tục sẽ bất tiện hơn.
+    let p377OpenDay = null;
+    let p377DayContentCache = {};
+    async function toggleP377DayRow(dayNumber) {
+      const expandEl = document.getElementById(`p377DayExpand-${dayNumber}`);
+      if (!expandEl) return;
+      const wasOpen = expandEl.style.display !== 'none';
+      if (p377OpenDay !== null) {
+        const prevEl = document.getElementById(`p377DayExpand-${p377OpenDay}`);
+        if (prevEl) prevEl.style.display = 'none';
+      }
+      if (wasOpen) { p377OpenDay = null; return; }
+      p377OpenDay = dayNumber;
+      expandEl.style.display = 'block';
+      if (!p377DayContentCache[dayNumber]) {
+        expandEl.innerHTML = `<div class="p377-empty">Đang tải...</div>`;
+        try {
+          const d = await fetch(`${API}/program377/day/${dayNumber}?user_id=${currentUser.id}`).then(r=>r.json());
+          if (!d.error && d.day) d.day.session = await getP377SessionForDate(d.day.calendarDate);
+          p377DayContentCache[dayNumber] = (d.error || !d.day)
+            ? `<div class="p377-empty">${esc(d.error || 'Không tìm thấy nội dung.')}</div>`
+            : renderDayContentHtml(d.day);
+        } catch { p377DayContentCache[dayNumber] = `<div class="p377-empty">Không tải được nội dung.</div>`; }
+      }
+      expandEl.innerHTML = p377DayContentCache[dayNumber];
+    }
+
+    // ── Báo cáo các ngày: ngày 1 → hôm nay, mới nhất trên cùng; mở 1 ngày thì ngày đang mở tự thu gọn ──
+    let p377Hist = { start: null, today: 0, byDate: {}, open: null, shown: 30 };
+    const P377_DOW = ['CN', 'Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7'];
+    function p377DateOfDay(n) { const d = new Date(String(p377Hist.start).slice(0, 10) + 'T00:00:00Z'); d.setUTCDate(d.getUTCDate() + n - 1); return d.toISOString().slice(0, 10); }
+    async function renderP377History(startDate, dayToday) {
+      if (startDate) p377Hist.start = startDate;
+      if (dayToday) p377Hist.today = Math.min(dayToday, 377);
+      const box = document.getElementById('p377History');
+      if (!box) return;
+      if (!p377Hist.start || p377Hist.today < 1) { box.innerHTML = '<div class="p377-empty">Chương trình của bạn chưa bắt đầu.</div>'; return; }
+      try {
+        const d = await fetch(`${API}/program377/reports?user_id=${currentUser.id}&limit=400`).then(r => r.json());
+        p377Hist.byDate = {};
+        (d.reports || []).forEach(r => { p377Hist.byDate[String(r.report_date).slice(0, 10)] = r; });
+        drawP377History();
+      } catch { box.innerHTML = '<div class="p377-empty">Không tải được danh sách báo cáo.</div>'; }
+    }
+    function drawP377History() {
+      const box = document.getElementById('p377History');
+      const today = todayStr(), rows = [];
+      const last = Math.max(1, p377Hist.today - p377Hist.shown + 1);
+      for (let n = p377Hist.today; n >= last; n--) {
+        const date = p377DateOfDay(n), r = p377Hist.byDate[date], dt = new Date(date + 'T00:00:00Z');
+        const st = !r ? (date === today ? '<span class="p377-hist-st no">Chưa báo cáo hôm nay</span>' : '<span class="p377-hist-st no">Chưa được báo cáo</span>')
+          : r.flag_level === 'urgent' ? '<span class="p377-hist-st urgent">✅ Đã báo cáo · Khẩn cấp</span>'
+          : r.flag_level === 'warning' ? '<span class="p377-hist-st warn">✅ Đã báo cáo · Cần theo dõi</span>'
+          : `<span class="p377-hist-st ok">✅ Đã báo cáo${r.is_late ? ' (trễ)' : ''}</span>`;
+        rows.push(`<div class="p377-hist-row${r ? ' has' : ''}${p377Hist.open === date ? ' open' : ''}" ${r ? `onclick="toggleP377Hist('${date}')" role="button" tabindex="0" aria-expanded="${p377Hist.open === date}"` : ''}>
+          <span class="p377-hist-chev">${r ? '▶' : ''}</span>
+          <div class="p377-hist-day">Ngày ${n}</div>
+          <div class="p377-hist-date"><b>${P377_DOW[dt.getUTCDay()]}</b>, ${fmtDate(date)}${date === today ? ' · hôm nay' : ''}</div>
+          ${st}
+        </div>${r && p377Hist.open === date ? `<div class="p377-hist-detail">${p377ReportDetailHtml(r)}</div>` : ''}`);
+      }
+      box.innerHTML = rows.join('') + (last > 1
+        ? `<div class="p377-hist-more"><button class="btn" type="button" onclick="p377Hist.shown += 60; drawP377History()">Xem thêm các ngày trước (còn ${last - 1} ngày)</button></div>` : '');
+    }
+    function toggleP377Hist(date) {
+      p377Hist.open = p377Hist.open === date ? null : date;
+      drawP377History();
+    }
+    // Toàn bộ nội dung 1 báo cáo
+    function p377ReportDetailHtml(r) {
+      const q = v => String(v ?? '').trim();
+      const imgOk = u => /^https?:\/\//i.test(q(u));
+      const meal = (label, text, img) => `<div class="p377-hist-meal"><div class="lb">${label}</div><div>${esc(q(text)) || '<span style="color:var(--text-muted);">—</span>'}</div>${imgOk(img) ? `<a href="${esc(img).replace(/"/g, '&quot;')}" target="_blank" rel="noopener"><img src="${esc(img).replace(/"/g, '&quot;')}" alt="Ảnh ${label.toLowerCase()}" loading="lazy"></a>` : ''}</div>`;
+      const chips = arr => (arr || []).length ? arr.map(x => `<span class="p377-hist-chip">${esc(x)}</span>`).join('') : '<span style="color:var(--text-muted);">—</span>';
+      const pair = (a, b) => [q(a), q(b)].filter(Boolean).map(esc).join(' — ') || '<span style="color:var(--text-muted);">—</span>';
+      const grat = [r.gratitude_1, r.gratitude_2, r.gratitude_3].map(q).filter(Boolean);
+      const vid = q(r.feeling_video_url);
+      const vidHtml = !vid ? '' : /drive\.google\.com\/file\/d\/[^/]+\/preview/.test(vid)
+        ? `<div class="p377-hist-video"><iframe src="${esc(vid).replace(/"/g, '&quot;')}" allow="autoplay" loading="lazy" title="Video cảm nhận"></iframe></div>`
+        : `<a href="${esc(vid).replace(/"/g, '&quot;')}" target="_blank" rel="noopener">🎥 Xem video cảm nhận</a>`;
+      const ai = r.ai_feedback
+        ? `<div class="p377-ai-feedback ${r.flag_level === 'warning' ? 'p377-ai-warning' : r.flag_level === 'urgent' ? 'p377-ai-urgent' : ''}" style="margin-top:12px;"><div class="p377-ai-label">${r.feedback_by === 'admin' ? '💬 Ban tổ chức nhận xét' : '🌻 An Nhiên nhận xét'}</div><div class="dh-md">${renderSimpleMarkdown(r.ai_feedback)}</div></div>` : '';
+      const when = q(r.updated_at || r.created_at);
+      return `<div class="p377-hist-meals">${meal('Bữa sáng', r.meal_breakfast, r.meal_breakfast_img)}${meal('Bữa trưa', r.meal_lunch, r.meal_lunch_img)}${meal('Bữa tối', r.meal_dinner, r.meal_dinner_img)}</div>
+        <dl class="p377-hist-grid">
+          <dt>Màu đã ăn (${(r.meal_colors || []).length}/5)</dt><dd>${chips(r.meal_colors)}</dd>
+          <dt>Vị đã ăn (${(r.meal_tastes || []).length}/7)</dt><dd>${chips(r.meal_tastes)}</dd>
+          <dt>⚖️ Cân nặng</dt><dd>${r.weight_kg ? esc(r.weight_kg) + " kg" : '<span style="color:var(--text-muted);">—</span>'}</dd>
+          <dt>Nước tiểu</dt><dd>${pair(r.urine_amount, r.urine_color)}</dd>
+          <dt>Phân</dt><dd>${pair(r.stool_shape, r.stool_color)}</dd>
+          <dt>Tập luyện</dt><dd>${q(r.exercise_type) ? esc(r.exercise_type) + (r.exercise_minutes ? ` · ${esc(r.exercise_minutes)} phút` : '') : '<span style="color:var(--text-muted);">—</span>'}</dd>
+          <dt>Mồ hôi</dt><dd>${pair(r.sweat_amount, r.sweat_taste)}</dd>
+          <dt>🙏 3 điều biết ơn</dt><dd>${grat.length ? '<ol style="margin:0;padding-left:18px;">' + grat.map(g => `<li>${esc(g)}</li>`).join('') + '</ol>' : '<span style="color:var(--text-muted);">—</span>'}</dd>
+          <dt>Cảm nhận sức khỏe</dt><dd style="white-space:pre-wrap;">${esc(q(r.feeling_note)) || '<span style="color:var(--text-muted);">—</span>'}</dd>
+          ${vid ? `<dt>🎥 Video cảm nhận</dt><dd>${vidHtml}</dd>` : ''}
+        </dl>
+        ${ai}
+        ${when ? `<div style="font-size:11.5px;color:var(--text-muted);margin-top:10px;">Lưu lúc ${esc(fmtDate(when))} ${esc(when.slice(11, 16))}${r.is_late ? ' · nộp trễ hạn' : ''}</div>` : ''}`;
+    }
+
+    function p377ReportSummaryHtml(r) {
+      const meals = [r.meal_breakfast, r.meal_lunch, r.meal_dinner].filter(Boolean).join(' · ');
+      const tags = [...(r.meal_colors || []), ...(r.meal_tastes || [])];
+      const badgeParts = [];
+      if (r.meal_colors?.length || r.meal_tastes?.length) badgeParts.push(`${(r.meal_colors || []).length}/5 màu · ${(r.meal_tastes || []).length}/7 vị`);
+      const extra = [];
+      if (r.weight_kg) extra.push(`Cân nặng: ${r.weight_kg} kg`);
+      if (r.urine_amount || r.urine_color) extra.push(`Nước tiểu: ${[r.urine_amount, r.urine_color].filter(Boolean).join(' — ')}`);
+      if (r.stool_shape || r.stool_color) extra.push(`Phân: ${[r.stool_shape, r.stool_color].filter(Boolean).join(' — ')}`);
+      if (r.exercise_type) extra.push(`Tập luyện: ${r.exercise_type}${r.exercise_minutes ? ` (${r.exercise_minutes} phút)` : ''}`);
+      if (r.sweat_amount || r.sweat_taste) extra.push(`Mồ hôi: ${[r.sweat_amount, r.sweat_taste].filter(Boolean).join(' — ')}`);
+      return `
+    <div class="p377-result-summary-line">${esc(meals) || '—'}</div>
+    ${badgeParts.length ? `<div class="p377-result-badge-line">${esc(badgeParts.join(' · '))}</div>` : ''}
+    ${extra.length ? `<div class="p377-result-badge-line">${esc(extra.join(' · '))}</div>` : ''}
+    ${[r.gratitude_1, r.gratitude_2, r.gratitude_3].filter(Boolean).length ? `<div class="p377-result-badge-line">🙏 ${esc([r.gratitude_1, r.gratitude_2, r.gratitude_3].filter(Boolean).join(' · '))}</div>` : ''}
+    ${r.feeling_note ? `<div class="p377-result-badge-line">Cảm nhận: ${esc(r.feeling_note)}</div>` : ''}
+    ${r.feeling_video_url ? `<div class="p377-result-badge-line">🎥 <a href="${esc(r.feeling_video_url).replace(/"/g, '&quot;')}" target="_blank" rel="noopener">Xem video cảm nhận</a></div>` : ''}`;
+    }
+
+    async function renderP377Results() {
+      const box = document.getElementById('p377Results');
+      const today = todayStr();
+      try {
+        const d = await fetch(`${API}/program377/reports?user_id=${currentUser.id}&limit=60`).then(r=>r.json());
+        if (!d.reports.length) { box.innerHTML = `<div class="p377-empty">Chưa có báo cáo nào để ghi nhận kết quả.</div>`; return; }
+        // Cân nặng: lần ghi đầu → gần nhất (trong 60 báo cáo gần đây)
+        const wts = d.reports.filter(r => Number(r.weight_kg) > 0).sort((a, b) => a.report_date.localeCompare(b.report_date));
+        let wHtml = '';
+        if (wts.length) {
+          const f = wts[0], l = wts[wts.length - 1], ch = Math.round((l.weight_kg - f.weight_kg) * 10) / 10;
+          wHtml = `<div class="p377-card" style="margin-bottom:12px;padding:12px 16px;font-size:14px;">⚖️ <b>Cân nặng</b>: ${wts.length > 1
+            ? `${esc(f.weight_kg)} kg (${esc(fmtDate(f.report_date))}) → <b>${esc(l.weight_kg)} kg</b> (${esc(fmtDate(l.report_date))}) · <b style="color:${ch < 0 ? '#10b981' : ch > 0 ? '#f59e0b' : 'inherit'};">${ch > 0 ? '+' : ''}${ch} kg</b>`
+            : `${esc(l.weight_kg)} kg (${esc(fmtDate(l.report_date))}) — ghi thêm các ngày sau để thấy thay đổi.`}</div>`;
+        }
+        box.innerHTML = wHtml + d.reports.map(r => {
+          const flagBadge = r.flag_level === 'warning' ? '<span class="p377-result-flag warning">Cần theo dõi</span>'
+            : r.flag_level === 'urgent' ? '<span class="p377-result-flag urgent">Khẩn cấp</span>' : '';
+          const aiClass = r.flag_level === 'warning' ? 'p377-ai-warning' : r.flag_level === 'urgent' ? 'p377-ai-urgent' : '';
+          const body = r.ai_feedback
+            ? `<div class="p377-ai-feedback ${aiClass}"><div class="p377-ai-label">${r.feedback_by === 'admin' ? '💬 Ban tổ chức nhận xét' : '🌻 An Nhiên nhận xét'}</div><div class="dh-md">${renderSimpleMarkdown(r.ai_feedback)}</div></div>`
+            : `<div class="p377-ai-feedback p377-ai-pending">🌻 An Nhiên đang xem báo cáo của bạn, chờ chút nhé...</div>`;
+          const dateLabel = r.report_date === today ? 'Hôm nay' : fmtDate(r.report_date);
+          return `<div class="p377-result-item">
+        <div class="p377-result-date">${esc(dateLabel)}</div>
+        <div class="p377-result-body-wrap">
+          <div style="font-size:11px;color:var(--text-muted);margin-bottom:2px;">Ngày ${r.day_number || '?'}/377${flagBadge}</div>
+          ${p377ReportSummaryHtml(r)}
+          ${body}
+        </div>
+      </div>`;
+        }).join('');
+      } catch { box.innerHTML = `<div class="p377-empty">Không tải được kết quả.</div>`; }
+    }
+
+    // Mô tả buổi: mỗi dòng 1 gạch đầu dòng, hỗ trợ **in đậm**
+    function sessionBodyHtml(text) {
+      const lines = String(text || '').split(/\r?\n/).map(l => l.replace(/^\s*[-•*]\s+/, '').trim()).filter(Boolean);
+      if (!lines.length) return '';
+      return '<ul>' + lines.map(l => `<li>${esc(l).replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')}</li>`).join('') + '</ul>';
+    }
+
+    async function renderSessions() {
+      const box = document.getElementById('p377Sessions');
+      const FORMAT = { zoom: 'Online qua Zoom', video: 'Video', exercise: 'Bài tập', other: 'Khác' };
+      try {
+        const [all] = await Promise.all([fetch(`${API}/program377/sessions`).then(r => r.json()), dhLoadHomeworkLib()]);
+        // Buổi sắp tới + bài tập của các buổi đã qua (6 buổi gần nhất có bài tập)
+        const today = todayStr();
+        const d = { sessions: (all.sessions || []).filter(s => String(s.session_date).slice(0, 10) >= today) };
+        const past = (all.sessions || []).filter(s => String(s.session_date).slice(0, 10) < today && dhHomeworkHtml(s.hw_note, s.hw_ids)).reverse().slice(0, 6);
+        const pastHtml = past.length ? `<div style="margin-top:18px;font-weight:700;font-size:15px;">📝 Bài tập các buổi đã qua</div>` + past.map(s => `
+      <div class="p377-session">
+        <div class="p377-session-title">${esc(s.title)}</div>
+        <div class="p377-session-info"><div class="p377-session-info-line">✅ <strong>Đã diễn ra:</strong> ${esc(fmtDate(s.session_date))}</div></div>
+        ${dhHomeworkHtml(s.hw_note, s.hw_ids)}
+      </div>`).join('') : '';
+        if (!d.sessions.length) { box.innerHTML = `<div class="p377-empty">Chưa có buổi nào sắp tới.</div>` + pastHtml; return; }
+        box.innerHTML = d.sessions.map(s => {
+          const isZoom = (s.session_type || 'zoom') === 'zoom';
+          const timeStr = [fmtDate(s.session_date), s.session_time].filter(Boolean).join(' · ');
+          const btn = s.link_url
+            ? `<a href="${esc(dhZoomHref(s.link_url)).replace(/"/g, '&quot;')}" target="_blank" rel="noopener" class="p377-session-zoom">${isZoom ? '📹 Tham gia Zoom' : '🔗 Mở link'}</a>`
+            : (isZoom ? `<span class="p377-session-zoom disabled">📹 Link Zoom sẽ cập nhật sau</span>` : '');
+          const body = s.content_html || sessionBodyHtml(s.description);
+          return `
+      <div class="p377-session">
+        <div class="p377-session-title">${esc(s.title)}</div>
+        <div class="p377-session-info">
+          <div class="p377-session-info-line">🕐 <strong>Thời gian:</strong> ${esc(timeStr)}</div>
+          <div class="p377-session-info-line">💻 <strong>Hình thức:</strong> ${esc(FORMAT[s.session_type] || 'Online qua Zoom')}</div>
+        </div>
+        ${btn ? `<div class="p377-session-zoom-row">${btn}</div>` : ''}
+        ${body ? `<div class="p377-session-body">${body}</div>` : ''}
+        ${dhHomeworkHtml(s.hw_note, s.hw_ids)}
+      </div>`;
+        }).join('') + pastHtml;
+      } catch { box.innerHTML = `<div class="p377-empty">Không tải được lịch.</div>`; }
+    }
+
+    let p377LetterApplied = false;
+    async function applyP377Letter() {
+      if (p377LetterApplied) return;
+      const box = document.getElementById('p377LetterContent');
+      try {
+        const [s, w8] = await Promise.all([
+          fetch(`${API}/settings`).then(r => r.json()),
+          fetch(`${API}/workshop8/status?user_id=${currentUser.id}`).then(r => r.json()).catch(() => ({})),
+        ]);
+        if (s.p377_letter_html) box.innerHTML = s.p377_letter_html;
+        // Đã được duyệt 8 buổi → giá thường gạch ngang, chỉ hiện giá ưu đãi riêng
+        const regular = String(s.p377_price_regular || '11.800.000').trim();
+        const special = String(s.p377_price_w8 || '').trim();
+        if (w8.enrollment && w8.enrollment.status === 'approved' && special) {
+          const toNum = v => Number(String(v).replace(/[^\d]/g, '')) || 0;
+          const off = toNum(regular) - toNum(special);
+          const offTxt = off > 0 ? ` (giảm ${off.toLocaleString('vi-VN')}đ)` : '';
+          const re = new RegExp(regular.replace(/\./g, '\\.') + '(\\s*(?:VNĐ|VND|đ))?', 'g');
+          box.innerHTML = box.innerHTML.replace(re, (m, unit) =>
+            `<s style="opacity:.6">${regular}${unit || ''}</s> <b style="color:var(--color-primary)">${esc(special)}${unit || ''}</b>`);
+          box.insertAdjacentHTML('afterbegin',
+            `<div style="border:2px solid var(--color-primary);background:var(--bg-active);border-radius:12px;padding:12px 16px;margin-bottom:16px;font-size:15px;">
+               🎁 <b>Ưu đãi riêng cho học viên đã tham gia 8 buổi:</b>
+               <s style="opacity:.6">${esc(regular)}đ</s> → <b style="color:var(--text);font-size:18px;">${esc(special)}đ</b>${esc(offTxt)}
+             </div>`);
+        }
+      } catch { /* giữ nội dung mặc định nếu không tải được */ }
+      p377LetterApplied = true;
+    }
+
+    // Video khoá trước + khung lịch Zoom trong 24 giờ (hiện ở mọi trạng thái, giống trang 8 buổi)
+    async function renderP377Top(isApproved) {
+      try {
+        const [s, sess] = await Promise.all([
+          fetch(`${API}/settings`).then(r => r.json()).catch(() => ({})),
+          fetch(`${API}/program377/sessions?upcoming=1`).then(r => r.json()).catch(() => ({ sessions: [] })),
+        ]);
+        const url = (s.program377_video_url || '').trim();
+        const card = document.getElementById('p377VideoCard');
+        if (url) {
+          const wrap = document.getElementById('p377VideoWrap');
+          if (/\.(mp4|webm|ogg)(\?|$)/i.test(url)) wrap.innerHTML = `<video src="${esc(url).replace(/"/g, '&quot;')}" controls></video>`;
+          else {
+            const src = (typeof videoEmbedUrl === 'function' && videoEmbedUrl(url)) || url;
+            wrap.innerHTML = `<iframe src="${esc(src).replace(/"/g, '&quot;')}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
+          }
+          card.style.display = '';
+        } else card.style.display = 'none';
+        if (typeof renderTodayEventBanner === 'function') {
+          renderTodayEventBanner(document.getElementById('dhLiveBanner'),
+            (sess.sessions || []).map(x => ({ title: x.title, date: x.session_date, time: x.session_time, link: x.link_url, content_html: x.content_html || sessionBodyHtml(x.description) })),
+            { canJoin: !!isApproved });
+        }
+        // Học viên đã duyệt: nhắc làm bài tập buổi trước (phía trên lịch Zoom 24 giờ)
+        if (isApproved && typeof dhHomeworkReminder === 'function') {
+          const all = await fetch(`${API}/program377/sessions`).then(r => r.json()).catch(() => ({ sessions: [] }));
+          dhHomeworkReminder('p377', (all.sessions || []).map(x => ({ key: String(x.id), title: x.title, date: String(x.session_date || '').slice(0, 10), hw_note: x.hw_note, hw_ids: x.hw_ids })));
+        }
+      } catch { /* phần phụ — lỗi thì bỏ qua */ }
+    }
+
+    // ── Nhạc thư giãn: danh sách do Admin thêm (file mp3 hoặc link YouTube); khách chọn bản mặc định; tự phát khi mở trang ──
+    // Trình duyệt thường chặn phát nhạc có tiếng khi chưa chạm vào trang → chờ lần chạm đầu tiên rồi phát.
+    // Bài YouTube phát bằng trình phát chính thức (YouTube IFrame API) trong khung video nhỏ ≥ 200px.
+    const p377Music = { tracks: [], defId: null, auto: true, curId: null, userPaused: false, yt: null, ytReady: null, ytPending: null };
+    const musicEsc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    const musicTrack = id => p377Music.tracks.find(x => x.id === id);
+    async function p377MusicInit() {
+      if (p377Music.inited) return;   // load() chạy lại khi sang ngày mới → nhạc đang phát giữ nguyên
+      p377Music.inited = true;
+      const box = document.getElementById('p377Music');
+      let d;
+      try {
+        const r = await fetch(`${API}/program377/music`);
+        if (!r.ok) return;
+        d = await r.json();
+      } catch { return; }
+      if (!d.tracks || !d.tracks.length) { box.hidden = true; return; }
+      Object.assign(p377Music, { tracks: d.tracks, defId: d.default_id, auto: d.autoplay });
+      box.hidden = false;
+      document.getElementById('p377MusicAuto').checked = p377Music.auto;
+      const audio = document.getElementById('p377Audio');
+      audio.addEventListener('ended', p377MusicNext);
+      audio.addEventListener('play', () => { p377Music.userPaused = false; document.getElementById('p377MusicHint').hidden = true; p377MusicRender(); });
+      audio.addEventListener('pause', () => { if (!audio.ended) p377Music.userPaused = true; p377MusicRender(); });
+      const start = musicTrack(p377Music.defId) || p377Music.tracks[0];
+      if (p377Music.auto) p377MusicPlay(start.id, true); else p377MusicLoad(start.id);
+      p377MusicRender();
+    }
+    // Hết bài → phát lại chính bài đó từ đầu (lặp 1 bài, không chuyển bài khác)
+    function p377MusicNext() {
+      const t = musicTrack(p377Music.curId);
+      if (!t) return;
+      if (t.youtube_id && p377Music.yt) { p377Music.yt.seekTo(0, true); p377Music.yt.playVideo(); }
+      else { const a = document.getElementById('p377Audio'); a.currentTime = 0; a.play().catch(() => {}); }
+    }
+    // Nạp YouTube IFrame API 1 lần, tạo trình phát khi cần
+    function p377YtPlayer() {
+      if (p377Music.ytReady) return p377Music.ytReady;
+      p377Music.ytReady = new Promise(resolve => {
+        const make = () => {
+          p377Music.yt = new YT.Player('p377YtPlayer', {
+            width: '100%', height: '100%',
+            playerVars: { playsinline: 1, rel: 0, modestbranding: 1 },
+            events: {
+              onReady: () => resolve(p377Music.yt),
+              onStateChange: e => {
+                if (e.data === YT.PlayerState.PLAYING) { p377Music.userPaused = false; clearTimeout(p377Music.ytWait); document.getElementById('p377MusicHint').hidden = true; }
+                if (e.data === YT.PlayerState.PAUSED) p377Music.userPaused = true;
+                if (e.data === YT.PlayerState.ENDED) p377MusicNext();
+                p377MusicRender();
+              },
+              onError: () => {   // chủ kênh tắt nhúng / video bị xoá → báo và bỏ qua bài này
+                const t = musicTrack(p377Music.curId), hint = document.getElementById('p377MusicHint');
+                hint.textContent = `⚠️ Không phát được "${t ? t.title : 'bài này'}" từ YouTube (video không cho phát nhúng hoặc đã bị gỡ).`;
+                hint.hidden = false;
+              },
+            },
+          });
+        };
+        if (window.YT && window.YT.Player) return make();
+        const prev = window.onYouTubeIframeAPIReady;
+        window.onYouTubeIframeAPIReady = () => { if (prev) prev(); make(); };
+        const s = document.createElement('script');
+        s.src = 'https://www.youtube.com/iframe_api';
+        document.head.appendChild(s);
+      });
+      return p377Music.ytReady;
+    }
+    function p377MusicIsPlaying(id) {
+      const t = musicTrack(id);
+      if (!t || id !== p377Music.curId) return false;
+      if (t.youtube_id) return !!(p377Music.yt && p377Music.yt.getPlayerState && p377Music.yt.getPlayerState() === 1);
+      return !document.getElementById('p377Audio').paused;
+    }
+    // Chuyển khung phát sang bài id; willPlay = sắp phát ngay (YouTube khi đó không nạp sẵn, tránh chồng lệnh)
+    function p377MusicLoad(id, willPlay) {
+      const t = musicTrack(id);
+      if (!t) return null;
+      const audio = document.getElementById('p377Audio'), ytBox = document.getElementById('p377YtBox');
+      const changed = p377Music.curId !== id;
+      p377Music.curId = id;
+      document.getElementById('p377MusicNow').textContent = '· ' + t.title;
+      if (t.youtube_id) {
+        if (!audio.paused) audio.pause();
+        audio.hidden = true; ytBox.hidden = false;
+        if (changed && !willPlay) p377YtPlayer().then(p => { if (p377Music.curId === id) p.cueVideoById(t.youtube_id); });
+      } else {
+        if (p377Music.yt && p377Music.yt.pauseVideo) p377Music.yt.pauseVideo();
+        ytBox.hidden = true; audio.hidden = false;
+        if (changed || !audio.src) audio.src = t.mp3_url;
+      }
+      return t;
+    }
+    // Trình duyệt chặn tự phát → hiện lời nhắc, phát ở lần chạm đầu tiên
+    function p377MusicWaitTap(playFn) {
+      document.getElementById('p377MusicHint').textContent = '🔇 Trình duyệt chưa cho tự phát nhạc — chạm vào bất kỳ đâu trên trang để bắt đầu nghe.';
+      document.getElementById('p377MusicHint').hidden = false;
+      const go = () => {
+        ['pointerdown', 'keydown'].forEach(ev => document.removeEventListener(ev, go, true));
+        if (!p377Music.userPaused) playFn();
+      };
+      ['pointerdown', 'keydown'].forEach(ev => document.addEventListener(ev, go, true));
+    }
+    function p377MusicPlay(id, isAuto) {
+      const t = p377MusicLoad(id, true);
+      if (!t) return;
+      if (t.youtube_id) {
+        p377YtPlayer().then(p => {
+          if (p377Music.curId !== id) return;
+          p.loadVideoById(t.youtube_id);
+          if (isAuto) {   // YouTube không báo lỗi khi bị chặn tự phát → sau 2.5 giây chưa phát thì chờ lần chạm
+            clearTimeout(p377Music.ytWait);
+            p377Music.ytWait = setTimeout(() => { if (!p377MusicIsPlaying(id)) p377MusicWaitTap(() => p.playVideo()); }, 2500);
+          }
+        });
+      } else {
+        const audio = document.getElementById('p377Audio');
+        audio.play().catch(() => { if (isAuto) p377MusicWaitTap(() => { if (audio.paused) audio.play().catch(() => {}); }); });
+      }
+      p377MusicRender();
+    }
+    function p377MusicToggle(id) {
+      const t = musicTrack(id);
+      if (p377MusicIsPlaying(id)) {
+        if (t.youtube_id) p377Music.yt.pauseVideo(); else document.getElementById('p377Audio').pause();
+      } else if (t.youtube_id && id === p377Music.curId && p377Music.yt && p377Music.yt.getPlayerState() === 2) {
+        p377Music.yt.playVideo();   // đang tạm dừng giữa chừng → phát tiếp, không phát lại từ đầu
+      } else p377MusicPlay(id);
+    }
+    async function p377MusicSetDefault(id) {
+      p377Music.defId = id;
+      p377MusicRender();
+      await fetch(`${API}/program377/music/pref`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ track_id: id }) }).catch(() => {});
+    }
+    async function p377MusicSetAuto(on) {
+      p377Music.auto = on;
+      await fetch(`${API}/program377/music/pref`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ autoplay: on }) }).catch(() => {});
+    }
+    function p377MusicRender() {
+      document.getElementById('p377MusicList').innerHTML = p377Music.tracks.map(t => {
+        const playing = p377MusicIsPlaying(t.id), isDef = t.id === p377Music.defId;
+        return `<div class="p377-music-row${playing ? ' playing' : ''}">
+          <button type="button" class="p377-music-play" onclick="p377MusicToggle(${t.id})" aria-label="${playing ? 'Tạm dừng' : 'Phát'} ${musicEsc(t.title)}">${playing ? '❚❚' : '▶'}</button>
+          <div class="p377-music-info"><div class="p377-music-title">${musicEsc(t.title)}${t.youtube_id ? ' <span class="p377-music-note">· YouTube</span>' : ''}</div>${t.note ? `<div class="p377-music-note">${musicEsc(t.note)}</div>` : ''}</div>
+          <button type="button" class="p377-music-def${isDef ? ' on' : ''}" ${isDef ? 'disabled' : `onclick="p377MusicSetDefault(${t.id})"`}>${isDef ? '⭐ Mặc định' : '☆ Đặt mặc định'}</button>
+        </div>`;
+      }).join('');
+    }
+
+    async function load() {
+      const d = await fetch(`${API}/program377/status?user_id=${currentUser.id}`).then(r=>r.json());
+      renderP377Top(d.enrollment && d.enrollment.status === 'approved');
+      document.getElementById('p377NotEnrolled').style.display = 'none';
+      document.getElementById('p377Pending').style.display = 'none';
+      document.getElementById('p377Active').style.display = 'none';
+      document.getElementById('p377IntakeGate').style.display = 'none';
+
+      // Admin chọn "Thư ngỏ dài" → người chưa đăng ký / bị từ chối xem trang bán hàng dài (?view=classic để xem trang này)
+      if (!d.enrollment || d.enrollment.status === 'rejected') {
+        const ps = await fetch(`${API}/settings`).then(r => r.json()).catch(() => ({}));
+        if (ps.p377_page_mode === 'letter' && !new URLSearchParams(location.search).has('view')) { location.replace('program377-thu-ngo.html'); return; }
+      }
+      if (!d.enrollment) { document.getElementById('p377NotEnrolled').style.display = 'block'; applyP377Letter(); return; }
+      if (d.enrollment.status === 'pending') { document.getElementById('p377Pending').style.display = 'block'; return; }
+      if (d.enrollment.status === 'rejected') {
+        document.getElementById('p377NotEnrolled').style.display = 'block';
+        document.getElementById('p377EnrollMsg').textContent = d.enrollment.adminNote ? `Đăng ký trước chưa được duyệt: ${d.enrollment.adminNote}` : '';
+        applyP377Letter();
+        return;
+      }
+
+      // Đã duyệt nhưng chưa làm khảo sát → yêu cầu làm khảo sát trước khi mở nội dung
+      // (trừ khi admin chọn "Không bắt buộc" ở Cài đặt → Khảo sát)
+      const [st, settings] = await Promise.all([
+        fetch(`${API}/ttm/intake-status/${currentUser.id}`).then(r => r.json()).catch(() => ({ done: true })),
+        fetch(`${API}/settings`).then(r => r.json()).catch(() => ({})),
+      ]);
+      if (!st.done && (settings.ttm_intake_trigger || 'signup') !== 'none') {
+        document.getElementById('p377IntakeGate').style.display = 'block';
+        return;
+      }
+
+      document.getElementById('p377Active').style.display = 'block';
+      if (settings.program377_space_url) document.getElementById('p377DiscussLink').setAttribute('href', settings.program377_space_url);
+      const dayN = Math.max(d.dayNumberToday, 1);
+      document.getElementById('p377DayLabel').textContent = `Ngày ${dayN}/${d.totalDays}`;
+      document.getElementById('p377BarFill').style.width = `${Math.min((dayN / d.totalDays) * 100, 100)}%`;
+
+      setupP377ReportTop();
+      p377MusicInit();
+      renderVideoGuide(settings.p377_video_guide);
+      fillReportForm(d.todayReport);
+      p377FormDate = todayStr();
+      try {   // video đang xử lý dở từ lần mở trang trước → theo dõi tiếp
+        const pj = JSON.parse(localStorage.getItem('p377VideoJob') || 'null');
+        if (pj && pj.date === todayStr()) p377VideoWatch(pj.id, '', false);
+        else localStorage.removeItem('p377VideoJob');
+      } catch {}
+      renderTodayContent(d.dayNumberToday);
+      renderTodayContent(d.dayNumberToday, 'p377TodayHighlight');
+      renderSessions();
+      renderP377TopicsOverview();
+      renderP377DaysList(d.dayNumberToday);
+      renderP377Results();
+      renderP377History(d.enrollment.startDate, d.dayNumberToday);
+      openP377ReportFromHash();
+    }
+
+    // program377.html#bao-cao → mở + cuộn tới khung "Báo cáo hôm nay" (link từ trang Nhật ký ăn uống:
+    // học viên 377 ngày ghi nhật ký ăn uống ngay trong báo cáo hằng ngày)
+    function openP377ReportFromHash() {
+      if (!/bao-cao/.test(location.hash)) return;
+      const top = document.getElementById('p377ReportTop');
+      if (!top) return;
+      top.open = true;
+      if (/from=nhat-ky/.test(location.hash) && !document.getElementById('p377FromDiary')) {
+        top.insertAdjacentHTML('beforebegin', `<div class="p377-card" id="p377FromDiary" style="border-left:4px solid #10b981;font-size:14px;line-height:1.6;">
+          📝 Bạn đang tham gia <b>377 ngày thực hành</b> nên <b>nhật ký ăn uống được ghi ngay trong "Báo cáo hôm nay"</b> bên dưới (bữa ăn, ảnh, màu, vị…).
+          Không cần ghi thêm ở trang Nhật ký ăn uống — An Nhiên vẫn nhận xét như trước.</div>`);
+      }
+      setTimeout(() => (document.getElementById('p377FromDiary') || top).scrollIntoView({ behavior: 'smooth', block: 'start' }), 300);
+    }
+    window.addEventListener('hashchange', openP377ReportFromHash);
+
+    // Trang mở từ hôm trước (để qua đêm) mà bấm lưu sau 0:00 sẽ thành báo cáo hôm nay mang nội dung hôm qua
+    // → không lưu, tải lại khung báo cáo của ngày mới
+    let p377FormDate = null;
+    async function p377CheckNewDay(sfx) {
+      if (!p377FormDate || todayStr() === p377FormDate) return false;
+      await load();
+      const msg = rf('p377Msg', sfx || '') || rf('p377Msg', '');
+      if (msg) { msg.style.color = '#f59e0b'; msg.textContent = '📅 Đã sang ngày mới — khung báo cáo vừa được làm mới cho hôm nay. Bạn nhập báo cáo hôm nay rồi lưu nhé.'; }
+      return true;
+    }
+    document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') p377CheckNewDay(); });
+    window.addEventListener('focus', () => p377CheckNewDay());
+
+    async function saveP377Report(sfx = '') {
+      if (await p377CheckNewDay(sfx)) return;
+      if (mealImgUploading) { rf('p377Msg', sfx).textContent = 'Đang tải ảnh / video, vui lòng đợi xong rồi lưu.'; return; }
+      const wRaw = (rf('p377Weight', sfx)?.value || '').trim().replace(',', '.');
+      if (wRaw && !(Number(wRaw) >= 20 && Number(wRaw) <= 300)) {
+        const m = rf('p377Msg', sfx); m.style.color = '#ef4444'; m.textContent = 'Cân nặng chưa đúng — ghi số kg, VD: 65.4';
+        rf('p377Weight', sfx).focus();
+        return;
+      }
+      const btn = rf('p377Save', sfx); btn.disabled = true;
+      const body = {
+        user_id: currentUser.id, report_date: todayStr(), weight_kg: wRaw,
+        meal_breakfast: rf('p377B', sfx).value.trim(),
+        meal_lunch: rf('p377L', sfx).value.trim(),
+        meal_dinner: rf('p377D', sfx).value.trim(),
+        meal_colors: [...sel.colors], meal_tastes: [...sel.tastes],
+        meal_breakfast_img: mealImgs.B, meal_lunch_img: mealImgs.L, meal_dinner_img: mealImgs.D,
+        feeling_video_url: feelingVideo.url,
+        urine_amount: rf('p377UrineAmount', sfx).value,
+        urine_color: rf('p377UrineColor', sfx).value.trim(),
+        stool_shape: rf('p377StoolShape', sfx).value.trim(),
+        stool_color: rf('p377StoolColor', sfx).value.trim(),
+        exercise_type: rf('p377ExType', sfx).value.trim(),
+        exercise_minutes: rf('p377ExMinutes', sfx).value,
+        sweat_amount: rf('p377SweatAmount', sfx).value,
+        sweat_taste: rf('p377SweatTaste', sfx).value,
+        gratitude_1: rf('p377Gratitude1', sfx).value.trim(),
+        gratitude_2: rf('p377Gratitude2', sfx).value.trim(),
+        gratitude_3: rf('p377Gratitude3', sfx).value.trim(),
+        feeling_note: rf('p377Feeling', sfx).value.trim(),
+      };
+      try {
+        const res = await fetch(`${API}/program377/reports`, { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(body) }).then(r=>r.json());
+        const msg = rf('p377Msg', sfx);
+        if (res.error) { msg.style.color = '#ef4444'; msg.textContent = res.error; }
+        else {
+          msg.style.color = res.isLate ? '#f59e0b' : '#10b981';
+          msg.textContent = res.isLate ? 'Đã lưu (báo cáo trễ hạn).' : 'Đã lưu báo cáo hôm nay!';
+          fillReportForm(body);   // đồng bộ cả 2 khung báo cáo
+          const top = document.getElementById('p377ReportTop');
+          if (sfx === 'Top' && top) top.open = true;   // vẫn mở khung vừa lưu để thấy thông báo
+          renderP377Results();
+          renderP377History();
+        }
+      } catch { rf('p377Msg', sfx).textContent = 'Có lỗi, thử lại.'; }
+      btn.disabled = false;
+    }
+
+    load();
+  </script>
+</body>
+</html>

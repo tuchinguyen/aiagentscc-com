@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8">
+  <script src="assets/js/auth-fetch.js?v=1"></script>
+  <script>(function(){try{var t=localStorage.getItem('theme');if(t==='dark'||(!t&&window.matchMedia('(prefers-color-scheme: dark)').matches))document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" href="/assets/img/logo.png">
+  <link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
+  <meta name="theme-color" content="#0ea5e9">
+  <title>Kiểm Tra Cơ Thể Hàn - Nhiệt — AI AGENTS CC</title>
+  <meta name="description" content="Chỉ 2 phút để biết cơ thể bạn đang thiên Hàn, thiên Nhiệt hay dạng Hàn giả nhiệt / Nhiệt giả hàn — từ đó chăm sóc đúng hướng.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/base.css?v=2">
+  <style>
+    body { background: var(--bg-app); }
+    .hn-wrap { max-width: 560px; margin: 0 auto; padding: 28px 16px 60px; }
+    .hn-progress-wrap { margin-bottom: 18px; }
+    .hn-progress-label { font-size: 12px; font-weight: 700; color: var(--text-muted); margin-bottom: 6px; }
+    .hn-bar { background: var(--border); border-radius: 99px; height: 8px; overflow: hidden; }
+    .hn-bar-fill { background: linear-gradient(90deg, #0ea5e9, #f97316); height: 100%; border-radius: 99px; transition: width .3s ease; }
+    .hn-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 26px 22px; box-shadow: 0 4px 20px rgba(0,0,0,.05); }
+    .hn-intro { text-align: center; }
+    .hn-intro-icon { font-size: 48px; margin-bottom: 12px; }
+    .hn-intro h1 { font-size: 22px; margin-bottom: 10px; }
+    .hn-intro p { color: var(--text-muted); font-size: 14.5px; line-height: 1.7; margin-bottom: 22px; }
+    .hn-card h2 { font-size: 18px; margin-bottom: 6px; }
+    .hn-hint { font-size: 13px; color: var(--text-muted); margin-bottom: 16px; }
+    .hn-items { display: flex; flex-direction: column; gap: 10px; margin-bottom: 22px; }
+    .hn-item { display: flex; align-items: center; gap: 10px; padding: 12px 14px; border: 1.5px solid var(--border); border-radius: var(--radius-md); cursor: pointer; font-size: 14.5px; transition: border-color .15s, background .15s; }
+    .hn-item:hover { border-color: var(--color-primary); }
+    .hn-item input { width: 18px; height: 18px; flex-shrink: 0; accent-color: var(--color-primary); }
+    .hn-item.checked {
+      border-color: var(--color-primary);
+      background: var(--bg-hover);
+      background: color-mix(in srgb, var(--color-primary) 15%, var(--bg-card));
+    }
+    .hn-nav { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+    .hn-field { margin-bottom: 14px; }
+    .hn-field label { display: block; font-size: 12.5px; font-weight: 700; color: var(--text-muted); margin-bottom: 5px; }
+    .hn-field input { width: 100%; padding: 11px 12px; border: 1px solid var(--border); border-radius: var(--radius-md); background: var(--bg-input); color: var(--text); font-size: 14.5px; font-family: inherit; box-sizing: border-box; }
+    .hn-error { color: #dc2626; font-size: 13px; margin-bottom: 12px; }
+    .hn-result { text-align: center; }
+    .hn-result-icon { font-size: 56px; margin-bottom: 8px; }
+    .hn-result-label { font-size: 12.5px; color: var(--text-muted); font-weight: 700; text-transform: uppercase; letter-spacing: .04em; }
+    .hn-result-type { font-size: 26px; margin: 6px 0 14px; color: var(--color-primary); }
+    .hn-result-desc { font-size: 14.5px; line-height: 1.7; color: var(--text); margin-bottom: 24px; }
+    .hn-cta-group { display: flex; flex-direction: column; gap: 10px; margin-bottom: 18px; }
+    .hn-restart { background: none; border: none; color: var(--text-muted); font-size: 13px; text-decoration: underline; cursor: pointer; font-family: inherit; }
+    .hn-btn { display: block; width: 100%; padding: 13px 20px; border-radius: var(--radius-md); font-size: 14.5px; font-weight: 700; text-align: center; cursor: pointer; border: none; text-decoration: none; box-sizing: border-box; font-family: inherit; }
+    .hn-btn-primary { background: var(--color-primary); color: #fff; }
+    .hn-btn-primary:hover { background: var(--color-primary-dark); }
+    .hn-btn-secondary { background: var(--bg-hover); color: var(--text); border: 1px solid var(--border); }
+    .hn-btn-ghost { background: none; border: 1px solid var(--border); color: var(--text); }
+    .hn-footer-note { text-align: center; font-size: 11.5px; color: var(--text-muted); margin-top: 18px; line-height: 1.6; }
+  </style>
+</head>
+
+<body>
+  <div class="hn-wrap" id="app">
+    <div class="hn-card hn-intro">Đang tải...</div>
+  </div>
+
+  <script>
+    const API = '/api';
+    let categories = [];
+    let currentStep = 0; // 0 = intro, 1..N = category steps, N+1 = lead form, N+2 = result
+    let selected = new Set();
+    let resultData = null;
+
+    function esc(s) {
+      return String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    }
+
+    async function init() {
+      try {
+        const d = await fetch(`${API}/han-nhiet-quiz/questions`).then(r => r.json());
+        categories = d.categories || [];
+        renderIntro();
+      } catch {
+        document.getElementById('app').innerHTML = `<div class="hn-card hn-intro"><p>Không tải được bài kiểm tra. Vui lòng thử lại sau.</p></div>`;
+      }
+    }
+
+    function progressPercent() {
+      const totalSteps = categories.length + 1; // +1 cho bước nhập thông tin, kết quả = 100%
+      if (currentStep === 0) return 0;
+      return Math.min(100, Math.round((currentStep / totalSteps) * 100));
+    }
+
+    function renderShell(innerHtml, showProgress) {
+      document.getElementById('app').innerHTML = `
+        ${showProgress ? `
+        <div class="hn-progress-wrap">
+          <div class="hn-progress-label">Bước ${currentStep}/${categories.length + 1}</div>
+          <div class="hn-bar"><div class="hn-bar-fill" style="width:${progressPercent()}%"></div></div>
+        </div>` : ''}
+        ${innerHtml}
+      `;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function renderIntro() {
+      currentStep = 0;
+      renderShell(`
+        <div class="hn-card hn-intro">
+          <div class="hn-intro-icon">❄️🔥</div>
+          <h1>Kiểm Tra Cơ Thể Hàn - Nhiệt</h1>
+          <p>Chỉ mất 2 phút — trả lời vài câu hỏi ngắn để biết cơ thể bạn đang thiên Hàn, thiên Nhiệt hay ở dạng "giả" phức tạp hơn, từ đó biết cách ăn uống & chăm sóc đúng hướng.</p>
+          <button class="hn-btn hn-btn-primary" onclick="startQuiz()">Bắt đầu kiểm tra →</button>
+        </div>
+      `, false);
+    }
+
+    function startQuiz() {
+      currentStep = 1;
+      renderCategoryStep();
+    }
+
+    function renderCategoryStep() {
+      const cat = categories[currentStep - 1];
+      renderShell(`
+        <div class="hn-card">
+          <h2>${esc(cat.label)}</h2>
+          <p class="hn-hint">Chọn tất cả biểu hiện đúng với bạn (có thể chọn nhiều hoặc không chọn cái nào).</p>
+          <div class="hn-items">
+            ${cat.items.map(it => `
+            <label class="hn-item${selected.has(it.id) ? ' checked' : ''}" id="hnItemLabel_${it.id}">
+              <input type="checkbox" value="${it.id}" ${selected.has(it.id) ? 'checked' : ''} onchange="toggleItem('${it.id}', this.checked)">
+              <span>${esc(it.text)}</span>
+            </label>`).join('')}
+          </div>
+          <div class="hn-nav">
+            ${currentStep > 1 ? `<button class="hn-btn hn-btn-secondary" style="width:auto;" onclick="prevStep()">← Quay lại</button>` : '<span></span>'}
+            <button class="hn-btn hn-btn-primary" style="width:auto;" onclick="nextStep()">Tiếp theo →</button>
+          </div>
+        </div>
+      `, true);
+    }
+
+    function toggleItem(id, checked) {
+      if (checked) selected.add(id); else selected.delete(id);
+      const label = document.getElementById(`hnItemLabel_${id}`);
+      if (label) label.classList.toggle('checked', checked);
+    }
+
+    function prevStep() {
+      currentStep--;
+      if (currentStep === 0) renderIntro();
+      else renderCategoryStep();
+    }
+
+    function nextStep() {
+      currentStep++;
+      if (currentStep <= categories.length) renderCategoryStep();
+      else renderLeadForm();
+    }
+
+    function renderLeadForm() {
+      renderShell(`
+        <div class="hn-card">
+          <h2>Gần xong rồi! 🎉</h2>
+          <p class="hn-hint">Nhập thông tin để xem kết quả chi tiết của bạn.</p>
+          <div class="hn-field">
+            <label>Họ tên</label>
+            <input type="text" id="hnName" placeholder="Nguyễn Văn A">
+          </div>
+          <div class="hn-field">
+            <label>Số điện thoại</label>
+            <input type="tel" id="hnPhone" placeholder="09xxxxxxxx">
+          </div>
+          <div class="hn-error" id="hnLeadError" style="display:none;"></div>
+          <div class="hn-nav">
+            <button class="hn-btn hn-btn-secondary" style="width:auto;" onclick="prevStep()">← Quay lại</button>
+            <button class="hn-btn hn-btn-primary" style="width:auto;" id="hnSubmitBtn" onclick="submitQuiz()">Xem kết quả →</button>
+          </div>
+        </div>
+      `, true);
+    }
+
+    async function submitQuiz() {
+      const name = document.getElementById('hnName').value.trim();
+      const phone = document.getElementById('hnPhone').value.trim();
+      const errEl = document.getElementById('hnLeadError');
+      errEl.style.display = 'none';
+      if (!name) { errEl.textContent = 'Vui lòng nhập họ tên.'; errEl.style.display = 'block'; return; }
+      if (!/^[0-9+\s]{9,13}$/.test(phone)) { errEl.textContent = 'Số điện thoại không hợp lệ.'; errEl.style.display = 'block'; return; }
+      const btn = document.getElementById('hnSubmitBtn');
+      btn.disabled = true; btn.textContent = 'Đang xử lý...';
+      try {
+        const res = await fetch(`${API}/han-nhiet-quiz/submit`, {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, phone, selectedItemIds: [...selected] }),
+        }).then(r => r.json());
+        if (res.error) {
+          errEl.textContent = res.error; errEl.style.display = 'block';
+          btn.disabled = false; btn.textContent = 'Xem kết quả →';
+          return;
+        }
+        resultData = res;
+        renderResult();
+      } catch {
+        errEl.textContent = 'Có lỗi xảy ra, vui lòng thử lại.'; errEl.style.display = 'block';
+        btn.disabled = false; btn.textContent = 'Xem kết quả →';
+      }
+    }
+
+    const RESULT_ICONS = { 'Hàn': '❄️', 'Nhiệt': '🔥', 'Hàn giả nhiệt': '🌡️', 'Nhiệt giả hàn': '🌗' };
+
+    function renderResult() {
+      currentStep = categories.length + 2;
+      const r = resultData;
+      renderShell(`
+        <div class="hn-card hn-result">
+          <div class="hn-result-icon">${RESULT_ICONS[r.resultType] || '🌡️'}</div>
+          <div class="hn-result-label">Thể trạng của bạn</div>
+          <h1 class="hn-result-type">${esc(r.resultType)}</h1>
+          <p class="hn-result-desc">${esc(r.description)}</p>
+          <div class="hn-cta-group">
+            <a class="hn-btn hn-btn-primary" href="https://zalo.me/0918694886" target="_blank" rel="noopener">💬 Nhắn Zalo tư vấn ngay</a>
+            <a class="hn-btn hn-btn-secondary" href="register.html">🏡 Đăng ký "AI AGENTS CC"</a>
+            <button class="hn-btn hn-btn-ghost" id="hnShareBtn" onclick="shareResult(this)">📤 Chia sẻ kết quả</button>
+          </div>
+          <button class="hn-restart" onclick="resetQuiz()">🔄 Làm lại từ đầu</button>
+        </div>
+        <p class="hn-footer-note">Đây là bài kiểm tra nhanh mang tính tham khảo. Để có lộ trình cá nhân hoá chính xác, bạn nên tham gia khảo sát Thân - Tâm - Mệnh đầy đủ trong chương trình.</p>
+      `, false);
+    }
+
+    function resetQuiz() {
+      selected = new Set();
+      resultData = null;
+      renderIntro();
+    }
+
+    async function shareResult(btn) {
+      const text = `Tôi vừa làm bài Kiểm Tra Cơ Thể Hàn - Nhiệt và kết quả là: ${resultData.resultType}. Thử ngay tại:`;
+      const url = location.href.split('?')[0];
+      if (navigator.share) {
+        try { await navigator.share({ title: 'Kiểm Tra Cơ Thể Hàn - Nhiệt', text, url }); } catch { /* người dùng hủy chia sẻ — bỏ qua */ }
+        return;
+      }
+      try {
+        await navigator.clipboard.writeText(`${text} ${url}`);
+        const old = btn.textContent;
+        btn.textContent = '✅ Đã sao chép!';
+        setTimeout(() => { btn.textContent = old; }, 2000);
+      } catch { /* clipboard bị chặn — bỏ qua, không chặn luồng chính */ }
+    }
+
+    init();
+  </script>
+</body>
+
+</html>

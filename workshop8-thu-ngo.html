@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8">
+  <script src="assets/js/auth-fetch.js?v=1"></script>
+  <script>(function(){try{var t=localStorage.getItem('theme');if(t==='dark'||(!t&&window.matchMedia('(prefers-color-scheme: dark)').matches))document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" href="/assets/img/logo.png">
+  <link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
+  <link rel="manifest" href="/manifest.json?v=2">
+  <meta name="apple-mobile-web-app-title" content="AI Agents CC">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="theme-color" content="#0ea5e9">
+  <title>Thư ngỏ 8 Buổi Chuyên Sâu — AI AGENTS CC</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/base.css?v=2">
+  <link rel="stylesheet" href="assets/css/components.css?v=11">
+  <link rel="stylesheet" href="assets/css/layout.css?v=6">
+  <style>
+    .wk8-wrap { max-width: 760px; margin: 0 auto; }
+    .wk8-hero { background: linear-gradient(135deg,#8b5cf6,#0ea5e9); color:#fff; border-radius: var(--radius-lg); padding: 20px 22px; margin-bottom: 16px; }
+    .wk8-hero-badge { display:inline-block; font-size:11px; font-weight:700; background:rgba(255,255,255,.2); padding:3px 10px; border-radius:99px; margin-bottom:8px; }
+    .wk8-hero h2 { font-family: var(--font-heading); font-size: 22px; font-weight: 800; margin-bottom: 6px; }
+    .wk8-hero p { font-size: 13.5px; opacity: .92; }
+    .wk8-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 18px 20px; margin-bottom: 16px; }
+    .wk8-card h3 { font-size: var(--fs-md); margin-bottom: 10px; }
+    .wk8-video-wrap { position: relative; width: 100%; aspect-ratio: 16/9; border-radius: var(--radius-md); overflow: hidden; background: #0f172a; margin-top: 4px; }
+    .wk8-video-wrap iframe, .wk8-video-wrap video { width: 100%; height: 100%; border: 0; display: block; }
+    .wk8-video-empty { display:flex; align-items:center; justify-content:center; height:100%; color:#94a3b8; font-size:13px; text-align:center; padding: 0 20px; }
+    .wk8-letter p { margin-bottom: 12px; font-size: 14px; line-height: 1.75; }
+    .wk8-letter ol, .wk8-letter ul { padding-left: 20px; margin-bottom: 12px; }
+    .wk8-letter li { margin-bottom: 6px; font-size: 13.5px; line-height: 1.7; }
+    .wk8-cta-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 14px 32px; border-radius: 999px; font-size: 15px; font-weight: 700; color: #fff; background: linear-gradient(135deg,#8b5cf6,#0ea5e9); border: none; cursor: pointer; }
+    .wk8-cta-btn:hover { opacity: .92; }
+    .wk8-cta-btn:disabled { opacity: .6; cursor: not-allowed; }
+    .wk8-pending-box { text-align: center; padding: 36px 20px; }
+    .wk8-pending-box h3 { font-size: 18px; margin-bottom: 8px; }
+    .wk8-pending-box p { color: var(--text-muted); font-size: 14px; }
+    .wk8-session { margin-top: 18px; padding-top: 18px; border-top: 1px solid var(--border); }
+    .wk8-session:first-of-type { margin-top: 8px; padding-top: 0; border-top: none; }
+    .wk8-session-title { font-family: var(--font-heading); font-size: 17px; font-weight: 800; color: var(--text); margin-bottom: 10px; }
+    .wk8-session-info { background: rgba(139,92,246,.08); border-radius: var(--radius-md); padding: 12px 16px; margin-bottom: 12px; }
+    .wk8-session-info-line { font-size: 16px; font-weight: 700; color: var(--text); }
+    .wk8-session-info-line + .wk8-session-info-line { margin-top: 6px; }
+    .wk8-session-info-line strong { color: #8b5cf6; }
+    .wk8-session-zoom-row { margin-bottom: 16px; }
+    .wk8-session-zoom { display: inline-block; font-size: 13.5px; font-weight: 700; color: #fff; background: #8b5cf6; padding: 8px 18px; border-radius: 99px; text-decoration: none; }
+    .wk8-session-zoom:hover { opacity: .9; }
+    .wk8-session-zoom.disabled { background: var(--border); color: var(--text-muted); pointer-events: none; }
+    .wk8-session-body { font-size: 14px; line-height: 1.8; }
+    .wk8-session-body p { margin-bottom: 18px; }
+    .wk8-session-body p:last-child { margin-bottom: 0; }
+    .wk8-session-body ol, .wk8-session-body ul { padding-left: 22px; margin-bottom: 18px; }
+    .wk8-session-body li { margin-bottom: 14px; }
+    .wk8-session-body li:last-child { margin-bottom: 0; }
+
+    /* ── Thư ngỏ dài (bán hàng) ── */
+    .tn { max-width: 720px; margin: 0 auto; padding-bottom: 24px; }
+    .tn-hero { background: linear-gradient(135deg,#7c3aed,#0ea5e9); color: #fff; border-radius: var(--radius-lg); padding: 26px 24px; margin-bottom: 18px; }
+    .tn-pre { display: inline-block; font-size: 11.5px; font-weight: 800; letter-spacing: .05em; background: rgba(255,255,255,.18); padding: 4px 12px; border-radius: 99px; margin-bottom: 12px; }
+    .tn-hero h1 { font-family: var(--font-heading); font-size: 26px; line-height: 1.3; font-weight: 800; margin-bottom: 10px; }
+    .tn-hero .tn-sub { font-size: 15px; line-height: 1.6; opacity: .95; }
+    .tn-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 16px; }
+    .tn-stat { background: rgba(255,255,255,.14); border-radius: 12px; padding: 10px 6px; text-align: center; }
+    .tn-stat b { display: block; font-family: var(--font-heading); font-size: 18px; }
+    .tn-stat span { font-size: 11.5px; opacity: .9; }
+    .tn-ctas { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 18px; }
+    .tn-btn { flex: 1; min-width: 180px; display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 14px 20px; border-radius: 999px;
+      font-family: inherit; font-size: 15px; font-weight: 800; cursor: pointer; text-decoration: none; border: 2px solid transparent; }
+    .tn-btn.main { background: #f59e0b; color: #fff; }
+    .tn-btn.main:hover { background: #d97706; }
+    .tn-btn.ghost { background: transparent; color: inherit; border-color: currentColor; }
+    .tn-btn:disabled { opacity: .6; cursor: default; }
+    .tn-sec { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 22px 24px; margin-bottom: 16px; }
+    .tn-sec h2 { font-family: var(--font-heading); font-size: 20px; line-height: 1.35; font-weight: 800; color: var(--text); margin-bottom: 12px; }
+    .tn-sec p { font-size: 15px; line-height: 1.8; color: var(--text); margin-bottom: 12px; }
+    .tn-sec p:last-child { margin-bottom: 0; }
+    .tn-sec ul { padding-left: 0; list-style: none; margin: 0 0 12px; }
+    .tn-sec li { position: relative; padding-left: 28px; font-size: 15px; line-height: 1.7; margin-bottom: 8px; color: var(--text); }
+    .tn-sec li::before { content: var(--tn-mark, '✔'); position: absolute; left: 0; top: 0; color: #10b981; font-weight: 800; }
+    .tn-sec ul.tn-x li::before { content: '•'; color: #ef4444; font-size: 20px; line-height: 1.3; }
+    .tn-big { font-size: 17px !important; font-weight: 700; }
+    .tn-hl { background: linear-gradient(transparent 60%, rgba(245,158,11,.35) 60%); padding: 0 2px; }
+    .tn-quote { border-left: 4px solid #8b5cf6; background: rgba(139,92,246,.07); padding: 14px 16px; border-radius: 10px; font-size: 15px; line-height: 1.7; margin-bottom: 12px; }
+    .tn-gold { display: grid; gap: 10px; margin-bottom: 14px; }
+    .tn-gold > div { display: grid; grid-template-columns: 64px 1fr; column-gap: 12px; align-items: start; padding: 12px 14px; border-radius: 12px;
+      background: linear-gradient(90deg, rgba(245,158,11,.12), transparent); border: 1px solid rgba(245,158,11,.35); }
+    .tn-gold b { grid-row: span 2; font-family: var(--font-heading); font-size: 17px; font-weight: 800; color: #b45309; letter-spacing: .03em; padding-top: 2px; }
+    [data-theme="dark"] .tn-gold b { color: #fbbf24; }
+    .tn-gold i { font-style: normal; font-weight: 800; font-size: 15px; color: var(--text); }
+    .tn-gold span { font-size: 14px; line-height: 1.65; color: var(--text); margin-top: 2px; }
+    .tn-price { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; margin-top: 14px; }
+    .tn-price s { opacity: .75; font-size: 15px; }
+    .tn-price b { font-family: var(--font-heading); font-size: 24px; }
+    .tn-price small { font-size: 12.5px; opacity: .9; width: 100%; }
+    .tn-session { border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; margin-bottom: 10px; }
+    .tn-session summary { cursor: pointer; font-family: var(--font-heading); font-size: 15.5px; font-weight: 800; color: var(--text); list-style: none; display: flex; gap: 10px; align-items: flex-start; }
+    .tn-session summary::-webkit-details-marker { display: none; }
+    .tn-session summary .n { flex-shrink: 0; width: 26px; height: 26px; border-radius: 50%; background: #8b5cf6; color: #fff; font-size: 13px; display: inline-flex; align-items: center; justify-content: center; }
+    .tn-session .body { font-size: 14px; line-height: 1.75; color: var(--text); margin-top: 10px; padding-left: 36px; }
+    .tn-session .body ul, .tn-session .body ol { padding-left: 18px; }
+    .tn-session .body li { padding-left: 0; font-size: 14px; }
+    .tn-session .body li::before { content: none; }
+    .tn-story { display: flex; gap: 14px; align-items: flex-start; border: 1px solid var(--border); border-left: 4px solid #10b981; border-radius: 12px; padding: 14px 16px; margin-bottom: 10px; }
+    .tn-story img { width: 96px; height: 96px; object-fit: cover; border-radius: 10px; flex-shrink: 0; cursor: zoom-in; }
+    .tn-story .r { font-weight: 800; font-size: 15.5px; color: var(--text); }
+    .tn-story .w { font-size: 13px; color: var(--text-muted); margin-top: 2px; }
+    .tn-story .d { font-size: 14px; font-style: italic; color: var(--text); margin-top: 6px; line-height: 1.6; }
+    .tn-offer { border: 2px dashed #f59e0b; border-radius: 14px; padding: 18px; background: rgba(245,158,11,.06); }
+    .tn-vs-group { font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: .05em; color: var(--text-muted); margin: 14px 0 4px; }
+    .tn-vs-group:first-child { margin-top: 0; }
+    .tn-vs { display: flex; gap: 12px; align-items: flex-start; padding: 9px 0; border-bottom: 1px dashed var(--border); }
+    .tn-vs .ic { flex-shrink: 0; width: 22px; text-align: center; font-weight: 800; color: #10b981; }
+    .tn-vs .tx { flex: 1; min-width: 0; font-size: 14.5px; line-height: 1.55; color: var(--text); }
+    .tn-vs .tx small { display: block; font-size: 12.5px; color: var(--text-muted); }
+    .tn-vs .tx a { color: inherit; text-decoration: underline; text-decoration-color: rgba(16,185,129,.5); }
+    .tn-vs .val { flex-shrink: 0; text-align: right; font-size: 12px; color: var(--text-muted); white-space: nowrap; }
+    .tn-vs .val b { display: block; font-size: 14.5px; color: var(--text); }
+    .tn-vs .val.free b { color: #10b981; }
+    .tn-vs-total { margin-top: 14px; padding: 14px 16px; border-radius: 12px; background: rgba(245,158,11,.12); display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: baseline; justify-content: space-between; }
+    .tn-vs-total .t1 { font-size: 15px; color: var(--text); } .tn-vs-total .t1 s { font-family: var(--font-heading); font-size: 19px; font-weight: 800; color: var(--text-muted); }
+    .tn-vs-total .t2 { font-size: 15px; color: var(--text); } .tn-vs-total .t2 b { font-family: var(--font-heading); font-size: 24px; font-weight: 800; color: #d97706; }
+    .tn-vs-total .t3 { width: 100%; font-size: 12.5px; color: var(--text-muted); }
+    @media (max-width: 520px) { .tn-vs .val b { font-size: 13.5px; } }
+    .tn-letter p { font-size: 14.5px; } .tn-letter ol, .tn-letter ul { padding-left: 20px; } .tn-letter li { padding-left: 0; } .tn-letter li::before { content: none; }
+    .tn-faq details { border-bottom: 1px solid var(--border); padding: 12px 0; }
+    .tn-faq summary { cursor: pointer; font-weight: 700; font-size: 15px; color: var(--text); }
+    .tn-faq details p { margin: 8px 0 0; font-size: 14.5px; }
+    .tn-steps { counter-reset: st; }
+    .tn-steps li { counter-increment: st; }
+    .tn-steps li::before { content: counter(st) !important; width: 20px; height: 20px; border-radius: 50%; background: #0ea5e9; color: #fff !important; font-size: 12px; display: inline-flex; align-items: center; justify-content: center; top: 3px !important; }
+    .tn-sign { font-style: italic; color: var(--text-muted); }
+    .tn-note { font-size: 12.5px !important; color: var(--text-muted) !important; line-height: 1.6 !important; }
+    .tn-msg { margin-top: 10px; font-size: 14px; font-weight: 600; text-align: center; }
+      background: var(--bg-card); border-top: 1px solid var(--border); box-shadow: 0 -6px 20px rgba(0,0,0,.08); }
+    @media (max-width: 768px) { .tn-hero h1 { font-size: 22px; } .tn-sec { padding: 18px 16px; } }
+  </style>
+</head>
+
+<body>
+
+  <div id="app">
+
+    <!-- Sidebar -->
+    <aside id="sidebar">
+      <div id="sidebar-logo">
+        <div class="sidebar-logo-mark" style="background:transparent;"><img src="assets/img/logo.png" alt="Logo" style="width:100%;height:100%;object-fit:contain;"></div>
+        <div class="sidebar-logo-text">AI AGENTS <span>CC</span></div>
+      </div>
+
+      <nav id="sidebar-nav">
+        <div class="nav-section-label">Cộng đồng</div>
+
+        <a href="feed.html" class="nav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
+          </svg>
+          Feed
+        </a>
+
+
+
+
+
+
+        <div class="nav-section-label" style="margin-top:8px;">Học tập</div>
+
+        <a href="challenge.html" class="nav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path
+              d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z" />
+          </svg>
+          Challenge
+        </a>
+
+        <div class="nav-section-label" style="margin-top:8px;">Khác</div>
+
+        <a href="marketplace.html" class="nav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path
+              d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z" />
+          </svg>
+          Marketplace
+        </a>
+      </nav>
+
+      <!-- Sidebar user -->
+      <div id="sidebar-user">
+        <div class="user-avatar-wrap">
+          <div class="avatar-placeholder avatar-md" id="sbAvatar" style="background:#7c3aed;">?</div>
+          <div class="user-status-dot"></div>
+        </div>
+        <div class="user-info">
+          <div class="user-name" id="sbName">—</div>
+          <div class="user-level" id="sbLevel">—</div>
+        </div>
+        <a href="index.html" class="icon-btn" title="Đăng xuất" style="margin-left:auto;" onclick="doLogout()">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4" />
+            <polyline points="16 17 21 12 16 7" />
+            <line x1="21" y1="12" x2="9" y2="12" />
+          </svg>
+        </a>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <div id="main">
+
+      <!-- Mobile topbar -->
+      <div id="mobile-topbar">
+        <button class="mob-menu-btn" onclick="toggleSidebar()" aria-label="Menu">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+          </svg>
+        </button>
+        <span style="flex:1;font-size:var(--fs-md);font-weight:600;color:var(--text)">💎 8 Buổi Chuyên Sâu</span>
+        <div class="mob-topbar-right">
+          <button class="icon-btn" id="themeToggleMob" type="button" aria-label="Chuyển chế độ sáng/tối">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"></svg>
+          </button>
+          <button class="icon-btn" id="notifBellMob" aria-label="Thông báo" style="position:relative;">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+            </svg>
+            <span id="notifBadgeMob" style="display:none;position:absolute;top:2px;right:2px;background:#ef4444;color:#fff;font-size:10px;font-weight:700;border-radius:99px;min-width:16px;height:16px;padding:0 4px;line-height:16px;text-align:center;">0</span>
+          </button>
+          <div id="topbarAvatarMob" style="width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;background:#7c3aed;flex-shrink:0;"></div>
+        </div>
+      </div>
+
+      <!-- Topbar -->
+      <nav id="subnav-bar" class="subnav-bar" aria-label="Điều hướng nhanh">
+        <a href="feed.html" class="subnav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+          Feed
+        </a>
+        <a href="spaces.html" class="subnav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></svg>
+          Spaces
+        </a>
+        <a href="courses.html" class="subnav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/></svg>
+          Courses
+        </a>
+        <a href="members.html" class="subnav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+          Members
+        </a>
+        <a href="leaderboard.html" class="subnav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/></svg>
+          Leaderboard
+        </a>
+        <a href="calendar.html" class="subnav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          Calendar
+        </a>
+        <a href="about.html" class="subnav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+          About
+        </a>
+        <div class="topbar-right">
+          <button class="icon-btn" id="themeToggle" type="button" aria-label="Chuyển chế độ sáng/tối">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"></svg>
+          </button>
+          <div style="position:relative;">
+            <button class="icon-btn" id="notifBell" aria-label="Thông báo" style="position:relative;">
+              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+              </svg>
+              <span id="notifBadge" style="display:none;position:absolute;top:2px;right:2px;background:#ef4444;color:#fff;font-size:10px;font-weight:700;border-radius:99px;min-width:16px;height:16px;padding:0 4px;line-height:16px;text-align:center;">0</span>
+            </button>
+            <div id="notifDropdown" style="display:none;"></div>
+          </div>
+          <a href="#" class="icon-btn" aria-label="Tin nhắn">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <path
+                d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+            </svg>
+          </a>
+          <div class="topbar-search">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <circle cx="11" cy="11" r="8" />
+              <line x1="21" y1="21" x2="16.65" y2="16.65" />
+            </svg>
+            <input type="text" id="globalSearchInput" placeholder="Tìm kiếm..." autocomplete="off">
+            <div id="globalSearchResults" class="gsr-panel"></div>
+          </div>
+          <div id="topbarAvatar"
+            style="width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;background:#7c3aed;cursor:pointer;flex-shrink:0;">
+          </div>
+        </div>
+      </nav>
+
+      <header id="topbar">
+        <button class="topbar-hamburger" id="hamburger" onclick="toggleSidebar()" aria-label="Mở menu">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path d="M4 6h16M4 12h16M4 18h16" stroke-linecap="round" />
+          </svg>
+        </button>
+
+        <div class="topbar-title">💎 8 Buổi Chuyên Sâu</div>
+      </header>
+
+      <div id="content-row">
+        <main id="feed" style="max-width:100%;">
+          <div class="tn">
+
+            <!-- 1–3. Pre-headline · Tiêu đề lớn · Tiêu đề phụ -->
+            <div class="tn-hero">
+              <div class="tn-pre">DÀNH CHO NGƯỜI ĐÃ THỬ NHIỀU CÁCH MÀ CƠ THỂ VẪN MỆT MỎI, NẶNG NỀ, KHÓ NGỦ</div>
+              <h1>Làm thế nào để cơ thể nhẹ nhõm, ngủ sâu và tràn đầy năng lượng trở lại — mà không phải ăn kiêng khắc nghiệt hay làm theo những lời khuyên trái chiều trên mạng?</h1>
+              <div class="tn-sub">8 buổi chuyên sâu trực tuyến cùng Ban tổ chức AI Agents CC: hiểu đúng cơ địa của mình, ăn uống theo Ngũ Hành và chăm sóc cơ thể theo đúng tiến trình sinh học tự nhiên — từng bước, có người đồng hành.</div>
+              <div class="tn-stats" id="tnStats"></div>
+              <div class="tn-price" id="tnPriceHero" style="display:none;"></div>
+              <div class="tn-ctas">
+                <button type="button" class="tn-btn main tn-enroll" onclick="tnEnroll(this)">Đăng ký tham gia 8 buổi →</button>
+                <button type="button" class="tn-btn ghost" onclick="tnConsult(this)">📞 Nhận tư vấn trước</button>
+              </div>
+              <div class="tn-msg" data-msg></div>
+            </div>
+
+            <div class="tn-sec" id="tnVideoCard" style="display:none;">
+              <h2>🎥 Xem trước một buổi học thực tế</h2>
+              <div class="wk8-video-wrap" id="wk8VideoWrap"><div class="wk8-video-empty">Đang tải video...</div></div>
+            </div>
+
+            <!-- 6. Đoạn mở đầu (Gary Halbert) -->
+            <div class="tn-sec">
+              <p class="tn-big">Nếu bạn muốn sáng thức dậy thấy cơ thể nhẹ nhõm, bữa ăn không còn là nỗi lo, và tự tin chăm sóc sức khoẻ cho chính mình lẫn gia đình — thì đây có thể là lá thư quan trọng nhất bạn đọc trong năm nay.</p>
+              <p>Lý do rất đơn giản. Hãy đọc tiếp.</p>
+            </div>
+
+            <!-- 7. Sự thật / vấn đề chung -->
+            <div class="tn-sec">
+              <h2>Sự thật mà ít ai nói với bạn</h2>
+              <p>Rất nhiều người chúng tôi gặp đều coi những điều sau là <b>"chuyện bình thường của tuổi tác, của công việc"</b>: mệt mỏi kéo dài, ăn xong đầy bụng, ngủ không sâu, tay chân lạnh, đau mỏi vai gáy, da xỉn màu, tâm trạng thất thường.</p>
+              <p>Nhưng theo cách nhìn của Đông phương, đó không phải là "bình thường". Đó là <span class="tn-hl">những tín hiệu cơ thể đang mất cân bằng</span> — và cơ thể đã gửi những tín hiệu ấy từ rất lâu trước khi chúng ta chịu lắng nghe.</p>
+              <p>Điều đáng tiếc hơn: nhiều người khi nhận ra thì lại chọn cách "chữa cháy" — uống thêm một loại thực phẩm chức năng, thử thêm một chế độ ăn kiêng đang thịnh hành — trong khi điều cơ thể cần là được <b>hiểu đúng và chăm sóc đúng</b>.</p>
+            </div>
+
+            <!-- 8. Đồng cảm — không phải lỗi của bạn -->
+            <div class="tn-sec">
+              <h2>Nếu bạn đã thử nhiều cách mà chưa thấy khác — đó không phải lỗi của bạn</h2>
+              <p>Mỗi ngày bạn nghe hàng chục lời khuyên trái ngược nhau: người bảo ăn sống, người bảo ăn chín; người khuyên nhịn ăn, người khuyên ăn nhiều bữa nhỏ; món này "thần dược" hôm nay, ngày mai lại thành "độc hại".</p>
+              <p>Vấn đề là <b>mỗi cơ thể một khác</b>. Một người cơ địa Hàn (lạnh) làm theo cách của người cơ địa Nhiệt (nóng) thì càng làm càng mệt. Bạn không thiếu cố gắng — bạn chỉ thiếu một tấm bản đồ đúng với chính cơ thể mình.</p>
+              <p>8 buổi chuyên sâu được xây dựng để trao cho bạn tấm bản đồ đó.</p>
+            </div>
+
+            <!-- 9. Vấn đề riêng -->
+            <div class="tn-sec">
+              <h2>Có phải bạn đang gặp một vài điều dưới đây?</h2>
+              <ul class="tn-x">
+                <li>Sáng dậy vẫn thấy mệt dù đã ngủ đủ giờ; chiều đến là uể oải, thiếu năng lượng</li>
+                <li>Ăn xong hay đầy bụng, khó tiêu, đi ngoài thất thường</li>
+                <li>Khó ngủ, ngủ không sâu, hay thức giấc giữa đêm</li>
+                <li>Tay chân lạnh, hay đau mỏi cổ vai gáy, lưng</li>
+                <li>Hay cáu gắt, lo âu, tâm trạng lên xuống không rõ lý do</li>
+                <li>Muốn ăn uống lành mạnh cho cả nhà nhưng không biết bắt đầu từ đâu, nên ăn gì, tránh gì</li>
+                <li>Đã học 3 buổi workshop, thấy đúng — nhưng chưa biết áp dụng sâu và bền vững thế nào</li>
+              </ul>
+              <p>Nếu bạn gật đầu với từ 2 điều trở lên, hãy dành thêm vài phút đọc tiếp.</p>
+            </div>
+
+            <!-- 10. Làm rõ hậu quả -->
+            <div class="tn-sec">
+              <h2>Điều gì xảy ra nếu tiếp tục bỏ qua những tín hiệu ấy?</h2>
+              <p>Những tín hiệu nhỏ, nếu bị bỏ qua đủ lâu, sẽ tích lại thành gánh nặng lớn hơn: năng lượng mỗi năm một ít đi, thời gian và tiền bạc dành cho việc "chữa cháy" mỗi năm một nhiều lên, và niềm vui sống trọn vẹn cùng gia đình cũng mỏng dần.</p>
+              <p>Bạn không cần đợi đến lúc đó. Cơ thể có khả năng tự cân bằng và phục hồi rất kỳ diệu — <b>khi được đặt vào đúng điều kiện</b>.</p>
+            </div>
+
+            <!-- 11–12. Big idea + cơ chế -->
+            <div class="tn-sec">
+              <h2>Ý tưởng cốt lõi: không ép cơ thể — mà tạo điều kiện để cơ thể tự làm việc của nó</h2>
+              <p>8 buổi chuyên sâu đi theo đúng trình tự sinh học tự nhiên, ứng dụng triết lý <b>5 chữ vàng AI Agents CC</b>:</p>
+              <div class="tn-gold">
+                <div><b>MẬT</b><i>Mật thiết với cơ thể</i><span>Lắng nghe từng tín hiệu nhỏ — nhịp thở, giấc ngủ, tiêu hoá. Kết nối sâu với bản thân là nền tảng đầu tiên của mọi sự chữa lành.</span></div>
+                <div><b>ÂM</b><i>Cân bằng Âm Dương</i><span>Điều chỉnh thực phẩm và sinh hoạt về trạng thái âm tính — thanh lọc, giảm viêm và tạo môi trường phục hồi bền vững từ bên trong.</span></div>
+                <div><b>ẤM</b><i>Nuôi dưỡng nhiệt lực</i><span>Cơ thể ấm là điều kiện để tế bào tái sinh. Thực phẩm ấm tính, vận động và kỹ thuật TDCS cùng nhau khơi thông nhiệt lực sâu bên trong.</span></div>
+                <div><b>KIÊN</b><i>Kiên trì bền bỉ</i><span>Không có phép màu qua đêm. Kiên định với phương pháp, kiên nhẫn với cơ thể — đây là phẩm chất phân biệt người thực sự phục hồi.</span></div>
+                <div><b>KIẾT</b><i>Kết hợp toàn diện</i><span>Tích hợp Dinh dưỡng Ngũ Hành + Giải Độc Tế Bào + Thao Tác Cột Sống thành một hệ thống nhất quán — phục hồi trọn vẹn Thân – Tâm – Mệnh.</span></div>
+              </div>
+              <div class="tn-quote">Không ăn kiêng khắc nghiệt. Không phải làm theo một công thức chung cho tất cả. Bạn học cách <b>lắng nghe và chăm sóc chính cơ thể mình</b> — kỹ năng dùng được cả đời, cho cả gia đình.</div>
+            </div>
+
+            <!-- 14. Toàn bộ nội dung 8 buổi (lấy từ nội dung admin) -->
+            <div class="tn-sec">
+              <h2>Đây là toàn bộ những gì bạn sẽ học trong 8 buổi</h2>
+              <p class="tn-note">Bấm vào từng buổi để xem chi tiết.</p>
+              <div id="tnSessions"></div>
+            </div>
+
+            <!-- 13. Vẽ tương lai -->
+            <div class="tn-sec">
+              <h2>Hình dung bạn sau 8 buổi</h2>
+              <ul>
+                <li>Bạn biết rõ cơ địa của mình và <b>tự xây được thực đơn 7 ngày</b> phù hợp — đi chợ, nấu ăn không còn băn khoăn</li>
+                <li>Bạn có trong tay <b>kế hoạch 21 ngày</b> để cơ thể tự làm sạch, tự phục hồi</li>
+                <li>Bạn thuộc các bài khai thông khí huyết, hơi thở để tự chăm sóc mỗi ngày tại nhà</li>
+                <li>Bạn hiểu nhịp sinh học bốn mùa, biết sắp xếp giấc ngủ và không gian sống hỗ trợ sức khoẻ</li>
+                <li>Bạn có <b>kế hoạch dài hạn</b> và một cộng đồng cùng đi để giữ được kết quả</li>
+              </ul>
+            </div>
+
+            <!-- 15. Khác biệt -->
+            <div class="tn-sec">
+              <h2>Điều gì làm 8 buổi này khác với những khoá bạn từng thấy?</h2>
+              <ul>
+                <li><b>Cá nhân hoá theo cơ địa:</b> sau khi được duyệt, bạn làm phiếu khảo sát Thân – Tâm – Mệnh để Ban tổ chức xây lộ trình riêng cho bạn — không phải một công thức chung</li>
+                <li><b>Học để làm được:</b> mỗi buổi đều có phần thực hành và bài tập áp dụng ngay trong tuần</li>
+                <li><b>Có người đồng hành:</b> học trực tiếp qua Zoom, hỏi đáp trong nhóm thảo luận riêng của lớp</li>
+                <li><b>Có đường đi tiếp:</b> 8 buổi là nền tảng để bước vào chương trình 377 ngày thực hành nếu bạn muốn đi sâu và bền vững</li>
+              </ul>
+            </div>
+
+            <!-- 19–20. Câu chuyện / chứng thực (từ Admin → Phễu bán hàng Feed) -->
+            <div class="tn-sec" id="tnStoriesSec" style="display:none;">
+              <h2>Học viên nói gì sau khi áp dụng?</h2>
+              <div id="tnStories"></div>
+              <p class="tn-note">Kết quả của mỗi người khác nhau, phụ thuộc cơ địa và mức độ thực hành. Câu chuyện được chia sẻ với sự đồng ý của học viên.</p>
+            </div>
+
+            <!-- Phù hợp với ai -->
+            <div class="tn-sec">
+              <h2>8 buổi này dành cho ai?</h2>
+              <ul>
+                <li>Người muốn chủ động chăm sóc sức khoẻ cho bản thân và gia đình bằng ăn uống, sinh hoạt hằng ngày</li>
+                <li>Người đã học 3 buổi workshop và muốn đi sâu, áp dụng bài bản</li>
+                <li>Người sẵn sàng dành thời gian học và thực hành đều đặn trong 8 buổi</li>
+              </ul>
+              <p><b>Chưa phù hợp nếu</b> bạn tìm một "viên thuốc thần" cho kết quả qua đêm mà không cần thay đổi gì. Chúng tôi không hứa điều đó.</p>
+            </div>
+
+            <!-- 21–22. Offer + quà -->
+            <div class="tn-sec">
+              <h2>Tóm lại, khi tham gia bạn nhận được</h2>
+              <div class="tn-offer" id="tnStack">Đang tải...</div>
+            </div>
+
+            <!-- Tóm tắt chương trình & mức đầu tư (thư ngỏ admin soạn — cùng nội dung với trang ngắn) -->
+            <div class="tn-sec tn-letter">
+              <h2>Chương trình &amp; mức đầu tư</h2>
+              <div id="tnLetter">Đang tải...</div>
+              <div id="tnStart" class="tn-quote" style="display:none;margin-top:12px;"></div>
+              <div class="tn-ctas">
+                <button type="button" class="tn-btn main tn-enroll" onclick="tnEnroll(this)">Đăng ký tham gia 8 buổi →</button>
+                <button type="button" class="tn-btn ghost" style="color:#7c3aed" onclick="tnConsult(this)">📞 Nhận tư vấn</button>
+              </div>
+              <div class="tn-msg" data-msg></div>
+            </div>
+
+            <!-- 27. Cách đăng ký -->
+            <div class="tn-sec">
+              <h2>Đăng ký thế nào?</h2>
+              <ul class="tn-steps">
+                <li>Bấm <b>"Đăng ký tham gia 8 buổi"</b> ngay trên trang này</li>
+                <li>Trong vòng 24 giờ, Ban tổ chức <b>gọi điện tư vấn trực tiếp</b> cho bạn — giải đáp thắc mắc, xem chương trình có phù hợp không, rồi mới hướng dẫn hoàn tất học phí. Bạn <b>không cần chuyển khoản trước</b>.</li>
+                <li>Bạn nhận thông báo trong ứng dụng và email khi được duyệt</li>
+                <li>Làm phiếu khảo sát Thân – Tâm – Mệnh để nhận lộ trình riêng, rồi vào lớp</li>
+              </ul>
+              <p class="tn-note">Bằng việc đăng ký, bạn đồng ý với <a href="noi-quy.html">Nội quy cộng đồng</a> và chính sách hoàn phí.</p>
+            </div>
+
+            <!-- Xử lý băn khoăn -->
+            <div class="tn-sec tn-faq">
+              <h2>Những băn khoăn thường gặp</h2>
+              <details><summary>Tôi bận, không chắc tham gia đủ các buổi trực tiếp?</summary>
+                <p>Học viên được xem video tổng hợp 8 buổi để học lại, và có nhóm thảo luận riêng để hỏi những phần chưa rõ.</p></details>
+              <details><summary>Tôi chưa học 3 buổi workshop miễn phí thì có học được không?</summary>
+                <p>Được, nhưng nếu còn kịp, bạn nên học <a href="workshop3.html">3 buổi workshop miễn phí</a> trước để có nền tảng — 8 buổi sẽ đi sâu hơn rất nhiều.</p></details>
+              <details><summary>Tôi đang điều trị bệnh và dùng thuốc thì sao?</summary>
+                <p>Chương trình hướng dẫn chăm sóc sức khoẻ qua ăn uống và sinh hoạt hằng ngày, <b>không thay thế chẩn đoán hay điều trị y khoa</b>. Bạn vẫn tiếp tục theo chỉ định của bác sĩ và trao đổi với bác sĩ trước khi thay đổi lớn.</p></details>
+              <details><summary>Học online có khó không? Tôi không rành công nghệ.</summary>
+                <p>Bạn chỉ cần điện thoại hoặc máy tính có Zoom. Link vào lớp hiện ngay trong ứng dụng khi đến giờ; Ban tổ chức hỗ trợ nếu bạn gặp khó khăn.</p></details>
+              <details><summary>Học xong 8 buổi rồi sao nữa?</summary>
+                <p>Bạn có thể tiếp tục chương trình 377 ngày thực hành để được đồng hành hằng ngày và giữ kết quả bền vững — học viên 8 buổi có mức ưu đãi riêng.</p></details>
+            </div>
+
+            <!-- 26. Cảnh báo nhẹ + P.S + CTA cuối -->
+            <div class="tn-sec">
+              <h2>Một lựa chọn nhỏ hôm nay</h2>
+              <p>Bạn có thể đóng trang này và mọi thứ vẫn như cũ — vẫn những buổi sáng mệt mỏi, vẫn những lời khuyên trái chiều, vẫn tự hỏi "mình nên ăn gì đây".</p>
+              <p>Hoặc bạn có thể dành 8 buổi để <b>thật sự hiểu cơ thể mình</b> và có một lộ trình rõ ràng để đi tiếp.</p>
+              <p class="tn-sign">Thân mến,<br>Ban tổ chức AI Agents CC</p>
+              <p><b>P.S.</b> Nếu bạn chỉ lướt nhanh xuống đây: 8 buổi trực tuyến · hiểu đúng cơ địa Hàn – Nhiệt · ăn uống theo Ngũ Hành · thanh lọc và khai thông · lộ trình cá nhân sau khảo sát · nhóm thảo luận riêng · video xem lại · ưu đãi khi lên 377 ngày.</p>
+              <div class="tn-ctas">
+                <button type="button" class="tn-btn main tn-enroll" onclick="tnEnroll(this)">Đăng ký tham gia 8 buổi →</button>
+                <button type="button" class="tn-btn ghost" style="color:#7c3aed" onclick="tnConsult(this)">📞 Nhận tư vấn</button>
+              </div>
+              <div class="tn-msg" data-msg></div>
+              <p class="tn-note" style="margin-top:14px;">Thông tin trong chương trình mang tính giáo dục, hỗ trợ chăm sóc sức khoẻ chủ động; không thay thế chẩn đoán, điều trị của bác sĩ. Kết quả mỗi người khác nhau.</p>
+            </div>
+
+          </div>
+        </main>
+      </div>
+
+    </div><!-- /main -->
+
+  </div><!-- /app -->
+
+  <!-- Mobile sidebar overlay -->
+  <div id="mob-overlay" onclick="closeSidebar()"></div>
+  <div id="mob-sidebar">
+    <div style="padding:14px 16px;border-bottom:1px solid var(--border);font-size:var(--fs-md);font-weight:700;color:var(--text);display:flex;align-items:center;gap:8px;">
+      <div style="width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;"><img src="assets/img/logo.png" alt="Logo" style="width:100%;height:100%;object-fit:contain;"></div>
+      <span class="mob-brand-name">AI AGENTS CC</span>
+    </div>
+    <nav style="flex:1;overflow-y:auto;padding:8px;">
+      <div class="nav-section-label">Cộng đồng</div>
+      <a href="feed.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        Feed
+      </a>
+      <div class="nav-section-label">Học tập</div>
+      <a href="challenge.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z"/></svg>
+        Challenge
+      </a>
+      <div class="nav-section-label">Khác</div>
+      <a href="marketplace.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z"/></svg>
+        Marketplace
+      </a>
+    </nav>
+  </div>
+
+  <!-- Mobile main menu (full site navigation) -->
+  <div id="mob-mainmenu-overlay" onclick="closeMainMenu()"></div>
+  <div id="mob-mainmenu">
+    <div style="padding:14px 16px;border-bottom:1px solid var(--border);font-size:var(--fs-md);font-weight:700;color:var(--text);display:flex;align-items:center;gap:8px;">
+      <div style="width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;"><img src="assets/img/logo.png" alt="Logo" style="width:100%;height:100%;object-fit:contain;"></div>
+      Menu chính
+    </div>
+    <nav style="flex:1;overflow-y:auto;padding:8px;">
+      <a href="feed.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        Feed
+      </a>
+      <a href="spaces.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></svg>
+        Spaces
+      </a>
+      <a href="courses.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/></svg>
+        Courses
+      </a>
+      <a href="members.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+        Members
+      </a>
+      <a href="leaderboard.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/></svg>
+        Leaderboard
+      </a>
+      <a href="calendar.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        Calendar
+      </a>
+      <a href="about.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+        About
+      </a>
+    </nav>
+  </div>
+
+  <nav id="mobile-nav">
+    <a href="feed.html" class="mob-nav-btn">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
+      </svg>
+      Feed
+    </a>
+    <a href="spaces.html" class="mob-nav-btn">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></svg>
+      Spaces
+    </a>
+    <a href="courses.html" class="mob-nav-btn">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/></svg>
+      Courses
+    </a>
+    <a href="members.html" class="mob-nav-btn">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>
+      </svg>
+      Members
+    </a>
+    <button class="mob-nav-btn" onclick="toggleMainMenu()">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/>
+      </svg>
+      Menu
+    </button>
+  </nav>
+
+  <script src="assets/js/app.js?v=28"></script>
+  <script>
+    const API = '/api';
+    const AV_COLORS = ['#0ea5e9', '#8b5cf6', '#10b981', '#f59e0b', '#ec4899', '#3b82f6', '#ef4444', '#14b8a6'];
+    function initials(u) { return ((u.first_name || '?')[0] + ((u.last_name || '')[0] || '')).toUpperCase(); }
+    function avColor(id) { return AV_COLORS[(id || 0) % AV_COLORS.length]; }
+    function doLogout() { localStorage.removeItem('currentUser'); window.location.href = 'index.html'; }
+    const LEVELS = [
+      { level: 1, name: 'Khởi động', xpMin: 0, xpMax: 45 }, { level: 2, name: 'Học viên', xpMin: 45, xpMax: 120 },
+      { level: 3, name: 'Thực hành', xpMin: 120, xpMax: 250 }, { level: 4, name: 'Nâng cao', xpMin: 250, xpMax: 450 },
+      { level: 5, name: 'Chuyên gia', xpMin: 450, xpMax: 700 }, { level: 6, name: 'Bậc thầy', xpMin: 700, xpMax: 1000 },
+      { level: 7, name: 'Huyền thoại', xpMin: 1000, xpMax: 1500 }, { level: 8, name: 'Tiên tri', xpMin: 1500, xpMax: 2200 },
+      { level: 9, name: 'Thần thánh', xpMin: 2200, xpMax: 9999 },
+    ];
+    function getLevel(xp) { for (let i = LEVELS.length - 1; i >= 0; i--) if (xp >= LEVELS[i].xpMin) return LEVELS[i]; return LEVELS[0]; }
+
+    let currentUser = null;
+    (function () {
+      const raw = localStorage.getItem('currentUser');
+      if (!raw) { window.location.href = 'index.html'; return; }
+      currentUser = JSON.parse(raw);
+      const ini = initials(currentUser);
+      const col = avColor(currentUser.id);
+      document.getElementById('sbAvatar').textContent = ini;
+      document.getElementById('sbAvatar').style.background = col;
+      document.getElementById('sbName').textContent = currentUser.first_name + ' ' + currentUser.last_name;
+      const lv = getLevel(currentUser.xp || 0);
+      document.getElementById('sbLevel').textContent = lv.name + ' · Lv.' + lv.level;
+      const tbAv = document.getElementById('topbarAvatar');
+      if (tbAv) { tbAv.textContent = ini; tbAv.style.background = col; tbAv.onclick = () => location.href = `profile.html?id=${currentUser.id}`; }
+    })();
+
+    function escHtml(s) { return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+    function fmtSessionDate(d) {
+      if (!d) return '';
+      const m = String(d).match(/^(\d{4})-(\d{2})-(\d{2})/);
+      if (!m) return escHtml(d);
+      return `${m[3]}/${m[2]}/${m[1]}`;
+    }
+
+    // Chuyển các link video phổ biến (YouTube watch/live/shorts, youtu.be, Vimeo,
+    // Google Drive) sang đúng dạng URL nhúng được.
+    function toEmbedUrl(url) {
+      try {
+        const u = new URL(url);
+        const host = u.hostname.replace(/^www\./, '').replace(/^m\./, '');
+        if (host === 'youtu.be') return `https://www.youtube.com/embed/${u.pathname.slice(1)}`;
+        if (host === 'youtube.com') {
+          if (u.pathname === '/watch' && u.searchParams.get('v')) return `https://www.youtube.com/embed/${u.searchParams.get('v')}`;
+          const liveMatch = u.pathname.match(/^\/live\/([^/]+)/);
+          if (liveMatch) return `https://www.youtube.com/embed/${liveMatch[1]}`;
+          const shortsMatch = u.pathname.match(/^\/shorts\/([^/]+)/);
+          if (shortsMatch) return `https://www.youtube.com/embed/${shortsMatch[1]}`;
+        }
+        if (host === 'vimeo.com') {
+          const id = u.pathname.split('/').filter(Boolean)[0];
+          if (id) return `https://player.vimeo.com/video/${id}`;
+        }
+        if (host === 'drive.google.com') {
+          const m = u.pathname.match(/\/file\/d\/([^/]+)/);
+          if (m) return `https://drive.google.com/file/d/${m[1]}/preview`;
+        }
+        return url;
+      } catch { return url; }
+    }
+
+    function renderVideoEmbed(url) {
+      const wrap = document.getElementById('wk8VideoWrap');
+      if (!url) {
+        wrap.innerHTML = '<div class="wk8-video-empty">Video đào tạo khoá trước sẽ được cập nhật sớm.</div>';
+        return;
+      }
+      if (/\.(mp4|webm|ogg)(\?|$)/i.test(url)) {
+        wrap.innerHTML = `<video src="${escHtml(url)}" controls></video>`;
+      } else {
+        wrap.innerHTML = `<iframe src="${escHtml(toEmbedUrl(url))}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
+      }
+    }
+
+    function tnFmtDate(d) {
+      if (!d) return '';
+      const x = new Date(String(d).slice(0, 10) + 'T00:00:00');
+      if (isNaN(x)) return '';
+      return ['Chủ nhật', 'Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7'][x.getDay()] + ', ' + x.toLocaleDateString('vi-VN');
+    }
+    const tnEsc = v => String(v == null ? '' : v).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    function tnMsg(btn, text, ok) {
+      const box = btn.closest('.tn-sec, .tn-hero');
+      const el = box ? box.querySelector('[data-msg]') : null;
+      if (el) { el.textContent = text; el.style.color = ok ? '#10b981' : '#ef4444'; }
+      else alert(text);
+    }
+    async function tnEnroll(btn) {
+      document.querySelectorAll('.tn-enroll').forEach(b => b.disabled = true);
+      try {
+        const r = await fetch(`${API}/workshop8/enroll`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ user_id: currentUser.id }) });
+        const d = await r.json().catch(() => ({}));
+        if (!r.ok) throw new Error(d.error || 'Có lỗi xảy ra.');
+        tnMsg(btn, '✅ Đã gửi đăng ký! Ban tổ chức sẽ gọi điện tư vấn trực tiếp cho bạn trong 24 giờ và hướng dẫn học phí — bạn chưa cần chuyển khoản lúc này.', true);
+        setTimeout(() => location.href = 'workshop8.html', 3500);
+      } catch (e) {
+        tnMsg(btn, e.message || 'Không kết nối được máy chủ.', false);
+        document.querySelectorAll('.tn-enroll').forEach(b => b.disabled = false);
+      }
+    }
+    async function tnConsult(btn) {
+      btn.disabled = true;
+      try {
+        const r = await fetch(`${API}/showcase/consult`, { method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ user_id: currentUser.id, program: 'workshop8', post_title: 'Thư ngỏ 8 buổi' }) });
+        const d = await r.json().catch(() => ({}));
+        if (!r.ok) throw new Error(d.error || 'Không gửi được.');
+        tnMsg(btn, '✅ Đã gửi yêu cầu tư vấn — Ban tổ chức sẽ liên hệ bạn trong 24 giờ.', true);
+      } catch (e) { tnMsg(btn, e.message, false); btn.disabled = false; }
+    }
+
+    // Bảng giá trị: mục cố định + khoá học được cấp + ưu đãi 377 + quà tặng → tổng giá trị so với học phí (Admin → 8 Buổi → Học phí & quà tặng)
+    async function tnRenderStack() {
+      const box = document.getElementById('tnStack');
+      let o;
+      try { o = await fetch(`${API}/workshop8/offer`).then(r => r.json()); } catch (e) { box.innerHTML = ''; return; }
+      const money = v => Number(v || 0).toLocaleString('vi-VN') + 'đ';
+      const val = v => v ? `<div class="val">Trị giá<b>${money(v)}</b></div>` : '';
+      const row = (ic, html, right) => `<div class="tn-vs"><div class="ic">${ic}</div><div class="tx">${html}</div>${right || ''}</div>`;
+      let h = '<div class="tn-vs-group">Chương trình chính</div>';
+      h += (o.items || []).map(x => row('✔', `<b>${tnEsc(x.label)}</b>${x.desc ? `<small>${tnEsc(x.desc)}</small>` : ''}`, val(x.value))).join('');
+      if ((o.courses || []).length) {
+        h += `<div class="tn-vs-group">📚 ${o.courses.length} khoá học online được mở khi tham gia</div>`;
+        h += o.courses.map(c => row('📘', `<b>${tnEsc(c.title)}</b><small>${c.lessons ? c.lessons + ' bài học · ' : ''}${c.private ? 'khoá riêng cho học viên' : 'đã mở miễn phí cho thành viên'}</small>`,
+          c.value ? val(c.value) : '<div class="val free"><b>Miễn phí</b>cho thành viên</div>')).join('');
+      }
+      if (o.p377) h += '<div class="tn-vs-group">Đặc quyền học viên 8 buổi</div>' + row('⭐', `<b>Ưu đãi khi lên 377 ngày thực hành</b><small>chỉ ${tnEsc(o.p377.w8)}đ thay vì ${tnEsc(o.p377.regular)}đ</small>`, `<div class="val">Tiết kiệm<b>${money(o.p377.saving)}</b></div>`);
+      if ((o.gifts || []).length) {
+        h += '<div class="tn-vs-group">🎁 Quà tặng kèm</div>';
+        h += o.gifts.map(g => row('🎁', `<b>${g.link ? `<a href="${tnEsc(g.link)}" target="_blank">${tnEsc(g.name)}</a>` : tnEsc(g.name)}</b>`, val(g.value))).join('');
+      }
+      const price = o.price_offer || o.price_regular;
+      if (o.total) h += `<div class="tn-vs-total"><div class="t1">Tổng giá trị bạn nhận được: <s>${money(o.total)}</s></div>
+          ${price ? `<div class="t2">Học phí ưu đãi hôm nay: <b>${tnEsc(price)}đ</b></div>` : ''}
+          <div class="t3">Đăng ký trước — Ban tổ chức gọi tư vấn trực tiếp rồi mới hướng dẫn học phí, bạn chưa cần chuyển khoản.</div></div>`;
+      box.innerHTML = h;
+    }
+
+    async function loadThuNgo() {
+      const [s, st, sc] = await Promise.all([
+        fetch(`${API}/settings`).then(r => r.json()).catch(() => ({})),
+        fetch(`${API}/workshop8/status?user_id=${currentUser.id}`).then(r => r.json()).catch(() => ({})),
+        fetch(`${API}/showcase?user_id=${currentUser.id}`).then(r => r.json()).catch(() => ({})),
+      ]);
+      // Đã đăng ký (chờ duyệt / đã duyệt) → về trang học 8 buổi
+      if (st.enrollment && ['pending', 'approved'].includes(st.enrollment.status)) { location.replace('workshop8.html'); return; }
+      const p8 = (sc.programs || []).find(p => p.key === 'workshop8') || {};
+      let sessions = [];
+      try { sessions = JSON.parse(s.workshop8_sessions || '[]'); } catch {}
+      sessions = Array.isArray(sessions) ? sessions.filter(x => x && x.title) : [];
+      // Ngày khai giảng = buổi đầu tiên còn ở phía trước
+      const today = new Date(Date.now() + 7 * 3600e3).toISOString().slice(0, 10);
+      const upcoming = sessions.map(x => String(x.date || '').slice(0, 10)).filter(d => d && d >= today).sort();
+      const first = sessions[0] && String(sessions[0].date || '').slice(0, 10);
+      const startDate = first && first >= today ? first : '';
+      const stats = [
+        [p8.members, 'học viên đã tham gia'],
+        [sessions.length || 8, 'buổi học trực tuyến'],
+        [upcoming[0] ? upcoming[0].slice(8, 10) + '/' + upcoming[0].slice(5, 7) : 'Zoom', upcoming[0] ? 'buổi học tiếp theo' : 'học online'],
+      ].filter(([v]) => v);
+      document.getElementById('tnStats').innerHTML = stats.map(([v, l]) => `<div class="tn-stat"><b>${tnEsc(v)}</b><span>${tnEsc(l)}</span></div>`).join('');
+      if (startDate) {
+        const el = document.getElementById('tnStart');
+        el.innerHTML = `📅 <b>Khoá tiếp theo khai giảng ${tnEsc(tnFmtDate(startDate))}</b>${s.workshop8_time_note ? ' · ' + tnEsc(s.workshop8_time_note) : ''}. Đăng ký sớm để Ban tổ chức kịp xét duyệt và gửi khảo sát trước buổi 1.`;
+        el.style.display = '';
+      }
+      document.getElementById('tnSessions').innerHTML = sessions.length ? sessions.map((x, i) => `<details class="tn-session"${i === 0 ? ' open' : ''}>
+          <summary><span class="n">${i + 1}</span><span>${tnEsc(String(x.title).replace(/^Buổi\s*\d+\s*[:\-–]\s*/i, ''))}</span></summary>
+          <div class="body">${x.content_html || ''}</div></details>`).join('') : '<p>Nội dung đang được cập nhật.</p>';
+      document.getElementById('tnLetter').innerHTML = s.workshop8_letter_html || '<p>Vui lòng bấm "Nhận tư vấn" để được báo học phí.</p>';
+      if (s.workshop8_video_url) { document.getElementById('tnVideoCard').style.display = ''; renderVideoEmbed(s.workshop8_video_url); }
+      // Học phí (Admin → 8 Buổi Chuyên Sâu → Học phí & quà tặng)
+      if (s.workshop8_price_offer || s.workshop8_price_regular) {
+        const el = document.getElementById('tnPriceHero');
+        el.innerHTML = s.workshop8_price_offer && s.workshop8_price_regular && s.workshop8_price_offer !== s.workshop8_price_regular
+          ? `<s>${tnEsc(s.workshop8_price_regular)}đ</s><b>${tnEsc(s.workshop8_price_offer)}đ</b><span>ưu đãi ghi danh sớm · trọn gói 8 buổi</span><small>Đăng ký trước — Ban tổ chức gọi tư vấn trực tiếp rồi mới hướng dẫn học phí.</small>`
+          : `<b>${tnEsc(s.workshop8_price_offer || s.workshop8_price_regular)}đ</b><span>trọn gói 8 buổi</span><small>Đăng ký trước — Ban tổ chức gọi tư vấn trực tiếp rồi mới hướng dẫn học phí.</small>`;
+        el.style.display = '';
+      }
+      tnRenderStack();
+      const stories = (p8.stories || []).length ? p8.stories : (p8.story ? [p8.story] : []);
+      if (stories.length) {
+        document.getElementById('tnStories').innerHTML = stories.map(x => `<div class="tn-story">
+            ${x.image_url ? `<img src="${tnEsc(x.image_url)}" alt="Ảnh kết quả" loading="lazy" onclick="window.open(this.src,'_blank')">` : ''}
+            <div><div class="r">✨ ${tnEsc(x.result)}</div>${x.who ? `<div class="w">— ${tnEsc(x.who)}</div>` : ''}${x.detail ? `<div class="d">“${tnEsc(x.detail)}”</div>` : ''}</div></div>`).join('');
+        document.getElementById('tnStoriesSec').style.display = '';
+      }
+      // Ghi nhận phễu: người chưa đăng ký mở thư ngỏ = "bấm xem chi tiết" (Admin → Phễu bán hàng Feed)
+      if (!currentUser.is_admin) fetch(`${API}/showcase/track`, { method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ user_id: currentUser.id, program: 'workshop8', kind: 'detail' }) }).catch(() => {});
+    }
+    loadThuNgo();
+  </script>
+
+</body>
+</html>

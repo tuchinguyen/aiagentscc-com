@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8">
+  <script src="assets/js/auth-fetch.js?v=1"></script>
+  <script>(function(){try{var t=localStorage.getItem('theme');if(t==='dark'||(!t&&window.matchMedia('(prefers-color-scheme: dark)').matches))document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" href="/assets/img/logo.png">
+  <link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
+  <link rel="manifest" href="/manifest.json?v=2">
+  <meta name="apple-mobile-web-app-title" content="AI Agents CC">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="theme-color" content="#0ea5e9">
+  <title>Thực đơn 7 ngày — AI AGENTS CC</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/base.css?v=2">
+  <link rel="stylesheet" href="assets/css/components.css?v=11">
+  <link rel="stylesheet" href="assets/css/layout.css?v=6">
+  <style>
+    .td-wrap { max-width: 1000px; margin: 0 auto; }
+    .td-intro { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 16px 18px; margin-bottom: 14px; }
+    .td-intro h1 { font-size: 21px; margin: 0 0 6px; }
+    .td-intro p { margin: 0 0 10px; color: var(--text-muted); font-size: 14px; line-height: 1.6; }
+    .td-rules { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 8px; }
+    .td-rule { border: 1px solid var(--border); border-radius: 10px; padding: 9px 11px; font-size: 13.5px; background: var(--bg-app); }
+    .td-rule b { display: block; margin-bottom: 4px; }
+    .tz { display: inline-flex; align-items: center; gap: 3px; font-size: 12px; font-weight: 700; padding: 2px 8px; border-radius: 99px; white-space: nowrap; }
+    .tz-chua { background: #dcfce7; color: #166534; } .tz-dang { background: #fee2e2; color: #991b1b; } .tz-cay { background: #f1f5f9; color: #334155; }
+    .tz-man { background: #e0e7ff; color: #3730a3; } .tz-ngot { background: #fef3c7; color: #92400e; } .tz-chat { background: #ede9fe; color: #5b21b6; }
+    [data-theme="dark"] .tz-chua { background: #14532d; color: #bbf7d0; } [data-theme="dark"] .tz-dang { background: #7f1d1d; color: #fecaca; }
+    [data-theme="dark"] .tz-cay { background: #334155; color: #e2e8f0; } [data-theme="dark"] .tz-man { background: #312e81; color: #c7d2fe; }
+    [data-theme="dark"] .tz-ngot { background: #78350f; color: #fde68a; } [data-theme="dark"] .tz-chat { background: #4c1d95; color: #ddd6fe; }
+    .td-bar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 10px 12px; margin-bottom: 12px; }
+    .td-bar select, .td-bar input { padding: 8px 10px; border: 1px solid var(--border); border-radius: 9px; background: var(--bg-app); color: var(--text); font: inherit; font-size: 14px; min-width: 0; }
+    .td-bar #tdTitle { flex: 1 1 200px; font-weight: 600; }
+    .td-btn { padding: 8px 12px; border-radius: 9px; border: 1px solid var(--border); background: var(--bg-card); color: var(--text); font: inherit; font-size: 13.5px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .td-btn:hover { background: var(--bg-hover); }
+    .td-btn.pri { background: var(--color-primary); border-color: var(--color-primary); color: #fff; }
+    .td-btn.danger { color: #ef4444; }
+    .td-status { font-size: 12.5px; color: var(--text-muted); margin-left: auto; }
+    .td-days { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 4px; margin-bottom: 12px; }
+    .td-day { flex: 0 0 auto; border: 1px solid var(--border); background: var(--bg-card); color: var(--text); border-radius: 12px; padding: 7px 12px; font: inherit; font-size: 13px; cursor: pointer; text-align: center; line-height: 1.35; }
+    .td-day small { display: block; font-size: 11px; color: var(--text-muted); }
+    .td-day.on { background: var(--color-primary); border-color: var(--color-primary); color: #fff; }
+    .td-day.on small { color: #e0f2fe; }
+    .td-day.full:not(.on) { border-color: #10b981; }
+    .td-wrap, .td-wrap > * { min-width: 0; }
+    .td-wrap [hidden] { display: none !important; }
+    .td-meals { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; }
+    .td-meal { min-width: 0; background: var(--bg-card); border: 1px solid var(--border); border-left: 5px solid var(--mc, #94a3b8); border-radius: var(--radius-lg); padding: 14px 16px; }
+    .td-meal-h { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: center; margin-bottom: 10px; }
+    .td-meal-h h3 { margin: 0; font-size: 16.5px; }
+    .td-meal-h .cnt { margin-left: auto; font-size: 12.5px; color: var(--text-muted); }
+    .td-row { display: flex; gap: 8px; align-items: flex-start; margin-bottom: 7px; }
+    .td-row .no { margin-top: 10px; width: 22px; height: 22px; border-radius: 50%; background: var(--bg-hover); color: var(--text-muted); font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .td-in { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+    .td-row input { width: 100%; box-sizing: border-box; padding: 10px 12px; border: 1px solid var(--border); border-radius: 10px; background: var(--bg-app); color: var(--text); font: inherit; font-size: 15px; }
+    .td-row input:focus { outline: 2px solid var(--color-primary); outline-offset: -1px; }
+    .td-row .tz-box { display: flex; gap: 4px; flex-wrap: wrap; }
+    .td-row .tz-box:empty { display: none; }
+    .td-row input.off { border-color: #f59e0b; background: color-mix(in srgb, #f59e0b 8%, var(--bg-app)); }
+    .td-warn { font-size: 12.5px; color: #b45309; background: #fef3c7; border-radius: 8px; padding: 5px 9px; line-height: 1.45; }
+    [data-theme="dark"] .td-warn { color: #fde68a; background: #3a2c12; }
+    .td-notes:empty { display: none; }
+    .td-notes { display: flex; flex-direction: column; gap: 4px; }
+    .td-info { font-size: 12.5px; color: #047857; background: #d1fae5; border-radius: 8px; padding: 5px 9px; line-height: 1.45; }
+    [data-theme="dark"] .td-info { color: #a7f3d0; background: #064e3b; }
+    .td-body { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 10px 14px; margin-bottom: 12px; font-size: 14px; }
+    .td-body select { padding: 7px 10px; border: 1px solid var(--border); border-radius: 9px; background: var(--bg-app); color: var(--text); font: inherit; font-size: 14px; }
+    .td-body a { color: var(--color-primary); font-weight: 600; }
+    .td-row .x { margin-top: 8px; border: none; background: none; color: var(--text-muted); font-size: 18px; cursor: pointer; padding: 0 4px; line-height: 1; }
+    .td-plus { border: 1.5px dashed var(--border); background: none; color: var(--color-primary); border-radius: 10px; padding: 8px 12px; font: inherit; font-size: 14px; font-weight: 700; cursor: pointer; margin: 2px 0 6px 30px; }
+    .td-plus:hover { border-color: var(--color-primary); background: var(--bg-active); }
+    .td-bal { font-size: 12.5px; margin: 4px 0 8px; color: var(--text-muted); display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+    .td-sug { border-top: 1px dashed var(--border); padding-top: 9px; margin-top: 4px; }
+    .td-sug-h { font-size: 12px; color: var(--text-muted); margin-bottom: 6px; font-weight: 600; }
+    .td-sug-list { display: flex; flex-wrap: wrap; gap: 6px; }
+    .td-sug-list button { max-width: 100%; border: 1px solid var(--border); background: var(--bg-app); color: var(--text); border-radius: 99px; padding: 5px 11px; font: inherit; font-size: 13px; cursor: pointer; }
+    .td-sug-list button:hover { border-color: var(--color-primary); background: var(--bg-active); }
+    .td-sug-list button.rc { border-style: dashed; }
+    .td-sug-list button.more { color: var(--color-primary); font-weight: 600; border-color: transparent; background: none; }
+    .td-foot { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-top: 12px; }
+    .td-note { width: 100%; box-sizing: border-box; padding: 10px 12px; border: 1px solid var(--border); border-radius: 10px; background: var(--bg-app); color: var(--text); font: inherit; font-size: 14px; resize: vertical; }
+    .td-empty { text-align: center; padding: 40px 20px; color: var(--text-muted); background: var(--bg-card); border: 1px dashed var(--border); border-radius: var(--radius-lg); line-height: 1.7; }
+    .td-week { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow-x: auto; }
+    .td-week table { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 640px; }
+    .td-week th, .td-week td { border-bottom: 1px solid var(--border); padding: 8px 10px; text-align: left; vertical-align: top; }
+    .td-week th { background: var(--bg-hover); font-size: 12px; text-transform: uppercase; letter-spacing: .03em; }
+    .td-week td:first-child { font-weight: 700; white-space: nowrap; }
+    .td-week ul { margin: 0; padding-left: 16px; }
+    .td-flash { animation: tdFlash .9s ease; }
+    @keyframes tdFlash { 0% { background: #fef08a; } 100% { background: var(--bg-app); } }
+    @media (max-width: 640px) {
+      .td-meal { padding: 12px; }
+      .td-row input { font-size: 16px; }
+      .td-status { margin-left: 0; width: 100%; }
+    }
+    @media print {
+      #sidebar, #mobile-topbar, #subnav-bar, #topbar, #mobile-nav, .td-bar, .td-days, .td-intro, #tdDay, .td-foot, #mob-sidebar, #mob-overlay { display: none !important; }
+      #tdWeek { display: block !important; }
+      .td-week { border: none; overflow: visible; }
+      .td-week table { min-width: 0; }
+      .td-print-h { display: block !important; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="app">
+
+    <!-- Sidebar -->
+    <aside id="sidebar">
+      <div id="sidebar-logo">
+        <div class="sidebar-logo-mark" style="background:transparent;"><img src="assets/img/logo.png" alt="Logo" style="width:100%;height:100%;object-fit:contain;"></div>
+        <div class="sidebar-logo-text">AI AGENTS <span>CC</span></div>
+      </div>
+
+      <nav id="sidebar-nav">
+        <div class="nav-section-label">Cộng đồng</div>
+
+        <a href="feed.html" class="nav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
+          </svg>
+          Feed
+        </a>
+
+
+
+        <div class="nav-section-label" style="margin-top:8px;">Học tập</div>
+
+        <a href="challenge.html" class="nav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path
+              d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z" />
+          </svg>
+          Challenge
+        </a>
+
+        <div class="nav-section-label" style="margin-top:8px;">Khác</div>
+
+        <a href="marketplace.html" class="nav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path
+              d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z" />
+          </svg>
+          Marketplace
+        </a>
+      </nav>
+
+      <!-- Sidebar user -->
+      <div id="sidebar-user">
+        <div class="user-avatar-wrap">
+          <div class="avatar-placeholder avatar-md" id="sbAvatar" style="background:#7c3aed;">?</div>
+          <div class="user-status-dot"></div>
+        </div>
+        <div class="user-info">
+          <div class="user-name" id="sbName">—</div>
+          <div class="user-level" id="sbLevel">—</div>
+        </div>
+        <a href="index.html" class="icon-btn" title="Đăng xuất" style="margin-left:auto;" onclick="doLogout()">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4" />
+            <polyline points="16 17 21 12 16 7" />
+            <line x1="21" y1="12" x2="9" y2="12" />
+          </svg>
+        </a>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <div id="main">
+
+      <!-- Mobile topbar -->
+      <div id="mobile-topbar">
+        <button class="mob-menu-btn" onclick="toggleSidebar()" aria-label="Menu">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+          </svg>
+        </button>
+        <span style="flex:1;font-size:var(--fs-md);font-weight:600;color:var(--text)">🍱 Thực đơn 7 ngày</span>
+        <div class="mob-topbar-right">
+          <button class="icon-btn" id="themeToggleMob" type="button" aria-label="Chuyển chế độ sáng/tối">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"></svg>
+          </button>
+          <button class="icon-btn" id="notifBellMob" aria-label="Thông báo" style="position:relative;">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+            </svg>
+            <span id="notifBadgeMob" style="display:none;position:absolute;top:2px;right:2px;background:#ef4444;color:#fff;font-size:10px;font-weight:700;border-radius:99px;min-width:16px;height:16px;padding:0 4px;line-height:16px;text-align:center;">0</span>
+          </button>
+          <div id="topbarAvatarMob" style="width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;background:#7c3aed;flex-shrink:0;"></div>
+        </div>
+</div>
+
+      <!-- Topbar -->
+      <nav id="subnav-bar" class="subnav-bar" aria-label="Điều hướng nhanh">
+        <a href="feed.html" class="subnav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+          Feed
+        </a>
+        <a href="spaces.html" class="subnav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></svg>
+          Spaces
+        </a>
+        <a href="courses.html" class="subnav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/></svg>
+          Courses
+        </a>
+        <a href="members.html" class="subnav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+          Members
+        </a>
+        <a href="leaderboard.html" class="subnav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/></svg>
+          Leaderboard
+        </a>
+        <a href="calendar.html" class="subnav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          Calendar
+        </a>
+        <a href="about.html" class="subnav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+          About
+        </a>
+        <div class="topbar-right">
+          <button class="icon-btn" id="themeToggle" type="button" aria-label="Chuyển chế độ sáng/tối">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"></svg>
+          </button>
+          <div style="position:relative;">
+            <button class="icon-btn" id="notifBell" aria-label="Thông báo" style="position:relative;">
+              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+              </svg>
+              <span id="notifBadge" style="display:none;position:absolute;top:2px;right:2px;background:#ef4444;color:#fff;font-size:10px;font-weight:700;border-radius:99px;min-width:16px;height:16px;padding:0 4px;line-height:16px;text-align:center;">0</span>
+            </button>
+            <div id="notifDropdown" style="display:none;"></div>
+          </div>
+          <a href="#" class="icon-btn" aria-label="Tin nhắn">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <path
+                d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+            </svg>
+          </a>
+          <div class="topbar-search">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <circle cx="11" cy="11" r="8" />
+              <line x1="21" y1="21" x2="16.65" y2="16.65" />
+            </svg>
+            <input type="text" id="globalSearchInput" placeholder="Tìm kiếm..." autocomplete="off">
+            <div id="globalSearchResults" class="gsr-panel"></div>
+          </div>
+          <div id="topbarAvatar"
+            style="width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;background:#7c3aed;cursor:pointer;flex-shrink:0;">
+          </div>
+        </div>
+      </nav>
+
+      <header id="topbar">
+        <button class="topbar-hamburger" id="hamburger" onclick="toggleSidebar()" aria-label="Mở menu">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path d="M4 6h16M4 12h16M4 18h16" stroke-linecap="round" />
+          </svg>
+        </button>
+
+        <div class="topbar-title">🍱 Thực đơn 7 ngày</div>
+      </header>
+
+      <div id="content-row">
+        <main id="feed" style="max-width:100%;">
+          <div class="td-wrap">
+            <section class="td-intro">
+              <h1>🍱 Thực đơn 7 ngày</h1>
+              <p>Lên thực đơn cho cả tuần theo vị ưu tiên của từng buổi. Gõ tên món, hoặc bấm vào <b>gợi ý</b> bên dưới mỗi buổi để điền nhanh. Thực đơn tự lưu khi bạn nhập.</p>
+              <div class="td-rules">
+                <div class="td-rule"><b>🌅 Buổi sáng · 3 món</b>Ưu tiên <span class="tz tz-chua">🍋 Chua</span> <span class="tz tz-dang">☕ Đắng</span></div>
+                <div class="td-rule"><b>☀️ Buổi trưa · 5 món</b>Ưu tiên <span class="tz tz-chua">🍋 Chua</span> <span class="tz tz-dang">☕ Đắng</span></div>
+                <div class="td-rule"><b>🌇 Buổi chiều · 5 món</b>Ưu tiên <span class="tz tz-cay">🌶️ Cay</span> <span class="tz tz-man">🧂 Mặn</span></div>
+                <div class="td-rule"><b>🍯 Vị ngọt</b>Dùng được <b style="display:inline">cả ngày</b>, ở mọi buổi <span class="tz tz-ngot">🍯 Ngọt</span></div>
+              </div>
+            </section>
+
+            <div class="td-body" id="tdBody" hidden></div>
+            <div class="td-bar" id="tdBar" hidden>
+              <select id="tdPlanSel" onchange="tdOpen(+this.value)" aria-label="Chọn thực đơn"></select>
+              <input id="tdTitle" maxlength="100" aria-label="Tên thực đơn" oninput="tdPlan.title=this.value;tdDirty()">
+              <label style="font-size:13px;color:var(--text-muted);display:flex;gap:6px;align-items:center;">Bắt đầu <input type="date" id="tdStart" onchange="tdPlan.start_date=this.value;tdDirty();tdRender()"></label>
+              <button class="td-btn" type="button" onclick="tdNew()">＋ Thực đơn mới</button>
+              <button class="td-btn" type="button" onclick="tdShowWeek()" id="tdWeekBtn">📅 Xem cả tuần</button>
+              <button class="td-btn" type="button" onclick="tdPrint()">🖨️ In / PDF</button>
+              <button class="td-btn danger" type="button" onclick="tdDelete()">🗑</button>
+              <span class="td-status" id="tdStatus"></span>
+            </div>
+
+            <div class="td-days" id="tdDays"></div>
+            <div id="tdDay"><div class="td-empty">Đang tải…</div></div>
+            <div id="tdWeek" hidden>
+              <div class="td-print-h" style="display:none;margin-bottom:10px;"><h2 id="tdPrintTitle" style="margin:0 0 4px;"></h2><div id="tdPrintSub" style="font-size:13px;"></div></div>
+              <div class="td-week" id="tdWeekBody"></div>
+            </div>
+            <datalist id="tdFoodList"></datalist>
+          </div>
+        </main>
+      </div>
+
+    </div><!-- /main -->
+
+  </div><!-- /app -->
+
+  <!-- Mobile sidebar overlay -->
+  <div id="mob-overlay" onclick="closeSidebar()"></div>
+  <div id="mob-sidebar">
+    <div style="padding:14px 16px;border-bottom:1px solid var(--border);font-size:var(--fs-md);font-weight:700;color:var(--text);display:flex;align-items:center;gap:8px;">
+      <div style="width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;"><img src="assets/img/logo.png" alt="Logo" style="width:100%;height:100%;object-fit:contain;"></div>
+      <span class="mob-brand-name">AI AGENTS CC</span>
+    </div>
+    <nav style="flex:1;overflow-y:auto;padding:8px;">
+      <div class="nav-section-label">Cộng đồng</div>
+      <a href="feed.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        Feed
+      </a>
+      <div class="nav-section-label">Học tập</div>
+      <a href="challenge.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z"/></svg>
+        Challenge
+      </a>
+      <div class="nav-section-label">Khác</div>
+      <a href="marketplace.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z"/></svg>
+        Marketplace
+      </a>
+    </nav>
+  </div>
+
+  <!-- Mobile bottom nav -->
+  <!-- Mobile main menu (full site navigation) -->
+  <div id="mob-mainmenu-overlay" onclick="closeMainMenu()"></div>
+  <div id="mob-mainmenu">
+    <div style="padding:14px 16px;border-bottom:1px solid var(--border);font-size:var(--fs-md);font-weight:700;color:var(--text);display:flex;align-items:center;gap:8px;">
+      <div style="width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;"><img src="assets/img/logo.png" alt="Logo" style="width:100%;height:100%;object-fit:contain;"></div>
+      Menu chính
+    </div>
+    <nav style="flex:1;overflow-y:auto;padding:8px;">
+      <a href="feed.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        Feed
+      </a>
+      <a href="spaces.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></svg>
+        Spaces
+      </a>
+      <a href="courses.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/></svg>
+        Courses
+      </a>
+      <a href="members.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+        Members
+      </a>
+      <a href="leaderboard.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/></svg>
+        Leaderboard
+      </a>
+      <a href="calendar.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        Calendar
+      </a>
+      <a href="about.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+        About
+      </a>
+    </nav>
+  </div>
+
+  <nav id="mobile-nav">
+    <a href="feed.html" class="mob-nav-btn">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
+      </svg>
+      Feed
+    </a>
+    <a href="spaces.html" class="mob-nav-btn">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></svg>
+      Spaces
+    </a>
+    <a href="courses.html" class="mob-nav-btn">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/></svg>
+      Courses
+    </a>
+    <a href="members.html" class="mob-nav-btn">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>
+      </svg>
+      Members
+    </a>
+    <button class="mob-nav-btn" onclick="toggleMainMenu()">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/>
+      </svg>
+      Menu
+    </button>
+  </nav>
+
+  <script src="assets/js/app.js?v=28"></script>
+  <script>
+const API = '/api';
+    const AV_COLORS = ['#0ea5e9', '#8b5cf6', '#10b981', '#f59e0b', '#ec4899', '#3b82f6', '#ef4444', '#14b8a6'];
+
+    function initials(u) { return ((u.first_name || '?')[0] + ((u.last_name || '')[0] || '')).toUpperCase(); }
+    function avColor(id) { return AV_COLORS[(id || 0) % AV_COLORS.length]; }
+    function doLogout() { localStorage.removeItem('currentUser'); window.location.href = 'index.html'; }
+    const LEVELS = [
+      { level: 1, name: 'Khởi động', xpMin: 0, xpMax: 45 }, { level: 2, name: 'Học viên', xpMin: 45, xpMax: 120 },
+      { level: 3, name: 'Thực hành', xpMin: 120, xpMax: 250 }, { level: 4, name: 'Nâng cao', xpMin: 250, xpMax: 450 },
+      { level: 5, name: 'Chuyên gia', xpMin: 450, xpMax: 700 }, { level: 6, name: 'Bậc thầy', xpMin: 700, xpMax: 1000 },
+      { level: 7, name: 'Huyền thoại', xpMin: 1000, xpMax: 1500 }, { level: 8, name: 'Tiên tri', xpMin: 1500, xpMax: 2200 },
+      { level: 9, name: 'Thần thánh', xpMin: 2200, xpMax: 9999 },
+    ];
+    function getLevel(xp) { for (let i = LEVELS.length - 1; i >= 0; i--) if (xp >= LEVELS[i].xpMin) return LEVELS[i]; return LEVELS[0]; }
+
+    let currentUser = null;
+    (function () {
+      const raw = localStorage.getItem('currentUser');
+      if (!raw) { window.location.href = 'index.html'; return; }
+      currentUser = JSON.parse(raw);
+      const ini = initials(currentUser);
+      const col = avColor(currentUser.id);
+      document.getElementById('sbAvatar').textContent = ini;
+      document.getElementById('sbAvatar').style.background = col;
+      document.getElementById('sbName').textContent = currentUser.first_name + ' ' + currentUser.last_name;
+      const lv = getLevel(currentUser.xp || 0);
+      document.getElementById('sbLevel').textContent = lv.name + ' · Lv.' + lv.level;
+      const tbAv = document.getElementById('topbarAvatar');
+      if (tbAv) { tbAv.textContent = ini; tbAv.style.background = col; tbAv.onclick = () => location.href = `profile.html?id=${currentUser.id}`; }
+    })();
+
+    // ── Thực đơn 7 ngày ──
+    const TD_MEALS = [
+      { k: 's', name: 'Buổi sáng', icon: '🌅', n: 3, pri: ['chua', 'dang'], buoi: ['sáng', 'cả ngày'], color: '#22c55e' },
+      { k: 't', name: 'Buổi trưa', icon: '☀️', n: 5, pri: ['chua', 'dang'], buoi: ['trưa', 'cả ngày'], color: '#f59e0b' },
+      { k: 'c', name: 'Buổi chiều', icon: '🌇', n: 5, pri: ['cay', 'man'], buoi: ['tối', 'cả ngày'], color: '#6366f1' },
+    ];
+    const TD_TASTE = {
+      chua: { label: 'Chua', icon: '🍋', words: ['chua', 'giấm', 'dấm', 'chanh', 'me', 'sấu', 'diếp cá', 'khế', 'kombucha', 'kefir', 'sữa chua', 'dưa cải'] },
+      dang: { label: 'Đắng', icon: '☕', words: ['đắng', 'khổ qua', 'mướp đắng', 'cà phê', 'ca cao', 'tim sen', 'rau má', 'ngải cứu', 'atiso'] },
+      cay: { label: 'Cay', icon: '🌶️', words: ['cay', 'ớt', 'tiêu', 'gừng', 'tỏi', 'sả', 'hành', 'quế', 'riềng', 'nghệ', 'kim chi', 'mù tạt'] },
+      man: { label: 'Mặn', icon: '🧂', words: ['mặn', 'muối', 'rong biển', 'tương', 'nước mắm', 'chao', 'hải sâm', 'tôm', 'cá', 'mực', 'nghêu', 'sò'] },
+      ngot: { label: 'Ngọt', icon: '🍯', words: ['ngọt', 'mật ong', 'mật mía', 'mía', 'chè', 'khoai', 'bí đỏ', 'cà rốt', 'ngô', 'bắp', 'chuối', 'xôi'] },
+      chat: { label: 'Chát', icon: '🍵', words: ['chát', 'trà', 'lựu', 'sung', 'vả', 'chuối xanh'] },
+    };
+    const TD_TASTE_KEY = { 'chua': 'chua', 'đắng': 'dang', 'cay': 'cay', 'mặn': 'man', 'ngọt': 'ngot', 'chát': 'chat' };
+    const tdEsc = s => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    const tdApi = (url, opts = {}) => fetch('/api/meal-plans' + url, { ...opts, headers: { 'x-user-token': dhSessionToken(), 'Content-Type': 'application/json' } })
+      .then(async r => { const d = await r.json().catch(() => ({})); if (!r.ok) throw new Error(d.error || 'Có lỗi, vui lòng thử lại.'); return d; });
+    let tdPlans = [], tdPlan = null, tdDayIdx = 0, tdFoods = [], tdRecipes = [], tdTimer = null, tdSaving = false, tdPending = false, tdWeekMode = false;
+    const tdMore = {};
+    const tdTodayStr = () => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; };
+    const tdDM = iso => iso ? iso.slice(8, 10) + '/' + iso.slice(5, 7) : '';
+    function tdDayDate(i) {
+      if (!tdPlan || !tdPlan.start_date) return null;
+      const d = new Date(tdPlan.start_date + 'T00:00:00'); d.setDate(d.getDate() + i); return d;
+    }
+    const TD_WD = ['CN', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7'];
+    function tdDayLabel(i) {
+      const d = tdDayDate(i);
+      return d ? { top: `${TD_WD[d.getDay()]} · ${String(d.getDate()).padStart(2, '0')}/${String(d.getMonth() + 1).padStart(2, '0')}`, sub: `Ngày ${i + 1}` } : { top: `Ngày ${i + 1}`, sub: '' };
+    }
+
+    // Đoán vị của món từ thư viện thực phẩm + từ khoá (chỉ để gợi ý cân đối, không bắt buộc)
+    let tdFoodWords = [];
+    function tdTastes(dish) {
+      let s = ' ' + String(dish || '').toLowerCase().normalize('NFC') + ' ';
+      if (!s.trim()) return [];
+      const out = new Set();
+      // Khớp NGUYÊN TỪ (không khớp 'cá' trong 'diếp cá'). Tên trong thư viện thực phẩm khớp trước (tên dài trước),
+      // lấy vị theo thư viện rồi xoá khỏi chuỗi để từ khoá chung không khớp nhầm vào phần đó.
+      const hit = (w, g) => new RegExp('(?<!\\p{L})' + w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '(?!\\p{L})', g ? 'gu' : 'u');
+      [...tdFoodWords].sort((a, b) => b[0].length - a[0].length).forEach(([w, t]) => {
+        if (hit(w).test(s)) { out.add(t); s = s.replace(hit(w, true), ' '); }
+      });
+      // Từ khoá chung: cụm dài trước ('diếp cá' trước 'cá'), khớp xong cũng xoá khỏi chuỗi
+      Object.entries(TD_TASTE).flatMap(([t, v]) => v.words.map(w => [w, t])).sort((a, b) => b[0].length - a[0].length).forEach(([w, t]) => {
+        if (hit(w).test(s)) { out.add(t); s = s.replace(hit(w, true), ' '); }
+      });
+      return [...out];
+    }
+    const tdChip = t => `<span class="tz tz-${t}">${TD_TASTE[t].icon} ${TD_TASTE[t].label}</span>`;
+
+    async function tdInit() {
+      try {
+        const [p, f, r] = await Promise.all([
+          tdApi(''),
+          fetch('/api/foods').then(x => x.json()).catch(() => ({ foods: [] })),
+          fetch('/api/recipes').then(x => x.json()).catch(() => ({ recipes: [] })),
+        ]);
+        tdPlans = p.plans || [];
+        tdBodySrv = p.body || { type: '', source: '' };
+        tdRenderBody();
+        tdFoods = (f.foods || []).map(x => ({ ...x, tk: TD_TASTE_KEY[String(x.taste || '').toLowerCase()] || '' }));
+        tdRecipes = r.recipes || [];
+        tdFoodWords = [];
+        tdFoods.forEach(x => {
+          if (!x.tk) return;
+          String(x.name || '').toLowerCase().split(/[\/,()]+/).map(w => w.trim()).filter(w => w.length >= 3).forEach(w => tdFoodWords.push([w, x.tk]));
+        });
+        document.getElementById('tdFoodList').innerHTML = [...new Set([...tdFoods.map(x => x.name), ...tdRecipes.map(x => x.title)])]
+          .map(n => `<option value="${tdEsc(n)}"></option>`).join('');
+      } catch (e) {
+        document.getElementById('tdDay').innerHTML = `<div class="td-empty">${tdEsc(e.message)}</div>`;
+        return;
+      }
+      if (!tdPlans.length) {
+        document.getElementById('tdDay').innerHTML = `<div class="td-empty">Bạn chưa có thực đơn nào.<br><br>
+          <button class="td-btn pri" type="button" onclick="tdNew()">＋ Tạo thực đơn 7 ngày đầu tiên</button></div>`;
+        return;
+      }
+      const want = +new URLSearchParams(location.search).get('id');
+      tdOpen(tdPlans.some(x => x.id === want) ? want : tdPlans[0].id);
+    }
+    function tdOpen(id) {
+      if (tdPending) tdSaveNow();
+      tdPlan = JSON.parse(JSON.stringify(tdPlans.find(x => x.id === id)));
+      // Mở đúng ngày hôm nay nếu thực đơn đang chạy
+      tdDayIdx = 0;
+      if (tdPlan.start_date) {
+        const diff = Math.round((new Date(tdTodayStr() + 'T00:00:00') - new Date(tdPlan.start_date + 'T00:00:00')) / 864e5);
+        if (diff >= 0 && diff < 7) tdDayIdx = diff;
+      }
+      tdRender();
+    }
+    function tdRender() {
+      if (!tdPlan) return;
+      document.getElementById('tdBar').hidden = false;
+      document.getElementById('tdPlanSel').innerHTML = tdPlans.map(p => `<option value="${p.id}"${p.id === tdPlan.id ? ' selected' : ''}>${tdEsc(p.title || 'Thực đơn')}${p.start_date ? ' · ' + tdDM(p.start_date) : ''}</option>`).join('');
+      const ti = document.getElementById('tdTitle'); if (document.activeElement !== ti) ti.value = tdPlan.title || '';
+      document.getElementById('tdStart').value = tdPlan.start_date || '';
+      tdRenderDays();
+      document.getElementById('tdDay').hidden = tdWeekMode;
+      document.getElementById('tdDays').hidden = tdWeekMode;
+      document.getElementById('tdWeek').hidden = !tdWeekMode;
+      document.getElementById('tdWeekBtn').textContent = tdWeekMode ? '✏️ Nhập theo ngày' : '📅 Xem cả tuần';
+      if (tdWeekMode) tdRenderWeek(); else tdRenderDay();
+    }
+    const tdDayFilled = d => TD_MEALS.reduce((n, m) => n + d[m.k].filter(Boolean).length, 0);
+    function tdRenderDays() {
+      const today = tdTodayStr();
+      document.getElementById('tdDays').innerHTML = tdPlan.days.map((d, i) => {
+        const L = tdDayLabel(i), f = tdDayFilled(d), dd = tdDayDate(i);
+        const isToday = dd && `${dd.getFullYear()}-${String(dd.getMonth() + 1).padStart(2, '0')}-${String(dd.getDate()).padStart(2, '0')}` === today;
+        return `<button type="button" class="td-day${i === tdDayIdx ? ' on' : ''}${f >= 13 ? ' full' : ''}" onclick="tdPickDay(${i})">${L.top}${isToday ? ' ⭐' : ''}<small>${L.sub ? L.sub + ' · ' : ''}${f >= 13 ? '✅ ' + f + ' món' : f + '/13 món'}</small></button>`;
+      }).join('');
+    }
+    function tdPickDay(i) { tdDayIdx = i; tdRenderDays(); tdRenderDay(); }
+    function tdSuggest(m) {
+      const pri = tdFoods.filter(f => m.pri.includes(f.tk));
+      const sweet = tdFoods.filter(f => f.tk === 'ngot');
+      const rec = tdRecipes.filter(r => m.buoi.includes(String(r.buoi || '').toLowerCase()));
+      return { pri, sweet, rec };
+    }
+    function tdRenderDay() {
+      const d = tdPlan.days[tdDayIdx], L = tdDayLabel(tdDayIdx);
+      const meals = TD_MEALS.map(m => {
+        const rows = d[m.k].map((v, j) => {
+          const ts = tdTastes(v);
+          return `<div class="td-row"><span class="no">${j + 1}</span>
+            <div class="td-in"><input value="${tdEsc(v)}" list="tdFoodList" maxlength="120" placeholder="Món ${j + 1}${j === 0 ? ' — gõ tên món hoặc bấm gợi ý' : ''}" aria-label="${m.name} món ${j + 1}"
+              data-m="${m.k}" data-j="${j}" class="${tdHasWarn(m, ts) ? 'off' : ''}" oninput="tdSet('${m.k}',${j},this.value);tdLive(this)" onchange="tdRenderDay()">
+            <span class="tz-box">${ts.slice(0, 3).map(tdChip).join('')}</span><div class="td-notes">${tdNotesHtml(m, ts)}</div></div>
+            ${v || j >= m.n ? `<button type="button" class="x" title="${j >= m.n ? 'Bỏ ô này' : 'Xoá món'}" onclick="tdDel('${m.k}',${j})">×</button>` : ''}</div>`;
+        }).join('')
+          + (d[m.k].length < TD_MAX ? `<button type="button" class="td-plus" onclick="tdPlus('${m.k}')">＋ Thêm món</button>` : '');
+        const all = new Set(d[m.k].flatMap(tdTastes));
+        const offN = d[m.k].filter(v => tdHasWarn(m, tdTastes(v))).length;
+        const bal = m.pri.map(t => all.has(t) ? `<span>✅ Có vị ${TD_TASTE[t].label.toLowerCase()}</span>` : `<span style="color:#d97706">○ Chưa có vị ${TD_TASTE[t].label.toLowerCase()}</span>`).join(' · ')
+          + (offN ? ` · <span style="color:#b45309;font-weight:600">⚠️ ${offN} món chưa hợp vị buổi này</span>` : '');
+        const S = tdSuggest(m), open = tdMore[m.k];
+        const btn = (name, cls = '') => `<button type="button" class="${cls}" onclick="tdAdd('${m.k}', this.dataset.v)" data-v="${tdEsc(name)}">${tdEsc(name)}</button>`;
+        const lim = (arr, n) => open ? arr : arr.slice(0, n);
+        const sug = `<div class="td-sug">
+            <div class="td-sug-h">Gợi ý vị ${m.pri.map(t => TD_TASTE[t].label.toLowerCase()).join(' & ')} — bấm để thêm:</div>
+            <div class="td-sug-list">${lim(S.pri, 12).map(f => btn(f.name)).join('')}</div>
+            <div class="td-sug-h" style="margin-top:8px;">🍯 Vị ngọt (dùng cả ngày):</div>
+            <div class="td-sug-list">${lim(S.sweet, 8).map(f => btn(f.name)).join('')}</div>
+            ${S.rec.length ? `<div class="td-sug-h" style="margin-top:8px;">📖 Công thức hợp buổi này:</div><div class="td-sug-list">${lim(S.rec, 6).map(r => btn(r.title, 'rc')).join('')}</div>` : ''}
+            <div class="td-sug-list" style="margin-top:6px;"><button type="button" class="more" onclick="tdMore['${m.k}']=!tdMore['${m.k}'];tdRenderDay()">${open ? '▲ Thu gọn gợi ý' : '▼ Xem thêm gợi ý'}</button></div>
+          </div>`;
+        const pri = m.pri.map(tdChip).join(' ') + ' ' + tdChip('ngot');
+        return `<section class="td-meal" style="--mc:${m.color}">
+          <div class="td-meal-h"><h3>${m.icon} ${m.name}</h3><span>Ưu tiên ${pri}</span><span class="cnt">${d[m.k].filter(Boolean).length}/${d[m.k].length} món</span></div>
+          ${rows}
+          <div class="td-bal">${bal}</div>
+          ${sug}
+        </section>`;
+      }).join('');
+      document.getElementById('tdDay').innerHTML = `<div class="td-meals">${meals}</div>
+        <div class="td-foot" style="flex-direction:column;align-items:stretch;">
+          <label style="font-size:13px;font-weight:600;">📝 Ghi chú ${tdEsc(L.top.toLowerCase())} (nước uống, vận động, cảm nhận…)</label>
+          <textarea class="td-note" rows="2" maxlength="500" oninput="tdPlan.days[${tdDayIdx}].note=this.value;tdDirty()">${tdEsc(d.note)}</textarea>
+        </div>
+        <div class="td-foot">
+          ${tdDayIdx < 6 ? `<button class="td-btn" type="button" onclick="tdCopyNext()">📋 Chép sang ${tdEsc(tdDayLabel(tdDayIdx + 1).top)}</button>` : ''}
+          <button class="td-btn" type="button" onclick="tdCopyEmpty()">📋 Chép cho các ngày còn trống</button>
+          ${tdDayFilled(d) ? `<button class="td-btn danger" type="button" onclick="tdClearDay()">Xoá hết món ngày này</button>` : ''}
+          ${tdDayIdx < 6 ? `<button class="td-btn pri" type="button" style="margin-left:auto" onclick="tdPickDay(${tdDayIdx + 1});window.scrollTo({top:0,behavior:'smooth'})">Ngày tiếp theo →</button>` : ''}
+        </div>`;
+    }
+    // Cơ địa Hàn / Nhiệt: lấy từ Lộ trình / bài Kiểm tra Hàn–Nhiệt; chưa có thì khách tự chọn (nhớ trên máy này)
+    let tdBodySrv = { type: '', source: '' };
+    const tdBodyType = () => { if (tdBodySrv.type) return tdBodySrv.type; try { return localStorage.getItem('tdBody') || ''; } catch { return ''; } };
+    const tdIsHan = () => /^Hàn/.test(tdBodyType()), tdIsNhiet = () => /^Nhiệt/.test(tdBodyType());
+    function tdRenderBody() {
+      const el = document.getElementById('tdBody'), t = tdBodyType();
+      el.hidden = false;
+      if (tdBodySrv.type) { el.innerHTML = `🌡️ Cơ thể của bạn: <b>${tdEsc(t)}</b> <span style="color:var(--text-muted);font-size:12.5px;">(theo ${tdEsc(tdBodySrv.source)}) — lời nhắc món cay như gừng sẽ theo cơ địa này.</span>`; return; }
+      el.innerHTML = `🌡️ Cơ thể của bạn: <select onchange="try{localStorage.setItem('tdBody',this.value)}catch(e){};tdRenderBody();if(tdPlan&&!tdWeekMode)tdRenderDay()" aria-label="Cơ địa">
+          ${[['', 'Chưa biết'], ['Hàn', 'Hàn'], ['Hàn giả nhiệt', 'Hàn giả nhiệt'], ['Nhiệt', 'Nhiệt'], ['Nhiệt giả hàn', 'Nhiệt giả hàn']].map(([v, l]) => `<option value="${v}"${v === t ? ' selected' : ''}>${l}</option>`).join('')}
+        </select> <span style="font-size:12.5px;color:var(--text-muted);">Chưa biết? <a href="kiem-tra-han-nhiet.html" target="_blank" rel="noopener">Làm bài Kiểm tra Hàn–Nhiệt</a> (2 phút).</span>`;
+    }
+    // Lời nhắc cho 1 món: warn = chưa hợp (viền cam, được đếm), info = lưu ý theo cơ địa
+    // Sáng / trưa (chua, đắng, ngọt): mặn → nhắc; cay (gừng, tiêu, quế…) → cơ thể Hàn dùng được, cơ thể Nhiệt hạn chế.
+    // Chiều (cay, mặn, ngọt): chua, đắng → nhắc; cơ thể Nhiệt dùng vị cay vừa phải.
+    function tdNotes(m, ts) {
+      const out = [], t = tdBodyType(), lbl = x => TD_TASTE[x].label.toLowerCase();
+      const ok = [...m.pri, 'ngot'].map(lbl).join(', '), buoi = m.name.toLowerCase();
+      const off = ts.filter(x => (m.k === 'c' ? ['chua', 'dang'] : ['man']).includes(x));
+      if (off.length) out.push({ lvl: 'warn', text: `⚠️ Món có vị ${off.map(lbl).join(', ')} — ${buoi} nên ưu tiên vị ${ok}. Cân nhắc đổi món hoặc dời sang ${m.k === 'c' ? 'buổi sáng / trưa' : 'buổi chiều'}.` });
+      if (ts.includes('cay')) {
+        if (m.k !== 'c') {
+          if (tdIsHan()) out.push({ lvl: 'info', text: `🌡️ Cơ thể ${t}: món cay ấm như gừng, quế, tiêu dùng được vào ${buoi}, giúp làm ấm cơ thể${/giả/.test(t) ? ' — dùng vừa phải' : ''}.` });
+          else if (tdIsNhiet()) out.push({ lvl: 'warn', text: `⚠️ Cơ thể ${t}: nên hạn chế gừng và món cay nóng. ${m.name} ưu tiên vị ${ok} — giảm lượng gừng hoặc đổi món.` });
+          else out.push({ lvl: 'warn', text: `⚠️ Món có vị cay (như gừng) — ${buoi} ưu tiên vị ${ok}. Cơ thể Hàn thì dùng được (giúp làm ấm), cơ thể Nhiệt nên hạn chế. Chọn cơ địa ở đầu trang để nhận lời nhắc đúng cho bạn.` });
+        } else if (tdIsNhiet()) out.push({ lvl: 'info', text: `🌡️ Cơ thể ${t}: vị cay dùng vừa phải, hạn chế gừng, ớt, tiêu.` });
+      }
+      return out;
+    }
+    const tdHasWarn = (m, ts) => tdNotes(m, ts).some(n => n.lvl === 'warn');
+    const tdNotesHtml = (m, ts) => tdNotes(m, ts).map(n => `<div class="${n.lvl === 'warn' ? 'td-warn' : 'td-info'}">${tdEsc(n.text)}</div>`).join('');
+    // Cập nhật nhãn vị + cảnh báo ngay khi đang gõ (không vẽ lại ô nhập để giữ con trỏ)
+    function tdLive(inp) {
+      const m = TD_MEALS.find(x => x.k === inp.dataset.m), ts = tdTastes(inp.value), box = inp.parentNode;
+      box.querySelector('.tz-box').innerHTML = ts.slice(0, 3).map(tdChip).join('');
+      box.querySelector('.td-notes').innerHTML = tdNotesHtml(m, ts);
+      inp.classList.toggle('off', tdHasWarn(m, ts));
+    }
+    // ＋ Thêm món: thêm 1 ô trống (tối đa TD_MAX món / buổi) rồi đặt con trỏ vào ô mới
+    const TD_MAX = 12;
+    function tdPlus(k) {
+      const arr = tdPlan.days[tdDayIdx][k];
+      if (arr.length >= TD_MAX) return;
+      const j = arr.findIndex(x => !x);
+      if (j < 0) arr.push('');
+      tdRenderDay();
+      const el = document.querySelector(`input[data-m="${k}"][data-j="${j < 0 ? arr.length - 1 : j}"]`);
+      if (el) el.focus();
+    }
+    // ×: ô trong số món gợi ý thì xoá chữ; ô thêm thì bỏ hẳn ô
+    function tdDel(k, j) {
+      const m = TD_MEALS.find(x => x.k === k), arr = tdPlan.days[tdDayIdx][k];
+      if (j >= m.n) arr.splice(j, 1); else arr[j] = '';
+      tdDirty(); tdRenderDays(); tdRenderDay();
+    }
+    function tdSet(k, j, v) {
+      tdPlan.days[tdDayIdx][k][j] = String(v || '').slice(0, 120);
+      tdDirty(); tdRenderDays();
+    }
+    function tdAdd(k, name) {
+      const arr = tdPlan.days[tdDayIdx][k];
+      if (arr.some(x => x.toLowerCase() === String(name).toLowerCase())) return;
+      const j = arr.findIndex(x => !x);
+      if (j < 0 && arr.length >= TD_MAX) { alert(`Mỗi buổi tối đa ${TD_MAX} món. Xoá bớt 1 món (bấm ×) để thêm món khác.`); return; }
+      if (j < 0) arr.push(name); else arr[j] = name;
+      tdDirty(); tdRenderDays(); tdRenderDay();
+      const el = document.querySelector(`input[data-m="${k}"][data-j="${j < 0 ? arr.length - 1 : j}"]`);
+      if (el) { el.classList.add('td-flash'); }
+    }
+    function tdCopyNext() {
+      const nx = tdPlan.days[tdDayIdx + 1];
+      if (tdDayFilled(nx) && !confirm(`${tdDayLabel(tdDayIdx + 1).top} đã có món. Ghi đè bằng thực đơn hôm nay?`)) return;
+      tdPlan.days[tdDayIdx + 1] = JSON.parse(JSON.stringify({ ...tdPlan.days[tdDayIdx], note: nx.note }));
+      tdDirty(); tdPickDay(tdDayIdx + 1);
+    }
+    function tdCopyEmpty() {
+      const src = tdPlan.days[tdDayIdx];
+      if (!tdDayFilled(src)) { alert('Ngày này chưa có món nào để chép.'); return; }
+      let n = 0;
+      tdPlan.days.forEach((d, i) => { if (i !== tdDayIdx && !tdDayFilled(d)) { TD_MEALS.forEach(m => { d[m.k] = [...src[m.k]]; }); n++; } });
+      if (!n) { alert('Không còn ngày nào trống.'); return; }
+      tdDirty(); tdRenderDays();
+      alert(`Đã chép sang ${n} ngày còn trống. Bạn có thể sửa từng ngày cho đa dạng.`);
+    }
+    function tdClearDay() {
+      if (!confirm('Xoá hết món của ngày này?')) return;
+      TD_MEALS.forEach(m => { tdPlan.days[tdDayIdx][m.k] = Array(m.n).fill(''); });
+      tdDirty(); tdRenderDays(); tdRenderDay();
+    }
+    function tdRenderWeek() {
+      const P = tdPlan;
+      document.getElementById('tdPrintTitle').textContent = P.title || 'Thực đơn 7 ngày';
+      document.getElementById('tdPrintSub').textContent = `${[currentUser.first_name, currentUser.last_name].filter(Boolean).join(' ')}${P.start_date ? ' · từ ' + tdDM(P.start_date) : ''} · Sáng ưu tiên chua, đắng · Trưa ưu tiên chua, đắng · Chiều ưu tiên cay, mặn · Ngọt dùng cả ngày`;
+      document.getElementById('tdWeekBody').innerHTML = `<table><thead><tr><th>Ngày</th>${TD_MEALS.map(m => `<th>${m.icon} ${m.name}</th>`).join('')}<th>Ghi chú</th></tr></thead><tbody>
+        ${P.days.map((d, i) => `<tr><td>${tdEsc(tdDayLabel(i).top)}</td>${TD_MEALS.map(m => {
+          const items = d[m.k].filter(Boolean);
+          return `<td>${items.length ? `<ul>${items.map(x => `<li>${tdEsc(x)}</li>`).join('')}</ul>` : '<span style="color:var(--text-muted)">—</span>'}</td>`;
+        }).join('')}<td>${tdEsc(d.note)}</td></tr>`).join('')}</tbody></table>`;
+    }
+    function tdShowWeek() { tdWeekMode = !tdWeekMode; tdRender(); }
+    function tdPrint() {
+      const was = tdWeekMode;
+      tdWeekMode = true; tdRender();
+      setTimeout(() => { window.print(); if (!was) { tdWeekMode = false; tdRender(); } }, 80);
+    }
+
+    // Tự lưu (chờ 0,8 giây sau lần gõ cuối)
+    function tdDirty() {
+      tdPending = true;
+      document.getElementById('tdStatus').textContent = '✏️ Đang nhập…';
+      clearTimeout(tdTimer); tdTimer = setTimeout(tdSaveNow, 800);
+    }
+    async function tdSaveNow() {
+      clearTimeout(tdTimer);
+      if (!tdPlan || !tdPending) return;
+      if (tdSaving) { tdTimer = setTimeout(tdSaveNow, 400); return; }
+      tdSaving = true; tdPending = false;
+      const st = document.getElementById('tdStatus');
+      st.textContent = '⏳ Đang lưu…';
+      const snap = tdPlan;
+      try {
+        const r = await tdApi('/' + snap.id, { method: 'PUT', body: JSON.stringify({ title: snap.title, start_date: snap.start_date, days: snap.days }) });
+        const i = tdPlans.findIndex(x => x.id === snap.id);
+        if (i >= 0) tdPlans[i] = r.plan;
+        if (tdPlan && tdPlan.id === snap.id) {
+          const now = new Date();
+          st.textContent = `✅ Đã lưu lúc ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+          const sel = document.getElementById('tdPlanSel').selectedOptions[0];
+          if (sel) sel.textContent = `${snap.title || 'Thực đơn'}${snap.start_date ? ' · ' + tdDM(snap.start_date) : ''}`;
+        }
+      } catch (e) {
+        tdPending = true;
+        st.innerHTML = `<span style="color:#ef4444">⚠️ Chưa lưu được: ${tdEsc(e.message)}</span> <button class="td-btn" type="button" onclick="tdSaveNow()">Thử lại</button>`;
+      } finally { tdSaving = false; }
+    }
+    window.addEventListener('beforeunload', e => { if (tdPending || tdSaving) { tdSaveNow(); e.preventDefault(); e.returnValue = ''; } });
+    document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden' && tdPending) tdSaveNow(); });
+
+    async function tdNew() {
+      if (tdPending) await tdSaveNow();
+      const nextNo = tdPlans.length + 1;
+      let copy = null;
+      if (tdPlan && tdPlans.length && confirm(`Tạo thực đơn mới dựa trên "${tdPlan.title}" (chép sẵn các món để sửa)?\n\nBấm "Huỷ" để tạo thực đơn trống.`)) copy = tdPlan.id;
+      let start = tdTodayStr();
+      if (tdPlans[0] && tdPlans[0].start_date) {
+        const d = new Date(tdPlans[0].start_date + 'T00:00:00'); d.setDate(d.getDate() + 7);
+        const s = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+        if (s > start) start = s;
+      }
+      try {
+        const r = await tdApi('', { method: 'POST', body: JSON.stringify({ title: `Thực đơn tuần ${nextNo}`, start_date: start, copy_from: copy }) });
+        tdPlans.unshift(r.plan);
+        tdWeekMode = false;
+        tdOpen(r.plan.id);
+        document.getElementById('tdStatus').textContent = '✅ Đã tạo thực đơn mới';
+      } catch (e) { alert(e.message); }
+    }
+    async function tdDelete() {
+      if (!tdPlan || !confirm(`Xoá hẳn "${tdPlan.title}"? Không khôi phục được.`)) return;
+      try {
+        await tdApi('/' + tdPlan.id, { method: 'DELETE' });
+        tdPending = false;
+        tdPlans = tdPlans.filter(x => x.id !== tdPlan.id);
+        tdPlan = null;
+        if (tdPlans.length) tdOpen(tdPlans[0].id);
+        else { document.getElementById('tdBar').hidden = true; document.getElementById('tdDays').innerHTML = ''; document.getElementById('tdWeek').hidden = true; tdInit(); }
+      } catch (e) { alert(e.message); }
+    }
+    tdInit();
+  </script>
+</body>
+</html>

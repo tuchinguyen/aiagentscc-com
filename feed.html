@@ -3,16 +3,24 @@
 
 <head>
   <meta charset="UTF-8">
+  <script src="assets/js/auth-fetch.js?v=1"></script>
+  <script>(function(){try{var t=localStorage.getItem('theme');if(t==='dark'||(!t&&window.matchMedia('(prefers-color-scheme: dark)').matches))document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Bảng tin — AI AGENTS CC</title>
+  <link rel="icon" type="image/png" href="/assets/img/logo.png">
+  <link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
+  <link rel="manifest" href="/manifest.json?v=2">
+  <meta name="apple-mobile-web-app-title" content="AI Agents CC">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="theme-color" content="#0ea5e9">
+  <title>Feed — AI AGENTS CC</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
     href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap"
     rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/base.css">
-  <link rel="stylesheet" href="assets/css/components.css">
-  <link rel="stylesheet" href="assets/css/layout.css">
+  <link rel="stylesheet" href="assets/css/base.css?v=2">
+  <link rel="stylesheet" href="assets/css/components.css?v=11">
+  <link rel="stylesheet" href="assets/css/layout.css?v=6">
   <style>
     /* Feed-specific extras */
     .feed-filters {
@@ -89,44 +97,349 @@
       color: #78716c;
     }
 
-    /* Level lock card */
-    .level-lock-card {
-      background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
-      border: 1px solid #bae6fd;
+    /* Showcase — khung giới thiệu 8 buổi / 377 ngày */
+    .sc { margin-bottom: 14px; }
+    .sc-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin: 0 2px 8px; }
+    .sc-head-title { font-family: var(--font-heading); font-size: 13px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: .04em; }
+    .sc-collapse { border: none; background: none; color: var(--text-muted); font-family: inherit; font-size: 12px; cursor: pointer; padding: 4px 6px; border-radius: 6px; }
+    .sc-collapse:hover { background: var(--bg-hover); color: var(--text); }
+    .sc-w3 { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; padding: 10px 14px; margin-bottom: 10px; border-radius: 12px;
+      background: color-mix(in srgb, #f59e0b 12%, var(--bg-card)); border: 1px solid color-mix(in srgb, #f59e0b 40%, var(--border)); }
+    .sc-w3-text { flex: 1; min-width: 200px; font-size: 13px; color: var(--text); line-height: 1.45; }
+    .sc-w3-text b { color: #b45309; }
+    [data-theme="dark"] .sc-w3-text b { color: #fbbf24; }
+    .sc-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .sc-card { --pc: #8b5cf6; position: relative; display: flex; flex-direction: column; gap: 10px; min-width: 0; padding: 14px;
+      background: var(--bg-card); border: 1px solid var(--border); border-top: 3px solid var(--pc); border-radius: 14px; }
+    .sc-card[data-key="program377"] { --pc: #10b981; }
+    .sc-top { display: flex; align-items: center; gap: 8px; }
+    .sc-title { flex: 1; min-width: 0; font-family: var(--font-heading); font-size: 15px; font-weight: 800; color: var(--text); }
+    .sc-new { font-size: 10.5px; font-weight: 800; color: #fff; background: #ef4444; padding: 2px 7px; border-radius: 99px; }
+    .sc-pill { font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 99px; background: var(--bg-hover); color: var(--text-muted); white-space: nowrap; }
+    .sc-pill.ok { background: color-mix(in srgb, var(--pc) 15%, transparent); color: var(--pc); }
+    .sc-news { display: flex; flex-direction: column; gap: 5px; }
+    .sc-news-item { font-size: 12.5px; color: var(--text); line-height: 1.4; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+    .sc-news-item span { color: var(--text-muted); }
+    .sc-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+    .sc-stat { text-align: center; padding: 7px 2px; border-radius: 10px; background: var(--bg-hover); }
+    .sc-stat b { display: block; font-family: var(--font-heading); font-size: 17px; color: var(--text); line-height: 1.1; }
+    .sc-stat span { font-size: 10.5px; color: var(--text-muted); }
+    .sc-live { border: 1px solid color-mix(in srgb, var(--pc) 35%, var(--border)); background: color-mix(in srgb, var(--pc) 7%, var(--bg-card)); border-radius: 10px; padding: 8px 12px; overflow: hidden; }
+    .sc-live-h { display: flex; align-items: center; gap: 6px; font-size: 11.5px; font-weight: 700; color: var(--pc); text-transform: uppercase; letter-spacing: .04em; margin-bottom: 4px; }
+    .sc-live-dot { width: 7px; height: 7px; border-radius: 50%; background: #22c55e; box-shadow: 0 0 0 0 rgba(34,197,94,.6); animation: scPulse 1.6s infinite; }
+    @keyframes scPulse { 70% { box-shadow: 0 0 0 7px rgba(34,197,94,0); } 100% { box-shadow: 0 0 0 0 rgba(34,197,94,0); } }
+    .sc-live-list { position: relative; height: 44px; }
+    .sc-live-item { position: absolute; inset: 0; display: flex; gap: 8px; align-items: center; font-size: 13px; line-height: 1.4; animation: scLiveIn .5s ease-out both; }
+    .sc-live-item.out { animation: scLiveOut .45s ease-in both; }
+    .sc-live-item .ic { font-size: 18px; flex: 0 0 auto; }
+    .sc-live-item .tx { min-width: 0; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+    .sc-live-item .tm { color: var(--text-muted); font-size: 11.5px; white-space: nowrap; }
+    @keyframes scLiveIn { from { transform: translateY(18px); opacity: 0; } to { transform: none; opacity: 1; } }
+    @keyframes scLiveOut { from { transform: none; opacity: 1; } to { transform: translateY(-18px); opacity: 0; } }
+    @media (prefers-reduced-motion: reduce) { .sc-live-item, .sc-live-item.out, .sc-live-dot { animation: none; } }
+    .sc-teaser { display: block; width: 100%; text-align: left; padding: 10px 12px; border: 1px dashed var(--border); border-radius: 10px;
+      background: none; color: var(--text); font-family: inherit; cursor: pointer; }
+    .sc-teaser:hover { border-color: var(--pc); }
+    .sc-teaser-title { font-size: 13px; font-weight: 700; margin-bottom: 3px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .sc-teaser-ex { position: relative; font-size: 12.5px; color: var(--text-muted); line-height: 1.45; max-height: 3.2em; overflow: hidden; }
+    .sc-teaser-ex::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 1.5em; background: linear-gradient(transparent, var(--bg-card)); }
+    .sc-teaser-more { margin-top: 4px; font-size: 12px; font-weight: 700; color: var(--pc); }
+    .sc-story { display: flex; gap: 10px; align-items: flex-start; padding: 10px 12px; border-radius: 10px;
+      background: color-mix(in srgb, var(--pc) 8%, var(--bg-card)); border-left: 3px solid var(--pc); }
+    .sc-story img { width: 56px; height: 56px; object-fit: cover; border-radius: 8px; flex-shrink: 0; cursor: zoom-in; }
+    .sc-story-label { font-size: 10.5px; font-weight: 800; color: var(--pc); text-transform: uppercase; letter-spacing: .04em; }
+    .sc-story-result { font-size: 13px; font-weight: 700; color: var(--text); line-height: 1.4; margin-top: 2px; }
+    .sc-story-who { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+    .sc-story-detail { font-size: 12.5px; color: var(--text-muted); font-style: italic; margin-top: 4px; line-height: 1.45; }
+    .sc-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: auto; }
+    .sc-btn { flex: 1; min-width: 120px; padding: 9px 12px; border-radius: 10px; font-family: inherit; font-size: 13px; font-weight: 700; cursor: pointer;
+      text-align: center; text-decoration: none; border: 1px solid var(--border); background: var(--bg-card); color: var(--text); }
+    .sc-btn.primary { background: var(--pc, var(--color-primary)); border-color: var(--pc, var(--color-primary)); color: #fff; }
+    .sc-btn.amber { background: #f59e0b; border-color: #f59e0b; color: #fff; flex: 0 0 auto; }
+    .sc-btn:disabled { opacity: .6; cursor: default; }
+    .sc-price { font-size: 12px; color: var(--text-muted); }
+    .sc-price b { color: var(--text); }
+    .sc-mini { display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 12px; background: var(--bg-card); border: 1px solid var(--border);
+      font-size: 13px; color: var(--text); cursor: pointer; }
+    .sc-mini:hover { background: var(--bg-hover); }
+    @media (max-width: 640px) {
+      .sc-row { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 10px; padding-bottom: 4px; scrollbar-width: none; }
+      .sc-row::-webkit-scrollbar { display: none; }
+      .sc-card { flex: 0 0 86%; scroll-snap-align: start; }
+    }
+    /* Popup mở khoá bài giới thiệu */
+    .sc-modal { position: fixed; inset: 0; z-index: 1000; display: none; align-items: center; justify-content: center; padding: 16px; background: rgba(2,6,23,.72); }
+    .sc-modal.open { display: flex; }
+    .sc-modal-box { --pc: #8b5cf6; width: 100%; max-width: 520px; max-height: 90vh; overflow-y: auto; background: var(--bg-card); color: var(--text);
+      border-radius: 16px; border: 2px solid var(--pc); border-top-width: 5px; box-shadow: 0 0 0 1px color-mix(in srgb, var(--pc) 30%, transparent), 0 20px 60px rgba(0,0,0,.5); padding: 20px; }
+    .sc-modal-box[data-key="program377"] { --pc: #10b981; }
+    .sc-modal-x { float: right; border: none; background: none; font-size: 22px; line-height: 1; color: var(--text-muted); cursor: pointer; }
+    .sc-modal-prog { font-size: 12px; font-weight: 800; color: var(--pc); text-transform: uppercase; letter-spacing: .04em; }
+    .sc-modal-title { font-family: var(--font-heading); font-size: 18px; font-weight: 800; margin: 4px 0 10px; }
+    .sc-modal-img { width: 100%; max-height: 220px; object-fit: cover; border-radius: 10px; margin-bottom: 10px; }
+    .sc-modal-text { font-size: 14.5px; line-height: 1.6; white-space: pre-wrap; }
+    .sc-blur { margin-top: 6px; user-select: none; filter: blur(5px); opacity: .7; font-size: 14.5px; line-height: 1.6; color: var(--text-muted); }
+    .sc-lock { margin-top: 14px; padding: 14px; border-radius: 12px; background: color-mix(in srgb, var(--pc) 9%, var(--bg-card)); border: 1px solid color-mix(in srgb, var(--pc) 35%, var(--border)); }
+    .sc-lock h4 { margin: 0 0 8px; font-size: 14.5px; }
+    .sc-lock ul { margin: 0 0 10px; padding-left: 18px; font-size: 13px; line-height: 1.6; }
+    .sc-done { font-size: 13px; color: #059669; font-weight: 600; margin-top: 8px; }
+    .sc-w3-hint { display: block; margin-top: 10px; font-size: 12.5px; color: #b45309; text-decoration: none; font-weight: 600; }
+
+    /* Post composer */
+    .composer-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
       border-radius: var(--radius-lg);
-      padding: 16px 20px;
-      text-align: center;
+      padding: 14px 16px;
       margin-bottom: 16px;
     }
-
-    .level-lock-card p {
+    .composer-top { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+    .composer-avatar {
+      width: 38px; height: 38px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; font-weight: 700; color: #fff; flex-shrink: 0;
+    }
+    .composer-title-input {
+      flex: 1;
+      border: none;
+      background: transparent;
+      font-size: var(--fs-md);
+      font-weight: 600;
+      color: var(--text);
+      outline: none;
+    }
+    .composer-title-input::placeholder { color: var(--text-light); font-weight: 500; }
+    .composer-textarea {
+      width: 100%;
+      border: none;
+      background: transparent;
+      resize: none;
+      font-family: var(--font-body);
+      font-size: var(--fs-base);
+      color: var(--text);
+      outline: none;
+      margin-bottom: 10px;
+      min-height: 40px;
+    }
+    .composer-textarea::placeholder { color: var(--text-light); }
+    .composer-actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+      padding-top: 10px;
+      border-top: 1px solid var(--border);
+    }
+    .composer-pillar-select {
+      border: 1px solid var(--border);
+      background: var(--bg-input);
+      border-radius: var(--radius-md);
+      padding: 7px 10px;
       font-size: var(--fs-sm);
-      color: #0369a1;
+      color: var(--text-muted);
+      outline: none;
+      cursor: pointer;
+      max-width: 100%;
+      min-width: 0;
+    }
+
+    /* Composer toolbar (attach image/video/doc/gif/poll + emoji) */
+    .composer-toolbar {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      padding-bottom: 6px;
+      position: relative;
+    }
+    .composer-tool-btn {
+      width: 30px;
+      height: 30px;
+      border: none;
+      background: transparent;
+      border-radius: var(--radius-md);
+      font-size: 16px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background .15s;
+    }
+    .composer-tool-btn:hover { background: var(--bg-hover); }
+    .composer-tool-btn.active { background: var(--color-primary); }
+    .composer-emoji-wrap { position: relative; }
+    .emoji-picker {
+      display: none;
+      position: absolute;
+      top: 34px;
+      left: 0;
+      z-index: 20;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 8px;
+      box-shadow: 0 8px 24px rgba(0,0,0,.12);
+      grid-template-columns: repeat(8, 1fr);
+      gap: 2px;
+      width: 240px;
+    }
+    .emoji-picker.open { display: grid; }
+    .emoji-picker button {
+      border: none;
+      background: transparent;
+      font-size: 17px;
+      padding: 4px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .emoji-picker button:hover { background: var(--bg-hover); }
+
+    .composer-attach-box {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--bg-hover);
+      border-radius: var(--radius-md);
+      padding: 8px 10px;
       margin-bottom: 8px;
     }
-
-    .level-lock-card p strong {
-      color: #0c4a6e;
+    .composer-attach-icon { font-size: 15px; flex-shrink: 0; }
+    .composer-attach-input {
+      flex: 1;
+      border: none;
+      background: transparent;
+      font-size: var(--fs-sm);
+      color: var(--text);
+      outline: none;
+      font-family: var(--font-body);
     }
+    .composer-attach-remove {
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      font-size: 16px;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+    .composer-poll-box {
+      background: var(--bg-hover);
+      border-radius: var(--radius-md);
+      padding: 10px;
+      margin-bottom: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .composer-poll-box input {
+      width: 100%;
+      box-sizing: border-box;
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      border-radius: var(--radius-sm);
+      padding: 7px 10px;
+      font-size: var(--fs-sm);
+      color: var(--text);
+      outline: none;
+      font-family: var(--font-body);
+    }
+    .composer-poll-opt-row { display: flex; }
+    .composer-poll-add,
+    .composer-attach-remove-text {
+      border: none;
+      background: transparent;
+      color: var(--color-primary);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      padding: 4px 0;
+    }
+    .composer-attach-remove-text { color: var(--text-muted); }
 
-    .level-lock-progress {
-      height: 6px;
-      background: #bae6fd;
-      border-radius: 99px;
-      max-width: 200px;
-      margin: 0 auto 6px;
+    /* Post media (image / video / doc link) */
+    .post-media-img {
+      display: block;
+      width: 100%;
+      max-height: 420px;
+      object-fit: contain;
+      background: var(--bg-hover);
+      border-radius: var(--radius-md);
+      margin: 8px 0;
+    }
+    .post-media-video {
+      position: relative;
+      width: 100%;
+      padding-top: 56.25%;
+      border-radius: var(--radius-md);
       overflow: hidden;
+      margin: 8px 0;
     }
-
-    .level-lock-fill {
+    .post-media-video iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
       height: 100%;
-      background: var(--color-primary);
-      border-radius: 99px;
+      border: none;
+    }
+    .post-media-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: var(--fs-sm);
+      font-weight: 600;
+      color: var(--color-primary);
+      background: var(--bg-hover);
+      border-radius: var(--radius-md);
+      padding: 8px 12px;
+      margin: 8px 0;
+      text-decoration: none;
     }
 
-    .level-lock-sub {
-      font-size: var(--fs-xs);
-      color: #64748b;
+    /* Poll */
+    .post-poll {
+      margin: 8px 0;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 10px 12px;
+    }
+    .poll-question {
+      font-size: var(--fs-sm);
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+    .poll-options { display: flex; flex-direction: column; gap: 6px; }
+    .poll-opt {
+      position: relative;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 7px 10px;
+      font-size: var(--fs-sm);
+      color: var(--text);
+      cursor: pointer;
+      overflow: hidden;
+      transition: border-color .15s;
+    }
+    .poll-opt:hover { border-color: var(--color-primary); }
+    .poll-opt-bar {
+      position: absolute;
+      inset: 0;
+      background: var(--bg-active);
+      z-index: 0;
+      transition: width .3s;
+    }
+    .poll-opt-row {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .poll-opt-voted { cursor: pointer; }
+    .poll-opt-mine { border-color: var(--color-primary); font-weight: 600; }
+    .poll-total {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 8px;
     }
 
     /* Post list gap */
@@ -247,6 +560,10 @@
         padding: 8px 10px;
         font-size: 12px;
       }
+
+      .composer-pillar-select {
+        max-width: calc(100vw - 64px);
+      }
     }
 
     /* ── Post Detail Modal ──────────────────────────────── */
@@ -270,14 +587,15 @@
     }
 
     .post-modal {
-      background: #fff;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
       border-radius: 16px;
       width: 100%;
       max-width: 680px;
       max-height: 90vh;
       display: flex;
       flex-direction: column;
-      box-shadow: 0 20px 60px rgba(0, 0, 0, .18);
+      box-shadow: var(--shadow-modal);
       transform: translateY(16px);
       transition: transform .2s;
       overflow: hidden;
@@ -321,7 +639,7 @@
     }
 
     .pm-close:hover {
-      background: #e2e8f0;
+      background: var(--border);
     }
 
     .pm-body {
@@ -394,7 +712,7 @@
       padding: 7px 16px;
       border-radius: var(--radius-md);
       border: 1.5px solid var(--border);
-      background: #fff;
+      background: var(--bg-card);
       cursor: pointer;
       font-size: var(--fs-sm);
       font-weight: 600;
@@ -535,7 +853,7 @@
 
     .pm-reply-input:focus {
       border-color: var(--color-primary);
-      background: #fff;
+      background: var(--bg-card);
     }
 
     .pm-reply-submit {
@@ -618,7 +936,7 @@
 
     .pm-comment-input:focus {
       border-color: var(--color-primary);
-      background: #fff;
+      background: var(--bg-card);
     }
 
     .pm-comment-submit {
@@ -664,14 +982,7 @@
     <!-- Sidebar -->
     <aside id="sidebar">
       <div id="sidebar-logo">
-        <div class="sidebar-logo-mark">
-          <svg viewBox="0 0 20 20" fill="none">
-            <circle cx="10" cy="10" r="3" fill="currentColor" />
-            <path d="M10 3v2M10 15v2M3 10h2M15 10h2" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-            <path d="M5.5 5.5l1.5 1.5M13 13l1.5 1.5M14.5 5.5L13 7M7 13l-1.5 1.5" stroke="currentColor"
-              stroke-width="1.5" stroke-linecap="round" />
-          </svg>
-        </div>
+        <div class="sidebar-logo-mark" style="background:transparent;"><img src="assets/img/logo.png" alt="Logo" style="width:100%;height:100%;object-fit:contain;"></div>
         <div class="sidebar-logo-text">AI AGENTS <span>CC</span></div>
       </div>
 
@@ -682,40 +993,13 @@
           <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
             <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
           </svg>
-          Bảng tin
+          Feed
         </a>
 
-        <a href="cot.html" class="nav-item">
-          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-            <polygon
-              points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-          </svg>
-          CÔT
-        </a>
 
-        <a href="signal.html" class="nav-item">
-          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
-          </svg>
-          Tín hiệu
-        </a>
 
-        <a href="qa.html" class="nav-item">
-          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-            <path
-              d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
-          Hỏi đáp
-        </a>
 
         <div class="nav-section-label" style="margin-top:8px;">Học tập</div>
-
-        <a href="courses.html" class="nav-item">
-          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-            <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
-          </svg>
-          Khóa học
-        </a>
 
         <a href="challenge.html" class="nav-item">
           <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
@@ -723,15 +1007,6 @@
               d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z" />
           </svg>
           Challenge
-        </a>
-
-        <a href="leaderboard.html" class="nav-item">
-          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-            <path
-              d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"
-              stroke-linecap="round" />
-          </svg>
-          Leaderboard
         </a>
 
         <div class="nav-section-label" style="margin-top:8px;">Khác</div>
@@ -742,14 +1017,6 @@
               d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z" />
           </svg>
           Marketplace
-        </a>
-
-        <a href="members.html" class="nav-item">
-          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-            <path
-              d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
-          </svg>
-          Thành viên
         </a>
       </nav>
 
@@ -777,32 +1044,62 @@
 
       <!-- Mobile topbar -->
       <div id="mobile-topbar">
-        <button class="mob-menu-btn" onclick="openSidebar()" aria-label="Menu">
+        <button class="mob-menu-btn" onclick="toggleSidebar()" aria-label="Menu">
           <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
             <line x1="3" y1="6" x2="21" y2="6" />
             <line x1="3" y1="12" x2="21" y2="12" />
             <line x1="3" y1="18" x2="21" y2="18" />
           </svg>
         </button>
-        <span style="flex:1;font-size:var(--fs-md);font-weight:600;color:var(--text)">Bảng tin</span>
-        <a href="#" class="icon-btn" aria-label="Thông báo" style="position:relative;">
-          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-            <path
-              d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-          </svg>
-          <span class="notif-dot"></span>
-        </a>
-      </div>
+        <span style="flex:1;font-size:var(--fs-md);font-weight:600;color:var(--text)">Feed</span>
+        <div class="mob-topbar-right">
+          <button class="icon-btn" id="themeToggleMob" type="button" aria-label="Chuyển chế độ sáng/tối">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"></svg>
+          </button>
+          <button class="icon-btn" id="notifBellMob" aria-label="Thông báo" style="position:relative;">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+            </svg>
+            <span id="notifBadgeMob" style="display:none;position:absolute;top:2px;right:2px;background:#ef4444;color:#fff;font-size:10px;font-weight:700;border-radius:99px;min-width:16px;height:16px;padding:0 4px;line-height:16px;text-align:center;">0</span>
+          </button>
+          <div id="topbarAvatarMob" style="width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;background:#7c3aed;flex-shrink:0;"></div>
+        </div>
+</div>
 
       <!-- Desktop topbar -->
-      <div id="topbar">
-        <div class="topbar-title">
-          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-            <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
-          </svg>
-          Bảng tin
-        </div>
+      <nav id="subnav-bar" class="subnav-bar" aria-label="Điều hướng nhanh">
+        <a href="feed.html" class="subnav-item active">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+          Feed
+        </a>
+        <a href="spaces.html" class="subnav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></svg>
+          Spaces
+        </a>
+        <a href="courses.html" class="subnav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/></svg>
+          Courses
+        </a>
+        <a href="members.html" class="subnav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+          Members
+        </a>
+        <a href="leaderboard.html" class="subnav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/></svg>
+          Leaderboard
+        </a>
+        <a href="calendar.html" class="subnav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          Calendar
+        </a>
+        <a href="about.html" class="subnav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+          About
+        </a>
         <div class="topbar-right">
+          <button class="icon-btn" id="themeToggle" type="button" aria-label="Chuyển chế độ sáng/tối">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"></svg>
+          </button>
           <div style="position:relative;">
             <button class="icon-btn" id="notifBell" aria-label="Thông báo" style="position:relative;">
               <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
@@ -818,13 +1115,26 @@
                 d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
             </svg>
           </a>
-          <div class="topbar-search" role="button" tabindex="0">
+          <div class="topbar-search">
             <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
               <circle cx="11" cy="11" r="8" />
               <line x1="21" y1="21" x2="16.65" y2="16.65" />
             </svg>
-            Tìm kiếm...
+            <input type="text" id="globalSearchInput" placeholder="Tìm kiếm..." autocomplete="off">
+            <div id="globalSearchResults" class="gsr-panel"></div>
           </div>
+          <div id="topbarAvatar"
+            style="width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;background:#7c3aed;cursor:pointer;flex-shrink:0;">
+          </div>
+        </div>
+      </nav>
+
+      <div id="topbar">
+        <div class="topbar-title">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
+          </svg>
+          Feed
         </div>
       </div>
 
@@ -839,20 +1149,48 @@
         <!-- Feed -->
         <main id="feed">
 
-          <!-- Level lock notice -->
-          <div class="level-lock-card">
-            <p>🔒 Đạt <strong>Level 10</strong> để mở khóa đăng bài. Hãy tương tác bằng comment!</p>
-            <div class="level-lock-progress">
-              <div class="level-lock-fill" style="width:20%"></div>
+          <!-- Khung giới thiệu 8 buổi / 377 ngày (loadShowcase) -->
+          <section class="sc" id="showcase" aria-label="Chương trình trong Ngôi Nhà" style="display:none;"></section>
+
+          <!-- Post composer -->
+          <div class="composer-card">
+            <div class="composer-top">
+              <div class="composer-avatar" id="composerAvatar"></div>
+              <input type="text" id="composerTitle" class="composer-title-input" placeholder="Tiêu đề (tuỳ chọn)">
             </div>
-            <div class="level-lock-sub">Level 2 / 10</div>
+            <textarea id="composerContent" class="composer-textarea" rows="2" placeholder="Bạn đang nghĩ gì?"></textarea>
+            <div id="composerAttachWrap" style="display:none;"></div>
+            <div class="composer-toolbar">
+              <button type="button" class="composer-tool-btn" data-type="image" onclick="toggleAttach('image')" title="Ảnh">🖼️</button>
+              <button type="button" class="composer-tool-btn" data-type="video" onclick="toggleAttach('video')" title="Video">🎬</button>
+              <button type="button" class="composer-tool-btn" data-type="doc" onclick="toggleAttach('doc')" title="Tài liệu">📄</button>
+              <button type="button" class="composer-tool-btn" data-type="gif" onclick="toggleAttach('gif')" title="GIF">🎞️</button>
+              <button type="button" class="composer-tool-btn" data-type="poll" onclick="toggleAttach('poll')" title="Bình chọn">📊</button>
+              <div class="composer-emoji-wrap">
+                <button type="button" class="composer-tool-btn" onclick="toggleEmojiPicker(event)" title="Emoji">😀</button>
+                <div class="emoji-picker" id="emojiPicker"></div>
+              </div>
+            </div>
+            <div class="composer-actions">
+              <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;min-width:0;max-width:100%;">
+                <select id="composerSpace" class="composer-pillar-select">
+                  <option value="">🏠 Chọn Space *</option>
+                </select>
+                <select id="composerTopic" class="composer-pillar-select">
+                  <option value="">Chọn Topic *</option>
+                </select>
+                <select id="composerPillar" class="composer-pillar-select">
+                  <option value="">Không thuộc trụ cột</option>
+                </select>
+              </div>
+              <button class="btn btn-primary btn-sm" id="composerSubmitBtn" onclick="submitPost()">Đăng bài</button>
+            </div>
           </div>
 
           <!-- Tabs + filter -->
           <div class="feed-filters">
             <div class="tab-nav" style="margin-bottom:0;border:0;flex:1;min-width:0;">
               <button class="tab-item active" data-tab="latest">Mới nhất</button>
-              <button class="tab-item" data-tab="cot">⭐ CÔT</button>
               <button class="tab-item" data-tab="popular">🔥 Phổ biến</button>
               <button class="tab-item" data-tab="signal">⚡ Tín hiệu</button>
             </div>
@@ -865,13 +1203,7 @@
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                 </svg>
               </button>
-              <div class="pillar-menu" id="pillarMenu">
-                <button class="pillar-option" onclick="setPillar('offer',this)">🔥 Offer</button>
-                <button class="pillar-option" onclick="setPillar('traffic',this)">✨ Thu hút</button>
-                <button class="pillar-option" onclick="setPillar('conversion',this)">🎯 Chuyển đổi</button>
-                <button class="pillar-option" onclick="setPillar('delivery',this)">⚙️ Cung ứng</button>
-                <button class="pillar-option" onclick="setPillar('continuity',this)">🔄 Continuity</button>
-              </div>
+              <div class="pillar-menu" id="pillarMenu"></div>
             </div>
           </div>
 
@@ -905,6 +1237,16 @@
             </div>
           </div>
 
+          <!-- Nội quy cộng đồng -->
+          <a class="rp-card" href="noi-quy.html" style="display:flex;gap:12px;align-items:center;text-decoration:none;color:var(--text);">
+            <span style="font-size:24px;line-height:1;">📜</span>
+            <span style="flex:1;min-width:0;">
+              <span style="display:block;font-weight:700;font-size:var(--fs-sm);">Nội quy cộng đồng</span>
+              <span style="display:block;font-size:var(--fs-xs);color:var(--text-muted);margin-top:2px;">Quy định chung, xử lý vi phạm, thanh toán &amp; hoàn phí</span>
+            </span>
+            <span style="color:var(--color-primary);font-weight:700;">→</span>
+          </a>
+
         </aside>
       </div>
     </div>
@@ -922,7 +1264,7 @@
           <path d="M10 3v2M10 15v2M3 10h2M15 10h2" stroke="#fff" stroke-width="2" stroke-linecap="round" />
         </svg>
       </div>
-      AI AGENTS CC
+      <span class="mob-brand-name">AI AGENTS CC</span>
     </div>
     <nav style="flex:1;overflow-y:auto;padding:8px;">
       <div class="nav-section-label">Cộng đồng</div>
@@ -930,34 +1272,9 @@
         <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
           <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
         </svg>
-        Bảng tin
-      </a>
-      <a href="cot.html" class="nav-item">
-        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-          <polygon
-            points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-        </svg>
-        CÔT
-      </a>
-      <a href="signal.html" class="nav-item">
-        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-          <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
-        </svg>
-        Tín hiệu
-      </a>
-      <a href="qa.html" class="nav-item">
-        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-          <path d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-        </svg>
-        Hỏi đáp
+        Feed
       </a>
       <div class="nav-section-label">Học tập</div>
-      <a href="courses.html" class="nav-item">
-        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-          <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
-        </svg>
-        Khóa học
-      </a>
       <a href="challenge.html" class="nav-item">
         <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
           <path
@@ -965,67 +1282,89 @@
         </svg>
         Challenge
       </a>
-      <a href="leaderboard.html" class="nav-item">
-        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-          <path
-            d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
-        </svg>
-        Leaderboard
-      </a>
       <div class="nav-section-label">Khác</div>
       <a href="marketplace.html" class="nav-item">
         <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
           <path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z"/>
         </svg>
-        Chợ
-      </a>
-      <a href="members.html" class="nav-item">
-        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-          <path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>
-        </svg>
-        Thành viên
+        Marketplace
       </a>
     </nav>
-    <div id="sidebar-user" style="background:var(--bg-app);">
+    <div id="mob-sidebar-user" style="background:var(--bg-app);">
       <div class="user-avatar-wrap">
-        <div class="avatar-placeholder avatar-md"
+        <div class="avatar-placeholder avatar-md" id="sbAvatarMob"
           style="background:#7c3aed;width:32px;height:32px;font-size:12px;font-weight:700;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;">
-          TC</div>
+          ?</div>
       </div>
       <div class="user-info">
-        <div class="user-name">Từ Chí Nguyễn</div>
-        <div class="user-level">Beginner · Lv.2</div>
+        <div class="user-name" id="sbNameMob">—</div>
+        <div class="user-level" id="sbLevelMob">—</div>
       </div>
     </div>
   </div>
 
   <!-- Mobile bottom nav -->
+  <!-- Mobile main menu (full site navigation) -->
+  <div id="mob-mainmenu-overlay" onclick="closeMainMenu()"></div>
+  <div id="mob-mainmenu">
+    <div style="padding:14px 16px;border-bottom:1px solid var(--border);font-size:var(--fs-md);font-weight:700;color:var(--text);display:flex;align-items:center;gap:8px;">
+      <div style="width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;"><img src="assets/img/logo.png" alt="Logo" style="width:100%;height:100%;object-fit:contain;"></div>
+      Menu chính
+    </div>
+    <nav style="flex:1;overflow-y:auto;padding:8px;">
+      <a href="feed.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        Feed
+      </a>
+      <a href="spaces.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></svg>
+        Spaces
+      </a>
+      <a href="courses.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/></svg>
+        Courses
+      </a>
+      <a href="members.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+        Members
+      </a>
+      <a href="leaderboard.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/></svg>
+        Leaderboard
+      </a>
+      <a href="calendar.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        Calendar
+      </a>
+      <a href="about.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+        About
+      </a>
+    </nav>
+  </div>
+
   <nav id="mobile-nav">
     <a href="feed.html" class="mob-nav-btn active">
       <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
         <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
       </svg>
-      Bảng tin
+      Feed
     </a>
-    <a href="challenge.html" class="mob-nav-btn">
-      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-        <path d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z"/>
-      </svg>
-      Challenge
+    <a href="spaces.html" class="mob-nav-btn">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></svg>
+      Spaces
     </a>
-    <a href="marketplace.html" class="mob-nav-btn">
-      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-        <path d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
-      </svg>
-      Chợ
+    <a href="courses.html" class="mob-nav-btn">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/></svg>
+      Courses
     </a>
     <a href="members.html" class="mob-nav-btn">
       <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
         <path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>
       </svg>
-      Cộng đồng
+      Members
     </a>
-    <button class="mob-nav-btn" onclick="openSidebar()">
+    <button class="mob-nav-btn" onclick="toggleMainMenu()">
       <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
         <line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/>
       </svg>
@@ -1033,17 +1372,19 @@
     </button>
   </nav>
 
-  <script src="assets/js/app.js"></script>
+  <script src="assets/js/app.js?v=28"></script>
   <script>
     const API = '/api';
-    const PILLAR_LABEL = { offer: 'Offer', traffic: 'Thu hút', conversion: 'Chuyển đổi', delivery: 'Cung ứng', continuity: 'Continuity' };
-    const PILLAR_CLASS = { offer: 'badge-offer', traffic: 'badge-traffic', conversion: 'badge-conversion', delivery: 'badge-delivery', continuity: 'badge-continuity' };
+    let PILLARS = {};
+    let PILLARS_LIST = [];
     const AV_COLORS = ['#0ea5e9', '#8b5cf6', '#10b981', '#f59e0b', '#ec4899', '#3b82f6', '#ef4444', '#14b8a6'];
     const TYPE_LABEL = { post: 'Bài viết', cot: '⭐ CÔT', signal: '⚡ Tín hiệu', qa: '❓ Hỏi đáp' };
     const LEVELS = [
-      { level: 1, xpMin: 0, xpMax: 45 }, { level: 2, xpMin: 45, xpMax: 120 }, { level: 3, xpMin: 120, xpMax: 250 },
-      { level: 4, xpMin: 250, xpMax: 450 }, { level: 5, xpMin: 450, xpMax: 700 }, { level: 6, xpMin: 700, xpMax: 1000 },
-      { level: 7, xpMin: 1000, xpMax: 1500 }, { level: 8, xpMin: 1500, xpMax: 2200 }, { level: 9, xpMin: 2200, xpMax: 9999 },
+      { level: 1, name: 'Khởi động', xpMin: 0, xpMax: 45 }, { level: 2, name: 'Học viên', xpMin: 45, xpMax: 120 },
+      { level: 3, name: 'Thực hành', xpMin: 120, xpMax: 250 }, { level: 4, name: 'Nâng cao', xpMin: 250, xpMax: 450 },
+      { level: 5, name: 'Chuyên gia', xpMin: 450, xpMax: 700 }, { level: 6, name: 'Bậc thầy', xpMin: 700, xpMax: 1000 },
+      { level: 7, name: 'Huyền thoại', xpMin: 1000, xpMax: 1500 }, { level: 8, name: 'Tiên tri', xpMin: 1500, xpMax: 2200 },
+      { level: 9, name: 'Thần thánh', xpMin: 2200, xpMax: 9999 },
     ];
     function getLevelDef(xp) { for (let i = LEVELS.length - 1; i >= 0; i--) if (xp >= LEVELS[i].xpMin) return LEVELS[i]; return LEVELS[0]; }
 
@@ -1054,50 +1395,440 @@
 
     // ── Auth ─────────────────────────────────────────────────────
     function doLogout() {
-      sessionStorage.removeItem('currentUser');
+      localStorage.removeItem('currentUser');
       window.location.href = 'index.html';
     }
 
     function initUser() {
-      const raw = sessionStorage.getItem('currentUser');
+      const raw = localStorage.getItem('currentUser');
       if (!raw) { window.location.href = 'index.html'; return; }
       currentUser = JSON.parse(raw);
+      if (!currentUser.ttm_intake_done_at) {
+        // Chỉ chặn ở đây khi admin chọn thời điểm "signup" (mặc định) trong
+        // Cài đặt → Khảo sát; các thời điểm khác (khi đăng ký 8 buổi / 377
+        // ngày / không bắt buộc) để enrollWorkshop8()/enrollP377() tự kiểm tra.
+        fetch(`/api/settings`).then(r => r.json()).then(settings => {
+          if ((settings.ttm_intake_trigger || 'none') !== 'signup') return;
+          // localStorage có thể bị lệch với server (cache cũ từ trước khi có
+          // tính năng này, nhiều tab, v.v.) — xác nhận lại với server trước khi
+          // khoá; tự chữa localStorage nếu server xác nhận đã làm intake rồi.
+          return fetch(`/api/ttm/intake-status/${currentUser.id}`).then(r => r.json()).then(status => {
+            if (status.done) {
+              currentUser.ttm_intake_done_at = status.doneAt || new Date().toISOString();
+              try { localStorage.setItem('currentUser', JSON.stringify(currentUser)); } catch (e) {}
+            } else {
+              window.location.href = 'intake-than-tam-menh.html';
+            }
+          });
+        }).catch(() => {});
+      }
       const initials = (currentUser.first_name[0] + (currentUser.last_name ? currentUser.last_name[0] : '')).toUpperCase();
       const color = AV_COLORS[currentUser.id % AV_COLORS.length];
       document.getElementById('sbAvatar').textContent = initials;
       document.getElementById('sbAvatar').style.background = color;
       document.getElementById('sbName').textContent = currentUser.first_name + ' ' + currentUser.last_name;
-      document.getElementById('sbLevel').textContent = `Level ${currentUser.level} · ${currentUser.xp} XP`;
-      const sbUserWrap = document.querySelector('#sidebar-user .user-avatar-wrap');
-      if (sbUserWrap) {
-        sbUserWrap.style.cursor = 'pointer';
-        sbUserWrap.onclick = () => window.location.href = `profile.html?id=${currentUser.id}`;
+      const sbLv = getLevelDef(currentUser.xp || 0);
+      document.getElementById('sbLevel').textContent = sbLv.name + ' · Lv.' + sbLv.level;
+      const sbAvatarMob = document.getElementById('sbAvatarMob');
+      if (sbAvatarMob) { sbAvatarMob.textContent = initials; sbAvatarMob.style.background = color; }
+      const sbNameMob = document.getElementById('sbNameMob');
+      if (sbNameMob) sbNameMob.textContent = currentUser.first_name + ' ' + currentUser.last_name;
+      const sbLevelMob = document.getElementById('sbLevelMob');
+      if (sbLevelMob) sbLevelMob.textContent = sbLv.name + ' · Lv.' + sbLv.level;
+      const tbAv = document.getElementById('topbarAvatar');
+      if (tbAv) {
+        tbAv.textContent = initials;
+        tbAv.style.background = color;
+        tbAv.onclick = () => window.location.href = `profile.html?id=${currentUser.id}`;
       }
-      const sbUserInfo = document.querySelector('#sidebar-user .user-info');
-      if (sbUserInfo) {
-        sbUserInfo.style.cursor = 'pointer';
-        sbUserInfo.onclick = () => window.location.href = `profile.html?id=${currentUser.id}`;
+      document.querySelectorAll('#sidebar-user .user-avatar-wrap, #mob-sidebar-user .user-avatar-wrap').forEach(el => {
+        el.style.cursor = 'pointer';
+        el.onclick = () => window.location.href = `profile.html?id=${currentUser.id}`;
+      });
+      document.querySelectorAll('#sidebar-user .user-info, #mob-sidebar-user .user-info').forEach(el => {
+        el.style.cursor = 'pointer';
+        el.onclick = () => window.location.href = `profile.html?id=${currentUser.id}`;
+      });
+
+      const cAvatar = document.getElementById('composerAvatar');
+      if (cAvatar) { cAvatar.textContent = initials; cAvatar.style.background = color; }
+      const cContent = document.getElementById('composerContent');
+      if (cContent) cContent.placeholder = `${currentUser.first_name} ơi, bạn đang nghĩ gì?`;
+    }
+
+    // Sessions cached before the admin-role field existed (or after a role change) can hold a
+    // stale is_admin — refresh it from the server so admin-only UI (pin toggle) shows correctly.
+    async function refreshAdminFlag() {
+      if (!currentUser) return;
+      try {
+        const u = await fetch(`${API}/users/${currentUser.id}?requester_id=${currentUser.id}`).then(r => r.json());
+        if (typeof u.is_admin === 'boolean' && u.is_admin !== currentUser.is_admin) {
+          currentUser.is_admin = u.is_admin;
+          localStorage.setItem('currentUser', JSON.stringify(currentUser));
+        }
+      } catch (e) {}
+    }
+
+    // ── Pillars (dynamic — admin-managed) ─────────────────────────────
+    async function loadPillars() {
+      try {
+        const { pillars } = await fetch(`${API}/pillars`).then(r => r.json());
+        PILLARS_LIST = pillars || [];
+        PILLARS = {};
+        // Kim/Thủy's seeded colors (#94a3b8/#1f2937) are unreadable on a dark
+        // card — lighten them in dark mode, matching base.css's --pillar-kim/
+        // -thuy dark overrides.
+        const isDarkTheme = document.documentElement.getAttribute('data-theme') === 'dark';
+        if (isDarkTheme) {
+          PILLARS_LIST.forEach(p => {
+            if (p.key === 'kim') p.color = '#cbd5e1';
+            if (p.key === 'thuy') p.color = '#64748b';
+          });
+        }
+        PILLARS_LIST.forEach(p => { PILLARS[p.key] = p; });
+        const sel = document.getElementById('composerPillar');
+        if (sel) {
+          PILLARS_LIST.forEach(p => {
+            const opt = document.createElement('option');
+            opt.value = p.key;
+            opt.textContent = `${p.icon || '🔥'} ${p.label}`;
+            sel.appendChild(opt);
+          });
+        }
+        const menu = document.getElementById('pillarMenu');
+        if (menu) {
+          menu.innerHTML =
+            `<button class="pillar-option" onclick="setPillar('',this)" style="border-bottom:1px solid var(--border);">🗂️ Tất cả</button>` +
+            PILLARS_LIST.map(p =>
+              `<button class="pillar-option" onclick="setPillar('${p.key}',this)">${p.icon || '🔥'} ${escHtml(p.label)}</button>`
+            ).join('');
+        }
+      } catch (e) {}
+    }
+
+    // ── Post composer ───────────────────────────────────────────────
+    async function loadComposerSpaces() {
+      const sel = document.getElementById('composerSpace');
+      if (!sel || !currentUser) return;
+      try {
+        // Only spaces the user can actually post into: public spaces (open to everyone,
+        // same rule as viewing) plus private/secret spaces they have an approved membership in.
+        const [{ spaces }, settings] = await Promise.all([
+          fetch(`${API}/spaces?user_id=${currentUser.id}`).then(r => r.json()),
+          fetch(`${API}/settings`).then(r => r.json()).catch(() => ({})),
+        ]);
+        (spaces || [])
+          .filter(s => s.visibility === 'public' || s.join_status === 'approved')
+          .forEach(s => {
+            const opt = document.createElement('option');
+            opt.value = s.id;
+            opt.textContent = `${s.icon || '💬'} ${s.name}`;
+            sel.appendChild(opt);
+          });
+        sel.addEventListener('change', onComposerSpaceChange);
+        composerDefaultSpace = String(settings.feed_default_space_id || '');
+        await applyComposerDefaultSpace();
+      } catch (e) {}
+    }
+
+    // Space mặc định (Admin → Không gian) — chọn sẵn kèm topic "Thảo luận chung" nếu có
+    let composerDefaultSpace = '';
+    async function applyComposerDefaultSpace() {
+      const sel = document.getElementById('composerSpace');
+      const def = composerDefaultSpace;
+      if (!sel || !def || ![...sel.options].some(o => o.value === def)) return;
+      sel.value = def;
+      await onComposerSpaceChange();
+      const topicSel = document.getElementById('composerTopic');
+      const general = [...topicSel.options].find(o => /thảo luận chung/i.test(o.textContent));
+      if (general) topicSel.value = general.value;
+      else if (topicSel.options.length === 2) topicSel.selectedIndex = 1;   // chỉ có 1 topic → chọn luôn
+    }
+
+    async function onComposerSpaceChange() {
+      const spaceId = document.getElementById('composerSpace').value;
+      const topicSel = document.getElementById('composerTopic');
+      topicSel.innerHTML = '<option value="">Chọn Topic *</option>';
+      if (!spaceId) return;
+      try {
+        const { topics } = await fetch(`${API}/topics?space_id=${spaceId}`).then(r => r.json());
+        if (!topics || !topics.length) {
+          topicSel.innerHTML = '<option value="">Space này chưa có Topic</option>';
+          return;
+        }
+        topics.forEach(t => {
+          const opt = document.createElement('option');
+          opt.value = t.id;
+          opt.textContent = `${t.icon || '🏷️'} ${t.name}`;
+          topicSel.appendChild(opt);
+        });
+      } catch (e) {}
+    }
+
+    // ── Composer toolbar: attachments (image/video/doc/gif/poll) ─────
+    let activeAttachType = null;
+
+    // Auto-embed: paste an image/document link straight into the content box
+    const AUTO_EMBED_IMAGE_RE = /\.(jpe?g|png|gif|webp|bmp|svg)(\?\S*)?$/i;
+    const AUTO_EMBED_DOC_RE = /\.(pdf|docx?|pptx?|xlsx?|txt)(\?\S*)?$/i;
+    const DRIVE_HOST_RE = /^https?:\/\/(drive|docs)\.google\.com\//i;
+    function detectAutoEmbedType(url) {
+      if (AUTO_EMBED_IMAGE_RE.test(url)) return 'image';
+      if (AUTO_EMBED_DOC_RE.test(url)) return 'doc';
+      if (/^https?:\/\/drive\.google\.com\//i.test(url)) return 'image'; // most Drive links shared here are photos
+      if (/^https?:\/\/docs\.google\.com\//i.test(url)) return 'doc'; // Docs/Sheets/Slides are genuine documents
+      return null;
+    }
+    // Google Drive share links (.../file/d/ID/view) aren't direct image URLs — <img> can't render them.
+    // Rewrite to Drive's direct-content URL so it actually displays inline.
+    function driveFileId(url) {
+      const m = url.match(/\/d\/([a-zA-Z0-9_-]{15,})/) || url.match(/[?&]id=([a-zA-Z0-9_-]{15,})/);
+      return m ? m[1] : null;
+    }
+    function normalizeAttachUrl(type, url) {
+      if ((type === 'image' || type === 'gif') && DRIVE_HOST_RE.test(url)) {
+        const id = driveFileId(url);
+        // "uc?export=view" không còn nhúng được vào <img> — dùng endpoint thumbnail của Drive
+        if (id) return `https://drive.google.com/thumbnail?id=${id}&sz=w1600`;
+      }
+      return url;
+    }
+    document.getElementById('composerContent')?.addEventListener('paste', (e) => {
+      if (activeAttachType) return;
+      const text = (e.clipboardData || window.clipboardData)?.getData('text') || '';
+      const match = text.match(/https?:\/\/[^\s<>"']+/i);
+      if (!match) return;
+      const url = match[0].replace(/[.,;:!?)]+$/, '');
+      const type = detectAutoEmbedType(url);
+      if (!type) return;
+      toggleAttach(type);
+      const input = document.getElementById('composerAttachUrl');
+      if (input) input.value = normalizeAttachUrl(type, url);
+    });
+
+    function toggleAttach(type) {
+      activeAttachType = activeAttachType === type ? null : type;
+      renderAttachBox();
+    }
+    function clearAttach() {
+      activeAttachType = null;
+      renderAttachBox();
+    }
+    function renderAttachBox() {
+      const wrap = document.getElementById('composerAttachWrap');
+      document.querySelectorAll('.composer-tool-btn[data-type]').forEach(b => b.classList.toggle('active', b.dataset.type === activeAttachType));
+      if (!activeAttachType) { wrap.style.display = 'none'; wrap.innerHTML = ''; return; }
+      wrap.style.display = 'block';
+      if (activeAttachType === 'poll') {
+        wrap.innerHTML = `
+      <div class="composer-poll-box">
+        <input type="text" id="composerPollQuestion" placeholder="Đặt câu hỏi cho bình chọn...">
+        <div id="composerPollOptions">
+          <div class="composer-poll-opt-row"><input type="text" class="poll-opt-input" placeholder="Lựa chọn 1"></div>
+          <div class="composer-poll-opt-row"><input type="text" class="poll-opt-input" placeholder="Lựa chọn 2"></div>
+        </div>
+        <div style="display:flex;gap:14px;">
+          <button type="button" class="composer-poll-add" onclick="addPollOption()">+ Thêm lựa chọn</button>
+          <button type="button" class="composer-attach-remove-text" onclick="clearAttach()">Huỷ bình chọn</button>
+        </div>
+      </div>`;
+      } else {
+        const meta = {
+          image: ['🖼️', 'Dán link ảnh hoặc bấm Tải ảnh lên'],
+          video: ['🎬', 'Dán link video (YouTube, Vimeo...)'],
+          doc:   ['📄', 'Dán link tài liệu (Google Docs, PDF...)'],
+          gif:   ['🎞️', 'Dán link GIF (https://...)'],
+        }[activeAttachType];
+        const driveHint = (activeAttachType === 'image' || activeAttachType === 'gif')
+          ? `<div style="font-size:11px;color:var(--text-light);padding:4px 2px 0;">Link Google Drive: nhớ đặt chế độ chia sẻ "Bất kỳ ai có đường liên kết" thì ảnh mới hiện được.</div>`
+          : '';
+        wrap.innerHTML = `
+      <div class="composer-attach-box">
+        <span class="composer-attach-icon">${meta[0]}</span>
+        <input type="text" id="composerAttachUrl" class="composer-attach-input" placeholder="${meta[1]}">
+        <button type="button" class="composer-attach-remove" onclick="clearAttach()">×</button>
+      </div>${driveHint}`;
+        if (activeAttachType === 'image') dhSetupComposerImageUpload(currentUser?.id);
+      }
+    }
+    function addPollOption() {
+      const wrap = document.getElementById('composerPollOptions');
+      if (!wrap || wrap.children.length >= 6) return;
+      const row = document.createElement('div');
+      row.className = 'composer-poll-opt-row';
+      row.innerHTML = `<input type="text" class="poll-opt-input" placeholder="Lựa chọn ${wrap.children.length + 1}">`;
+      wrap.appendChild(row);
+    }
+
+    // ── Composer toolbar: emoji picker ────────────────────────────────
+    const EMOJI_LIST = ['😀','😂','😍','🤔','👍','🔥','🎉','💡','🚀','❤️','😢','😅','🙌','👏','💪','🤝','✅','⚡','🎯','📌','😎','🥳','🤯','😴','👀','🙏','💯','⭐','✨','🤖','😁','😊'];
+    function toggleEmojiPicker(e) {
+      e?.stopPropagation();
+      const el = document.getElementById('emojiPicker');
+      const open = el.classList.toggle('open');
+      if (open && !el.dataset.built) {
+        el.innerHTML = EMOJI_LIST.map(em => `<button type="button" onclick="insertEmoji('${em}')">${em}</button>`).join('');
+        el.dataset.built = '1';
+      }
+    }
+    function insertEmoji(em) {
+      const ta = document.getElementById('composerContent');
+      const start = ta.selectionStart ?? ta.value.length;
+      const end = ta.selectionEnd ?? ta.value.length;
+      ta.value = ta.value.slice(0, start) + em + ta.value.slice(end);
+      ta.focus();
+      ta.selectionStart = ta.selectionEnd = start + em.length;
+      document.getElementById('emojiPicker').classList.remove('open');
+    }
+    document.addEventListener('click', e => {
+      const wrap = document.querySelector('.composer-emoji-wrap');
+      if (wrap && !wrap.contains(e.target)) document.getElementById('emojiPicker')?.classList.remove('open');
+    });
+
+    async function submitPost() {
+      const contentEl = document.getElementById('composerContent');
+      const titleEl   = document.getElementById('composerTitle');
+      const pillarEl  = document.getElementById('composerPillar');
+      const spaceEl   = document.getElementById('composerSpace');
+      const topicEl   = document.getElementById('composerTopic');
+      const btn       = document.getElementById('composerSubmitBtn');
+      const content   = contentEl.value.trim();
+      if (!content) { contentEl.focus(); return; }
+      if (!spaceEl.value) { alert('Vui lòng chọn Space trước khi đăng bài.'); spaceEl.focus(); return; }
+      if (!topicEl.value) { alert('Vui lòng chọn Topic cho bài đăng.'); topicEl.focus(); return; }
+
+      const payload = {
+        user_id: currentUser.id,
+        title: titleEl.value.trim(),
+        content,
+        pillar: pillarEl.value || null,
+        space_id: spaceEl.value,
+        topic_id: topicEl.value,
+      };
+      if (activeAttachType === 'poll') {
+        const question = document.getElementById('composerPollQuestion')?.value.trim();
+        const options = [...document.querySelectorAll('.poll-opt-input')].map(i => i.value.trim()).filter(Boolean);
+        if (question && options.length >= 2) {
+          payload.poll_question = question;
+          payload.poll_options = options;
+        }
+      } else if (activeAttachType) {
+        const url = document.getElementById('composerAttachUrl')?.value.trim();
+        if (url) payload[`${activeAttachType}_url`] = normalizeAttachUrl(activeAttachType, url);
+      }
+
+      btn.disabled = true;
+      btn.textContent = 'Đang đăng...';
+      try {
+        const res = await fetch(`${API}/posts`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) throw new Error(data.error || 'Không đăng được bài. Vui lòng thử lại.');
+        contentEl.value = '';
+        titleEl.value = '';
+        pillarEl.value = '';
+        spaceEl.value = '';
+        topicEl.innerHTML = '<option value="">Chọn Topic *</option>';
+        applyComposerDefaultSpace();   // về lại Space mặc định (nếu admin đã đặt)
+        clearAttach();
+        contentEl.style.height = '';
+        await loadFeed();
+      } catch (e) {
+        alert(e.message || 'Không đăng được bài. Vui lòng thử lại.');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Đăng bài';
       }
     }
 
+    document.getElementById('composerContent')?.addEventListener('input', function () {
+      this.style.height = 'auto';
+      this.style.height = this.scrollHeight + 'px';
+    });
+
     // ── Feed ──────────────────────────────────────────────────────
+    // Tải 20 bài mỗi lần; cuộn tới cuối danh sách (hoặc bấm "Xem thêm") để tải tiếp bài cũ hơn
+    const FEED_PAGE = 20;
+    let feedOffset = 0, feedDone = false, feedBusy = false, feedErr = false, feedSeq = 0;
+    function feedPageUrl(offset) {
+      let url = `${API}/feed?limit=${FEED_PAGE}&offset=${offset}`;
+      if (currentUser) url += `&user_id=${currentUser.id}`;
+      if (activePillar) url += `&pillar=${activePillar}`;
+      if (activeType) url += `&type=${activeType}`;
+      if (activeSort) url += `&sort=${activeSort}`;
+      return url;
+    }
     async function loadFeed() {
       const el = document.getElementById('postList');
+      const seq = ++feedSeq;
+      feedOffset = 0; feedDone = false; feedBusy = true; feedErr = false;
+      feedMoreRender();
       el.innerHTML = '<div style="text-align:center;padding:40px 0;color:var(--text-muted);font-size:var(--fs-sm)">Đang tải...</div>';
       try {
-        let url = `${API}/feed?limit=20`;
-        if (activePillar) url += `&pillar=${activePillar}`;
-        if (activeType) url += `&type=${activeType}`;
-        if (activeSort) url += `&sort=${activeSort}`;
-        const { posts } = await fetch(url).then(r => r.json());
+        const { posts } = await fetch(feedPageUrl(0)).then(r => r.json());
+        if (seq !== feedSeq) return;
         if (!posts.length) {
           el.innerHTML = '<div style="text-align:center;padding:48px 0;color:var(--text-muted)"><div style="font-size:32px;margin-bottom:8px">📭</div><div style="font-size:var(--fs-sm)">Chưa có bài đăng nào.</div></div>';
+          feedDone = true;
           return;
         }
         el.innerHTML = posts.map(p => renderPost(p)).join('');
+        feedOffset = posts.length;
+        feedDone = posts.length < FEED_PAGE;
       } catch (e) {
-        el.innerHTML = '<div style="text-align:center;padding:40px 0;color:#ef4444;font-size:var(--fs-sm)">⚠️ Không kết nối được server.<br>Chạy: <code>node server.js</code></div>';
+        if (seq !== feedSeq) return;
+        el.innerHTML = '<div style="text-align:center;padding:40px 0;color:#ef4444;font-size:var(--fs-sm)">⚠️ Không tải được dữ liệu.<br>Vui lòng kiểm tra kết nối mạng rồi tải lại trang.</div>';
+        feedDone = true;
+      } finally {
+        if (seq === feedSeq) { feedBusy = false; feedMoreRender(); }
       }
+    }
+    async function loadMoreFeed() {
+      if (feedBusy || feedDone) return;
+      const seq = feedSeq;
+      feedBusy = true; feedErr = false;
+      feedMoreRender();
+      try {
+        const { posts } = await fetch(feedPageUrl(feedOffset)).then(r => r.json());
+        if (seq !== feedSeq) return;
+        const el = document.getElementById('postList');
+        // Có bài mới đăng trong lúc xem → các trang sau lệch 1 bài; bỏ bài đã hiện để không trùng
+        const seen = new Set([...el.querySelectorAll('[data-post-id]')].map(a => a.dataset.postId));
+        el.insertAdjacentHTML('beforeend', posts.filter(p => !seen.has(String(p.id))).map(p => renderPost(p)).join(''));
+        feedOffset += posts.length;
+        feedDone = posts.length < FEED_PAGE;
+      } catch (e) {
+        if (seq === feedSeq) feedErr = true;
+      } finally {
+        if (seq === feedSeq) {
+          feedBusy = false;
+          feedMoreRender();
+          // Khung "Xem thêm" vẫn còn trong màn hình (danh sách ngắn) → tải tiếp luôn
+          const box = document.getElementById('feedMore');
+          if (!feedDone && !feedErr && box && box.getBoundingClientRect().top < innerHeight + 600) setTimeout(loadMoreFeed, 50);
+        }
+      }
+    }
+    function feedMoreRender() {
+      const list = document.getElementById('postList');
+      let box = document.getElementById('feedMore');
+      if (!box) {
+        box = document.createElement('div');
+        box.id = 'feedMore';
+        box.style.cssText = 'text-align:center;padding:16px 0 24px;color:var(--text-muted);font-size:var(--fs-sm)';
+        list.after(box);
+        if ('IntersectionObserver' in window)
+          new IntersectionObserver(es => { if (es.some(x => x.isIntersecting)) loadMoreFeed(); }, { rootMargin: '600px 0px' }).observe(box);
+      }
+      const btn = label => '<button type="button" onclick="loadMoreFeed()" style="border:1px solid var(--border);background:var(--bg-card);color:var(--text);border-radius:999px;padding:8px 18px;font:inherit;font-weight:600;cursor:pointer">' + label + '</button>';
+      if (!feedOffset) box.innerHTML = '';
+      else if (feedBusy) box.innerHTML = 'Đang tải thêm bài…';
+      else if (feedErr) box.innerHTML = '⚠️ Không tải được thêm bài. ' + btn('Thử lại');
+      else if (!feedDone) box.innerHTML = btn('Xem thêm bài cũ hơn');
+      else box.innerHTML = feedOffset > FEED_PAGE ? 'Đã hiện hết bài đăng.' : '';
     }
 
     function renderPost(p) {
@@ -1105,26 +1836,36 @@
       const color = AV_COLORS[p.author_id % AV_COLORS.length];
       const name = p.first_name + ' ' + p.last_name;
       const time = timeAgo(p.created_at);
-      const pillarBadge = p.pillar
-        ? `<span class="badge badge-pillar ${PILLAR_CLASS[p.pillar]}">${PILLAR_LABEL[p.pillar]}</span>` : '';
+      const pl = PILLARS[p.pillar];
+      const pillarBadge = pl
+        ? `<span class="badge badge-pillar" style="background:${pl.color}20;color:${pl.color}">${escHtml(pl.label)}</span>` : '';
       const typeBadge = p.post_type !== 'post'
         ? `<span style="font-size:11px;font-weight:700;color:var(--color-primary)">${TYPE_LABEL[p.post_type] || p.post_type}</span>` : '';
+      const pinnedBadge = p.is_pinned
+        ? `<span class="badge" style="background:#fef3c7;color:#92400e">📌 Đã ghim</span>` : '';
+      const pinBtn = (currentUser && currentUser.is_admin)
+        ? `<span class="post-stat pin-toggle-btn" onclick="event.stopPropagation();togglePin(${p.id})" style="cursor:pointer">
+          ${p.is_pinned ? '📌 Bỏ ghim' : '📍 Ghim'}
+        </span>` : '';
 
       return `
-  <article class="post-card" data-pillar="${p.pillar || ''}" onclick="openPost(${p.id})" tabindex="0" role="button" aria-label="Mở bài đăng">
+  <article class="post-card" data-post-id="${p.id}" data-pillar="${p.pillar || ''}" onclick="openPost(${p.id})" tabindex="0" role="button" aria-label="Mở bài đăng">
     <div class="post-avatar" style="width:40px;height:40px;border-radius:50%;background:${color};display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:#fff;flex-shrink:0;">${initials}</div>
     <div class="post-body">
       <div class="post-meta">
         <span class="post-author">${name}</span>
         <span class="badge badge-level">Lv.${p.level}</span>
         <span class="post-time">${time}</span>
+        ${pinnedBadge}
       </div>
-      ${p.title ? `<h3 class="post-title">${p.title}</h3>` : ''}
-      <p class="post-excerpt">${p.content}</p>
+      ${p.title ? `<h3 class="post-title">${escHtml(p.title)}</h3>` : ''}
+      <p class="post-excerpt">${escHtml(p.content)}</p>
+      ${buildPostMediaHtml(p)}
+      ${buildPollHtml(p)}
       <div class="post-footer">
         ${pillarBadge}
         ${typeBadge}
-        <span class="post-stat" onclick="event.stopPropagation();likePost(${p.id},this)" style="cursor:pointer">
+        <span class="post-stat${p.liked ? ' liked' : ''}" onclick="event.stopPropagation();likePost(${p.id},this)" style="cursor:pointer">
           <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
           <span class="like-count">${p.likes_count}</span>
         </span>
@@ -1132,15 +1873,49 @@
           <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
           ${p.comments_count}
         </span>
+        ${pinBtn}
       </div>
     </div>
   </article>`;
     }
 
+    async function togglePin(id) {
+      if (!currentUser || !currentUser.is_admin) return;
+      try {
+        const res = await fetch(`${API}/posts/${id}/pin`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ user_id: currentUser.id }),
+        });
+        const data = await res.json();
+        if (!res.ok) { alert(data.error || 'Không thể ghim bài viết.'); return; }
+        await loadFeed();
+      } catch (e) {
+        alert('Không thể ghim bài viết. Vui lòng thử lại.');
+      }
+    }
+
+    async function togglePmPin() {
+      if (!currentUser || !currentUser.is_admin || !_pmPostId) return;
+      try {
+        const res = await fetch(`${API}/posts/${_pmPostId}/pin`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ user_id: currentUser.id }),
+        });
+        const data = await res.json();
+        if (!res.ok) { alert(data.error || 'Không thể ghim bài viết.'); return; }
+        const uid = currentUser ? `?user_id=${currentUser.id}` : '';
+        const updated = await fetch(`${API}/posts/${_pmPostId}${uid}`).then(r => r.json());
+        renderPmPost(updated);
+        await loadFeed();
+      } catch (e) {
+        alert('Không thể ghim bài viết. Vui lòng thử lại.');
+      }
+    }
+
     async function likePost(id, el) {
-      await fetch(`${API}/posts/${id}/like`, { method: 'POST' });
-      const cnt = el.querySelector('.like-count');
-      cnt.textContent = Number(cnt.textContent) + 1;
+      await dhToggleLike(id);
     }
 
     // ── Profile card ──────────────────────────────────────────────
@@ -1263,7 +2038,7 @@
       btn.addEventListener('click', () => {
         document.querySelectorAll('.tab-item[data-tab]').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
-        const tabMap = { latest: ['', ''], cot: ['cot', ''], popular: ['', 'popular'], signal: ['signal', ''] };
+        const tabMap = { latest: ['', ''], popular: ['', 'popular'], signal: ['signal', ''] };
         const [t, s] = tabMap[btn.dataset.tab] || ['', ''];
         activeType = t;
         activeSort = s;
@@ -1291,10 +2066,12 @@
       document.getElementById('pmCommentInput').value = '';
       document.getElementById('pmLikeBtn').classList.remove('liked');
       try {
+        const uid = currentUser ? `?user_id=${currentUser.id}` : '';
         const [post, cmts] = await Promise.all([
-          fetch(`${API}/posts/${postId}`).then(r => r.json()),
+          fetch(`${API}/posts/${postId}${uid}`).then(r => r.json()),
           fetch(`${API}/posts/${postId}/comments`).then(r => r.json()),
         ]);
+        if (post && post.error) { document.getElementById('pmBody').innerHTML = '<div style="padding:40px;text-align:center;color:var(--text-muted)">🔒 ' + post.error + '</div>'; return; }
         renderPmPost(post);
         renderPmComments(cmts.comments || []);
       } catch (e) {
@@ -1303,12 +2080,22 @@
     }
 
     function renderPmPost(p) {
-      const pl = { offer: { label: 'Offer', color: '#f59e0b' }, traffic: { label: 'Thu hút', color: '#3b82f6' }, conversion: { label: 'Chuyển đổi', color: '#8b5cf6' }, delivery: { label: 'Cung ứng', color: '#10b981' }, continuity: { label: 'Continuity', color: '#ec4899' } }[p.pillar] || null;
+      const pl = PILLARS[p.pillar] || null;
       const ini = ((p.first_name || '?')[0] + ((p.last_name || '')[0] || '')).toUpperCase();
       const col = AV_COLORS[p.author_id % AV_COLORS.length];
+      const isAdmin = currentUser && currentUser.is_admin;
+      const pinPill = p.is_pinned
+        ? (isAdmin
+            ? `<button onclick="togglePmPin()" style="font-size:11px;font-weight:700;padding:3px 10px;border-radius:99px;border:none;background:#fef3c7;color:#92400e;cursor:pointer;font-family:var(--font-body);">📌 Đã ghim (bấm để bỏ)</button>`
+            : `<span style="font-size:11px;font-weight:700;padding:3px 10px;border-radius:99px;background:#fef3c7;color:#92400e">📌 Đã ghim</span>`)
+        : (isAdmin
+            ? `<button onclick="togglePmPin()" style="font-size:11px;font-weight:700;padding:3px 10px;border-radius:99px;border:1px solid var(--border);background:var(--bg-card);color:var(--text-muted);cursor:pointer;font-family:var(--font-body);">📍 Ghim bài viết</button>`
+            : '');
       document.getElementById('pmHeaderBadges').innerHTML =
         (pl ? `<span style="font-size:11px;font-weight:700;padding:3px 10px;border-radius:99px;background:${pl.color}20;color:${pl.color}">${pl.label}</span>` : '') +
-        (p.post_type === 'cot' ? '<span style="font-size:11px;font-weight:700;padding:3px 10px;border-radius:99px;background:#fef3c7;color:#b45309">★ CÔT</span>' : '');
+        (p.post_type === 'cot' ? '<span style="font-size:11px;font-weight:700;padding:3px 10px;border-radius:99px;background:#fef3c7;color:#b45309">★ CÔT</span>' : '') +
+        pinPill;
+      pmPostExtras(p); // nút ✏️ Sửa bài (tác giả) + nhãn bài bị ẩn — app.js
       document.getElementById('pmLikeCount').textContent = p.likes_count || 0;
       document.getElementById('pmCmtCount').textContent = p.comments_count || 0;
       document.getElementById('pmBody').innerHTML = `
@@ -1316,11 +2103,13 @@
       <div class="pm-avatar" style="background:${col}">${ini}</div>
       <div>
         <div class="pm-author-name">${escHtml(p.first_name)} ${escHtml(p.last_name || '')}</div>
-        <div class="pm-author-meta">Lv.${p.level} · ${timeAgo(p.created_at)}</div>
+        <div class="pm-author-meta">Lv.${p.level} · ${timeAgo(p.created_at)}${p.updated_at ? ' · đã sửa' : ''}</div>
       </div>
     </div>
     ${p.title ? `<div class="pm-title">${escHtml(p.title)}</div>` : ''}
-    <div class="pm-content">${escHtml(p.content || '')}</div>`;
+    <div class="pm-content">${escHtml(p.content || '')}</div>
+    ${buildPostMediaHtml(p)}
+    ${buildPollHtml(p)}`;
     }
 
     function renderPmComments(comments) {
@@ -1408,12 +2197,7 @@
     }
 
     async function pmLike() {
-      if (_pmLiked) return;
-      _pmLiked = true;
-      document.getElementById('pmLikeBtn').classList.add('liked');
-      await fetch(`${API}/posts/${_pmPostId}/like`, { method: 'POST' });
-      const el = document.getElementById('pmLikeCount');
-      el.textContent = Number(el.textContent) + 1;
+      await dhToggleLike(_pmPostId);   // app.js — thích / bỏ thích, trái tim đỏ
     }
 
     async function pmSubmitComment() {
@@ -1444,6 +2228,66 @@
     }
 
     function escHtml(s) { return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+    function escAttr(s) { return String(s || '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+
+    // ── Post media (image / video / doc / gif) + poll rendering ────
+    function youtubeEmbedUrl(url) {
+      // YouTube (kể cả /live/), Vimeo, Google Drive → link nhúng (app.js videoEmbedUrl)
+      return videoEmbedUrl(url);
+    }
+    function vimeoEmbedUrl(url) {
+      const m = String(url).match(/vimeo\.com\/(\d+)/);
+      return m ? `https://player.vimeo.com/video/${m[1]}` : null;
+    }
+    function buildPostMediaHtml(p) {
+      let html = '';
+      if (p.image_url) html += `<img src="${escAttr(p.image_url)}" class="post-media-img" loading="lazy" onerror="this.remove()">`;
+      if (p.gif_url) html += `<img src="${escAttr(p.gif_url)}" class="post-media-img" loading="lazy" onerror="this.remove()">`;
+      if (p.video_url) {
+        const embed = youtubeEmbedUrl(p.video_url) || vimeoEmbedUrl(p.video_url);
+        html += embed
+          ? `<div class="post-media-video"><iframe src="${escAttr(embed)}" allowfullscreen loading="lazy"></iframe></div>`
+          : `<a href="${escAttr(p.video_url)}" target="_blank" rel="noopener" class="post-media-link" onclick="event.stopPropagation()">🎬 Xem video ↗</a>`;
+      }
+      if (p.doc_url) html += `<a href="${escAttr(p.doc_url)}" target="_blank" rel="noopener" class="post-media-link" onclick="event.stopPropagation()">📄 Mở tài liệu ↗</a>`;
+      return html;
+    }
+    function buildPollHtml(p) {
+      if (!p.poll_question || !Array.isArray(p.poll_options) || !p.poll_options.length) return '';
+      const total = p.poll_total || 0;
+      const voted = p.my_vote !== null && p.my_vote !== undefined;
+      const opts = p.poll_options.map((opt, i) => {
+        const count = (p.poll_tallies && p.poll_tallies[i]) || 0;
+        const pct = total ? Math.round(count / total * 100) : 0;
+        const isMine = p.my_vote === i;
+        if (voted) {
+          return `<div class="poll-opt poll-opt-voted ${isMine ? 'poll-opt-mine' : ''}" onclick="event.stopPropagation();votePoll(${p.id},${i},this)">
+        <div class="poll-opt-bar" style="width:${pct}%"></div>
+        <div class="poll-opt-row"><span>${isMine ? '✓ ' : ''}${escHtml(opt)}</span><span>${pct}%</span></div>
+      </div>`;
+        }
+        return `<div class="poll-opt" onclick="event.stopPropagation();votePoll(${p.id},${i},this)">${escHtml(opt)}</div>`;
+      }).join('');
+      return `<div class="post-poll" data-post-id="${p.id}">
+      <div class="poll-question">📊 ${escHtml(p.poll_question)}</div>
+      <div class="poll-options">${opts}</div>
+      <div class="poll-total">${total} lượt bình chọn</div>
+    </div>`;
+    }
+    async function votePoll(postId, optionIndex, el) {
+      if (!currentUser) return;
+      try {
+        await fetch(`${API}/posts/${postId}/vote`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ user_id: currentUser.id, option_index: optionIndex }),
+        });
+        const updated = await fetch(`${API}/posts/${postId}?user_id=${currentUser.id}`).then(r => r.json());
+        document.querySelectorAll(`.post-poll[data-post-id="${postId}"]`).forEach(pollEl => {
+          pollEl.outerHTML = buildPollHtml(updated);
+        });
+      } catch (e) {}
+    }
 
     // ── Helpers ───────────────────────────────────────────────────
     function timeAgo(dateStr) {
@@ -1472,13 +2316,260 @@
       } catch (e) { }
     }
 
+    // ── Khung giới thiệu 8 buổi / 377 ngày (phễu bán hàng) ─────────────
+    // Người chưa tham gia: con số, tin mới, buổi Zoom tiếp theo, bài giới thiệu khoá 1/2 + "Nhận tư vấn".
+    // Chưa học 3 buổi workshop miễn phí → nhắc 3 buổi trước. Học viên: thẻ thành lối tắt vào chương trình.
+    let scData = null;
+    const SC_ICON = { workshop8: '💎', program377: '🗓️' };
+    const SC_COLLAPSE_KEY = 'dh_sc_collapsed_until';
+    const scEsc = s => String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+    const scLs = (k, v) => { try { if (v === undefined) return localStorage.getItem(k); localStorage.setItem(k, v); } catch (e) { return null; } };
+    function scDate(d, time) {
+      if (!d) return '';
+      const x = new Date(d + 'T00:00:00');
+      const wd = ['CN', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7'][x.getDay()];
+      const hm = (String(time || '').match(/\d{1,2}[:h]\d{2}/) || [''])[0].replace('h', ':');
+      return `${wd}, ${String(x.getDate()).padStart(2, '0')}/${String(x.getMonth() + 1).padStart(2, '0')}${hm ? ' · ' + hm : ''}`;
+    }
+    function scIsNew(p) {
+      const seen = scLs('dh_sc_seen_' + p.key) || '';
+      const latest = [p.latest_post_at, p.latest_lesson && p.latest_lesson.created_at].filter(Boolean).sort().pop() || '';
+      if (!latest) return false;
+      if (!seen) return Date.now() - new Date(latest.replace(' ', 'T')).getTime() < 14 * 864e5;
+      return latest > seen;
+    }
+    function scMarkSeen(key) {
+      const d = new Date(Date.now() + 7 * 3600e3).toISOString().slice(0, 19).replace('T', ' ');
+      scLs('dh_sc_seen_' + key, d);
+    }
+
+    // Ghi nhận phễu (thấy thẻ / mở bài khoá / xem chi tiết / 3 buổi) — Admin → Phễu bán hàng Feed
+    function scTrack(program, kind, postId) {
+      if (!currentUser || currentUser.is_admin) return;
+      if (kind === 'view') {
+        const k = 'dh_sc_v_' + program, today = new Date().toISOString().slice(0, 10);
+        if (scLs(k) === today) return;
+        scLs(k, today);
+      }
+      try {
+        fetch(`${API}/showcase/track`, { method: 'POST', keepalive: true, headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ user_id: currentUser.id, program, kind, post_id: postId || null }) }).catch(() => {});
+      } catch (e) {}
+    }
+    // 8 buổi: giá niêm yết gạch + giá ưu đãi (Admin → 8 Buổi Chuyên Sâu); chương trình khác: Liên hệ tư vấn
+    function scPriceHtml(p) {
+      if (!p.price_offer && !p.price_regular) return '<b>Liên hệ tư vấn</b>';
+      if (p.price_offer && p.price_regular && p.price_offer !== p.price_regular)
+        return `<s style="opacity:.7">${scEsc(p.price_regular)}đ</s> <b style="color:var(--pc)">${scEsc(p.price_offer)}đ</b> <span style="opacity:.8">· ưu đãi ghi danh sớm</span>`;
+      return `<b>${scEsc(p.price_offer || p.price_regular)}đ</b>`;
+    }
+    function scStoryHtml(p) {
+      const st = p.story;
+      if (!st) return '';
+      return `<div class="sc-story">
+          ${st.image_url ? `<img src="${scEsc(st.image_url)}" alt="Ảnh kết quả" loading="lazy" onclick="window.open(this.src,'_blank')">` : ''}
+          <div style="min-width:0"><div class="sc-story-label">✨ Kết quả học viên</div>
+          <div class="sc-story-result">${scEsc(st.result)}</div>
+          ${st.who ? `<div class="sc-story-who">— ${scEsc(st.who)}</div>` : ''}
+          ${st.detail ? `<div class="sc-story-detail">“${scEsc(st.detail)}”</div>` : ''}</div></div>`;
+    }
+
+    async function loadShowcase() {
+      const el = document.getElementById('showcase');
+      if (!el || !currentUser) return;
+      try {
+        scData = await fetch(`${API}/showcase?user_id=${currentUser.id}`).then(r => r.json());
+      } catch (e) { return; }
+      renderShowcase();
+    }
+
+    function renderShowcase() {
+      const el = document.getElementById('showcase');
+      const d = scData;
+      if (!d || !d.enabled) { el.style.display = 'none'; return; }
+      const v = d.viewer;
+      // Học viên cả 2 chương trình → không cần khung giới thiệu (admin vẫn thấy để xem trước)
+      if (!v.is_admin && v.workshop8 === 'approved' && v.program377 === 'approved') { el.style.display = 'none'; return; }
+      el.style.display = '';
+      const until = Number(scLs(SC_COLLAPSE_KEY) || 0);
+      if (until > Date.now()) {
+        el.innerHTML = `<div class="sc-mini" role="button" tabindex="0" onclick="scExpand()" onkeydown="if(event.key==='Enter')scExpand()">
+          <span>💎 8 Buổi Chuyên Sâu · 🗓️ 377 Ngày Thực Hành</span>
+          ${d.programs.some(scIsNew) ? '<span class="sc-new">Mới</span>' : ''}
+          <span style="margin-left:auto;color:var(--text-muted);font-size:12px;">Mở ▾</span></div>`;
+        return;
+      }
+      const w3 = d.workshop3 || {};
+      const showW3 = !v.w3 && v.workshop8 === 'none' && v.program377 === 'none';
+      const w3Strip = showW3 ? `<div class="sc-w3">
+          <div class="sc-w3-text">🎁 <b>Bắt đầu miễn phí:</b> 3 Buổi Workshop — hiểu cơ thể mình theo Ngũ Hành trước khi học chuyên sâu.
+          ${w3.next_session ? `<br><span style="color:var(--text-muted)">Buổi tiếp theo: ${scEsc(scDate(w3.next_session.date, w3.next_session.time))} — ${scEsc(w3.next_session.title || '')}</span>` : ''}</div>
+          <a class="sc-btn amber" href="${scEsc(w3.page || 'workshop3.html')}" onclick="scTrack('workshop3','w3')">Tham gia miễn phí →</a></div>` : '';
+      el.innerHTML = `<div class="sc-head"><span class="sc-head-title">Bên trong Ngôi Nhà đang diễn ra</span>
+          <button type="button" class="sc-collapse" onclick="scCollapse()" aria-label="Thu gọn khung giới thiệu">Thu gọn ▴</button></div>
+        ${w3Strip}
+        <div class="sc-row">${d.programs.map(scCard).join('')}</div>`;
+      scLiveStart();
+      d.programs.filter(p => !p.unlocked && p.viewer_status === 'none').forEach(p => scTrack(p.key, 'view'));
+    }
+
+    function scCard(p) {
+      const st = p.viewer_status;
+      const pill = p.unlocked ? `<span class="sc-pill ok">${st === 'approved' ? '✓ Bạn đang học' : 'Admin'}</span>`
+        : st === 'pending' ? '<span class="sc-pill">⏳ Đang chờ duyệt</span>' : '<span class="sc-pill">🔒 Học viên</span>';
+      const news = [];
+      if (p.posts_week) news.push(`🆕 <b>${p.posts_week}</b> bài viết mới tuần này`);
+      if (p.next_session) news.push(`📅 Zoom ${scEsc(scDate(p.next_session.date, p.next_session.time))} <span>— ${scEsc(p.next_session.title || '')}</span>`);
+      if (p.latest_lesson) news.push(`📚 Bài học mới <span>— ${scEsc(p.latest_lesson.title)}</span>`);
+      if (p.reports_today) news.push(`🔥 Hôm nay <b>${p.reports_today}</b> người đã nộp báo cáo thực hành`);
+      const stats = [[p.members, 'Học viên'], [p.posts_total, 'Bài viết'], [p.courses, 'Khoá học'], [p.lessons, 'Bài học']]
+        .map(([n, l]) => `<div class="sc-stat"><b>${Number(n) || 0}</b><span>${l}</span></div>`).join('');
+      const t = (p.teasers || [])[0];
+      const teaser = t ? `<button type="button" class="sc-teaser" onclick="scOpenTeaser('${p.key}',0)">
+          <div class="sc-teaser-title">${p.unlocked ? '📌' : '🔒'} ${scEsc(t.title || 'Bài viết nổi bật')}</div>
+          <div class="sc-teaser-ex">${scEsc(t.excerpt)}</div>
+          <div class="sc-teaser-more">${p.unlocked ? 'Đọc bài →' : 'Xem tiếp →'}</div></button>` : '';
+      let actions;
+      if (p.unlocked) actions = `<a class="sc-btn primary" href="${p.page}" onclick="scMarkSeen('${p.key}')">Vào chương trình →</a>`;
+      else if (st === 'pending') actions = `<a class="sc-btn" href="${p.page}">Xem trạng thái đăng ký</a>`;
+      else actions = `<a class="sc-btn" href="${p.page}" onclick="scMarkSeen('${p.key}');scTrack('${p.key}','detail')">Xem chi tiết</a>
+          <button type="button" class="sc-btn primary" onclick="scConsult('${p.key}', this)">📞 Nhận tư vấn</button>`;
+      return `<article class="sc-card" data-key="${p.key}">
+        <div class="sc-top"><span style="font-size:18px">${SC_ICON[p.key] || ''}</span><span class="sc-title">${scEsc(p.label)}</span>
+          ${scIsNew(p) ? '<span class="sc-new">Mới</span>' : ''}${pill}</div>
+        ${news.length ? `<div class="sc-news">${news.map(x => `<div class="sc-news-item">${x}</div>`).join('')}</div>` : ''}
+        <div class="sc-stats">${stats}</div>
+        ${p.unlocked ? '' : scStoryHtml(p)}
+        ${teaser}
+        ${!p.unlocked && st !== 'pending' ? `<div class="sc-price">Học phí: ${scPriceHtml(p)}</div>` : ''}
+        ${(p.activity || []).length ? `<div class="sc-live" aria-live="off"><div class="sc-live-h"><span class="sc-live-dot"></span>Đang diễn ra trong nhóm</div>
+          <div class="sc-live-list" data-live="${p.key}">${scLiveItem(p, 0)}</div></div>` : ''}
+        <div class="sc-actions">${actions}</div>
+      </article>`;
+    }
+
+    // Hoạt động gần đây của nhóm: lần lượt trượt lên từng dòng (ai đăng bài / bình luận / thích / nộp báo cáo)
+    const SC_ACT = { post: ['📝', 'vừa đăng bài'], comment: ['💬', 'vừa bình luận'], like: ['❤️', 'vừa thích bài'], report: ['📊', 'vừa nộp báo cáo thực hành'] };
+    function scAgo(at, now) {
+      const m = Math.max(0, Math.round((Date.parse(String(now).replace(' ', 'T')) - Date.parse(String(at).replace(' ', 'T'))) / 60000));
+      return m < 1 ? 'vừa xong' : m < 60 ? m + ' phút trước' : m < 1440 ? Math.round(m / 60) + ' giờ trước' : Math.round(m / 1440) + ' ngày trước';
+    }
+    function scLiveItem(p, i) {
+      const e = p.activity[i % p.activity.length], [ic, verb] = SC_ACT[e.kind] || ['•', ''];
+      return `<div class="sc-live-item"><span class="ic">${ic}</span><span class="tx"><b>${scEsc(e.who)}</b> ${verb}${e.title ? `: “${scEsc(e.title)}”` : ''}
+        <span class="tm">· ${scAgo(e.at, p.now)}</span></span></div>`;
+    }
+    let scLiveTimer = null, scLiveIdx = 0;
+    function scLiveStart() {
+      clearInterval(scLiveTimer);
+      scLiveTimer = setInterval(() => {
+        if (document.hidden || !scData) return;
+        scLiveIdx++;
+        document.querySelectorAll('.sc-live-list[data-live]').forEach(box => {
+          const p = scData.programs.find(x => x.key === box.dataset.live);
+          if (!p || !p.activity || p.activity.length < 2) return;
+          const old = box.firstElementChild;
+          if (old) { old.classList.add('out'); setTimeout(() => old.remove(), 450); }
+          box.insertAdjacentHTML('beforeend', scLiveItem(p, scLiveIdx));
+        });
+      }, 3200);
+    }
+
+    function scCollapse() { scLs(SC_COLLAPSE_KEY, String(Date.now() + 3 * 864e5)); renderShowcase(); }
+    function scExpand() { scLs(SC_COLLAPSE_KEY, '0'); renderShowcase(); }
+
+    function scOpenTeaser(key, idx) {
+      const p = scData && scData.programs.find(x => x.key === key);
+      const t = p && p.teasers[idx];
+      if (!t) return;
+      scMarkSeen(key);
+      if (p.unlocked && t.id) { openPost(t.id); return; }
+      scTrack(key, 'teaser', t.ref);
+      let m = document.getElementById('scModal');
+      if (!m) {
+        m = document.createElement('div');
+        m.id = 'scModal';
+        m.className = 'sc-modal';
+        m.setAttribute('role', 'dialog');
+        m.setAttribute('aria-modal', 'true');
+        m.onclick = e => { if (e.target === m) scCloseModal(); };
+        document.body.appendChild(m);
+      }
+      const v = scData.viewer;
+      const showW3 = !v.w3 && v.workshop8 === 'none' && v.program377 === 'none';
+      const perks = [
+        p.members ? `Cùng <b>${p.members}</b> học viên đang thực hành` : '',
+        p.posts_total ? `<b>${p.posts_total}</b> bài viết, chia sẻ trong nhóm riêng` : '',
+        p.lessons ? `<b>${p.lessons}</b> bài học trong <b>${p.courses}</b> khoá học` : '',
+        p.next_session ? `Buổi Zoom tiếp theo: ${scEsc(scDate(p.next_session.date, p.next_session.time))}` : '',
+        p.key === 'program377' ? 'Báo cáo hằng ngày, được Ban tổ chức nhận xét' : 'Lộ trình cá nhân theo thể trạng của bạn',
+      ].filter(Boolean);
+      const pending = p.viewer_status === 'pending';
+      m.innerHTML = `<div class="sc-modal-box" data-key="${p.key}">
+        <button type="button" class="sc-modal-x" onclick="scCloseModal()" aria-label="Đóng">×</button>
+        <div class="sc-modal-prog">${SC_ICON[p.key] || ''} ${scEsc(p.label)}</div>
+        <div class="sc-modal-title">${scEsc(t.title || 'Bài viết nổi bật')}</div>
+        ${t.image_url ? `<img class="sc-modal-img" src="${scEsc(t.image_url)}" alt="" loading="lazy">` : ''}
+        <div class="sc-modal-text">${scEsc(t.excerpt)}…</div>
+        <div class="sc-blur" aria-hidden="true">Phần tiếp theo của bài viết chỉ hiển thị cho học viên của chương trình. Nội dung gồm hướng dẫn chi tiết, kinh nghiệm thực hành và chia sẻ của Ban tổ chức dành riêng cho nhóm học viên.</div>
+        <div class="sc-lock">
+          <h4>🔒 Phần còn lại dành cho học viên ${scEsc(p.label)}</h4>
+          <ul>${perks.map(x => `<li>${x}</li>`).join('')}</ul>
+          ${p.story ? `<div style="margin-bottom:10px">${scStoryHtml(p)}</div>` : ''}
+          ${pending ? '<div class="sc-price">⏳ Bạn đã đăng ký — Ban tổ chức đang duyệt, bài sẽ mở khi được duyệt.</div>'
+            : `<div class="sc-price" style="margin-bottom:10px;">Học phí: ${scPriceHtml(p)}</div>
+          <div class="sc-actions">
+            <button type="button" class="sc-btn primary" onclick="scConsult('${p.key}', this, ${idx})">📞 Nhận tư vấn</button>
+            <a class="sc-btn" href="${p.page}" onclick="scTrack('${p.key}','detail')">Xem chi tiết chương trình</a>
+          </div>`}
+          ${showW3 && !pending ? `<a class="sc-w3-hint" onclick="scTrack('workshop3','w3')" href="${scEsc((scData.workshop3 || {}).page || 'workshop3.html')}">🎁 Chưa sẵn sàng? Bắt đầu với 3 Buổi Workshop miễn phí →</a>` : ''}
+        </div></div>`;
+      m.classList.add('open');
+      document.addEventListener('keydown', scEscKey);
+    }
+    function scEscKey(e) { if (e.key === 'Escape') scCloseModal(); }
+    function scCloseModal() {
+      document.getElementById('scModal')?.classList.remove('open');
+      document.removeEventListener('keydown', scEscKey);
+    }
+
+    async function scConsult(key, btn, teaserIdx) {
+      const p = scData && scData.programs.find(x => x.key === key);
+      const t = p && teaserIdx != null ? p.teasers[teaserIdx] : null;
+      btn.disabled = true;
+      const old = btn.textContent;
+      btn.textContent = 'Đang gửi...';
+      try {
+        const r = await fetch(`${API}/showcase/consult`, {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ user_id: currentUser.id, program: key, post_title: t ? t.title : '' }),
+        });
+        const j = await r.json().catch(() => ({}));
+        if (!r.ok) throw new Error(j.error || 'Không gửi được');
+        btn.textContent = '✅ Đã gửi yêu cầu';
+        const box = btn.closest('.sc-actions');
+        if (box && !box.parentNode.querySelector('.sc-done')) box.insertAdjacentHTML('afterend',
+          '<div class="sc-done">Ban tổ chức sẽ liên hệ bạn trong 24 giờ qua số điện thoại / email trong hồ sơ.</div>');
+      } catch (e) {
+        btn.disabled = false;
+        btn.textContent = old;
+        alert(e.message || 'Không gửi được, vui lòng thử lại.');
+      }
+    }
+
     // ── Init ──────────────────────────────────────────────────────
     initUser();
     loadAnnouncement();
-    loadFeed();
+    loadShowcase();
+    Promise.all([loadPillars(), refreshAdminFlag()]).then(loadFeed);
+    loadComposerSpaces();
     loadProfileCard();
     loadChallengeWidget();
     loadLBWidget();
+
+    // Deep-link from search results: feed.html?post_id=X
+    const _deepLinkPostId = new URLSearchParams(window.location.search).get('post_id');
+    if (_deepLinkPostId) setTimeout(() => openPost(parseInt(_deepLinkPostId)), 600);
   </script>
 
   <!-- Post Detail Modal -->

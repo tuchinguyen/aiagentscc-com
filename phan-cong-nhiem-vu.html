@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8">
+  <script src="assets/js/auth-fetch.js?v=1"></script>
+  <script>(function(){try{var t=localStorage.getItem('theme');if(t==='dark'||(!t&&window.matchMedia('(prefers-color-scheme: dark)').matches))document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex">
+  <link rel="icon" type="image/png" href="/assets/img/logo.png">
+  <link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
+  <meta name="theme-color" content="#0f766e">
+  <title>Phân công nhiệm vụ — AI AGENTS CC</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/base.css?v=2">
+  <link rel="stylesheet" href="assets/css/van-hanh.css?v=3">
+  <style>
+    .pc-wrap { max-width: 1180px; margin: 0 auto; padding: 28px 16px 60px; display: flex; flex-direction: column; gap: 20px; }
+
+    .pc-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+    .pc-head h1 { font-family: var(--font-heading); font-size: 26px; font-weight: 800; letter-spacing: -.01em; margin: 0; }
+    .pc-head p { margin: 6px 0 0; color: var(--text-muted); font-size: 14px; }
+    .pc-date { background: var(--bg-card); border: 1px solid var(--border); border-radius: 999px; padding: 8px 14px; font-size: 13px; font-weight: 600; white-space: nowrap; }
+    .pc-back { font-size: 13px; color: var(--text-muted); }
+
+    .pc-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 20px; }
+    .pc-card h2 { font-family: var(--font-heading); font-size: 17px; font-weight: 700; margin: 0 0 4px; }
+    .pc-card .sub { color: var(--text-muted); font-size: 13px; margin: 0 0 14px; }
+
+    /* Bảng ma trận */
+    .pc-table-wrap { overflow-x: auto; }
+    table.pc-matrix { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 13.5px; min-width: 900px; }
+    .pc-matrix th, .pc-matrix td { border-bottom: 1px solid var(--border); border-right: 1px solid var(--border); padding: 12px; vertical-align: top; text-align: left; }
+    .pc-matrix tr > *:first-child { border-left: 1px solid var(--border); }
+    .pc-matrix thead th { border-top: 1px solid var(--border); background: var(--bg-hover); font-weight: 700; }
+    .pc-matrix thead th:first-child { border-top-left-radius: 10px; }
+    .pc-matrix thead th:last-child { border-top-right-radius: 10px; }
+    .pc-matrix tbody tr:last-child td:first-child, .pc-matrix tbody tr:last-child th:first-child { border-bottom-left-radius: 10px; }
+    .pc-matrix tbody tr:last-child td:last-child { border-bottom-right-radius: 10px; }
+    .pc-matrix thead .ag-name { display: block; font-size: 14px; }
+    .pc-matrix thead .ag-role { display: block; font-weight: 500; color: var(--text-muted); font-size: 12px; margin-top: 2px; }
+    .pc-matrix tbody th { width: 150px; background: var(--bg-card); }
+    .mem-name { font-weight: 700; font-size: 14px; display: block; }
+    .mem-role { color: var(--text-muted); font-size: 12px; font-weight: 500; display: block; margin-top: 2px; }
+    .empty { color: var(--border); text-align: center; }
+
+    .task { display: flex; gap: 8px; align-items: flex-start; padding: 6px 8px; border-radius: 8px; line-height: 1.45; }
+    .task + .task { margin-top: 6px; }
+    .task input { margin-top: 3px; width: 16px; height: 16px; accent-color: var(--color-primary); flex-shrink: 0; cursor: pointer; }
+    .task label { cursor: pointer; }
+    .task.done label { text-decoration: line-through; color: var(--text-muted); }
+    .task input:disabled { cursor: not-allowed; opacity: .55; }
+    .task .who { display: inline-block; width: 100%; font-size: 11px; color: var(--text-muted); margin-top: 2px; text-decoration: none; }
+    .task .doing { font-size: 11px; font-weight: 700; color: #d97706; white-space: nowrap; }
+    .pc-login { font-size: 13px; background: color-mix(in srgb, var(--color-primary) 9%, transparent); border: 1px solid var(--border); border-radius: 10px; padding: 10px 12px; margin-bottom: 12px; }
+    .task { background: color-mix(in srgb, var(--c, #64748b) 11%, transparent); }
+    .dot { background: var(--c, #64748b); }
+    .pc-loading { color: var(--text-muted); font-size: 14px; padding: 20px 0; }
+    .tag { display: inline-block; font-size: 11px; font-weight: 700; border-radius: 999px; padding: 1px 7px; margin-left: 4px; background: var(--bg-hover); color: var(--text-muted); vertical-align: 1px; white-space: nowrap; }
+    .tag.daily { background: var(--color-primary-light); color: var(--color-primary-dark); }
+
+    .dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; vertical-align: 0; }
+
+    .pc-progress { display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--text-muted); margin-bottom: 12px; flex-wrap: wrap; }
+    .pc-bar { flex: 1; min-width: 140px; height: 8px; background: var(--bg-hover); border-radius: 999px; overflow: hidden; }
+    .pc-bar > i { display: block; height: 100%; width: 0; background: var(--color-primary); transition: width .25s; }
+    .pc-btn { border: 1px solid var(--border); background: var(--bg-card); color: var(--text); border-radius: 8px; padding: 6px 12px; font-size: 13px; cursor: pointer; }
+    .pc-btn:hover { background: var(--bg-hover); }
+
+    /* Agent */
+    .ag-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    .ag { border: 1px solid var(--border); border-radius: 12px; padding: 14px; }
+    .ag h3 { margin: 0 0 6px; font-size: 15px; }
+    .ag p { margin: 0; font-size: 13px; color: var(--text-muted); line-height: 1.5; }
+
+    /* Luồng khách mới */
+    .flow { display: flex; align-items: stretch; gap: 8px; flex-wrap: wrap; }
+    .flow .step { flex: 1; min-width: 170px; border: 1px solid var(--border); border-radius: 12px; padding: 12px; font-size: 13px; line-height: 1.5; }
+    .flow .step b.st { display: block; font-size: 13.5px; margin-bottom: 2px; }
+    .flow .arrow { align-self: center; color: var(--text-muted); font-size: 18px; }
+
+    .pc-note { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
+    .pc-note ul { margin: 6px 0 0; padding-left: 18px; }
+
+    /* Điện thoại: bảng chuyển thành thẻ theo từng người */
+    @media (max-width: 760px) {
+      .pc-head h1 { font-size: 22px; }
+      .ag-grid { grid-template-columns: 1fr; }
+      .flow .arrow { transform: rotate(90deg); width: 100%; text-align: center; }
+      table.pc-matrix { min-width: 0; }
+      .pc-matrix thead { display: none; }
+      .pc-matrix, .pc-matrix tbody, .pc-matrix tr, .pc-matrix th, .pc-matrix td { display: block; width: 100%; }
+      .pc-matrix tr { border: 1px solid var(--border); border-radius: 12px; margin-bottom: 12px; overflow: hidden; }
+      .pc-matrix th, .pc-matrix td { border: 0 !important; border-radius: 0 !important; padding: 8px 12px; }
+      .pc-matrix tbody th { width: auto; background: var(--bg-hover); padding: 12px; }
+      .pc-matrix td::before { content: attr(data-col); display: block; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; color: var(--text-muted); margin-bottom: 4px; }
+      .pc-matrix td.empty { display: none; }
+    }
+
+    @media print {
+      body { background: #fff; }
+      .pc-noprint { display: none !important; }
+      .pc-card { border: 0; padding: 0; }
+      table.pc-matrix { min-width: 0; font-size: 11.5px; }
+      .task input { display: none; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="vh-shell">
+  <aside class="vh-side" id="vhSide" aria-label="Điều hướng vận hành"></aside>
+  <main class="pc-wrap vh-main">
+    <div class="pc-head">
+      <div>
+        <h1 id="pcTitle">📋 Bảng phân công công việc hằng ngày</h1>
+        <p id="pcSubtitle"></p>
+      </div>
+      <div class="pc-date" id="pcToday"></div>
+    </div>
+
+    <!-- BẢNG CHÍNH -->
+    <section class="pc-card">
+      <h2>Thành viên × Agent</h2>
+      <p class="sub"><span id="pcLegend"></span> · Tick ô vuông khi làm xong việc của bạn — cả nhóm cùng thấy.</p>
+
+      <div class="pc-noprint" id="pcLogin"></div>
+      <div class="pc-progress pc-noprint">
+        <span id="pcCount">0/0 việc</span>
+        <div class="pc-bar"><i id="pcBar"></i></div>
+        <a class="pc-btn" href="kanban-nhiem-vu.html" style="text-decoration:none;">🗂️ Mở Kanban &amp; KPI</a>
+        <button class="pc-btn" type="button" onclick="window.print()">🖨️ In bảng</button>
+      </div>
+
+      <div class="pc-table-wrap">
+        <table class="pc-matrix" id="pcMatrix">
+          <thead><tr id="pcHeadRow"></tr></thead>
+          <tbody id="pcBody"><tr><td class="pc-loading">Đang tải…</td></tr></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="pc-card" id="pcFlowCard" hidden>
+      <h2>🔁 Luồng khách mới từ quảng cáo</h2>
+      <p class="sub">Từ lúc có lead đến lúc khách được duyệt vào chương trình.</p>
+      <div class="flow" id="pcFlow"></div>
+    </section>
+
+    <section class="pc-card" id="pcAgentCard" hidden>
+      <h2>🤖 Các agent hỗ trợ</h2>
+      <p class="sub">Mỗi người cần <b>kết nối Telegram</b> với agent mình phụ trách (xin link kết nối từ người điều hành).</p>
+      <div class="ag-grid" id="pcAgents"></div>
+    </section>
+
+    <section class="pc-card pc-note" id="pcNotesCard" hidden>
+      <h2>📌 Lưu ý chung</h2>
+      <ul id="pcNotes"></ul>
+    </section>
+  </main>
+  </div>
+
+  <script src="assets/js/van-hanh.js?v=6"></script>
+  <script>
+    VH.nav('phan-cong');
+    (function () {
+      var d = new Date();
+      var days = ['Chủ nhật', 'Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7'];
+      document.getElementById('pcToday').textContent = '📅 ' + days[d.getDay()] + ', ' + d.toLocaleDateString('vi-VN');
+
+      function esc(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+      // Chữ thường + **in đậm**
+      function fmt(s) { return esc(s).replace(/\*\*(.+?)\*\*/g, '<b>$1</b>'); }
+      function dot(c) { return '<span class="dot" style="--c:' + esc(c.color) + '"></span>'; }
+
+      // Trạng thái lưu trên máy chủ (dùng chung với Kanban): chỉ người được gắn với thành viên (hoặc admin) mới tick được
+      var state = { statuses: {}, me: null };
+      function boxes() { return Array.prototype.slice.call(document.querySelectorAll('#pcMatrix input[type=checkbox]')); }
+      function render() {
+        var bs = boxes(), n = 0;
+        bs.forEach(function (b) {
+          var st = state.statuses[b.dataset.k];
+          b.checked = !!st && st.status === 'done';
+          b.disabled = !VH.canEditItem(state, b.dataset.m, b.dataset.t);
+          var h = VH.helpOf(state, b.dataset.m, b.dataset.t);
+          b.title = b.disabled ? (state.me ? 'Chỉ người phụ trách việc này mới tick được' : 'Đăng nhập để tick việc của bạn') : '';
+          var task = b.closest('.task');
+          task.classList.toggle('done', b.checked);
+          var who = task.querySelector('.who');
+          who.textContent = (h ? (h.status === 'accepted' ? '🤝 ' + h.to_name + ' nhận hỗ trợ' : '⏳ đang nhờ ' + h.to_name) + (st ? ' · ' : '') : '') +
+            (st ? (st.status === 'done' ? '✓ ' : '🔄 đang làm · ') + (st.by || '') + (st.at ? ' · ' + st.at.slice(11, 16) + ' ' + VH.fmtDate(st.at.slice(0, 10)).slice(0, 5) : '') : '');
+          if (b.checked) n++;
+        });
+        document.getElementById('pcCount').textContent = n + '/' + bs.length + ' việc đã xong (kỳ hiện tại)';
+        document.getElementById('pcBar').style.width = (bs.length ? n * 100 / bs.length : 0) + '%';
+      }
+      function setStatus(b) {
+        var want = b.checked ? 'done' : 'todo';
+        VH.api('/api/task-board/state', { method: 'POST', body: { member_id: b.dataset.m, task_id: b.dataset.t, status: want } })
+          .then(load).catch(function (e) { alert(e.message); load(); });
+      }
+
+      function draw(b) {
+        var cols = b.columns || [];
+        if (b.title) document.getElementById('pcTitle').textContent = '📋 ' + b.title;
+        document.getElementById('pcSubtitle').textContent = b.subtitle || '';
+        document.title = (b.title || 'Phân công nhiệm vụ') + ' — AI AGENTS CC';
+        document.getElementById('pcLegend').innerHTML = cols.map(function (c) {
+          return dot(c) + esc(c.name) + (c.is_agent === false ? ' (không qua agent)' : '');
+        }).join(' &nbsp; ');
+        document.getElementById('pcHeadRow').innerHTML = '<th>Thành viên</th>' + cols.map(function (c) {
+          return '<th><span class="ag-name">' + dot(c) + esc(c.name) + '</span><span class="ag-role">' + esc(c.role) + '</span></th>';
+        }).join('');
+        document.getElementById('pcBody').innerHTML = (b.members || []).map(function (m) {
+          return '<tr><th><span class="mem-name">' + esc(m.name) + '</span><span class="mem-role">' + esc(m.role) + '</span></th>' +
+            cols.map(function (c) {
+              var ts = (m.tasks || []).filter(function (t) { return t.col === c.id; });
+              if (!ts.length) return '<td data-col="' + esc(c.name) + '" class="empty">—</td>';
+              return '<td data-col="' + esc(c.name) + '">' + ts.map(function (t) {
+                var k = m.id + '|' + t.id, id = 'pc-' + m.id + '-' + t.id;
+                var tagText = t.tag || (t.freq !== 'daily' ? VH.FREQ[t.freq] : '');
+                var tag = tagText ? ' <span class="tag' + (/mỗi ngày|hằng ngày/i.test(tagText) ? ' daily' : '') + '">' + esc(tagText) + '</span>' : '';
+                var link = t.link ? ' <a href="' + esc(t.link) + '" target="_blank" rel="noopener">↗ Mở</a>' : '';
+                return '<div class="task" style="--c:' + esc(c.color) + '"><input type="checkbox" id="' + esc(id) + '" data-k="' + esc(k) + '" data-m="' + esc(m.id) + '" data-t="' + esc(t.id) + '"><label for="' + esc(id) + '">' + fmt(t.text) + tag + link + '<span class="who"></span></label></div>';
+              }).join('') + '</td>';
+            }).join('') + '</tr>';
+        }).join('') || '<tr><td class="pc-loading">Chưa có thành viên.</td></tr>';
+        boxes().forEach(function (bx) {
+          bx.addEventListener('change', function () { setStatus(bx); });
+        });
+
+        var flow = b.flow || [];
+        document.getElementById('pcFlowCard').hidden = !flow.length;
+        document.getElementById('pcFlow').innerHTML = flow.map(function (f) {
+          return '<div class="step"><b class="st">' + esc(f.title) + '</b>' + fmt(f.text) + '</div>';
+        }).join('<div class="arrow">→</div>');
+
+        var ags = cols.filter(function (c) { return c.is_agent !== false && c.desc; });
+        document.getElementById('pcAgentCard').hidden = !ags.length;
+        document.getElementById('pcAgents').innerHTML = ags.map(function (c) {
+          return '<div class="ag"><h3>' + dot(c) + esc(c.name) + '</h3><p>' + fmt(c.desc) + '</p></div>';
+        }).join('');
+
+        var notes = b.notes || [];
+        document.getElementById('pcNotesCard').hidden = !notes.length;
+        document.getElementById('pcNotes').innerHTML = notes.map(function (n) { return '<li>' + fmt(n) + '</li>'; }).join('');
+        render();
+      }
+
+      var drawn = false;
+      function load() {
+        return VH.api('/api/task-board/state').then(function (d) {
+          state = d;
+          document.getElementById('pcLogin').innerHTML = VH.accessNote(d);
+          if (!drawn) { draw(d.board); drawn = true; } else render();
+        });
+      }
+      load().catch(function () {
+        document.getElementById('pcBody').innerHTML = '<tr><td class="pc-loading">Không tải được bảng phân công. Vui lòng tải lại trang.</td></tr>';
+      });
+    })();
+  </script>
+</body>
+
+</html>

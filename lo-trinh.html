@@ -1,0 +1,1027 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <script src="assets/js/auth-fetch.js?v=1"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" href="/assets/img/logo.png">
+  <link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
+  <link rel="manifest" href="/manifest.json?v=2">
+  <meta name="apple-mobile-web-app-title" content="AI Agents CC">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="theme-color" content="#0ea5e9">
+  <title>Lộ trình của tôi — AI AGENTS CC</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --sky: #0ea5e9;
+      --sky-dark: #0284c7;
+      --sky-light: #e0f2fe;
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --text: #0f172a;
+      --muted: #64748b;
+      --border: #e2e8f0;
+      --green: #10b981;
+      --amber: #f59e0b;
+    }
+
+    html, body {
+      min-height: 100%;
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    .header {
+      background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 50%, #0c4a6e 100%);
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .header::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(14,165,233,.07) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(14,165,233,.07) 1px, transparent 1px);
+      background-size: 24px 24px;
+      pointer-events: none;
+    }
+
+    .back-btn {
+      position: relative;
+      z-index: 1;
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      text-decoration: none;
+      flex-shrink: 0;
+    }
+
+    .logo {
+      position: relative;
+      z-index: 1;
+      width: 38px;
+      height: 38px;
+      background: linear-gradient(135deg, var(--sky), #6366f1);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    .header-text { position: relative; z-index: 1; }
+
+    .header-name {
+      color: #fff;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+
+    .header-sub {
+      color: #7dd3fc;
+      font-size: 11.5px;
+      margin-top: 1px;
+    }
+
+    .lt-menu-btn {
+      position: relative;
+      z-index: 1;
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      cursor: pointer;
+      flex-shrink: 0;
+      margin-left: auto;
+    }
+
+    /* ── Menu drawer ── */
+    .lt-menu-overlay {
+      display: none;
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,.4);
+      z-index: 400;
+    }
+    .lt-menu-overlay.open { display: block; }
+
+    .lt-menu-drawer {
+      position: fixed;
+      top: 0; right: 0; bottom: 0;
+      width: 260px;
+      max-width: 80vw;
+      background: linear-gradient(180deg, #0f172a 0%, #0c2540 100%);
+      z-index: 450;
+      transform: translateX(100%);
+      transition: transform .25s ease;
+      overflow-y: auto;
+      padding: 18px 14px;
+    }
+    .lt-menu-drawer.open { transform: translateX(0); }
+
+    .lt-menu-title {
+      color: #7dd3fc;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      padding: 6px 10px 10px;
+    }
+
+    .lt-menu-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 10px;
+      border-radius: 10px;
+      color: #e2e8f0;
+      text-decoration: none;
+      font-size: 13.5px;
+      font-weight: 600;
+    }
+    .lt-menu-item svg { width: 18px; height: 18px; flex-shrink: 0; color: #7dd3fc; }
+    .lt-menu-item:hover { background: rgba(255,255,255,.08); }
+    .lt-menu-item.active { background: rgba(14,165,233,.18); color: #fff; }
+    .lt-menu-item.active svg { color: #38bdf8; }
+
+    /* ── Tabs ── */
+    .tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      max-width: 720px;
+      margin: 18px auto 0;
+      padding: 0 18px;
+    }
+
+    .tab-btn {
+      flex: 1 1 140px;
+      padding: 11px 14px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-family: 'Inter', sans-serif;
+      font-size: 13.5px;
+      font-weight: 600;
+      color: var(--muted);
+      cursor: pointer;
+      transition: all .15s ease;
+    }
+
+    .tab-btn.active {
+      background: var(--sky);
+      border-color: var(--sky);
+      color: #fff;
+    }
+
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    main {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 16px 18px 60px;
+    }
+
+    .state-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 40px 28px;
+      text-align: center;
+      box-shadow: 0 1px 3px rgba(0,0,0,.05);
+    }
+
+    .state-icon { font-size: 44px; margin-bottom: 16px; }
+
+    .state-title {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 19px;
+      font-weight: 800;
+      margin-bottom: 10px;
+    }
+
+    .state-body {
+      color: var(--muted);
+      font-size: 14.5px;
+      line-height: 1.7;
+      max-width: 440px;
+      margin: 0 auto;
+    }
+
+    .doc-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0,0,0,.05);
+    }
+
+    .doc-head {
+      padding: 20px 24px;
+      border-bottom: 1px solid var(--border);
+      background: linear-gradient(135deg, var(--sky-light), #fff);
+    }
+
+    .doc-eyebrow {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      color: var(--sky-dark);
+      margin-bottom: 6px;
+    }
+
+    .doc-title {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 19px;
+      font-weight: 800;
+    }
+
+    .doc-meta {
+      font-size: 12.5px;
+      color: var(--muted);
+      margin-top: 6px;
+    }
+
+    .doc-body { padding: 24px; }
+
+    /* ── Rendered roadmap markdown ── */
+    .doc-body h2, .doc-body h3, .doc-body h4 {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 800;
+      color: var(--text);
+      margin: 20px 0 10px;
+    }
+    .doc-body h2 { font-size: 18px; }
+    .doc-body h3 { font-size: 16.5px; color: var(--sky-dark); }
+    .doc-body h4 { font-size: 15px; }
+    .doc-body p { font-size: 14.5px; line-height: 1.85; margin-bottom: 12px; }
+    .doc-body p.md-subhead { margin: 16px 0 6px; }
+    .doc-body p.md-subhead:first-child { margin-top: 0; }
+    .doc-body ul, .doc-body ol { padding-left: 22px; margin-bottom: 12px; }
+    .doc-body li { font-size: 14.5px; line-height: 1.8; margin-bottom: 4px; }
+    .doc-body hr { border: none; border-top: 1px solid var(--border); margin: 20px 0; }
+    .doc-body strong { color: var(--text); }
+    .doc-body > *:first-child { margin-top: 0; }
+
+    .table-wrap { overflow-x: auto; margin-bottom: 16px; -webkit-overflow-scrolling: touch; }
+    .table-wrap table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+    .table-wrap th, .table-wrap td {
+      padding: 9px 12px;
+      border: 1px solid var(--border);
+      text-align: left;
+      vertical-align: top;
+    }
+    .table-wrap th {
+      background: var(--sky-light);
+      color: var(--sky-dark);
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    .table-wrap tr:nth-child(even) td { background: #fafcfe; }
+
+    .doc-disclaimer {
+      margin: 16px 0 24px;
+      padding: 14px 16px;
+      background: #fffbeb;
+      border: 1px solid #fde68a;
+      border-radius: 10px;
+      font-size: 12.5px;
+      line-height: 1.6;
+      color: #92400e;
+    }
+
+    .history-note {
+      text-align: center;
+      font-size: 12.5px;
+      color: var(--muted);
+      margin-top: 18px;
+    }
+    .history-note a { color: var(--sky-dark); font-weight: 600; text-decoration: none; }
+
+    /* ── Intake summary tab ── */
+    .intake-section { margin-bottom: 22px; }
+    .intake-section:last-child { margin-bottom: 0; }
+    .intake-section h3 {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      color: var(--sky-dark);
+      margin-bottom: 12px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .contact-grid { display: grid; gap: 8px; }
+    .contact-row { display: flex; gap: 10px; font-size: 14px; }
+    .contact-k { color: var(--muted); min-width: 110px; flex-shrink: 0; }
+    .contact-v { font-weight: 600; }
+
+    .qa-row {
+      display: flex;
+      gap: 12px;
+      padding: 12px 0;
+      border-bottom: 1px dashed var(--border);
+    }
+    .qa-row:last-child { border-bottom: none; }
+    .qa-num {
+      flex-shrink: 0;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--sky-light);
+      color: var(--sky-dark);
+      font-size: 11.5px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .qa-q { font-size: 13.5px; color: var(--muted); margin-bottom: 4px; line-height: 1.5; }
+    .qa-a { font-size: 14.5px; font-weight: 500; line-height: 1.6; }
+
+    /* ── Hồ sơ ảnh tab ── */
+    .photo-intro { font-size: 13.5px; color: var(--muted); line-height: 1.7; margin-bottom: 18px; }
+    .photo-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+    @media (max-width: 420px) {
+      .photo-grid { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    }
+    .photo-slot {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0,0,0,.05);
+    }
+    .photo-slot-preview {
+      aspect-ratio: 3/4;
+      background: #f1f5f9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .photo-slot-preview img, .photo-slot-preview video {
+      width: 100%; height: 100%; object-fit: cover; display: block;
+    }
+    .photo-slot-placeholder { text-align: center; color: var(--muted); font-size: 12px; padding: 10px; }
+    .photo-slot-placeholder .icon { font-size: 26px; display: block; margin-bottom: 6px; }
+    .photo-slot-label {
+      padding: 9px 10px;
+      font-size: 12.5px;
+      font-weight: 600;
+      text-align: center;
+      border-top: 1px solid var(--border);
+      cursor: pointer;
+      background: #fff;
+      color: var(--sky-dark);
+    }
+    .photo-slot-label input { display: none; }
+    .photo-slot.done .photo-slot-label { background: var(--sky-light); }
+    .photo-slot-badge {
+      position: absolute; top: 6px; right: 6px;
+      background: var(--green); color: #fff; font-size: 10px; font-weight: 700;
+      border-radius: 999px; width: 20px; height: 20px;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    .video-slot { grid-column: 1 / -1; }
+    .video-slot .photo-slot-preview { aspect-ratio: auto; height: 480px; }
+    .photo-slot-preview iframe { width: 100%; height: 100%; border: 0; display: block; }
+
+    .photo-save-bar {
+      display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+    }
+    .photo-save-btn {
+      background: var(--sky);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      padding: 12px 22px;
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .photo-save-btn:disabled { opacity: .5; cursor: not-allowed; }
+    .photo-status { font-size: 12.5px; color: var(--muted); }
+    .photo-status.ok { color: var(--green); font-weight: 600; }
+    .photo-status.err { color: #dc2626; font-weight: 600; }
+    .photo-updated-note { font-size: 12px; color: var(--muted); margin-top: 10px; }
+    /* ── Hồ sơ y khoa (assets/js/health-records.js) ── */
+    .hr-card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 18px 20px; margin-bottom: 14px; box-shadow: 0 1px 3px rgba(0,0,0,.05); }
+    .hr-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 8px; }
+    .hr-title { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 18px; font-weight: 800; }
+    .hr-sub { font-size: 12.5px; color: var(--muted); line-height: 1.6; margin-top: 4px; }
+    .hr-text { font-size: 14px; line-height: 1.7; color: var(--text); margin: 8px 0 12px; }
+    .hr-note { font-size: 12.5px; color: var(--muted); background: var(--bg); border-radius: 8px; padding: 8px 10px; }
+    .hr-consent { background: #f8fafc; border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; font-size: 13.5px; line-height: 1.65; margin-bottom: 14px; }
+    .hr-consent ul { padding-left: 20px; margin: 8px 0 12px; }
+    .hr-check { display: flex; gap: 8px; align-items: flex-start; margin-top: 8px; cursor: pointer; }
+    .hr-check input { margin-top: 4px; }
+    .hr-btn { border: 1px solid var(--border); background: var(--card); color: var(--text); border-radius: 10px; padding: 9px 14px; font-size: 13.5px; font-weight: 600; cursor: pointer; font-family: inherit; }
+    .hr-btn.primary { background: var(--sky); border-color: var(--sky); color: #fff; }
+    .hr-btn:disabled { opacity: .6; cursor: wait; }
+    .hr-link { background: none; border: none; color: var(--sky-dark); font-weight: 600; cursor: pointer; font-size: 13px; font-family: inherit; padding: 4px 0; }
+    .hr-link.danger { color: #dc2626; }
+    .hr-badge { font-size: 11.5px; font-weight: 700; border-radius: 999px; padding: 3px 10px; white-space: nowrap; }
+    .hr-visit { display: flex; align-items: center; gap: 14px; background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 14px 16px; margin-bottom: 10px; cursor: pointer; }
+    .hr-visit:hover { border-color: var(--sky); }
+    .hr-visit-date { font-weight: 800; color: var(--sky-dark); min-width: 88px; }
+    .hr-visit-main { flex: 1; min-width: 0; }
+    .hr-visit-title { font-weight: 700; font-size: 14.5px; } .hr-visit-title span { font-weight: 500; color: var(--muted); }
+    .hr-visit-meta { font-size: 12.5px; color: var(--muted); margin-top: 2px; }
+    .hr-visit-return { font-size: 12.5px; color: #b91c1c; margin-top: 4px; }
+    .hr-alert { background: #fee2e2; color: #991b1b; border-radius: 10px; padding: 10px 12px; font-size: 13px; margin-bottom: 12px; }
+    .hr-alert.info { background: #fef3c7; color: #92400e; } .hr-alert.ok { background: #d1fae5; color: #065f46; }
+    .hr-grid3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; align-items: end; margin-bottom: 10px; }
+    .hr-card label { display: flex; flex-direction: column; gap: 4px; font-size: 12.5px; font-weight: 600; color: var(--muted); }
+    .hr-full { margin-bottom: 10px; }
+    .hr-card input, .hr-card select, .hr-card textarea { border: 1px solid var(--border); border-radius: 8px; padding: 8px 10px; font-size: 13.5px; font-family: inherit; color: var(--text); background: #fff; width: 100%; }
+    .hr-card input:disabled, .hr-card select:disabled, .hr-card textarea:disabled { background: #f8fafc; color: var(--text); }
+    .hr-sec { font-weight: 800; font-size: 15px; margin-bottom: 10px; } .hr-sec span { font-weight: 500; font-size: 12.5px; color: var(--muted); }
+    .hr-files { display: flex; gap: 10px; flex-wrap: wrap; }
+    .hr-file { position: relative; width: 110px; }
+    .hr-file-thumb { width: 110px; height: 140px; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; display: flex; align-items: center; justify-content: center; background: #f8fafc; cursor: pointer; font-weight: 700; color: var(--muted); }
+    .hr-file-thumb img { width: 100%; height: 100%; object-fit: cover; }
+    .hr-file-name { font-size: 11px; color: var(--muted); margin-top: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .hr-file-del { position: absolute; top: 4px; right: 4px; width: 24px; height: 24px; border-radius: 50%; border: none; background: rgba(0,0,0,.6); color: #fff; cursor: pointer; }
+    .hr-file-add { width: 110px; height: 140px; border: 1.5px dashed var(--border); border-radius: 10px; background: #fff; color: var(--muted); cursor: pointer; font-weight: 600; font-size: 13px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; font-family: inherit; }
+    .hr-file-add span { font-size: 26px; } .hr-file-add:hover { border-color: var(--sky); color: var(--sky-dark); }
+    .hr-quick { font-size: 12.5px; color: var(--muted); margin-bottom: 10px; display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+    .hr-chip { border: 1px solid var(--border); background: var(--sky-light); color: var(--sky-dark); border-radius: 999px; padding: 4px 10px; font-size: 12px; font-weight: 600; cursor: pointer; font-family: inherit; }
+    .hr-table-wrap { overflow-x: auto; margin-bottom: 10px; }
+    .hr-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .hr-table th { text-align: left; font-size: 11.5px; color: var(--muted); font-weight: 700; padding: 6px; border-bottom: 1px solid var(--border); white-space: nowrap; }
+    .hr-table td { padding: 6px; border-bottom: 1px solid var(--border); vertical-align: top; }
+    .hr-table td select { min-width: 170px; }
+    .hr-ref { white-space: nowrap; } .hr-ref input { width: 64px !important; display: inline-block; }
+    .hr-flag { font-size: 11.5px; font-weight: 700; border-radius: 6px; padding: 2px 6px; white-space: nowrap; }
+    .hr-flag.low { background: #dbeafe; color: #1d4ed8; } .hr-flag.high { background: #fee2e2; color: #b91c1c; } .hr-flag.ok { background: #d1fae5; color: #047857; }
+    .hr-empty { color: var(--muted); font-size: 13px; padding: 8px 0; }
+    /* So sánh trước – sau */
+    .hr-subtabs { display: flex; gap: 6px; margin-top: 12px; }
+    .hr-subtabs button { flex: 1; border: 1px solid var(--border); background: #fff; border-radius: 10px; padding: 9px 10px; font-weight: 700; font-size: 13px; color: var(--muted); cursor: pointer; font-family: inherit; }
+    .hr-subtabs button.active { background: var(--sky-light); border-color: var(--sky); color: var(--sky-dark); }
+    .hr-cmp-wrap { overflow-x: auto; margin: 10px 0; border: 1px solid var(--border); border-radius: 12px; }
+    .hr-cmp { border-collapse: collapse; font-size: 13px; width: 100%; }
+    .hr-cmp th { background: #f8fafc; font-size: 12px; color: var(--muted); text-align: center; padding: 8px 10px; white-space: nowrap; border-bottom: 1px solid var(--border); }
+    .hr-cmp th:first-child, .hr-cmp td:first-child { position: sticky; left: 0; background: #fff; text-align: left; z-index: 1; }
+    .hr-cmp th:first-child { background: #f8fafc; }
+    .hr-cmp td { padding: 7px 10px; border-bottom: 1px solid var(--border); text-align: center; white-space: nowrap; }
+    .hr-cmp-group td { background: #f1f5f9 !important; font-weight: 800; font-size: 12px; color: var(--sky-dark); text-align: left !important; }
+    .hr-cmp-name { cursor: pointer; font-weight: 600; color: var(--text); min-width: 150px; white-space: normal !important; }
+    .hr-cmp-name:hover { color: var(--sky-dark); text-decoration: underline; }
+    .hr-cmp-name span { display: block; font-size: 11px; color: var(--muted); font-weight: 500; }
+    .hr-cmp-ref { font-size: 12px; color: var(--muted); }
+    .hr-c.hi b { color: #b91c1c; } .hr-c.lo b { color: #1d4ed8; } .hr-c.ok b { color: #047857; }
+    .hr-c-empty { color: #cbd5e1; }
+    .hr-delta { display: block; font-size: 11px; font-weight: 700; color: var(--muted); }
+    .hr-delta.good { color: #047857; } .hr-delta.bad { color: #b91c1c; }
+    .hr-unv { font-size: 10.5px; color: #b45309; font-weight: 600; font-style: normal; }
+    .hr-chart { border: 1px solid var(--border); border-radius: 12px; padding: 12px; margin-top: 12px; }
+    .hr-img-tl { border: 1px solid var(--border); border-radius: 12px; padding: 10px 12px; margin-bottom: 8px; }
+    .hr-img-tl-k { font-weight: 700; font-size: 13px; margin-bottom: 6px; }
+    .hr-img-tl-row { display: flex; gap: 12px; font-size: 13px; padding: 4px 0; border-top: 1px dashed var(--border); }
+    .hr-img-tl-row span { color: var(--sky-dark); font-weight: 700; min-width: 84px; }
+    .hr-print-head { display: none; }
+    @media print {
+      body * { visibility: hidden !important; }
+      .hr-print-area, .hr-print-area * { visibility: visible !important; }
+      .hr-print-area { position: absolute; left: 0; top: 0; width: 100%; border: none; box-shadow: none; padding: 0; }
+      .hr-print-head { display: block; margin-bottom: 10px; }
+      .hr-no-print { display: none !important; }
+      .hr-cmp-wrap { overflow: visible; border: none; }
+      .hr-cmp th:first-child, .hr-cmp td:first-child { position: static; }
+      .hr-cmp td, .hr-cmp th { padding: 4px 6px; font-size: 11px; }
+      @page { size: A4 landscape; margin: 12mm; }
+    }
+    .hr-ai-bar { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-top: 12px; padding-top: 12px; border-top: 1px dashed var(--border); font-size: 12.5px; color: var(--muted); }
+    .hr-ai-note { background: #fef9c3; border: 1px solid #fde68a; color: #854d0e; border-radius: 8px; padding: 8px 10px; font-size: 12.5px; line-height: 1.5; margin-bottom: 10px; }
+    .hr-table tr.hr-ai-row td { background: #fefce8; }
+    @media (max-width: 600px) { .hr-table tr.hr-ai-row { background: #fefce8; border-color: #fde68a; } .hr-table tr.hr-ai-row td { background: transparent; } }
+    .hr-img-row { border: 1px solid var(--border); border-radius: 12px; padding: 12px; margin-bottom: 10px; }
+    .hr-actions { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; justify-content: center; margin: 6px 0 4px; }
+    @media (max-width: 600px) {
+      .hr-grid3 { grid-template-columns: 1fr; } .hr-visit { flex-wrap: wrap; }
+      /* Bảng chỉ số → mỗi chỉ số 1 thẻ: tên | kết quả + đơn vị + xoá | tham chiếu + cao/thấp */
+      .hr-table thead { display: none; }
+      .hr-table, .hr-table tbody { display: block; }
+      .hr-table tr { display: grid; grid-template-columns: 1fr 1fr auto; gap: 6px; border: 1px solid var(--border); border-radius: 10px; padding: 8px; margin-bottom: 8px; }
+      .hr-table td { border: none; padding: 0; }
+      .hr-table td:nth-child(1) { grid-column: 1 / -1; }
+      .hr-table td:nth-child(2) { grid-column: 1; } .hr-table td:nth-child(3) { grid-column: 2; }
+      .hr-table td:nth-child(6) { grid-column: 3; grid-row: 2; align-self: center; }
+      .hr-table td:nth-child(4) { grid-column: 1 / 3; } .hr-table td:nth-child(5) { grid-column: 3; align-self: center; }
+      .hr-table td input { width: 100% !important; } .hr-table td select { min-width: 0; }
+      .hr-table td.hr-ref { display: flex; align-items: center; gap: 4px; } .hr-table td.hr-ref input { width: auto !important; flex: 1; min-width: 0; }
+      .hr-table-wrap { overflow: visible; }
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <a href="feed.html" class="back-btn" aria-label="Quay lại">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg>
+    </a>
+    <div class="logo">🌿</div>
+    <div class="header-text">
+      <div class="header-name">Lộ trình của tôi</div>
+      <div class="header-sub">Ăn uống thuận tự nhiên — cá nhân hóa</div>
+    </div>
+    <button class="lt-menu-btn" onclick="toggleLtMenu()" aria-label="Menu">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+  </header>
+
+  <div class="lt-menu-overlay" id="ltMenuOverlay" onclick="closeLtMenu()"></div>
+  <div class="lt-menu-drawer" id="ltMenuDrawer">
+    <div class="lt-menu-title">Cộng đồng</div>
+    <a href="feed.html" class="lt-menu-item">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+      Feed
+    </a>
+    <a href="spaces.html" class="lt-menu-item">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></svg>
+      Spaces
+    </a>
+    <a href="courses.html" class="lt-menu-item">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/></svg>
+      Courses
+    </a>
+    <a href="members.html" class="lt-menu-item">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+      Members
+    </a>
+    <div class="lt-menu-title">Sức khỏe</div>
+    <a href="lo-trinh.html" class="lt-menu-item active">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2C8 6 6 9.5 6 13a6 6 0 0012 0c0-3.5-2-7-6-11z"/></svg>
+      Lộ trình của tôi
+    </a>
+    <a href="workshop3.html" class="lt-menu-item">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      3 Buổi Workshop
+    </a>
+    <a href="workshop8.html" class="lt-menu-item">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      8 Buổi Chuyên Sâu
+    </a>
+    <a href="program377.html" class="lt-menu-item">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      377 ngày thực hành
+    </a>
+    <a href="coach-1-1.html" class="lt-menu-item">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><path d="M8 14l2 2 4-4"/></svg>
+      Đặt lịch coach 1-1
+    </a>
+    <div class="lt-menu-title">Học tập</div>
+    <a href="challenge.html" class="lt-menu-item">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z"/></svg>
+      Challenge
+    </a>
+    <div class="lt-menu-title">Khác</div>
+    <a href="leaderboard.html" class="lt-menu-item">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/></svg>
+      Leaderboard
+    </a>
+    <a href="calendar.html" class="lt-menu-item">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      Calendar
+    </a>
+    <a href="marketplace.html" class="lt-menu-item">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z"/></svg>
+      Marketplace
+    </a>
+    <a href="about.html" class="lt-menu-item">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+      About
+    </a>
+  </div>
+
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="intake" onclick="switchTab('intake')">📋 Hồ sơ khảo sát</button>
+    <button class="tab-btn" data-tab="photos" onclick="switchTab('photos')">🧍 Hồ sơ ảnh</button>
+    <button class="tab-btn" data-tab="roadmap" onclick="switchTab('roadmap')">🌿 Lộ trình</button>
+    <button class="tab-btn" data-tab="medical" onclick="switchTab('medical')">🩺 Hồ sơ y khoa</button>
+  </div>
+
+  <main>
+    <div class="tab-panel active" id="panel-intake">
+      <div class="state-card"><div class="state-icon">⏳</div><div class="state-title">Đang tải...</div></div>
+    </div>
+    <div class="tab-panel" id="panel-medical"></div>
+    <div class="tab-panel" id="panel-photos">
+      <div class="photo-intro">
+        Chụp 3 ảnh dáng người (mặc quần áo ôm sát, đứng thẳng, nền trơn, đủ ánh sáng) và 1 video ngắn động tác
+        <strong>ngồi xuống — đứng lên</strong> để đội ngũ đánh giá tư thế và khả năng vận động của bạn.
+      </div>
+      <div class="photo-grid">
+        <div class="photo-slot" id="slot-front">
+          <div class="photo-slot-preview" id="preview-front">
+            <div class="photo-slot-placeholder"><span class="icon">🧍</span>Toàn thân — Phía trước</div>
+          </div>
+          <label class="photo-slot-label">
+            📷 Chọn ảnh
+            <input type="file" accept="image/*" onchange="onPhotoPicked('front', this)">
+          </label>
+        </div>
+        <div class="photo-slot" id="slot-back">
+          <div class="photo-slot-preview" id="preview-back">
+            <div class="photo-slot-placeholder"><span class="icon">🧍</span>Toàn thân — Phía sau</div>
+          </div>
+          <label class="photo-slot-label">
+            📷 Chọn ảnh
+            <input type="file" accept="image/*" onchange="onPhotoPicked('back', this)">
+          </label>
+        </div>
+        <div class="photo-slot" id="slot-side">
+          <div class="photo-slot-preview" id="preview-side">
+            <div class="photo-slot-placeholder"><span class="icon">🧍</span>Toàn thân — Bên hông</div>
+          </div>
+          <label class="photo-slot-label">
+            📷 Chọn ảnh
+            <input type="file" accept="image/*" onchange="onPhotoPicked('side', this)">
+          </label>
+        </div>
+        <div class="photo-slot video-slot" id="slot-video">
+          <div class="photo-slot-preview" id="preview-video">
+            <div class="photo-slot-placeholder"><span class="icon">🎥</span>Video: ngồi xuống — đứng lên (quay ngắn, khoảng 5–10 giây)</div>
+          </div>
+          <label class="photo-slot-label">
+            🎥 Chọn video
+            <input type="file" accept="video/*" onchange="onPhotoPicked('video', this)">
+          </label>
+        </div>
+      </div>
+      <div class="photo-save-bar">
+        <button class="photo-save-btn" id="photoSaveBtn" onclick="savePhotos()" disabled>💾 Lưu hồ sơ ảnh</button>
+        <span class="photo-status" id="photoStatus"></span>
+      </div>
+      <div class="photo-updated-note" id="photoUpdatedNote"></div>
+    </div>
+    <div class="tab-panel" id="panel-roadmap">
+      <div class="state-card"><div class="state-icon">⏳</div><div class="state-title">Đang tải...</div></div>
+    </div>
+  </main>
+
+  <script src="assets/js/health-records.js?v=3"></script>
+  <script>
+    const currentUser = (() => {
+      try { return JSON.parse(localStorage.getItem('currentUser') || 'null'); }
+      catch { return null; }
+    })();
+
+    if (!currentUser?.id) location.href = 'index.html';
+
+    function switchTab(name) {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === name));
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      document.getElementById(`panel-${name}`).classList.add('active');
+      if (name === 'medical' && !window._hrLoaded) { window._hrLoaded = true; HR.load(); }
+    }
+
+    function toggleLtMenu() {
+      document.getElementById('ltMenuDrawer').classList.toggle('open');
+      document.getElementById('ltMenuOverlay').classList.toggle('open');
+    }
+    function closeLtMenu() {
+      document.getElementById('ltMenuDrawer').classList.remove('open');
+      document.getElementById('ltMenuOverlay').classList.remove('open');
+    }
+
+    function escHtml(s) {
+      return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+
+    function fmtDate(iso) {
+      if (!iso) return '';
+      const d = new Date(iso.replace(' ', 'T'));
+      if (isNaN(d)) return iso;
+      return d.toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' });
+    }
+
+    /* ── Lightweight markdown → HTML (escapes first, safe from injected tags) ── */
+    function mdToHtml(md) {
+      const lines = escHtml(md).split('\n');
+      let html = '', inList = false, listType = null, para = [];
+
+      const inlineFmt = s => s
+        .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+        .replace(/(^|[^*])\*([^*\n]+)\*(?!\*)/g, '$1<em>$2</em>');
+
+      const flushPara = () => { if (para.length) { html += `<p>${para.join(' ')}</p>`; para = []; } };
+      const closeList = () => { if (inList) { html += listType === 'ol' ? '</ol>' : '</ul>'; inList = false; listType = null; } };
+
+      const isTableRow = l => /^\|.+\|$/.test(l);
+      const isSepRow = l => isTableRow(l) && /^\|[\s:|-]+\|$/.test(l) && l.includes('-');
+      const splitRow = l => l.replace(/^\||\|$/g, '').split('|').map(c => c.trim());
+
+      let i = 0;
+      while (i < lines.length) {
+        const line = lines[i].trim();
+
+        if (!line) { flushPara(); closeList(); i++; continue; }
+
+        // Markdown table: header row followed by a ":---|:---" separator row
+        if (isTableRow(line) && i + 1 < lines.length && isSepRow(lines[i + 1].trim())) {
+          flushPara(); closeList();
+          const headers = splitRow(line);
+          html += '<div class="table-wrap"><table><thead><tr>' +
+            headers.map(h => `<th>${inlineFmt(h)}</th>`).join('') + '</tr></thead><tbody>';
+          i += 2;
+          while (i < lines.length && isTableRow(lines[i].trim())) {
+            const cells = splitRow(lines[i].trim());
+            html += '<tr>' + cells.map(c => `<td>${inlineFmt(c)}</td>`).join('') + '</tr>';
+            i++;
+          }
+          html += '</tbody></table></div>';
+          continue;
+        }
+
+        if (/^-{3,}$/.test(line)) { flushPara(); closeList(); html += '<hr>'; i++; continue; }
+
+        let m = line.match(/^(#{1,4})\s+(.*)$/);
+        if (m) { flushPara(); closeList(); const lvl = m[1].length + 1; html += `<h${lvl}>${inlineFmt(m[2])}</h${lvl}>`; i++; continue; }
+
+        // "- Buổi nào đó (...):" là tiêu đề nhóm khi dòng kế tiếp là "+ ..." — in
+        // đậm thay vì làm bullet, để không lẫn với các ý con bên dưới.
+        m = line.match(/^-\s+(.*)$/);
+        if (m && /^\+\s+/.test((lines[i + 1] || '').trim())) {
+          flushPara(); closeList();
+          html += `<p class="md-subhead"><strong>${inlineFmt(m[1])}</strong></p>`;
+          i++; continue;
+        }
+
+        m = line.match(/^[-*+]\s+(.*)$/);
+        if (m) { flushPara(); if (listType !== 'ul') { closeList(); html += '<ul>'; inList = true; listType = 'ul'; } html += `<li>${inlineFmt(m[1])}</li>`; i++; continue; }
+
+        m = line.match(/^\d+[.)]\s+(.*)$/);
+        if (m) { flushPara(); if (listType !== 'ol') { closeList(); html += '<ol>'; inList = true; listType = 'ol'; } html += `<li>${inlineFmt(m[1])}</li>`; i++; continue; }
+
+        closeList();
+        para.push(inlineFmt(line));
+        i++;
+      }
+      flushPara(); closeList();
+      return html;
+    }
+
+    /* ── Parse buildAnswersSummaryText() format into readable HTML ── */
+    function renderIntakeSummary(summaryText) {
+      let html = '';
+      const re = /===\s*(.+?)\s*===\n([\s\S]*?)(?=\n===|\s*$)/g;
+      let m;
+      while ((m = re.exec(summaryText))) {
+        const title = m[1].trim();
+        const body = m[2].trim();
+        if (!body) continue;
+
+        if (title === 'THÔNG TIN LIÊN HỆ') {
+          html += `<div class="intake-section"><h3>${escHtml(title)}</h3><div class="contact-grid">`;
+          body.split('\n').map(l => l.trim()).filter(Boolean).forEach(row => {
+            const idx = row.indexOf(':');
+            const k = idx >= 0 ? row.slice(0, idx) : row;
+            const v = idx >= 0 ? row.slice(idx + 1).trim() : '';
+            html += `<div class="contact-row"><span class="contact-k">${escHtml(k)}</span><span class="contact-v">${escHtml(v)}</span></div>`;
+          });
+          html += `</div></div>`;
+          continue;
+        }
+
+        html += `<div class="intake-section"><h3>${escHtml(title)}</h3>`;
+        let cur = null;
+        body.split('\n').forEach(l => {
+          const qm = l.match(/^(\d+)\.\s+(.*)$/);
+          const am = l.match(/^\s*→\s*(.*)$/);
+          if (qm) {
+            if (cur) html += renderQA(cur);
+            cur = { num: qm[1], q: qm[2], a: '' };
+          } else if (am && cur) {
+            cur.a = am[1];
+          }
+        });
+        if (cur) html += renderQA(cur);
+        html += `</div>`;
+      }
+      return html || `<p style="color:var(--muted);font-size:14px;">${escHtml(summaryText)}</p>`;
+
+      function renderQA(item) {
+        return `<div class="qa-row"><div class="qa-num">${item.num}</div><div><div class="qa-q">${escHtml(item.q)}</div><div class="qa-a">${escHtml(item.a)}</div></div></div>`;
+      }
+    }
+
+    function stateCard(icon, title, body) {
+      return `<div class="state-card"><div class="state-icon">${icon}</div><div class="state-title">${title}</div><div class="state-body">${body}</div></div>`;
+    }
+
+    async function loadIntake() {
+      const panel = document.getElementById('panel-intake');
+      try {
+        const res = await fetch(`/api/ttm/intake/${currentUser.id}`);
+        const data = await res.json();
+        if (!data.intake) {
+          panel.innerHTML = stateCard('📋', 'Chưa có hồ sơ khảo sát', 'Bạn chưa hoàn thành khảo sát Thân-Tâm-Mệnh.');
+          return;
+        }
+        panel.innerHTML = `
+          <div class="doc-card">
+            <div class="doc-head">
+              <div class="doc-eyebrow">Hồ sơ khảo sát Thân-Tâm-Mệnh</div>
+              <div class="doc-title">Dành cho ${escHtml(currentUser.first_name)} ${escHtml(currentUser.last_name || '')}</div>
+              <div class="doc-meta">Gửi ngày ${fmtDate(data.intake.submittedAt)} — đã chuyển cho Người hướng dẫn xem xét</div>
+            </div>
+            <div class="doc-body">${renderIntakeSummary(data.intake.summaryText)}</div>
+          </div>
+        `;
+      } catch (e) {
+        panel.innerHTML = stateCard('⚠️', 'Không tải được', 'Đã có lỗi kết nối. Vui lòng thử tải lại trang.');
+      }
+    }
+
+    async function loadRoadmap() {
+      const panel = document.getElementById('panel-roadmap');
+      try {
+        const res = await fetch(`/api/ttm/roadmap/${currentUser.id}`);
+        const data = await res.json();
+        if (!data.roadmap) {
+          panel.innerHTML = stateCard('🕊️', 'Lộ trình của bạn đang được soạn',
+            'Chúng tôi đã nhận được thông tin bạn chia sẻ. Đội ngũ đang xem xét kỹ lưỡng để soạn một lộ trình ăn uống thuận tự nhiên phù hợp nhất với bạn — thường mất khoảng 24–48 giờ. Quay lại tab này sau nhé.');
+          return;
+        }
+        const r = data.roadmap;
+        panel.innerHTML = `
+          <div class="doc-card">
+            <div class="doc-head">
+              <div class="doc-eyebrow">Lộ trình thuận tự nhiên</div>
+              <div class="doc-title">Dành cho ${escHtml(currentUser.first_name)} ${escHtml(currentUser.last_name || '')}</div>
+              <div class="doc-meta">Được duyệt ngày ${fmtDate(r.reviewedAt || r.createdAt)}${r.reviewedByName ? ' bởi ' + escHtml(r.reviewedByName) : ''}${r.theTrang ? ' — Thể trạng: <b>' + escHtml(r.theTrang) + '</b>' : ''}</div>
+            </div>
+            <div class="doc-body">${mdToHtml(r.content)}</div>
+          </div>
+          <div class="doc-disclaimer">⚠️ Lộ trình này mang tính tham khảo dựa trên phương pháp thuận tự nhiên, không thay thế chẩn đoán hoặc điều trị y tế chuyên khoa. Nếu có triệu chứng bất thường, hãy liên hệ ngay với đội ngũ hỗ trợ.</div>
+          <div class="history-note">Muốn cập nhật lại thể trạng? <a href="intake-than-tam-menh.html">Làm lại khảo sát Thân-Tâm-Mệnh</a></div>
+        `;
+      } catch (e) {
+        panel.innerHTML = stateCard('⚠️', 'Không tải được', 'Đã có lỗi kết nối. Vui lòng thử tải lại trang.');
+      }
+    }
+
+    /* ── Hồ sơ ảnh tab ── */
+    const PHOTO_LABELS = {
+      front: 'Toàn thân — Phía trước', back: 'Toàn thân — Phía sau',
+      side: 'Toàn thân — Bên hông', video: 'Video ngồi xuống — đứng lên',
+    };
+    const pendingPhotoFiles = {};
+    let currentPhotos = null;
+
+    function setPhotoStatus(msg, cls) {
+      const el = document.getElementById('photoStatus');
+      el.textContent = msg || '';
+      el.className = 'photo-status' + (cls ? ' ' + cls : '');
+    }
+
+    function onPhotoPicked(field, input) {
+      const file = input.files?.[0];
+      if (!file) return;
+
+      const isVideo = field === 'video';
+      const maxMB = isVideo ? 60 : 40;   // ảnh được nén trước khi gửi
+      if (file.size > maxMB * 1024 * 1024) {
+        setPhotoStatus(isVideo ? `Video quá lớn (tối đa ${maxMB}MB). Bạn quay ngắn khoảng 10–20 giây, chế độ quay thường (không 4K) rồi chọn lại.` : `Ảnh "${PHOTO_LABELS[field]}" quá lớn (tối đa ${maxMB}MB).`, 'err');
+        input.value = '';
+        return;
+      }
+
+      pendingPhotoFiles[field] = file;
+      const preview = document.getElementById(`preview-${field}`);
+      const url = URL.createObjectURL(file);
+      preview.innerHTML = isVideo
+        ? `<video src="${url}" controls playsinline></video>`
+        : `<img src="${url}" alt="${escHtml(PHOTO_LABELS[field])}">`;
+      document.getElementById(`slot-${field}`).classList.add('done');
+      document.getElementById('photoSaveBtn').disabled = false;
+      setPhotoStatus('Đã chọn file — bấm "Lưu hồ sơ ảnh" để tải lên.', '');
+    }
+
+    // Nén ảnh trên máy trước khi gửi (ảnh điện thoại 3–8MB → ~300–600KB, cạnh dài tối đa 1600px).
+    // Không đọc được ảnh (định dạng lạ) thì gửi nguyên file.
+    function compressPhoto(file) {
+      return new Promise(resolve => {
+        if (!/^image\//.test(file.type) || /gif$/.test(file.type)) return resolve(file);
+        const url = URL.createObjectURL(file);
+        const img = new Image();
+        img.onload = () => {
+          const MAX = 1600, s = Math.min(1, MAX / Math.max(img.naturalWidth, img.naturalHeight));
+          const c = document.createElement('canvas');
+          c.width = Math.round(img.naturalWidth * s); c.height = Math.round(img.naturalHeight * s);
+          c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+          URL.revokeObjectURL(url);
+          c.toBlob(b => resolve(b && b.size < file.size ? new File([b], (file.name || 'anh').replace(/\.\w+$/, '') + '.jpg', { type: 'image/jpeg' }) : file), 'image/jpeg', 0.85);
+        };
+        img.onerror = () => { URL.revokeObjectURL(url); resolve(file); };
+        img.src = url;
+      });
+    }
+
+    // Gửi từng file một (ảnh đã nén, video riêng) để không vượt giới hạn dung lượng mỗi lần gửi
+    async function savePhotos() {
+      const fields = ['front', 'back', 'side', 'video'].filter(f => pendingPhotoFiles[f]);
+      if (!fields.length) return;
+
+      const btn = document.getElementById('photoSaveBtn');
+      btn.disabled = true;
+      let done = 0;
+      try {
+        for (const f of fields) {
+          const isVideo = f === 'video';
+          setPhotoStatus(`⏳ Đang tải ${PHOTO_LABELS[f]} (${done + 1}/${fields.length})${isVideo ? ' — video có thể mất 1–2 phút' : ''}…`, '');
+          const file = isVideo ? pendingPhotoFiles[f] : await compressPhoto(pendingPhotoFiles[f]);
+          const fd = new FormData();
+          fd.append(f, file, file.name || (isVideo ? 'video.mp4' : 'anh.jpg'));
+          const res = await fetch(`/api/ttm/photos/${currentUser.id}`, { method: 'POST', body: fd });
+          const data = await res.json().catch(() => ({}));
+          if (res.status === 413) throw new Error(isVideo
+            ? 'Video quá lớn để tải lên. Bạn quay lại ngắn khoảng 10–20 giây (chế độ quay thường, không 4K) rồi thử lại.'
+            : `Ảnh "${PHOTO_LABELS[f]}" quá lớn, vui lòng chọn ảnh khác.`);
+          if (!res.ok || !data.ok) throw new Error(data.error || `Tải "${PHOTO_LABELS[f]}" chưa được (mã lỗi ${res.status}). Vui lòng thử lại.`);
+          delete pendingPhotoFiles[f];
+          currentPhotos = data.photos;
+          done++;
+        }
+        renderPhotoPreviews(currentPhotos);
+        setPhotoStatus('✅ Đã lưu hồ sơ ảnh!', 'ok');
+        document.getElementById('photoUpdatedNote').textContent = 'Cập nhật lần cuối: ' + fmtDate(new Date().toISOString());
+      } catch (e) {
+        if (done) renderPhotoPreviews(currentPhotos);
+        const ok = done ? `Đã lưu ${done}/${fields.length} file. ` : '';
+        setPhotoStatus('⚠️ ' + ok + (e.message === 'Failed to fetch' ? 'Mạng bị gián đoạn khi tải lên — kiểm tra wifi / 4G rồi bấm Lưu lại.' : (e.message || 'Lỗi kết nối, vui lòng thử lại.')), 'err');
+        btn.disabled = false;
+      }
+    }
+
+    function renderPhotoPreviews(photos) {
+      if (!photos) return;
+      ['front', 'back', 'side', 'video'].forEach(field => {
+        const url = photos[field];
+        if (!url) return;
+        const preview = document.getElementById(`preview-${field}`);
+        preview.innerHTML = field === 'video'
+          ? (url.startsWith('/api/') ? `<video src="${url}" controls playsinline preload="metadata"></video>` : `<iframe src="${url}" allow="autoplay"></iframe>`)
+          : `<img src="${url}" alt="${escHtml(PHOTO_LABELS[field])}">`;
+        document.getElementById(`slot-${field}`).classList.add('done');
+      });
+    }
+
+    async function loadPhotos() {
+      try {
+        const res = await fetch(`/api/ttm/photos/${currentUser.id}`);
+        const data = await res.json();
+        currentPhotos = data.photos;
+        if (!currentPhotos) return;
+
+        renderPhotoPreviews(currentPhotos);
+        if (currentPhotos.updatedAt) {
+          document.getElementById('photoUpdatedNote').textContent = 'Cập nhật lần cuối: ' + fmtDate(currentPhotos.updatedAt);
+        }
+      } catch (e) { /* im lặng — người dùng vẫn có thể upload mới */ }
+    }
+
+    if (currentUser?.id) { loadIntake(); loadPhotos(); loadRoadmap(); }
+    if (new URLSearchParams(location.search).get('tab') === 'medical') switchTab('medical');
+  </script>
+</body>
+</html>

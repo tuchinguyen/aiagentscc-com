@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8">
+  <script src="assets/js/auth-fetch.js?v=1"></script>
+  <script>(function(){try{var t=localStorage.getItem('theme');if(t==='dark'||(!t&&window.matchMedia('(prefers-color-scheme: dark)').matches))document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" href="/assets/img/logo.png">
+  <link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
+  <link rel="manifest" href="/manifest.json?v=2">
+  <meta name="apple-mobile-web-app-title" content="AI Agents CC">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="theme-color" content="#0ea5e9">
+  <title>Trợ lý Ngũ Hành — AI AGENTS CC</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/base.css?v=2">
+  <link rel="stylesheet" href="assets/css/components.css?v=11">
+  <link rel="stylesheet" href="assets/css/layout.css?v=6">
+  <style>
+    /* This page turns the feed column into a fixed-height chat surface */
+    #feed { padding: 0; overflow: hidden; display: flex; }
+
+    .tl-wrap { flex: 1; display: flex; flex-direction: column; min-width: 0; max-width: 900px; margin: 0 auto; width: 100%; }
+
+    .tl-scroll { flex: 1; overflow-y: auto; padding: 20px 20px 8px; scrollbar-width: thin; }
+    .tl-scroll::-webkit-scrollbar { width: 4px; }
+    .tl-scroll::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.08); border-radius: 2px; }
+
+    .tl-intro {
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg);
+      padding: 16px 18px; margin-bottom: 16px; color: var(--text-muted); line-height: 1.7; font-size: var(--fs-sm);
+    }
+    .tl-intro strong { color: var(--text); }
+    .tl-disclaim {
+      margin-top: 10px; padding-top: 10px; border-top: 1px dashed var(--border);
+      font-size: var(--fs-xs); color: var(--text-muted);
+    }
+
+    .tl-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+    .tl-chip {
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: 999px;
+      padding: 7px 13px; font-size: var(--fs-sm); font-weight: 600; color: var(--text);
+      cursor: pointer; transition: background .15s, border-color .15s; font-family: inherit;
+    }
+    .tl-chip:hover { background: var(--bg-hover); border-color: #cbd5e1; }
+
+    .tl-msg { display: flex; margin-bottom: 14px; }
+    .tl-msg.user { justify-content: flex-end; }
+    .tl-bubble {
+      max-width: 80%; padding: 11px 15px; font-size: 14px; line-height: 1.7; word-break: break-word;
+    }
+    .tl-msg.ai .tl-bubble {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: 4px 16px 16px 16px; color: var(--text); box-shadow: 0 1px 3px rgba(0,0,0,.05);
+    }
+    .tl-msg.user .tl-bubble {
+      background: var(--color-primary); color: #fff; border-radius: 16px 4px 16px 16px;
+    }
+    .tl-bubble h1, .tl-bubble h2, .tl-bubble h3 { font-size: var(--fs-md); margin: 8px 0 4px; font-family: var(--font-heading); }
+    .tl-bubble h1:first-child, .tl-bubble h2:first-child, .tl-bubble h3:first-child { margin-top: 0; }
+    .tl-bubble p { margin: 6px 0; }
+    .tl-bubble p:first-child { margin-top: 0; }
+    .tl-bubble p:last-child { margin-bottom: 0; }
+    .tl-bubble ul { margin: 6px 0; padding-left: 20px; }
+    .tl-bubble li { margin: 3px 0; }
+    .tl-bubble .meta { font-size: var(--fs-xs); color: var(--text-muted); }
+
+    .tl-typing { display: inline-flex; align-items: center; gap: 4px; padding: 13px 15px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 4px 16px 16px 16px; }
+    .tl-typing span { width: 6px; height: 6px; border-radius: 50%; background: var(--text-muted); animation: tlBlink 1.2s infinite both; }
+    .tl-typing span:nth-child(2) { animation-delay: .18s; }
+    .tl-typing span:nth-child(3) { animation-delay: .36s; }
+    @keyframes tlBlink { 0%, 80%, 100% { opacity: .25; } 40% { opacity: 1; } }
+
+    .tl-composer {
+      flex-shrink: 0; border-top: 1px solid var(--border); background: var(--bg-card);
+      padding: 12px 20px; display: flex; gap: 10px; align-items: flex-end;
+    }
+    .tl-composer textarea {
+      flex: 1; resize: none; border: 1px solid var(--border); border-radius: var(--radius-md);
+      padding: 10px 13px; font-family: inherit; font-size: 14px; line-height: 1.5; color: var(--text);
+      background: var(--bg-app); max-height: 140px; min-height: 42px;
+    }
+    .tl-composer textarea:focus { outline: none; border-color: var(--color-primary); }
+    .tl-send {
+      flex-shrink: 0; border: none; background: var(--color-primary); color: #fff; font-weight: 700;
+      font-family: inherit; font-size: 14px; padding: 0 18px; height: 42px; border-radius: var(--radius-md); cursor: pointer;
+    }
+    .tl-send:disabled { opacity: .5; cursor: not-allowed; }
+    .tl-foot { flex-shrink: 0; text-align: center; font-size: var(--fs-xs); color: var(--text-muted); padding: 0 20px 10px; background: var(--bg-card); }
+
+    .tl-gate {
+      margin: 24px auto; max-width: 520px; text-align: center; background: var(--bg-card);
+      border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 28px 24px;
+    }
+    /* Lời mời tham gia chương trình khi hết lượt hỏi */
+    .tl-upsell h2, .tl-upsell h3 { font-family: var(--font-heading); font-size: 16px; margin: 0 0 8px; color: var(--color-primary); }
+    .tl-upsell ul { margin: 6px 0 10px; padding-left: 20px; }
+    .tl-upsell li { margin-bottom: 4px; }
+    .tl-upsell p { margin: 0 0 8px; }
+    .tl-upsell-btn { display: inline-block; margin-top: 8px; padding: 10px 18px; border-radius: 99px; background: var(--color-primary); color: #fff !important; font-weight: 700; text-decoration: none; }
+    .tl-upsell-btn:hover { opacity: .9; }
+    .tl-upsell-note { margin-top: 8px; font-size: 12px; color: var(--text-muted); }
+    .tl-gate h2 { font-family: var(--font-heading); font-size: 18px; margin-bottom: 8px; color: var(--text); }
+    .tl-gate p { font-size: var(--fs-sm); color: var(--text-muted); line-height: 1.7; margin-bottom: 16px; }
+  </style>
+</head>
+
+<body>
+
+  <div id="app">
+
+    <!-- Sidebar -->
+    <aside id="sidebar">
+      <div id="sidebar-logo">
+        <div class="sidebar-logo-mark" style="background:transparent;"><img src="assets/img/logo.png" alt="Logo" style="width:100%;height:100%;object-fit:contain;"></div>
+        <div class="sidebar-logo-text">AI AGENTS <span>CC</span></div>
+      </div>
+
+      <nav id="sidebar-nav">
+        <div class="nav-section-label">Cộng đồng</div>
+
+        <a href="feed.html" class="nav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
+          </svg>
+          Feed
+        </a>
+
+
+
+        <div class="nav-section-label" style="margin-top:8px;">Học tập</div>
+
+        <a href="challenge.html" class="nav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path
+              d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z" />
+          </svg>
+          Challenge
+        </a>
+
+        <div class="nav-section-label" style="margin-top:8px;">Khác</div>
+
+        <a href="marketplace.html" class="nav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path
+              d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z" />
+          </svg>
+          Marketplace
+        </a>
+      </nav>
+
+      <!-- Sidebar user -->
+      <div id="sidebar-user">
+        <div class="user-avatar-wrap">
+          <div class="avatar-placeholder avatar-md" id="sbAvatar" style="background:#7c3aed;">?</div>
+          <div class="user-status-dot"></div>
+        </div>
+        <div class="user-info">
+          <div class="user-name" id="sbName">—</div>
+          <div class="user-level" id="sbLevel">—</div>
+        </div>
+        <a href="index.html" class="icon-btn" title="Đăng xuất" style="margin-left:auto;" onclick="doLogout()">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4" />
+            <polyline points="16 17 21 12 16 7" />
+            <line x1="21" y1="12" x2="9" y2="12" />
+          </svg>
+        </a>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <div id="main">
+
+      <!-- Mobile topbar -->
+      <div id="mobile-topbar">
+        <button class="mob-menu-btn" onclick="toggleSidebar()" aria-label="Menu">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+          </svg>
+        </button>
+        <span style="flex:1;font-size:var(--fs-md);font-weight:600;color:var(--text)">🌿 Trợ lý Ngũ Hành</span>
+        <div class="mob-topbar-right">
+          <button class="icon-btn" id="themeToggleMob" type="button" aria-label="Chuyển chế độ sáng/tối">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"></svg>
+          </button>
+          <button class="icon-btn" id="notifBellMob" aria-label="Thông báo" style="position:relative;">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+            </svg>
+            <span id="notifBadgeMob" style="display:none;position:absolute;top:2px;right:2px;background:#ef4444;color:#fff;font-size:10px;font-weight:700;border-radius:99px;min-width:16px;height:16px;padding:0 4px;line-height:16px;text-align:center;">0</span>
+          </button>
+          <div id="topbarAvatarMob" style="width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;background:#7c3aed;flex-shrink:0;"></div>
+        </div>
+</div>
+
+      <!-- Topbar -->
+      <nav id="subnav-bar" class="subnav-bar" aria-label="Điều hướng nhanh">
+        <a href="feed.html" class="subnav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+          Feed
+        </a>
+        <a href="spaces.html" class="subnav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></svg>
+          Spaces
+        </a>
+        <a href="courses.html" class="subnav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/></svg>
+          Courses
+        </a>
+        <a href="members.html" class="subnav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+          Members
+        </a>
+        <a href="leaderboard.html" class="subnav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/></svg>
+          Leaderboard
+        </a>
+        <a href="calendar.html" class="subnav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          Calendar
+        </a>
+        <a href="about.html" class="subnav-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+          About
+        </a>
+        <div class="topbar-right">
+          <button class="icon-btn" id="themeToggle" type="button" aria-label="Chuyển chế độ sáng/tối">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"></svg>
+          </button>
+          <div style="position:relative;">
+            <button class="icon-btn" id="notifBell" aria-label="Thông báo" style="position:relative;">
+              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+              </svg>
+              <span id="notifBadge" style="display:none;position:absolute;top:2px;right:2px;background:#ef4444;color:#fff;font-size:10px;font-weight:700;border-radius:99px;min-width:16px;height:16px;padding:0 4px;line-height:16px;text-align:center;">0</span>
+            </button>
+            <div id="notifDropdown" style="display:none;"></div>
+          </div>
+          <div class="topbar-search">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <circle cx="11" cy="11" r="8" />
+              <line x1="21" y1="21" x2="16.65" y2="16.65" />
+            </svg>
+            <input type="text" id="globalSearchInput" placeholder="Tìm kiếm..." autocomplete="off">
+            <div id="globalSearchResults" class="gsr-panel"></div>
+          </div>
+          <div id="topbarAvatar"
+            style="width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;background:#7c3aed;cursor:pointer;flex-shrink:0;">
+          </div>
+        </div>
+      </nav>
+
+      <header id="topbar">
+        <button class="topbar-hamburger" id="hamburger" onclick="toggleSidebar()" aria-label="Mở menu">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path d="M4 6h16M4 12h16M4 18h16" stroke-linecap="round" />
+          </svg>
+        </button>
+
+        <div class="topbar-title">🌿 Trợ lý Ngũ Hành</div>
+      </header>
+
+      <div id="content-row">
+        <main id="feed">
+          <div class="tl-wrap">
+            <!-- Gate (shown when the member doesn't have program access) -->
+            <div class="tl-gate" id="tlGate" hidden>
+              <h2>Trợ lý Ngũ Hành dành cho thành viên chương trình</h2>
+              <p>Tính năng này mở cho thành viên đang tham gia <strong>Thử thách cộng đồng</strong>
+                hoặc đã mua sản phẩm của cộng đồng. Tham gia để được trợ lý đồng hành mỗi ngày nhé!</p>
+              <a href="challenge.html" class="btn btn-primary">Xem thử thách 28 ngày</a>
+            </div>
+
+            <!-- Chat -->
+            <div class="tl-scroll" id="tlScroll" hidden>
+              <div class="tl-intro">
+                Chào bạn 👋 Mình là <strong>Trợ lý Ngũ Hành</strong>. Hỏi mình bất cứ điều gì về ăn uống dưỡng sinh:
+                nên ăn gì theo vị / theo buổi, có nguyên liệu này thì nấu món gì và ăn khi nào, điều chỉnh bữa ăn
+                theo thể trạng của bạn...
+                <div class="tl-disclaim">
+                  ⚠️ Đây là gợi ý ăn uống dưỡng sinh, <strong>không thay thế việc khám chữa bệnh</strong>.
+                  Có bệnh nền, đang dùng thuốc hoặc triệu chứng nặng — hãy hỏi bác sĩ.
+                </div>
+              </div>
+              <div class="tl-chips" id="tlChips"></div>
+            </div>
+
+            <div class="tl-composer" id="tlComposer" hidden>
+              <textarea id="tlInput" rows="1" placeholder="Hỏi trợ lý Ngũ Hành..." aria-label="Câu hỏi"></textarea>
+              <button class="tl-send" id="tlSend" type="button">Gửi</button>
+            </div>
+            <div class="tl-foot" id="tlFoot" hidden></div>
+          </div>
+        </main>
+      </div>
+
+    </div><!-- /main -->
+
+  </div><!-- /app -->
+
+  <!-- Mobile sidebar overlay -->
+  <div id="mob-overlay" onclick="closeSidebar()"></div>
+  <div id="mob-sidebar">
+    <div style="padding:14px 16px;border-bottom:1px solid var(--border);font-size:var(--fs-md);font-weight:700;color:var(--text);display:flex;align-items:center;gap:8px;">
+      <div style="width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;"><img src="assets/img/logo.png" alt="Logo" style="width:100%;height:100%;object-fit:contain;"></div>
+      <span class="mob-brand-name">AI AGENTS CC</span>
+    </div>
+    <nav style="flex:1;overflow-y:auto;padding:8px;">
+      <div class="nav-section-label">Cộng đồng</div>
+      <a href="feed.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        Feed
+      </a>
+      <div class="nav-section-label">Học tập</div>
+      <a href="challenge.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z"/></svg>
+        Challenge
+      </a>
+      <div class="nav-section-label">Khác</div>
+      <a href="marketplace.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z"/></svg>
+        Marketplace
+      </a>
+    </nav>
+  </div>
+
+  <!-- Mobile main menu (full site navigation) -->
+  <div id="mob-mainmenu-overlay" onclick="closeMainMenu()"></div>
+  <div id="mob-mainmenu">
+    <div style="padding:14px 16px;border-bottom:1px solid var(--border);font-size:var(--fs-md);font-weight:700;color:var(--text);display:flex;align-items:center;gap:8px;">
+      <div style="width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;"><img src="assets/img/logo.png" alt="Logo" style="width:100%;height:100%;object-fit:contain;"></div>
+      Menu chính
+    </div>
+    <nav style="flex:1;overflow-y:auto;padding:8px;">
+      <a href="feed.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        Feed
+      </a>
+      <a href="spaces.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></svg>
+        Spaces
+      </a>
+      <a href="courses.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/></svg>
+        Courses
+      </a>
+      <a href="members.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+        Members
+      </a>
+      <a href="leaderboard.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/></svg>
+        Leaderboard
+      </a>
+      <a href="calendar.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        Calendar
+      </a>
+      <a href="about.html" class="nav-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+        About
+      </a>
+    </nav>
+  </div>
+
+  <nav id="mobile-nav">
+    <a href="feed.html" class="mob-nav-btn">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
+      </svg>
+      Feed
+    </a>
+    <a href="spaces.html" class="mob-nav-btn">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></svg>
+      Spaces
+    </a>
+    <a href="courses.html" class="mob-nav-btn">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/></svg>
+      Courses
+    </a>
+    <a href="members.html" class="mob-nav-btn">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>
+      </svg>
+      Members
+    </a>
+    <button class="mob-nav-btn" onclick="toggleMainMenu()">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/>
+      </svg>
+      Menu
+    </button>
+  </nav>
+
+  <script src="assets/js/app.js?v=28"></script>
+  <script>
+    const API = '/api';
+    const AV_COLORS = ['#0ea5e9', '#8b5cf6', '#10b981', '#f59e0b', '#ec4899', '#3b82f6', '#ef4444', '#14b8a6'];
+
+    function initials(u) { return ((u.first_name || '?')[0] + ((u.last_name || '')[0] || '')).toUpperCase(); }
+    function avColor(id) { return AV_COLORS[(id || 0) % AV_COLORS.length]; }
+    function doLogout() { localStorage.removeItem('currentUser'); window.location.href = 'index.html'; }
+    const LEVELS = [
+      { level: 1, name: 'Khởi động', xpMin: 0 }, { level: 2, name: 'Học viên', xpMin: 45 },
+      { level: 3, name: 'Thực hành', xpMin: 120 }, { level: 4, name: 'Nâng cao', xpMin: 250 },
+      { level: 5, name: 'Chuyên gia', xpMin: 450 }, { level: 6, name: 'Bậc thầy', xpMin: 700 },
+      { level: 7, name: 'Huyền thoại', xpMin: 1000 }, { level: 8, name: 'Tiên tri', xpMin: 1500 },
+      { level: 9, name: 'Thần thánh', xpMin: 2200 },
+    ];
+    function getLevel(xp) { for (let i = LEVELS.length - 1; i >= 0; i--) if (xp >= LEVELS[i].xpMin) return LEVELS[i]; return LEVELS[0]; }
+
+    let currentUser = null;
+    (function () {
+      const raw = localStorage.getItem('currentUser');
+      if (!raw) { window.location.href = 'index.html'; return; }
+      currentUser = JSON.parse(raw);
+      const ini = initials(currentUser);
+      const col = avColor(currentUser.id);
+      document.getElementById('sbAvatar').textContent = ini;
+      document.getElementById('sbAvatar').style.background = col;
+      document.getElementById('sbName').textContent = currentUser.first_name + ' ' + currentUser.last_name;
+      const lv = getLevel(currentUser.xp || 0);
+      document.getElementById('sbLevel').textContent = lv.name + ' · Lv.' + lv.level;
+      const tbAv = document.getElementById('topbarAvatar');
+      if (tbAv) { tbAv.textContent = ini; tbAv.style.background = col; tbAv.onclick = () => location.href = `profile.html?id=${currentUser.id}`; }
+    })();
+
+    // ── Elements ──────────────────────────────────────────────
+    const scrollEl   = document.getElementById('tlScroll');
+    const chipsEl    = document.getElementById('tlChips');
+    const composerEl = document.getElementById('tlComposer');
+    const footEl     = document.getElementById('tlFoot');
+    const gateEl     = document.getElementById('tlGate');
+    const inputEl    = document.getElementById('tlInput');
+    const sendBtn    = document.getElementById('tlSend');
+
+    const SUGGESTIONS = [
+      'Vị chua thì nên ăn gì và ăn vào buổi nào?',
+      'Sáng nay mình nên ăn món gì?',
+      'Mình có bí đỏ, nên nấu món gì và ăn khi nào?',
+      'Mình hay mất ngủ, nên điều chỉnh ăn uống thế nào?',
+      'Trời lạnh nên ăn uống thế nào cho ấm người?',
+    ];
+
+    const history = [];
+    let waiting = false;
+    let locked  = false;   // 429 / 503 — composer disabled for the session
+
+    // ── Markdown (basic) ─────────────────────────────────────
+    function esc(s) { return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+    function inlineFormat(s) {
+      return esc(s)
+        .replace(/~~(.+?)~~/g, '<s style="opacity:.7">$1</s>')       // ~~giá cũ~~ → gạch ngang
+        .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+        .replace(/\*(.+?)\*/g, '<em>$1</em>');
+    }
+    function textToHtml(s) { return esc(s).replace(/\n/g, '<br>'); }
+
+    function renderMarkdown(md) {
+      const lines = String(md || '').split('\n');
+      let html = '', inList = false;
+      for (let i = 0; i < lines.length; i++) {
+        const line = lines[i].trim();
+        if (!line) { if (inList) { html += '</ul>'; inList = false; } continue; }
+        if (/^#{1,3}\s/.test(line)) {
+          if (inList) { html += '</ul>'; inList = false; }
+          const level = line.match(/^#+/)[0].length;
+          html += `<h${level}>${inlineFormat(line.replace(/^#{1,3}\s/, ''))}</h${level}>`;
+        } else if (/^[-*]\s/.test(line)) {
+          if (!inList) { html += '<ul>'; inList = true; }
+          html += `<li>${inlineFormat(line.replace(/^[-*]\s/, ''))}</li>`;
+        } else if (/^\d+\.\s/.test(line)) {
+          if (!inList) { html += '<ul>'; inList = true; }
+          html += `<li>${inlineFormat(line.replace(/^\d+\.\s/, ''))}</li>`;
+        } else {
+          if (inList) { html += '</ul>'; inList = false; }
+          html += `<p>${inlineFormat(line)}</p>`;
+        }
+      }
+      if (inList) html += '</ul>';
+      return html;
+    }
+
+    // ── Chat rendering ───────────────────────────────────────
+    function scrollToBottom() { scrollEl.scrollTop = scrollEl.scrollHeight; }
+
+    function addBubble(role, html) {
+      const msg = document.createElement('div');
+      msg.className = 'tl-msg ' + role;
+      const bubble = document.createElement('div');
+      bubble.className = 'tl-bubble';
+      bubble.innerHTML = html;
+      msg.appendChild(bubble);
+      scrollEl.appendChild(msg);
+      scrollToBottom();
+      return msg;
+    }
+
+    function showTyping() {
+      const msg = document.createElement('div');
+      msg.className = 'tl-msg ai';
+      msg.id = 'tlTyping';
+      msg.innerHTML = '<div class="tl-typing"><span></span><span></span><span></span></div>';
+      scrollEl.appendChild(msg);
+      scrollToBottom();
+    }
+    function hideTyping() { document.getElementById('tlTyping')?.remove(); }
+
+    function setRemaining(n) {
+      if (n === null || n === undefined) { footEl.hidden = true; return; }
+      footEl.hidden = false;
+      footEl.textContent = n > 0 ? `Còn ${n} lượt hỏi hôm nay` : 'Bạn đã dùng hết lượt hỏi hôm nay';
+    }
+
+    function disableComposer(reason) {
+      locked = true;
+      inputEl.disabled = true;
+      sendBtn.disabled = true;
+      inputEl.placeholder = reason || 'Trợ lý tạm thời không khả dụng';
+    }
+
+    // ── Send flow ────────────────────────────────────────────
+    async function send(text) {
+      text = (text || '').trim();
+      if (!text || waiting || locked) return;
+
+      chipsEl.hidden = true;
+      inputEl.value = '';
+      inputEl.style.height = 'auto';
+      waiting = true;
+      sendBtn.disabled = true;
+      inputEl.disabled = true;
+
+      addBubble('user', textToHtml(text));
+      history.push({ role: 'user', content: text });
+      showTyping();
+
+      try {
+        const r = await fetch(`${API}/assistant/chat`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ user_id: currentUser.id, messages: history })
+        });
+        const data = await r.json().catch(() => ({}));
+        hideTyping();
+
+        if (r.status === 403) {
+          history.pop();
+          scrollEl.hidden = true;
+          composerEl.hidden = true;
+          footEl.hidden = true;
+          gateEl.hidden = false;
+          return;
+        }
+        if (r.status === 429) {
+          history.pop();
+          if (data.upsell && data.upsell.markdown) {
+            // Hết lượt → lời mời tham gia chương trình tiếp theo (nội dung admin soạn) + nút đăng ký
+            const cta = data.upsell.cta_link
+              ? `<a class="tl-upsell-btn" href="${esc(data.upsell.cta_link)}">${esc(data.upsell.cta_text || 'Xem chương trình')}</a>` : '';
+            addBubble('ai', `<div class="tl-upsell">${renderMarkdown(data.upsell.markdown)}${cta}
+              <div class="tl-upsell-note">Bạn vẫn có thể hỏi tiếp vào ngày mai.</div></div>`);
+          } else {
+            addBubble('ai', textToHtml(data.error || 'Bạn đã dùng hết lượt hỏi hôm nay.'));
+          }
+          setRemaining(0);
+          disableComposer('Hết lượt hỏi hôm nay — quay lại ngày mai nhé');
+          return;
+        }
+        if (!r.ok) {
+          addBubble('ai', `<em>${textToHtml(data.error || 'Trợ lý đang bận, thử lại sau nhé.')}</em>`);
+          return;
+        }
+
+        addBubble('ai', renderMarkdown(data.reply));
+        history.push({ role: 'assistant', content: data.reply });
+        setRemaining(data.remaining);
+      } catch (e) {
+        hideTyping();
+        addBubble('ai', '<em>Mất kết nối tới server. Vui lòng thử lại.</em>');
+      } finally {
+        waiting = false;
+        if (!locked) {
+          sendBtn.disabled = false;
+          inputEl.disabled = false;
+          inputEl.focus();
+        }
+      }
+    }
+
+    // ── Init ─────────────────────────────────────────────────
+    // Access (program membership, daily quota, on/off) is enforced by the server on the
+    // first message: 403 → gate, 429 → lock, 503 → inline notice.
+    function init() {
+      chipsEl.innerHTML = SUGGESTIONS.map(q =>
+        `<button class="tl-chip" type="button">${esc(q)}</button>`).join('');
+      chipsEl.querySelectorAll('.tl-chip').forEach((btn, i) => {
+        btn.addEventListener('click', () => send(SUGGESTIONS[i]));
+      });
+
+      scrollEl.hidden = false;
+      composerEl.hidden = false;
+
+      inputEl.addEventListener('input', () => {
+        inputEl.style.height = 'auto';
+        inputEl.style.height = Math.min(inputEl.scrollHeight, 140) + 'px';
+      });
+      inputEl.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(inputEl.value); }
+      });
+      sendBtn.addEventListener('click', () => send(inputEl.value));
+      inputEl.focus();
+    }
+
+    init();
+  </script>
+</body>
+
+</html>

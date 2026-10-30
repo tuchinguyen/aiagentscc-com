@@ -12,8 +12,19 @@ Nền tảng cộng đồng học AI Agent cho người Việt — từ prompt e
 ```
 server.js         # Express API server — chạy: node server.js (port 3000)
 brain.db          # SQLite database (tự tạo khi chạy server)
-package.json      # Dependencies: express, sql.js, bcryptjs, cors
+package.json      # Dependencies: express, sql.js, bcryptjs, cors, multer, resend, googleapis, web-push
+content/          # Nội dung mặc định: noi-quy / huong-dan (.md), kich-ban-zoom (.json)
 ```
+
+### Nâng cấp từ template cộng đồng (10/2026)
+
+Code lấy từ `E:\claude-code\template-cong-dong` (gốc là cộng đồng Ngũ Hành), đã đổi sang AI AGENTS CC:
+- **Trang sức khoẻ bị ẩn**: `HIDDEN_PAGES` trong `server.js` chuyển hướng về `feed.html` (tro-ly, nhat-ky, thuc-don-7-ngay, thuc-pham, cong-thuc, kiem-tra-han-nhiet, quy-trinh, workshop3, workshop8(+thu-ngo), program377(+thu-ngo), intake-than-tam-menh, lo-trinh, ban-do-hanh-trinh, hanh-trinh, coach-1-1, dia-diem). File vẫn giữ — bật lại bằng cách bỏ khỏi danh sách.
+- **Admin**: mục sức khoẻ ẩn bằng CSS (`/* AI AGENTS CC: ẩn các mục sức khỏe */` trong `admin.html`). Hồ sơ thành viên = Hồ sơ AI Agent (`users.intake_profile` từ `intake.html`) · Thử thách · Học tập · Đơn hàng · Cộng đồng. Danh sách tổng hợp có 1 danh sách / thử thách (`challenge:ID`).
+- **Khảo sát** `intake.html` + `INTAKE_SYSTEM` là bản AI Agent cũ; khảo sát Thân-Tâm-Mệnh tắt (`ttm_intake_trigger` mặc định `none`).
+- Thanh toán: BIDV 96247NGUYEN, nội dung `AIAGENT <product_id> <buyer_id>` (`SEPAY_MEMO_PREFIX`). Danh mục sản phẩm: prompt / agent / ebook / tool / course / other.
+- `.env` nên có thêm `COMMUNITY_NAME=AI AGENTS CC`, `SITE_URL=https://aiagentscc.com`, `SEPAY_MEMO_PREFIX=AIAGENT` (code đã đặt sẵn làm mặc định).
+- Điểm danh Zoom: gửi khách `/zoom?src=zalo|messenger|congdong`; cần điền "Link phòng Zoom" ở Admin → Cài đặt → 📅 Lịch và có buổi Zoom trong Lịch.
 
 ### API endpoints
 
