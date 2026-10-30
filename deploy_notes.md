@@ -1,5 +1,21 @@
 # Deploy Notes — AI Agent Command Center
 
+## Máy chủ hiện tại (cập nhật 30/10/2026)
+
+- VPS `14.225.255.217`, thư mục app: `/opt/aiagentscc-com`
+- Chạy bằng **systemd** `mywebsite.service` (đọc `.env`, cổng 3000), nginx đứng trước.
+  **Không chạy thêm bằng pm2** — hai bản sẽ tranh cổng 3000 và ghi đè `brain.db` của nhau.
+- Cập nhật code:
+  ```bash
+  cd /opt/aiagentscc-com
+  cp -a brain.db /root/backup-aiagentscc/brain-$(date +%Y%m%d-%H%M%S).db
+  git pull origin main && npm install --omit=dev
+  systemctl restart mywebsite && journalctl -u mywebsite -n 30 --no-pager
+  ```
+- Bản sao lưu trước mỗi lần deploy: `/root/backup-aiagentscc/`.
+
+> Các mục bên dưới (pm2, `/var/www/aiagentscc`) là hướng dẫn cài lần đầu cũ — chỉ để tham khảo.
+
 ## Stack
 - Node.js (Express) + SQLite (sql.js, persisted to `brain.db`)
 - Frontend: HTML/CSS/JS tĩnh, served bởi Express
